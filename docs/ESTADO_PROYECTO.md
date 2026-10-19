@@ -20,7 +20,7 @@ integrarla a `develop`.
 
 ## 1. Lo que ya existe (revisado el 19/10/2026)
 
-**Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; rama `feature/act-4-base-solucion`, aún sin fusionar):
+**Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; act. 4, PR #1):
 - `src/main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
 - Clases del curso en `src/`: `Shader.h`, `Camera.h` (WASD/flechas + ratón, pitch ±89°), `Model.h` + `Mesh.h` (Assimp, texturas RGBA).
 - Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación** (descarta píxeles con alfa < 0.1).
