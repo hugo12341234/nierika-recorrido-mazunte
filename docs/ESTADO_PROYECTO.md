@@ -4,7 +4,7 @@
 > (`CIERRE` en el Proyecto o `/cierre` en Claude Code) y reemplaza la versión anterior en el
 > Proyecto de Claude y en `docs/ESTADO_PROYECTO.md` del repositorio.
 
-**Última actualización:** 18/10/2026 · **Hoy:** fin de semana 3 · **Días a la entrega:** 31 (18/11/2026)
+**Última actualización:** 19/10/2026 · **Hoy:** inicio de la semana 4 (Bloque A) · **Días a la entrega:** 30 (18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (ramas `main` y `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -59,7 +59,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 1 | Fuentes Mazunte (APA 7) | ✅ | Hoja del plan |
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | ✅ | Base de la Práctica 6 (GLEW, SOIL2, Assimp) |
+| 4 | VS + dependencias | ✅ | Rama `feature/act-4-base-solucion` (PR #1): `NierikaStudio.sln` x64 + `vcpkg.json` con `builtin-baseline` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: con las correcciones del código base, compila y corre en la PC de D2** (Release x64, VS 2022): se ven fachada, altar y calavera con textura, FOV 45°, cursor capturado. Se aprueba con el *merge* del PR #1 (revisión de D1) |
 | 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
@@ -93,6 +93,10 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 18/10 | Propuesta v2.0 y plan de trabajo en PDF guardados en `docs/propuesta/` | Consulta desde cualquier hilo | Documentación |
 | 18/10 | Se mantiene **Trello** como tablero Kanban (el de la propuesta); no se usa GitHub Projects | Coherencia con la propuesta | Act. 5, evidencias del manual técnico |
 | 18/10 | En Trello las tarjetas no llevan "#" al inicio (activa el selector de etiquetas): se nombran "Act. N ..." | Evitar errores al capturar | Trello |
+| 19/10 | La solución recibida (P5.rar) estaba compilada en **32 bits** (libs, DLL y .exe x86; configs x64 rotas). Se reestructura a **x64 solo**: dependencias compiladas (Assimp, GLFW, GLEW, GLM) por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/` compilados desde fuente | La propuesta exige x64 y `vendor/`; no hay binarios x64 en la solución; vcpkg es la vía oficial de VS 2022 y deja a D1 y D2 con las mismas versiones. Assimp pasa de 4.x del curso a la versión actual de vcpkg | Act. 4, 56 (dist/ con .exe + DLL), CLAUDE.md |
+| 19/10 | Estructura del repo: `src/`, `vendor/`, `Models/`, `Shaders/`; salida en `build/` (ignorada). No se suben `.pdb`/`.ilk`/`.vs`/`Debug`, los `.rar` ni los modelos de prácticas anteriores (peces, pokebolas) | Repo ligero (la solución pesaba 195 MB) | Repositorio |
+| 19/10 | `vcpkg.json` con `builtin-baseline` `664933b8…` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) | Sin baseline cada PC toma la versión que tenga vcpkg en ese momento; con él D1, D2 y el Release final usan exactamente las mismas versiones (las mismas con que ya compiló D2) | Act. 4, 56 |
+| 19/10 | Correcciones al código base de la práctica: FOV con `glm::radians` (antes 45 se interpretaba como radianes → ~58° por casualidad); cursor capturado (1ª persona); texturas **RGBA** (necesario para el alfa del papel picado y las flores); `TextureFromFile` `inline`; textura faltante → aviso en consola + color magenta; `aiProcess_GenNormals`; se quita `GLEW_STATIC` | Errores latentes que iban a aparecer en las actividades 25, 33, 37 y 44 o al agregar más `.cpp` | `src/main.cpp`, `src/Model.h`, `src/Camera.h` |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | Act. 18 |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
 | *pendiente* | Origen del "altar" y la calavera: si son externos, se documentan con crédito y no cuentan para los 18 propios | Criterio de modelado de la propuesta | Act. 14 y 24 |
@@ -104,6 +108,8 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | Ventana | tamaño | 800×600 → **cambiar a 1280×720** | `main.cpp` |
 | Proyección | near / far | 0.1 / 100 → **cambiar far a 300** | `main.cpp` |
 | Cámara | posición inicial | (0, 2, 6) | `main.cpp` |
+| Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `Camera.h` (`ZOOM`), `main.cpp` (`glm::perspective`) |
+| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° | `Camera.h` |
 | Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** | `main.cpp` |
 | "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** | `main.cpp` |
 | Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **revisar** | `main.cpp` |
@@ -111,14 +117,15 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 
 ## 6. Problemas abiertos
 
-1. `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl` (si no, el modelo sale sin textura).
+1. `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl`. *(19/10: con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo en la tarea A1.)*
 2. `altar.mtl`: `map_Kd shaded.png` → usar `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1`.
 3. Texturas del altar y la calavera de 2048 px (la propuesta pide 1K): reducir a 1024 en GIMP.
 4. Escalas fuera de 1 u = 1 m (ver sección 5).
 5. Falta iluminación: el shader actual solo muestra la textura.
-6. No se ha revisado aún el resto del código (`Camera.h`, `Shader.h`, `Model.h`, shaders): conectar la carpeta completa de la solución.
+6. ~~Revisar el resto del código~~ → revisado el 19/10 (ver decisiones). Siguen pendientes: no se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader: act. 54) y `Model.h` no carga mapas normales/de relieve (act. 34).
 
 ## 7. Siguiente paso concreto
 
+D1 revisa el PR #1 (`/verificar 4`) → *merge* y borrar la rama → *merge* del PR #2 (documentación). Después,
 Bloque A, en este orden: (1) corregir problemas 1–2 y las escalas; (2) ventana 1280×720 y far 300;
 (3) playa + mar; (4) shader de iluminación; (5) colisiones.

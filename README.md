@@ -42,7 +42,28 @@ docs/                    Project context, plan and live status (Spanish)
 CLAUDE.md                Project rules for the AI assistant
 ```
 
-The Visual Studio solution, `Models/` and `Shaders/` folders are added in the next commits.
+```
+NierikaStudio.sln / .vcxproj   Visual Studio 2022 solution (x64 only)
+vcpkg.json                     Binary dependencies: assimp, glfw3, glew, glm
+src/                           C++ source (main.cpp, Camera.h, Shader.h, Model.h, Mesh.h)
+vendor/SOIL2/                  SOIL2 + stb_image, compiled with the project
+Models/<object>/<object>.obj   3D models (+ .mtl and textures)
+Shaders/                       GLSL 330 core shaders (.vs / .frag)
+```
+
+## Build and run
+
+1. Install **Visual Studio 2022** with the *Desktop development with C++* workload.
+2. Install vcpkg once (this is what the team uses):
+   ```
+   git clone https://github.com/microsoft/vcpkg C:\vcpkg
+   C:\vcpkg\bootstrap-vcpkg.bat
+   C:\vcpkg\vcpkg integrate install
+   ```
+   If vcpkg was cloned before, update it with `git -C C:\vcpkg pull`: `vcpkg.json` pins the library versions with a
+   `builtin-baseline`, and that commit must exist in your vcpkg copy.
+3. Open `NierikaStudio.sln`, choose **Release | x64** (or Debug) and press **F5**.
+   The first build downloads and compiles Assimp, GLFW, GLEW and GLM (about 10–20 min); later builds are fast.
 
 ## Branching
 
