@@ -60,7 +60,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
 | 4 | VS + dependencias | ✅ | Base de la Práctica 6 (GLEW, SOIL2, Assimp) |
-| 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Falta: etiquetas e invitar a D1 |
+| 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
 | 8 | Playa 100×50 | ⏳ | Bloque A |
