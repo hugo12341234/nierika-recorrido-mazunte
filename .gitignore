@@ -446,3 +446,7 @@ CLAUDE.local.md
 
 # Videos crudos de OBS (solo se suben los 3 MP4 finales en docs/videos/)
 *.mkv
+
+# Nierika: salida de compilacion y paquetes de vcpkg (se regeneran)
+build/
+vcpkg_installed/

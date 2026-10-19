@@ -59,7 +59,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 1 | Fuentes Mazunte (APA 7) | ✅ | Hoja del plan |
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | ✅ | Base de la Práctica 6 (GLEW, SOIL2, Assimp) |
+| 4 | VS + dependencias | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` (assimp, glfw3, glew, glm) + `vendor/SOIL2` + `src/` + 3 modelos. **Pendiente de compilar en Visual Studio** (no se pudo compilar desde el entorno de Claude) y de revisión de D1 |
 | 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
@@ -93,6 +93,8 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 18/10 | Propuesta v2.0 y plan de trabajo en PDF guardados en `docs/propuesta/` | Consulta desde cualquier hilo | Documentación |
 | 18/10 | Se mantiene **Trello** como tablero Kanban (el de la propuesta); no se usa GitHub Projects | Coherencia con la propuesta | Act. 5, evidencias del manual técnico |
 | 18/10 | En Trello las tarjetas no llevan "#" al inicio (activa el selector de etiquetas): se nombran "Act. N ..." | Evitar errores al capturar | Trello |
+| 19/10 | La solución recibida (P5.rar) estaba compilada en **32 bits** (libs, DLL y .exe x86; configs x64 rotas). Se reestructura a **x64 solo**: dependencias compiladas (Assimp, GLFW, GLEW, GLM) por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/` compilados desde fuente | La propuesta exige x64 y `vendor/`; no hay binarios x64 en la solución; vcpkg es la vía oficial de VS 2022 y deja a D1 y D2 con las mismas versiones. Assimp pasa de 4.x del curso a la versión actual de vcpkg | Act. 4, 56 (dist/ con .exe + DLL), CLAUDE.md |
+| 19/10 | Estructura del repo: `src/`, `vendor/`, `Models/`, `Shaders/`; salida en `build/` (ignorada). No se suben `.pdb`/`.ilk`/`.vs`/`Debug`, los `.rar` ni los modelos de prácticas anteriores (peces, pokebolas) | Repo ligero (la solución pesaba 195 MB) | Repositorio |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | Act. 18 |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
 | *pendiente* | Origen del "altar" y la calavera: si son externos, se documentan con crédito y no cuentan para los 18 propios | Criterio de modelado de la propuesta | Act. 14 y 24 |

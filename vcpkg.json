@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "nierika-studio",
+  "version-string": "0.1.0",
+  "description": "Recorrido virtual Dia de Muertos en Mazunte (CGeIHC, FI UNAM)",
+  "dependencies": [
+    "assimp",
+    "glfw3",
+    "glew",
+    "glm"
+  ]
+}
