@@ -59,7 +59,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 1 | Fuentes Mazunte (APA 7) | ✅ | Hoja del plan |
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` (assimp, glfw3, glew, glm) + `vendor/SOIL2` + `src/` + 3 modelos. **Pendiente de compilar en Visual Studio** (no se pudo compilar desde el entorno de Claude) y de revisión de D1 |
+| 4 | VS + dependencias | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` (assimp, glfw3, glew, glm) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: compila y corre en la PC de D2** (Release x64, VS 2022, vcpkg con Assimp 6.0.5): se ven fachada, altar y calavera con textura. Pendiente: revisión de D1 en el PR |
 | 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
@@ -113,7 +113,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 
 ## 6. Problemas abiertos
 
-1. `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl` (si no, el modelo sale sin textura).
+1. `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl`. *(19/10: con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo en la tarea A1.)*
 2. `altar.mtl`: `map_Kd shaded.png` → usar `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1`.
 3. Texturas del altar y la calavera de 2048 px (la propuesta pide 1K): reducir a 1024 en GIMP.
 4. Escalas fuera de 1 u = 1 m (ver sección 5).
