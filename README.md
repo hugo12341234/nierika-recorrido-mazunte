@@ -30,25 +30,32 @@ Real-time, first-person 3D virtual tour that recreates the Day of the Dead celeb
 
 ## Repository layout
 
-```
-docs/                    Project context, plan and live status (Spanish)
-  CONTEXTO_PROYECTO.md   Scope, requirements, acceptance criteria, conventions
-  PLAN_ACTIVIDADES.md    Work breakdown (60 activities)
-  ESTADO_PROYECTO.md     Current plan, progress, decisions, fixed parameters
-  manual_tecnico/        Technical manual (ES/EN)
-  manual_usuario/        User manual (ES/EN)
-  videos/                Demo videos
-.claude/                 AI-assistant configuration (agents and commands)
-CLAUDE.md                Project rules for the AI assistant
-```
+**Application**
 
 ```
 NierikaStudio.sln / .vcxproj   Visual Studio 2022 solution (x64 only)
-vcpkg.json                     Binary dependencies: assimp, glfw3, glew, glm
+vcpkg.json                     Dependencies installed by vcpkg (assimp, glfw3, glew, glm), pinned by builtin-baseline
 src/                           C++ source (main.cpp, Camera.h, Shader.h, Model.h, Mesh.h)
 vendor/SOIL2/                  SOIL2 + stb_image, compiled with the project
-Models/<object>/<object>.obj   3D models (+ .mtl and textures)
+Models/<object>/               3D model: <object>.obj + .mtl + its textures
 Shaders/                       GLSL 330 core shaders (.vs / .frag)
+```
+
+**Documentation** (Spanish — the full map is in `docs/FLUJO_DE_TRABAJO.md`, section 1)
+
+```
+docs/
+  ESTADO_PROYECTO.md                Live status: current plan with task codes, progress, decisions, parameters
+  CONTEXTO_PROYECTO.md              What was promised: scope, acceptance criteria, stack, conventions
+  PLAN_ACTIVIDADES.md               Original work breakdown (60 activities, reference only)
+  FLUJO_DE_TRABAJO.md               How the team works: repository map, task cycle, Git rules
+  INSTRUCCIONES_PROYECTO_CLAUDE.md  Instructions for the team's Claude project
+  propuesta/                        Submitted proposal and work plan (PDF)
+  manual_tecnico/                   Technical manual (ES/EN)
+  manual_usuario/                   User manual (ES/EN)
+  videos/                           Demo videos
+CLAUDE.md                           Project rules for the AI assistant (Claude Code)
+.claude/                            AI-assistant configuration (settings, commands and agents)
 ```
 
 ## Build and run
@@ -63,7 +70,7 @@ Shaders/                       GLSL 330 core shaders (.vs / .frag)
 
 - `main` — tested, deliverable versions only.
 - `develop` — daily integration.
-- `feature/act-<N>-<name>` — one branch per task; merged into `develop` through a reviewed pull request.
+- `feature/<task-code>-<name>` (e.g. `feature/a-10-dovelas`) — one branch per task; merged into `develop` through a pull request reviewed by the other team member.
 
 ## Team — Nierika Studio (Team 15)
 
