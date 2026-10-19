@@ -4,7 +4,7 @@
 > (`CIERRE` en el Proyecto o `/cierre` en Claude Code) y reemplaza la versión anterior en el
 > Proyecto de Claude y en `docs/ESTADO_PROYECTO.md` del repositorio.
 
-**Última actualización:** 18/10/2026 · **Hoy:** fin de semana 3 · **Días a la entrega:** 31 (18/11/2026)
+**Última actualización:** 19/10/2026 · **Hoy:** inicio de la semana 4 (Bloque A) · **Días a la entrega:** 30 (18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (ramas `main` y `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -59,7 +59,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 1 | Fuentes Mazunte (APA 7) | ✅ | Hoja del plan |
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` (assimp, glfw3, glew, glm) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: compila y corre en la PC de D2** (Release x64, VS 2022, vcpkg con Assimp 6.0.5): se ven fachada, altar y calavera con textura. **19/10 (después):** se fijó `builtin-baseline` de vcpkg y se corrigió el código base (ver decisiones del 19/10) → **recompilar una vez** antes de aprobar. Pendiente: revisión de D1 en el PR |
+| 4 | VS + dependencias | ✅ | Rama `feature/act-4-base-solucion` (PR #1): `NierikaStudio.sln` x64 + `vcpkg.json` con `builtin-baseline` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: con las correcciones del código base, compila y corre en la PC de D2** (Release x64, VS 2022): se ven fachada, altar y calavera con textura, FOV 45°, cursor capturado. Se aprueba con el *merge* del PR #1 (revisión de D1) |
 | 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
@@ -126,5 +126,6 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 
 ## 7. Siguiente paso concreto
 
+D1 revisa el PR #1 (`/verificar 4`) → *merge* y borrar la rama → *merge* del PR #2 (documentación). Después,
 Bloque A, en este orden: (1) corregir problemas 1–2 y las escalas; (2) ventana 1280×720 y far 300;
 (3) playa + mar; (4) shader de iluminación; (5) colisiones.
