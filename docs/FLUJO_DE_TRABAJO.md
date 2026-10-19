@@ -143,7 +143,7 @@
 2. **Siempre `git pull` en `develop` antes de crear una rama.**
 3. **Un PR = una tarea**, pequeño, para revisarlo rápido y evitar conflictos.
 4. **Antes de cada commit, revisar `git status`**: no deben aparecer `build/`, `.vs/`, `.exe` ni `.dll` (el `.gitignore` los bloquea). Si aparece algo raro, preguntar.
-5. **Autoría:** commits y PR solo a nombre del integrante (sin `Co-Authored-By` ni marcas de Claude). El historial es evidencia del manual técnico. Antes del primer commit de cada sesión, comprobar `git config user.name` (en los hilos web viene como `Claude`).
+5. **Autoría:** commits y PR solo a nombre del integrante (sin `Co-Authored-By` ni marcas de Claude; única excepción: el bloque "Requested by" que la plataforma pone en la descripción de los PR abiertos desde hilos web, decisión del 19/10). El historial es evidencia del manual técnico. Antes del primer commit de cada sesión, comprobar `git config user.name` (en los hilos web viene como `Claude`).
 6. **Todo valor que cambie** (escala, posición, color de luz) queda en la **sección 5 del ESTADO**.
 7. **Toda decisión nueva** (techo plano, quitar un objeto, cambiar una librería) va al **Registro de decisiones** (sección 4 del ESTADO) y, en el mismo commit, se corrige cualquier otro documento que quede desactualizado.
 8. **Conflictos** (casi siempre en `main.cpp`): pedir a Claude Code "actualiza mi rama con develop y resuelve el conflicto".

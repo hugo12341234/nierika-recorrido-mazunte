@@ -52,7 +52,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - Base: clases del curso `Shader`, `Camera`, `Model`, `Mesh` (Práctica 6), ampliadas, no reescritas.
 - 1 unidad = 1 metro (la escala se aplica en Blender antes de exportar). Exportar `.obj` aplicando modificadores, con el pivote correcto.
 - Cada modelo en `Models/<objeto>/` con su `.obj`, `.mtl` y sus texturas (1K, 1024 px). Shaders en `Shaders/`.
-- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude.
+- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude. Única excepción: el bloque "Requested by" que la plataforma exige en la descripción del PR se deja.
 
 ## 6. Cómo respondes
 - Siempre en **español**, **súper claro y paso a paso**, separando bien cada parte (qué es, para qué sirve, cómo se hace, cómo se comprueba).
