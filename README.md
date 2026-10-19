@@ -61,8 +61,14 @@ CLAUDE.md                           Project rules for the AI assistant (Claude C
 ## Build and run
 
 1. Install **Visual Studio 2022** with the *Desktop development with C++* workload.
-2. Open a *Developer PowerShell for VS 2022* and run once: `vcpkg integrate install`
-   (if `vcpkg` is not found, enable the *vcpkg package manager* component in the Visual Studio Installer).
+2. Install vcpkg once (this is what the team uses):
+   ```
+   git clone https://github.com/microsoft/vcpkg C:\vcpkg
+   C:\vcpkg\bootstrap-vcpkg.bat
+   C:\vcpkg\vcpkg integrate install
+   ```
+   If vcpkg was cloned before, update it with `git -C C:\vcpkg pull`: `vcpkg.json` pins the library versions with a
+   `builtin-baseline`, and that commit must exist in your vcpkg copy.
 3. Open `NierikaStudio.sln`, choose **Release | x64** (or Debug) and press **F5**.
    The first build downloads and compiles Assimp, GLFW, GLEW and GLM (about 10–20 min); later builds are fast.
 
