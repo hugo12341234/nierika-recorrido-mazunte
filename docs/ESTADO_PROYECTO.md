@@ -146,7 +146,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 1 | Fuentes Mazunte (APA 7) | — | ✅ | Hoja del plan |
 | 2 | Propuesta técnica | — | ✅ | Propuesta v2.0 (04/10/2026), `docs/propuesta/` |
 | 3 | Repo + .gitignore | — | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (público), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | — | ✅ | Rama `feature/act-4-base-solucion` (PR #1): `NierikaStudio.sln` x64 + `vcpkg.json` con `builtin-baseline` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: con las correcciones del código base, compila y corre en la PC de D2** (Release x64, VS 2022): se ven fachada, altar y calavera con textura, FOV 45°, cursor capturado. Se aprueba con el *merge* del PR #1 (revisión de D1) |
+| 4 | VS + dependencias | — | ✅ | Rama `feature/act-4-base-solucion` (PR #1): `NierikaStudio.sln` x64 + `vcpkg.json` con `builtin-baseline` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: con las correcciones del código base, compila y corre en la PC de D2** (Release x64, VS 2022): se ven fachada, altar y calavera con textura, FOV 45°, cursor capturado. Fusionada en `develop` el 19/10 (PR #1) **sin revisión previa de D1** (excepción, ver decisiones); D1 la revisa después con `/verificar 4` |
 | 5 | Trello | — | ✅ | 18/10: 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde). Falta: invitar a D1 y poner el código (A-1…A-12) en el título de cada tarjeta |
 | 6 | Blender y GIMP | X-1 | 🔄 | Blender 4.4.3 en al menos un equipo |
 | 7 | Bocetos del cuarto | X-2 | ❓ | |
@@ -231,6 +231,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 19/10 | Se completa el plan vigente: act. 30 (copalero) → B-14; act. 43 (integrar simples) → C-5; acts. 6 y 7 → tareas sueltas X-1 y X-2; act. 35 → B-13 | Esas actividades no estaban en ningún bloque | Plan vigente |
 | 19/10 | **Orden de autoridad** de los documentos: (1) Registro de decisiones del ESTADO → (2) `CONTEXTO_PROYECTO.md` → (3) `PLAN_ACTIVIDADES.md` y PDFs de `docs/propuesta/`. Si dos documentos se contradicen, se señala y se registra una decisión; no se elige en silencio | Integridad y coherencia del proyecto | Todos los documentos, CLAUDE.md, instrucciones del Proyecto de Claude |
 | 19/10 | Las instrucciones del Proyecto de Claude (web) se guardan en `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` | Que los dos integrantes usen las mismas y queden versionadas | Proyecto de Claude |
+| 19/10 | **Excepción única:** los PR #1 (act. 4) y #2 (documentación) se fusionan sin la revisión previa de D1. D1 los revisa **después**, ya en `develop`, con `/verificar 4`; si pide cambios, entran por un PR nuevo. Desde la siguiente tarea vuelve la regla normal: nada entra a `develop` sin la revisión del otro integrante | D1 aún no acepta la invitación al repositorio y el Bloque A empieza hoy; la act. 4 ya compila y corre en la PC de D2 | Act. 4, flujo de trabajo |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | A-11 (act. 18) |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
 | *pendiente* | Origen del "altar" y la calavera. Indicio: nombres de texturas (`texture_diffuse`, `texture_normal`, `shaded`) y el mismo `mtllib base.mtl` en ambos, patrón típico de generadores 3D por IA. Si son externos: crédito, solo secundarios y **no cuentan** para los 18 propios | Criterio de modelado de la propuesta | B-1, B-9 (acts. 14 y 24) |
@@ -272,7 +273,6 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 
 ## 7. Siguiente paso concreto
 
-1. **Act. 4** (ya compila en la PC de D2): D1 acepta la invitación al repo, compila la rama `feature/act-4-base-solucion` y la revisa con `/verificar 4` → *merge* a `develop` y borrar la rama.
-2. Fusionar el PR de documentación (`feature/docs-orden`) después del de la act. 4.
-3. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
-4. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+1. **D1:** aceptar la invitación al repositorio, instalar vcpkg (ver README), compilar `develop` (Release x64) y revisar la act. 4 y la documentación con `/verificar 4` (revisión posterior, ver decisiones del 19/10).
+2. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
+3. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
