@@ -7,6 +7,7 @@ Entrega final: **mié 18/11/2026**. Responde siempre **en español**, explicando
 - `docs/CONTEXTO_PROYECTO.md` — alcance, criterios de aceptación, stack, convenciones.
 - `docs/PLAN_ACTIVIDADES.md` — 60 actividades (responsable, verificador, criterio).
 - `docs/ESTADO_PROYECTO.md` — **plan vigente (sección 2)**, hecho/pendiente, decisiones, parámetros fijados. **Mantenlo al día** (`/cierre`).
+- `docs/FLUJO_DE_TRABAJO.md` — ciclo de cada tarea (Trello → rama → `/actividad` → `/cierre` → PR → `/verificar` → merge). Síguelo y recuérdale al usuario el paso que falte.
 - Se trabaja por disponibilidad (no por Resp./Verif. de la propuesta); el otro integrante revisa con `/verificar`.
 
 ## Stack (no cambiar)
