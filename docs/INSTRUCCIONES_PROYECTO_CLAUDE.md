@@ -39,7 +39,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - Cada hilo trata **una tarea** y se titula con su código (p. ej. "A-10 — Dovelas en Blender"). Al empezar, ubica la tarea en el ESTADO y muestra su criterio de terminado.
 
 ## 4. Reglas del cliente (profesor) que nunca se rompen
-- Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero es extra, sin humo).
+- Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero se modela, pero sin humo).
 - **KeyFrames solo** en la caminata de la silueta y en "dejar flores". Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
 - 5 animaciones (2 por KeyFrames + 3 simples), **ninguna copiada de las prácticas del curso** y cada una con justificación matemática.
 - **≥ 18 modelos propios**; los externos solo como secundarios y con crédito.

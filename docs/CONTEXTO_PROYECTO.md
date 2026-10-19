@@ -42,7 +42,7 @@
 - Calles/edificios del pueblo, colina y mirador de Punta Cometa, tapete de arena.
 - Versión móvil, web o VR. Multijugador o guardado de partida.
 - Reproducción exacta del panteón real (es adaptación del estudio).
-- Personajes con diálogo o IA. **Humo de copal con partículas** (el copalero es extra, sin humo).
+- Personajes con diálogo o IA. **Humo de copal con partículas** (el copalero se modela, pero sin humo).
 
 ---
 
@@ -88,7 +88,7 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 | 4 | Panteón | Tumbas, barda, cruz, arco con papel picado | **Ficha: papel picado** |
 | 5 | Cuarto del cementerio | Altar de 3 niveles con 7 objetos | Silueta dejando flores; **fichas: altar, pan de muerto** |
 
-**Objetos de la ofrenda (7):** vela, botella de refresco de vidrio, pan de muerto, flor de cempasúchil, marco con fotografía, papel picado, copalero de barro (extra, sin humo) — sobre altar de 3 niveles.
+**Objetos de la ofrenda (7):** vela, botella de refresco de vidrio, pan de muerto, flor de cempasúchil, marco con fotografía, papel picado, copalero de barro (sin humo; obligatorio para el conteo de modelos, decisión del 19/10) — sobre altar de 3 niveles.
 
 **Fuentes culturales por ficha** (nivel de evidencia): flores y velas en el mar → Baños (2025), *local documentado*; velas, cempasúchil, copal, pan, papel picado, agua y sal → SEP (2026), *tradición general*; cuarto del cementerio → UNESCO (s. f.), *adaptación del estudio*. Lo que sea adaptación debe decirlo en la ficha.
 
