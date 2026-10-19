@@ -4,7 +4,7 @@
 #include <vector>
 
 // GL Includes
-#define GLEW_STATIC
+// Sin GLEW_STATIC: vcpkg instala GLEW como DLL (glew32.dll); definirlo romperia el enlazado
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
@@ -24,7 +24,7 @@ const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
 const GLfloat SPEED = 6.0f;
 const GLfloat SENSITIVTY = 0.25f;
-const GLfloat ZOOM = 45.0f;
+const GLfloat ZOOM = 45.0f;        // Campo de vision vertical en GRADOS (en main.cpp se convierte con glm::radians)
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera

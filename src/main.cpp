@@ -52,7 +52,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Adaptacion,carga de modelos y camara sintetica", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte", nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -67,6 +67,9 @@ int main()
     // Set the required callback functions
     glfwSetKeyCallback(window, KeyCallback);
     glfwSetCursorPosCallback(window, MouseCallback);
+
+    // Camara en primera persona: oculta el cursor y lo mantiene dentro de la ventana (ESC cierra el programa)
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Set this to true so GLEW knows to use a modern approach
     glewExperimental = GL_TRUE;
@@ -91,7 +94,7 @@ int main()
     Model base((char*)"Models/calavera/base.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
 
-    glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     // Game loop
     while (!glfwWindowShouldClose(window))

@@ -20,7 +20,8 @@
 
 using namespace std;
 
-GLint TextureFromFile(const char *path, string directory);
+// inline: la funcion vive en este .h; sin inline habria simbolos duplicados al incluirlo en mas de un .cpp
+inline GLint TextureFromFile(const char *path, string directory);
 
 class Model
 {
@@ -53,10 +54,10 @@ private:
 	{
 		// Read file via ASSIMP
 		Assimp::Importer importer;
-		const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);  // GenNormals: crea normales si el .obj no las trae (necesarias para la iluminacion)
 
 		// Check for errors
-		if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+		if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) // if is Not Zero
 		{
 			cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
 			return;
@@ -107,10 +108,17 @@ private:
 			vector.z = mesh->mVertices[i].z;
 			vertex.Position = vector;
 
-			// Normals
-			vector.x = mesh->mNormals[i].x;
-			vector.y = mesh->mNormals[i].y;
-			vector.z = mesh->mNormals[i].z;
+			// Normals (si la malla no tiene normales se usa (0,1,0) para no leer memoria invalida)
+			if (mesh->HasNormals())
+			{
+				vector.x = mesh->mNormals[i].x;
+				vector.y = mesh->mNormals[i].y;
+				vector.z = mesh->mNormals[i].z;
+			}
+			else
+			{
+				vector = glm::vec3(0.0f, 1.0f, 0.0f);
+			}
 			vertex.Normal = vector;
 
 			// Texture Coordinates
@@ -207,7 +215,7 @@ private:
 	}
 };
 
-GLint TextureFromFile(const char *path, string directory)
+inline GLint TextureFromFile(const char *path, string directory)
 {
 	//Generate texture ID and load texture data
 	string filename = string(path);
@@ -215,13 +223,23 @@ GLint TextureFromFile(const char *path, string directory)
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 
-	int width, height;
+	int width = 0, height = 0;
 
-	unsigned char *image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	// RGBA: conserva el canal alfa (papel picado, flores); el fragment shader descarta los pixeles con alfa < 0.1
+	unsigned char *image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+	// Si falla, se avisa en consola y se usa 1 pixel magenta: asi la textura faltante se ve a simple vista
+	unsigned char magenta[4] = { 255, 0, 255, 255 };
+	bool cargada = (image != nullptr);
+	if (!cargada)
+	{
+		cout << "ERROR::TEXTURA:: no se pudo cargar " << filename << " (" << SOIL_last_result() << ")" << endl;
+		width = 1;
+		height = 1;
+	}
 
 	// Assign texture to ID
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, cargada ? image : magenta);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Parameters
@@ -230,7 +248,10 @@ GLint TextureFromFile(const char *path, string directory)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	SOIL_free_image_data(image);
+	if (cargada)
+	{
+		SOIL_free_image_data(image);
+	}
 
 	return textureID;
 }
