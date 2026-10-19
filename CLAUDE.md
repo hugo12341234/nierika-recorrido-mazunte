@@ -54,6 +54,8 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 - Título del PR: `<código> · <tarea> (act. N)`, p. ej. `A-10 · Arco con dovelas (act. 17)`.
 - Autoría: los commits y PR van **solo a nombre del integrante** (su cuenta de GitHub). **No agregues** líneas
   `Co-Authored-By`, `Claude-Session` ni "Generated with Claude Code" en commits ni en descripciones de PR.
+  Única excepción (decisión del 19/10): el bloque de atribución que la plataforma exige en los PR abiertos desde
+  hilos web (comentario HTML + línea "Requested by … · project thread") se deja en la descripción del PR.
 - **Antes del primer commit de cada sesión** revisa `git config user.name` y `git config user.email`.
   En los hilos del Proyecto de Claude (web) Git viene configurado como `Claude`: si el autor no es un integrante,
   **pregunta quién está trabajando** (D1 o D2) y configúralo con su identidad de la tabla. No adivines.

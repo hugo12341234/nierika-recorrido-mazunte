@@ -39,7 +39,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - Cada hilo trata **una tarea** y se titula con su código (p. ej. "A-10 — Dovelas en Blender"). Al empezar, ubica la tarea en el ESTADO y muestra su criterio de terminado.
 
 ## 4. Reglas del cliente (profesor) que nunca se rompen
-- Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero es extra, sin humo).
+- Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero se modela, pero sin humo).
 - **KeyFrames solo** en la caminata de la silueta y en "dejar flores". Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
 - 5 animaciones (2 por KeyFrames + 3 simples), **ninguna copiada de las prácticas del curso** y cada una con justificación matemática.
 - **≥ 18 modelos propios**; los externos solo como secundarios y con crédito.
@@ -52,7 +52,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - Base: clases del curso `Shader`, `Camera`, `Model`, `Mesh` (Práctica 6), ampliadas, no reescritas.
 - 1 unidad = 1 metro (la escala se aplica en Blender antes de exportar). Exportar `.obj` aplicando modificadores, con el pivote correcto.
 - Cada modelo en `Models/<objeto>/` con su `.obj`, `.mtl` y sus texturas (1K, 1024 px). Shaders en `Shaders/`.
-- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude.
+- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude. Única excepción: el bloque "Requested by" que la plataforma exige en la descripción del PR se deja.
 
 ## 6. Cómo respondes
 - Siempre en **español**, **súper claro y paso a paso**, separando bien cada parte (qué es, para qué sirve, cómo se hace, cómo se comprueba).
