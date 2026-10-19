@@ -36,7 +36,7 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 ## Compilar y probar
 - Compilar: abrir `NierikaStudio.sln` en Visual Studio 2022 → `Release | x64` (o `Debug | x64`) → Build Solution.
   Desde terminal (Developer PowerShell): `msbuild NierikaStudio.sln /p:Configuration=Release /p:Platform=x64`
-- Dependencias: Assimp, GLFW, GLEW y GLM las instala **vcpkg** (manifiesto `vcpkg.json`; requiere `vcpkg integrate install` una sola vez). SOIL2/stb viven en `vendor/` y se compilan con el proyecto. Solo x64.
+- Dependencias: Assimp, GLFW, GLEW y GLM las instala **vcpkg** (manifiesto `vcpkg.json` con `builtin-baseline`; instalación una sola vez en `C:\vcpkg` con `bootstrap-vcpkg.bat` y `vcpkg integrate install`, ver README; si sale un error del *baseline*, actualizar con `git -C C:\vcpkg pull`). SOIL2/stb viven en `vendor/` y se compilan con el proyecto. Solo x64.
 - Estructura: código en `src/`, dependencias de código fuente en `vendor/`, `Models/`, `Shaders/`. Salida en `build/x64/<Configuración>/` (ignorada por git).
 - Ejecutar con el *Working Directory* en la carpeta que contiene `Models/` y `Shaders/` (el proyecto ya lo fija a la raíz del repositorio con F5).
 - Antes de dar algo por terminado: compila sin errores y explica al usuario qué debe ver al ejecutar.
