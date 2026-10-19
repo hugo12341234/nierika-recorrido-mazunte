@@ -1,6 +1,7 @@
 # CLAUDE.md — Nierika Studio · Recorrido virtual Día de Muertos en Mazunte
 
-> **Qué es este archivo:** las reglas que Claude Code lee al empezar cada sesión en este repositorio.
+> **Qué es este archivo:** las reglas que Claude lee al trabajar en este repositorio, ya sea en Claude Code
+> o en un hilo del Proyecto de Claude (web) que tenga el repo.
 > Es corto a propósito: el detalle vive en `docs/` (ver tabla de abajo).
 
 Proyecto final de CGeIHC (FI UNAM, 2027-1). Equipo de 2: **D1 = 319266894**, **D2 = 321332086**.
@@ -53,6 +54,19 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 - Título del PR: `<código> · <tarea> (act. N)`, p. ej. `A-10 · Arco con dovelas (act. 17)`.
 - Autoría: los commits y PR van **solo a nombre del integrante** (su cuenta de GitHub). **No agregues** líneas
   `Co-Authored-By`, `Claude-Session` ni "Generated with Claude Code" en commits ni en descripciones de PR.
+- **Antes del primer commit de cada sesión** revisa `git config user.name` y `git config user.email`.
+  En los hilos del Proyecto de Claude (web) Git viene configurado como `Claude`: si el autor no es un integrante,
+  **pregunta quién está trabajando** (D1 o D2) y configúralo con su identidad de la tabla. No adivines.
+
+  | Integrante | `user.name` | `user.email` |
+  |---|---|---|
+  | D2 (321332086) | `Hugo Chacón` | `152136307+hugo12341234@users.noreply.github.com` |
+  | D1 (319266894) | *pendiente: D1 debe darla* | *pendiente* |
+
+  Si es D1 y su identidad sigue pendiente, pídesela y regístrala en esta tabla antes de hacer commit.
+- Los cambios al repo se hacen **igual desde Claude Code o desde un hilo del Proyecto de Claude** con el repo:
+  siempre en una rama `feature/…`, con `/cierre` y por PR. Si Claude no puede borrar la rama en GitHub
+  (desde los hilos web suele no tener ese permiso), después del *merge* el integrante pulsa **Delete branch** en el PR.
 
 ## 6. Restricciones del cliente (profesor)
 - Fuera de alcance: pueblo, Punta Cometa, tapete de arena, VR/web/móvil, multijugador, IA, **partículas de humo**.

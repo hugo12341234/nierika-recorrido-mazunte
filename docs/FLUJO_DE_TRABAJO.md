@@ -57,8 +57,8 @@
 |---|---|---|
 | **Trello** | Quién hace qué y en qué estado va cada tarea | https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte |
 | **GitHub** | Código y documentos; revisión por *pull request* (PR) | https://github.com/hugo12341234/nierika-recorrido-mazunte |
-| **Claude Code** | Todo lo que **modifica archivos del repo** (código, shaders, `.mtl`, docs) | En la carpeta del repo (`claude`) |
-| **Proyecto de Claude (web)** | Planear, dudas de teoría, matemáticas, guías de Blender/GIMP, redacción de manuales | claude.ai → proyecto "Nierika – Recorrido Mazunte" |
+| **Claude Code** | Modificar archivos del repo trabajando en tu PC (código, shaders, `.mtl`, docs) | En la carpeta del repo (`claude`) |
+| **Proyecto de Claude (web)** | Planear, teoría, matemáticas, guías de Blender/GIMP, manuales. **También puede modificar el repo**: el proyecto tiene el repositorio con permiso de escritura y cada hilo lo clona al momento | claude.ai → proyecto "Nierika – Recorrido Mazunte" |
 | **Visual Studio 2022** | Compilar (`NierikaStudio.sln`, Release \| x64) y ver la escena | PC de cada integrante |
 
 ---
@@ -125,11 +125,14 @@
 
 ## 5. Cuándo usar cada Claude
 
-- **Claude Code** → si el resultado es un archivo cambiado del repo.
-- **Proyecto de Claude (web)** → si es para entender o planear ("¿qué sigue?", fórmulas, Blender, textos de fichas, manuales). **Un hilo por tarea.**
-- **El Proyecto web debe ver la versión más reciente de `docs/`.** Después de cada *merge* a `develop`, actualiza los archivos del proyecto (si conectaste el repositorio de GitHub, vuelve a sincronizarlo; si subiste los archivos a mano, reemplázalos).
+- **Los dos pueden cambiar archivos del repo**, con las mismas reglas: rama `feature/…`, `/cierre`, PR, revisión del otro integrante y commits a nombre del integrante.
+- **Claude Code** → cuando trabajas en tu PC y quieres compilar enseguida (F5) lo que Claude cambió.
+- **Proyecto de Claude (web)** → para entender o planear ("¿qué sigue?", fórmulas, Blender, textos de fichas, manuales) y también para cambios en el repo cuando no estás en tu PC. **Un hilo por tarea.**
+- **De dónde lee el Proyecto web:** del repositorio, que cada hilo clona al momento; por eso siempre ve el `develop` actual. **No subas copias de `docs/` como archivos del proyecto**: serían una segunda versión que se queda vieja y contradice al repo.
+- **Autoría en los hilos web:** Git empieza configurado como `Claude`. Antes del primer commit, Claude debe preguntarte quién eres (D1 o D2) y configurar tu nombre y correo (tabla en `CLAUDE.md`, sección 5).
+- **Borrar ramas:** si Claude no puede borrar la rama en GitHub, después del *merge* pulsa **Delete branch** en el PR.
 - **Sus instrucciones** son las de `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md`: si cambian ahí, cópialas de nuevo al proyecto.
-- **No duplicar el cierre:** si la tarea se hizo en Claude Code → `/cierre`. Escribir `CIERRE` en el Proyecto web solo si todo se hizo ahí; te dará los cambios para el ESTADO y luego los aplicas con Claude Code.
+- **Cierre:** donde se haya hecho la tarea, ahí se corre `/cierre` antes del commit (en Claude Code o en el hilo web con el repo). Escribe `CIERRE` en un hilo web solo si ese hilo no tocó el repo: te dará los cambios para el ESTADO y luego se aplican en una rama.
 - **Modelo:** Sonnet para el día a día; Opus para lo difícil (KeyFrames, shaders, errores raros); Haiku para cosas simples. En Claude Code se cambia con `/model`.
 
 ---
@@ -140,7 +143,7 @@
 2. **Siempre `git pull` en `develop` antes de crear una rama.**
 3. **Un PR = una tarea**, pequeño, para revisarlo rápido y evitar conflictos.
 4. **Antes de cada commit, revisar `git status`**: no deben aparecer `build/`, `.vs/`, `.exe` ni `.dll` (el `.gitignore` los bloquea). Si aparece algo raro, preguntar.
-5. **Autoría:** commits y PR solo a nombre del integrante (sin `Co-Authored-By` ni marcas de Claude). El historial es evidencia del manual técnico.
+5. **Autoría:** commits y PR solo a nombre del integrante (sin `Co-Authored-By` ni marcas de Claude). El historial es evidencia del manual técnico. Antes del primer commit de cada sesión, comprobar `git config user.name` (en los hilos web viene como `Claude`).
 6. **Todo valor que cambie** (escala, posición, color de luz) queda en la **sección 5 del ESTADO**.
 7. **Toda decisión nueva** (techo plano, quitar un objeto, cambiar una librería) va al **Registro de decisiones** (sección 4 del ESTADO) y, en el mismo commit, se corrige cualquier otro documento que quede desactualizado.
 8. **Conflictos** (casi siempre en `main.cpp`): pedir a Claude Code "actualiza mi rama con develop y resuelve el conflicto".

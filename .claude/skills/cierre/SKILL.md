@@ -19,5 +19,5 @@ Actualiza `docs/ESTADO_PROYECTO.md` con lo ocurrido en **esta** sesión. Solo he
    `README.md`, `CLAUDE.md`). Si encuentras una contradicción que no puedes resolver, anótala en problemas abiertos.
 4. Si la fecha va adelantada respecto al plan vigente y hay tareas atrasadas, márcalas ⚠️ y dilo.
 5. Muestra al usuario un resumen de 5 líneas máximo de lo que cambió en el ESTADO.
-6. Recuérdale: hacer commit de los documentos en la rama de la tarea y, después del *merge* a `develop`,
-   actualizar los archivos del Proyecto de Claude (web).
+6. Recuérdale: hacer commit de los documentos en la rama de la tarea (a su nombre: revisa `git config user.name`)
+   y abrir el PR. El Proyecto de Claude (web) lee el repo directamente, así que no hay que copiarle nada.
