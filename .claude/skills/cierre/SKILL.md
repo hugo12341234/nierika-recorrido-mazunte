@@ -6,14 +6,18 @@ disable-model-invocation: true
 
 Actualiza `docs/ESTADO_PROYECTO.md` con lo ocurrido en **esta** sesión. Solo hechos reales; nada supuesto.
 
-1. Revisa `git status` y `git diff --stat` (y `git log -5 --oneline`) para saber qué cambió.
+1. Revisa `git status`, `git diff --stat` y `git log -5 --oneline` para saber qué cambió.
 2. En el archivo:
-   - Cambia **Última actualización** a la fecha de hoy y la semana actual.
-   - Tabla de actividades: actualiza el estado (✅ 🔄 👀 ⏳ ⚠️ ✂️) y la columna de evidencia (commit, PR, archivo).
-   - **Registro de decisiones**: agrega cada cambio respecto a la propuesta (fecha, decisión, motivo, a qué afecta).
-   - **Parámetros fijados**: agrega valores exactos elegidos hoy con su `archivo:línea`.
-   - **Estructura del repositorio**: actualízala si se crearon carpetas o archivos importantes.
-   - **Problemas abiertos** y **Siguiente paso concreto**.
-3. Si la fecha actual va adelantada respecto al plan y hay actividades atrasadas, márcalas ⚠️ y dilo.
-4. Muestra al usuario un resumen de 5 líneas máximo de lo que cambió en el ESTADO.
-5. Recuérdale: hacer commit de `docs/ESTADO_PROYECTO.md` y subir la nueva versión al Proyecto de Claude.ai.
+   - **Última actualización:** fecha de hoy, semana/bloque actual y días a la entrega (18/11/2026).
+   - **Sección 2 (Plan vigente):** estado de la tarea trabajada (✅ 🔄 ⏳ ⚠️ ✂️). Márcala ✅ si en esta rama compiló y cumple su criterio de terminado: el ESTADO viaja en el PR, así que en `develop` solo aparece ✅ cuando el otro integrante aprueba y hace el *merge*. Si queda a medias, 🔄 con lo que falta.
+   - **Sección 3 (por actividad):** el mismo estado en las actividades que cubre la tarea (columna Act.), con la evidencia (rama, PR o archivo).
+   - **Sección 4 (decisiones):** cada cambio respecto a la propuesta o a una regla (fecha, decisión, motivo, a qué afecta). Cierra las *pendientes* que se hayan decidido.
+   - **Sección 5 (parámetros):** valores exactos elegidos hoy, con su archivo.
+   - **Secciones 6 y 7:** problemas abiertos (con la tarea que los resuelve) y siguiente paso concreto.
+3. **Coherencia:** si hoy cambió algo que otro documento describe (carpetas, stack, convenciones, flujo),
+   corrige también ese documento (`CONTEXTO_PROYECTO.md`, `FLUJO_DE_TRABAJO.md` → mapa del repositorio,
+   `README.md`, `CLAUDE.md`). Si encuentras una contradicción que no puedes resolver, anótala en problemas abiertos.
+4. Si la fecha va adelantada respecto al plan vigente y hay tareas atrasadas, márcalas ⚠️ y dilo.
+5. Muestra al usuario un resumen de 5 líneas máximo de lo que cambió en el ESTADO.
+6. Recuérdale: hacer commit de los documentos en la rama de la tarea y, después del *merge* a `develop`,
+   actualizar los archivos del Proyecto de Claude (web).

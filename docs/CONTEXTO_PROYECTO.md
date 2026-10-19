@@ -1,8 +1,11 @@
-# CONTEXTO DEL PROYECTO — Nierika Studio (fuente de verdad)
+# CONTEXTO DEL PROYECTO — Nierika Studio (qué prometimos)
 
-> Este archivo resume la **Propuesta técnica v2.0 (4 oct 2026)** y el **Plan de trabajo**.
-> Si algo en una conversación contradice este archivo, **gana este archivo** (salvo que el
-> equipo registre un cambio en `ESTADO_PROYECTO.md → Registro de decisiones`).
+> **Qué es este archivo:** el resumen de la **Propuesta técnica v2.0 (4 oct 2026)** y del **Plan de trabajo**
+> (PDFs en `docs/propuesta/`), con los cambios ya aprobados por el equipo. Dice **qué** se entrega y **cómo** debe ser;
+> el avance real está en `ESTADO_PROYECTO.md`.
+> **Orden de autoridad:** (1) Registro de decisiones de `ESTADO_PROYECTO.md` → (2) este archivo →
+> (3) `PLAN_ACTIVIDADES.md` y los PDFs. Si una conversación o un documento contradice este archivo, gana este archivo,
+> salvo que la diferencia esté registrada como decisión.
 
 ---
 
@@ -95,7 +98,8 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 
 - **C++17**, **OpenGL 3.3 Core Profile**, **GLSL 330**, **Visual Studio 2022**, compilación **x64** Debug/Release.
 - **GLFW** (ventana/entrada) · **GLEW** (carga de funciones; la propuesta decía GLAD, se cambió el 18/10) · **GLM** (matemáticas) · **Assimp** (.obj) · **SOIL2 / stb_image** (texturas) · **Dear ImGui** (fichas) · **miniaudio** (audio).
-- Base de código: proyecto de la **Práctica 6** del laboratorio (clases del curso `Shader`, `Camera`, `Model`).
+- Assimp, GLFW, GLEW y GLM se instalan con **vcpkg** (`vcpkg.json`, versiones fijas por `builtin-baseline`); SOIL2/stb en `vendor/SOIL2` (decisiones del 19/10).
+- Base de código: proyecto de la **Práctica 6** del laboratorio (clases del curso `Shader`, `Camera`, `Model`, `Mesh`).
 - **Blender** (modelado, UV, export .obj) · **GIMP** (texturas, canales alfa) · **OBS** (videos).
 - Texturas **Poly Haven / ambientCG (CC0)**, 1K, albedo + normal.
 - **Git/GitHub** (ramas por funcionalidad, PR) · **Trello** (Kanban).
@@ -111,8 +115,8 @@ Todo movimiento se calcula en la aplicación (keyframes en C++; oleaje en vertex
 - **Escala:** 1 unidad = 1 metro (escalar en Blender antes de exportar, no con factores grandes en `main.cpp`). Playa 100×50 m; mar 100×100 m (malla subdividida).
 - **Cámara:** pitch bloqueado a ±89°; colisiones **AABB**; ciclo con **deltaTime**.
 - **Modelos:** exportar .obj desde Blender **aplicando modificadores**; pivote correcto (vela: pivote en la base); rutas **relativas**.
-- **Carpetas:** `Models/<objeto>/<objeto>.obj` (+ .mtl y texturas del objeto); `Shaders/*.vs` y `*.frag`; `vendor/` con dependencias; `dist/` con el .exe autónomo + .dll.
-- **Git:** ramas `main` (releases), `develop` (integración), `feature/<actividad>`; todo entra por **pull request** aprobado por el verificador.
+- **Carpetas:** `src/` código C++; `Models/<objeto>/<objeto>.obj` (+ .mtl y **texturas del objeto en la misma carpeta**; la propuesta habla de una carpeta `textures/`, pero en el repo cada textura vive junto a su modelo); `Shaders/*.vs` y `*.frag`; `vendor/SOIL2` (dependencia en código fuente); `build/` salida de compilación (ignorada); `dist/` con el .exe autónomo + .dll.
+- **Git:** ramas `main` (releases), `develop` (integración), `feature/<código>-<nombre>` (código de tarea del ESTADO, p. ej. `feature/a-10-dovelas`); todo entra por **pull request** aprobado por el otro integrante. Commits solo a nombre del integrante.
 - **Definición de terminado:** el entregable existe en `develop`, **compila sin errores** y el verificador lo aprobó en el PR.
 - **Kanban:** columnas Pendiente / En proceso / En revisión / Terminado; **máx. 2 tarjetas en proceso por integrante**; revisión cada viernes 30 min.
 
