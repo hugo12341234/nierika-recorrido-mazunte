@@ -23,6 +23,7 @@
 | `INSTRUCCIONES_PROYECTO_CLAUDE.md` | Texto que se pega en las instrucciones del Proyecto de Claude (web) | Si cambian las reglas de Claude |
 | `propuesta/` | PDFs entregados al profesor: propuesta v2.0 y plan de trabajo | No |
 | `manual_tecnico/`, `manual_usuario/` | Entregables finales; cada bloque deja aquí sus capturas y parámetros | Sí, al cerrar cada bloque |
+| `manual_tecnico/evidencias/` | Captura semanal del Trello y minuta de cada viernes (evidencia de gestión) | Sí, cada viernes |
 | `videos/` | Los 3 MP4 finales | Al final (E-4) |
 
 **Si dos documentos dicen cosas distintas, manda:** (1) el Registro de decisiones del ESTADO →
@@ -39,6 +40,7 @@
 | `Models/<objeto>/` | Cada modelo con su `.obj`, `.mtl` y **sus texturas** |
 | `Shaders/` | Shaders GLSL 330 (`.vs` y `.frag`) |
 | `build/` | Salida de compilación (no se sube a Git) |
+| `dist/` | Release autónomo (.exe + DLL + `Models/` + `Shaders/`); no se sube a Git, va como .zip en el Release (E-3, E-7) |
 
 ### Configuración de Claude
 
@@ -142,7 +144,7 @@
 1. **Nunca trabajar directo en `develop` ni en `main`**; siempre en una rama `feature/...`.
 2. **Siempre `git pull` en `develop` antes de crear una rama.**
 3. **Un PR = una tarea**, pequeño, para revisarlo rápido y evitar conflictos.
-4. **Antes de cada commit, revisar `git status`**: no deben aparecer `build/`, `.vs/`, `.exe` ni `.dll` (el `.gitignore` los bloquea). Si aparece algo raro, preguntar.
+4. **Antes de cada commit, revisar `git status`**: no deben aparecer `build/`, `.vs/`, `dist/`, `.exe` ni `.dll`. El `.gitignore` bloquea `build/`, `.vs/` y `dist/`, pero **no** `.exe` ni `.dll` sueltos fuera de esas carpetas: si aparecen, no los agregues y pregunta.
 5. **Autoría:** commits y PR solo a nombre del integrante (sin `Co-Authored-By` ni marcas de Claude; única excepción: el bloque "Requested by" que la plataforma pone en la descripción de los PR abiertos desde hilos web, decisión del 19/10). El historial es evidencia del manual técnico. Antes del primer commit de cada sesión, comprobar `git config user.name` (en los hilos web viene como `Claude`).
 6. **Todo valor que cambie** (escala, posición, color de luz) queda en la **sección 5 del ESTADO**.
 7. **Toda decisión nueva** (techo plano, quitar un objeto, cambiar una librería) va al **Registro de decisiones** (sección 4 del ESTADO) y, en el mismo commit, se corrige cualquier otro documento que quede desactualizado.

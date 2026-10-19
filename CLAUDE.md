@@ -43,7 +43,8 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 - Rutas **relativas** siempre. Shaders en archivos dentro de `Shaders/`, no en strings de C++.
 - Escala real en el .obj (1 u = 1 m); en `main.cpp` solo escalas cercanas a 1.
 - Texturas 1K (1024 px), cargadas en RGBA (el fragment shader descarta alfa < 0.1).
-- Toda la memoria de GPU (VAO, VBO, EBO, texturas, programas) se libera en destructores o `cleanup()`.
+- Toda la memoria de GPU (VAO, VBO, EBO, texturas, programas) se libera con `cleanup()` explícito al final de `main`,
+  **no en destructores**: `Shader`, `Mesh` y `Model` se copian (decisión del 19/10). `Draw` recibe `Shader&`.
 - Comentarios en español. Una clase por par `.h/.cpp` (las clases heredadas del curso siguen solo en `.h`;
   si una función queda definida en un `.h`, debe ser `inline`).
 
