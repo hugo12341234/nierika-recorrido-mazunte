@@ -56,13 +56,13 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 |---|---|---|---|---|
 | A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ⏳ |
 | A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ⏳ |
-| A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720 | ⏳ |
+| A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ⏳ |
 | A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
 | A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
 | A-6 | Textura de arena 1K con mapeo UV | 13 | Textura 1K sin estiramientos visibles | ⏳ |
 | A-7 | Mar: malla 100×100 m subdividida | 10 | Malla preparada para el vertex shader de olas | ⏳ |
-| A-8 | Shader Blinn-Phong: luz ambiental cálida + 3 luces clave | 37 | El interior del cuarto se distingue sin perder el ambiente nocturno; sin luces puntuales extra | ⏳ |
-| A-9 | Colisiones AABB con suelo y muros | 12 | La cámara no atraviesa el suelo ni los muros | ⏳ |
+| A-8 | Shader Blinn-Phong: luz ambiental cálida + 3 luces clave | 37 | El interior del cuarto se distingue sin perder el ambiente nocturno; sin luces puntuales extra; `Draw(Shader&)` por referencia y nada de `glDelete*` en destructores (decisión `cleanup()`, 19/10) | ⏳ |
+| A-9 | Colisiones AABB con suelo y muros | 12 | La cámara no atraviesa el suelo ni los muros; camina en el plano XZ a la altura de ojos fijada en la sección 5 (pendiente de confirmar) | ⏳ |
 | A-10 | Arco de medio punto con dovelas visibles | 17 | Dovelas visibles (detalle obligatorio) | ⏳ |
 | A-11 | Piso interior del cuarto y techo a dos aguas en su propio `.obj` | 18 | Piso, paredes y techo sin detalles innecesarios; techo separado de `fachada.obj` (decisión del techo: a dos aguas, 19/10) | ⏳ |
 | A-12 | Texturas de piedra rústica 1K en muros y fachada | 16, 21 | Piedra rústica coherente con materiales reales, 1K | ⏳ |
@@ -117,7 +117,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 |---|---|---|---|---|
 | E-1 | Pruebas de integración y fugas de memoria (VAO, VBO, texturas) | 54 | Lista de errores priorizada | ⏳ |
 | E-2 | Corrección de errores de cámara y colisiones | 55 | Sin atascos en bardas | ⏳ |
-| E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC | ⏳ |
+| E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC sin Visual Studio; `dist/` incluye `Models/`, `Shaders/` y las DLL; se publica como .zip en el Release (decisión del 19/10), no en Git | ⏳ |
 | E-4 | 3 videos MP4 | 57 | Entorno; recorrido; animaciones e interactividad | ⏳ |
 | E-5 | Manual técnico (ES + EN) | 58 | Arquitectura, cronograma, RACI, justificación, conclusiones | ⏳ |
 | E-6 | Manual de usuario (ES + EN) | 59 | Capturas y explicación de controles | ⏳ |
@@ -191,7 +191,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 2 | Propuesta técnica | — | ✅ | Propuesta v2.0 (04/10/2026), `docs/propuesta/` |
 | 3 | Repo + .gitignore | — | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (público), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
 | 4 | VS + dependencias | — | ✅ | Rama `feature/act-4-base-solucion` (PR #1): `NierikaStudio.sln` x64 + `vcpkg.json` con `builtin-baseline` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: con las correcciones del código base, compila y corre en la PC de D2** (Release x64, VS 2022): se ven fachada, altar y calavera con textura, FOV 45°, cursor capturado. Fusionada en `develop` el 19/10 (PR #1) **sin revisión previa de D1** (excepción, ver decisiones); D1 la revisa después con `/verificar 4` |
-| 5 | Trello | — | ✅ | 18/10: 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde). Falta: invitar a D1 y poner el código (A-1…A-12) en el título de cada tarjeta |
+| 5 | Trello | — | ✅ | 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado). **19/10 (export JSON):** 56 tarjetas: las 49 tareas A-1…E-7, X-1 y X-2 con código y su etiqueta de bloque (A–E y "Sueltas (X)"), más 7 en Terminado. Prioridades Alta/Media/Baja iguales a la columna *Prior.* del plan original. Falta: invitar a D1, asignar responsable y fecha a cada tarjeta, separar "A-3 + A-4" y archivar "Act. 0" |
 | 6 | Blender y GIMP | X-1 | 🔄 | Blender 4.4.3 en al menos un equipo |
 | 7 | Bocetos del cuarto | X-2 | ❓ | |
 | 8 | Playa 100×50 | A-5 | ⏳ | |
@@ -203,8 +203,8 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 14 | Tumbas | B-9 | ⏳ | Faltan las 4 tumbas propias en Blender (decisión del 19/10); una sustituye a la capilla de Maya (`altar/altar.obj`) |
 | 15 | Ciclo deltaTime + render | A-5 | 🔄 | Ciclo ✅; falta la playa |
 | 16 | Fachada con apertura | A-12 | 🔄 | `fachada.obj` con apertura de arco; falta escala real (A-2) y textura de piedra (A-12) |
-| 17 | Arco con dovelas | A-10 | 🔄 | Arco existe; faltan dovelas visibles |
-| 18 | Piso, paredes, techo | A-11 | 🔄 | Paredes y techo (a dos aguas) existen; confirmar piso interior |
+| 17 | Arco con dovelas | A-10 | ⏳ | No hay pieza de arco: `fachada.obj` solo tiene la apertura del muro (act. 16) |
+| 18 | Piso, paredes, techo | A-11 | 🔄 | Paredes y techo a dos aguas (decidido el 19/10) existen; **no hay piso interior** (las caras en y = 0 son la base de los muros y miran hacia abajo) |
 | 19 | Cruz | B-11 | ⏳ | |
 | 20 | Barda perimetral | B-10 | ⏳ | |
 | 21 | Textura piedra rústica | A-12 | 🔄 | Hoy: concreto/laminado 512 px → cambiar a piedra 1K |
@@ -285,6 +285,10 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 19/10 | **Corrección del conteo:** el cempasúchil (planos cruzados) se cuenta como malla plana en el escenario estricto, que así bajaba a 17. Se agrega **una roca de la barda en su propio `.obj`** (la propuesta pide "variantes de rocas", act. 20) y queda obligatoria | Revisión independiente del PR #4 (`/mnt/project-files/revisiones/REVISION_PR4_2026-10-19.md`) | Inventario, B-10, orden de recortes |
 | 19/10 | **Excepción de revisión:** el PR #4 se fusionó sin la revisión de D1. D1 lo revisa **después**, en GitHub (*Files changed*) o en Claude Code sobre el commit `09c39d8`; si pide cambios, entran por un PR nuevo. Vuelve la regla normal: nada entra a `develop` sin la revisión del otro integrante, y este PR de seguimiento lo fusiona D1 | D2 lo fusionó antes de la revisión | Flujo de trabajo, PR #4 |
 | 19/10 | **Bloque de atribución en los PR abiertos desde hilos web:** se acepta **solo en la descripción del PR** (el comentario HTML y la línea "Requested by … · project thread" que exige la plataforma). Los commits siguen solo a nombre del integrante, sin `Co-Authored-By`, `Claude-Session` ni otras marcas | Decisión de D2: el uso de Claude ya es visible en el repo (`CLAUDE.md`, `.claude/`) y la evidencia del manual técnico son los commits, que siguen limpios | `CLAUDE.md` §5, FLUJO_DE_TRABAJO, instrucciones del Proyecto |
+| 19/10 | **Memoria de GPU con `cleanup()` explícito, no con destructores.** `Model::Draw` y `Mesh::Draw` pasan a recibir `Shader&` (hoy reciben el shader **por valor**, `src/Model.h:37`, `src/Mesh.h:60`) y cada clase tiene `cleanup()` con sus `glDelete*`, que se llama al final de `main` antes de `glfwTerminate()`. Matiza la regla de `CLAUDE.md` §4 ("en destructores o `cleanup()`"): en estas clases, solo `cleanup()` | Las clases se copian (`Draw(Shader)` por valor; `vector<Mesh>` copia y mueve al crecer, `src/Model.h:82`): un destructor con `glDeleteProgram` o `glDeleteVertexArrays` borraría recursos en uso en cada `Draw` o al crecer el vector, y se verían modelos invisibles sin ningún error | A-8, E-1, problema #7, `CLAUDE.md` §4 |
+| 19/10 | **`dist/` no se versiona:** el `.exe` con sus DLL, `Models/` y `Shaders/` se publica como .zip en el Release de GitHub (E-7). `dist/` va al `.gitignore` | Binarios pesados en el historial; `FLUJO` decía que `.gitignore` bloqueaba `.exe` y `.dll`, y no era cierto (verificado con `git check-ignore`) | E-3, E-7, `.gitignore`, FLUJO_DE_TRABAJO |
+| 19/10 | **Evidencias de gestión:** cada viernes se guarda una captura del Trello y una minuta corta en `docs/manual_tecnico/evidencias/` | La propuesta las promete como evidencia del manual técnico (pág. 20, "Evidencias") y no había dónde guardarlas | Manual técnico, sección 7 |
+| *pendiente* | **Cámara a pie (antes de A-9). Valores propuestos por Claude, pendientes de confirmar por D2:** (1) movimiento solo en el plano XZ: `front` sin su componente y para avanzar (hoy avanza hacia donde mira, también hacia arriba, `src/Camera.h:60-71`); (2) altura de ojos **1.6 m** sobre el suelo; (3) velocidad al caminar **2.0 m/s** (hoy 6 m/s, `Camera.h:240`, que es velocidad de carrera); (4) el cuarto se escala para que la apertura del arco mida **≥ 2.1 m de alto** (hoy 1.61 m a escala 1, problema #11): factor ≈ 1.3, que deja muros de ~2.6 m y una puerta de ~1.2 m de ancho | (2) Altura de ojos de un adulto de pie (valor de referencia, no medido). (3) A 1.4 m/s, paso normal, cruzar la playa de 100 m toma ~71 s; a 2.0 m/s, ~50 s, mejor para el recorrido y los videos. (4) Una puerta real mide ~2.1 m (valor de referencia); con 1.61 m la cámara a 1.6 m roza el arco | A-2, A-9, sección 5, `Camera.h`, `main.cpp` |
 | 19/10 | La calavera de azúcar **no** entra a la ofrenda: se quita de la escena y del repo en A-1 | No está en la propuesta y se modeló en Maya (decisión anterior) | A-1, alcance, fichas |
 | *pendiente* | ¿El repositorio queda **público** (portafolio) o **privado**? Hoy es público | Expone los números de cuenta y la configuración de Claude | Repositorio |
 
@@ -296,9 +300,11 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 |---|---|---|---|
 | Ventana | tamaño | 800×600 → **cambiar a 1280×720** (A-3) | `src/main.cpp` |
 | Proyección | near / far | 0.1 / 100 → **cambiar far a 300** (A-4) | `src/main.cpp` |
-| Cámara | posición inicial | (0, 2, 6) | `src/main.cpp` |
+| Cámara | posición inicial | (0, 2, 6) → y = 1.6 **(propuesto, pendiente de confirmar)**; x, z se fijan con la escena (A-2, A-5) | `src/main.cpp` |
 | Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `src/Camera.h` (`ZOOM`), `src/main.cpp` (`glm::perspective`) |
-| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° | `src/Camera.h` |
+| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° → velocidad 2.0 m/s **(propuesto, pendiente de confirmar)** | `src/Camera.h` |
+| Cámara | altura de ojos / plano de movimiento | 1.6 m / XZ **(propuesto, pendiente de confirmar)**; hoy vuela | `src/Camera.h` (A-9) |
+| Cuarto | apertura del arco (alto × ancho) | hoy 1.61 × 0.90 m a escala 1 → ≥ 2.1 m de alto (factor ≈ 1.3) **(propuesto, pendiente de confirmar)** | `Models/fachada/` (A-2) |
 | Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** (A-2) | `src/main.cpp` |
 | "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** (A-2) | `src/main.cpp` |
 | Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **se quita** (A-1) | `src/main.cpp` |
@@ -317,8 +323,9 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 3 | Texturas del altar y la calavera de 2048 px (la propuesta pide 1K). Ya no se reducen: la calavera se borra en A-1 y la capilla se reemplaza en B-9 | A-1 (calavera), B-9 (capilla) |
 | 4 | Escalas fuera de 1 u = 1 m (sección 5) | A-2 |
 | 5 | Falta iluminación: el shader actual solo muestra la textura | A-8 |
-| 6 | El material `Material` de la fachada no tiene textura (se ve negro) | A-12 |
-| 7 | No se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader) | E-1 (o antes, al tocar esas clases) |
+| 6 | `fachada.mtl` define el material `Material` sin textura, pero **ninguna cara lo usa** (las 204 caras usan `Material.001` y `Material.003`). Material sobrante: se quita al reexportar | A-12 |
+| 7 | No se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader). Se hace con `cleanup()` explícito, no con destructores (decisión del 19/10) | E-1 (o antes, al tocar esas clases) |
+| 11 | A escala 1, la apertura del arco mide **0.90 m de ancho × 1.61 m de alto** (`fachada.obj`, cara z = −2) y los muros 2.0 m. Con ojos a 1.6 m la cámara apenas pasa y una persona real no cabe. El tamaño real del cuarto se decide en A-2 (ver la pendiente de la cámara) | A-2 |
 | 8 | `Model.h` no carga mapas normales/de relieve (necesario para el pan) | B-12 |
 | 9 | `fachada.obj` incluye el techo (objeto `roof`); según la definición de modelo propio, el techo va en su propio `.obj` | A-11 |
 | 10 | **Prueba de autoría:** falta guardar el `.blend` de la fachada, y cada modelo nuevo debe guardar el suyo. Si el manual técnico menciona la capilla y la calavera de Maya como trabajo previo, también hay que guardar sus `.ma`/`.mb`. La capilla provisional no debe salir en videos ni capturas finales (no cuenta y no tiene crédito) | B-13 (antes del manual técnico) |
@@ -329,8 +336,8 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 
 1. **D2:** volver a pegar las instrucciones de `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` en el Proyecto de Claude (cambiaron el 19/10) y quitar del proyecto cualquier copia suelta de `docs/`.
 2. **D1:** dar su nombre y correo de GitHub para la tabla de autoría de `CLAUDE.md`; aceptar la invitación al repositorio, instalar vcpkg (ver README), compilar `develop` (Release x64) y revisar la act. 4 y la documentación con `/verificar 4` (revisión posterior, ver decisiones del 19/10).
-3. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
-4. Trello: actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
-5. **D2:** guardar el `.blend` de la fachada (problema #10).
-6. **D1:** revisar el PR #4 (excepción del 19/10) y fusionar el PR de seguimiento.
+3. Trello: invitar a D1, asignar responsable y fecha a las tarjetas del Bloque A, y actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
+4. **D2:** guardar el `.blend` de la fachada (problema #10).
+5. **D1:** revisar el PR #4 (excepción del 19/10) y fusionar el PR de seguimiento.
+6. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
 7. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.

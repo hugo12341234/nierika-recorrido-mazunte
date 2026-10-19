@@ -450,3 +450,5 @@ CLAUDE.local.md
 # Nierika: salida de compilacion y paquetes de vcpkg (se regeneran)
 build/
 vcpkg_installed/
+# Release autonomo: se publica como .zip en el Release de GitHub, no en Git (decision 19/10)
+dist/
