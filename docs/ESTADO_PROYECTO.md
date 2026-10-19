@@ -32,8 +32,8 @@ integrarla a `develop`.
 | Modelo | Origen | Geometría | Texturas | Observaciones |
 |---|---|---|---|---|
 | `fachada/fachada.obj` | Blender 4.4.3 (propio) | 204 caras; 3.2 × 2.5 × 2.6 u; muros con **apertura de arco de medio punto** + **techo a dos aguas** | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. El material `Material` no tiene textura. |
-| `altar/altar.obj` | Exportado desde Maya (**origen sin confirmar**, ver decisión pendiente) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | El .obj dice `mtllib base.mtl` pero el archivo es `altar.mtl`; `altar.mtl` usa `shaded.png` (con luz "horneada") y `Kd 0 0 0` → tarea **A-1**. |
-| `calavera/base.obj` | Igual que el anterior (**origen sin confirmar**) | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | Calavera de azúcar; **no está en la lista de objetos de la propuesta** (decisión pendiente). |
+| `altar/altar.obj` | **Propio** (confirmado de palabra por D2 el 19/10); exportado desde Maya. **Se retira**: se rehace en Blender como una de las tumbas de B-9 (decisión 19/10, solo Blender) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | El .obj dice `mtllib base.mtl` pero el archivo es `altar.mtl`; `altar.mtl` usa `shaded.png` (con luz "horneada") y `Kd 0 0 0` → tarea **A-1**. |
+| `calavera/base.obj` | **Propio**, exportado desde Maya. **Se retira de la escena** en A-1 (decisión 19/10: no está en la propuesta) | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | Calavera de azúcar; **no está en la lista de objetos de la propuesta** (decisión pendiente). |
 
 **Transformaciones actuales en `main.cpp`** (rompen la regla 1 u = 1 m → tarea **A-2**):
 fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6.6 m de alto** · calavera esc. 0.4 en y = 2.1 m.
@@ -54,8 +54,8 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
-| A-1 | Corregir material del altar (`mtllib`, `map_Kd`, `Kd`) y bajar texturas del altar y la calavera a 1K | — | El altar carga `altar.mtl` con `texture_diffuse.png`; ninguna textura > 1024 px; sin errores en consola | ⏳ |
-| A-2 | Escalas reales 1 u = 1 m (fachada, altar, calavera) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ⏳ |
+| A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ⏳ |
+| A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ⏳ |
 | A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720 | ⏳ |
 | A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
 | A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
@@ -79,12 +79,12 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | B-6 | Marco de madera con plano para la foto | 29 | UV exactas para la foto | ⏳ |
 | B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | ⏳ |
 | B-8 | Soportes de madera para el papel picado | 22 | Postes simples | ⏳ |
-| B-9 | Tumbas propias (3 o 4) | 14 | Lápida y base | ⏳ |
+| B-9 | Tumbas propias: **4** con geometría distinta, en Blender; una es la capilla con domo y cruz (rehecha usando la de Maya como referencia) | 14 | Lápida y base; 4 tumbas distintas, cada una en su `.obj` (inventario #7–#10); la capilla de Maya se retira de `Models/altar/` | ⏳ |
 | B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas | ⏳ |
 | B-11 | Cruz de piedra de la entrada | 19 | Una sola, sin variantes | ⏳ |
 | B-12 | Texturizar altar, vela, botella, pan, cempasúchil y marco (PBR 1K) | 31, 32, 33, 34 | Materiales coherentes; mapa de relieve para el pan | ⏳ |
 | B-13 | Cargar todos los .obj, colocar y ajustar la ofrenda en el cuarto | 35, 36, 38 | Rutas relativas; los 7 objetos caben y se ven | ⏳ |
-| B-14 | Copalero de barro (extra, sin humo) — **primero en recortarse** | 30 | Hueco interno; sin partículas | ⏳ |
+| B-14 | Copalero de barro (extra, sin humo) — **obligatorio para el conteo de modelos** | 30 | Hueco interno; sin partículas | ⏳ |
 
 ### Bloque C · 2–8 nov · 3 animaciones simples + fichas
 
@@ -132,7 +132,48 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 
 **Para no ahogarse al final:** cada bloque deja escritas sus secciones del manual técnico (capturas + parámetros) en `docs/manual_tecnico/`.
 
-**Qué recortar primero si el tiempo no alcanza** (en este orden): copalero (B-14) → detalle del marco (B-6) → variantes de rocas en la barda (B-10) → pausas en la velocidad de las flores (C-4). **No se recorta:** colisiones, iluminación, 5 fichas, 2 KeyFrames, 3 simples, ≥ 18 modelos propios, 30 FPS, manuales y videos.
+**Qué recortar primero si el tiempo no alcanza** (en este orden): detalle del marco (B-6) → variantes de rocas en la barda (B-10) → pausas en la velocidad de las flores (C-4). **No se recorta:** colisiones, iluminación, 5 fichas, 2 KeyFrames, 3 simples, ≥ 18 modelos propios (por eso no se recortan la 4.ª tumba ni el copalero), 30 FPS, manuales y videos.
+Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver inventario).
+
+### Inventario de modelos propios (meta ≥ 18)
+
+> Definición en el Registro de decisiones (19/10). Cuenta cada **objeto distinto** modelado por el equipo y exportado a
+> su propio `.obj` en `Models/<objeto>/`. Las instancias o copias del mismo `.obj` cuentan **una vez**; las variantes
+> con geometría distinta (cada tumba) cuentan por separado. **Evidencia:** el archivo fuente `.blend` (todo se modela en **Blender**, como dice la propuesta; el `.ma`/`.mb` solo si
+> se hubiera hecho en otra herramienta) se guarda para el manual técnico. **Plano** = malla plana subdividida (riesgo de que el profesor no la
+> considere un modelo; ver la nota del conteo).
+
+| # | Modelo | Archivo (`Models/…`) | Tarea | Tipo | Estado | Evidencia fuente |
+|---|---|---|---|---|---|---|
+| 1 | Fachada y muros del cuarto (con apertura del arco) | `fachada/fachada.obj` | A-12 (acts. 16, 21) | Volumen | 🔄 existe; hoy incluye también el techo | Blender 4.4.3 (encabezado del `.obj`); falta guardar el `.blend` |
+| 2 | Techo del cuarto | `techo/techo.obj` (separar de `fachada.obj`) | A-11 (act. 18) | Volumen | 🔄 existe dentro de `fachada.obj`; falta decidir plano o a dos aguas | — |
+| 3 | Arco de medio punto con dovelas | `arco/arco.obj` | A-10 (act. 17) | Volumen | ⏳ | — |
+| 4 | Piso interior del cuarto | `piso/piso.obj` | A-11 (act. 18) | Plano | ⏳ (no existe en `fachada.obj`) | — |
+| 5 | Playa 100×50 m | `playa/playa.obj` | A-5 (act. 8) | Plano | ⏳ | — |
+| 6 | Mar 100×100 m | `mar/mar.obj` | A-7 (act. 10) | Plano | ⏳ | — |
+| 7 | Tumba 1: capilla con domo y cruz (rehecha en Blender) | `tumba1/tumba1.obj` | B-9 (act. 14) | Volumen | ⏳ (sustituye a `altar/altar.obj`) | — |
+| 8 | Tumba 2 | `tumba2/tumba2.obj` | B-9 (act. 14) | Volumen | ⏳ | — |
+| 9 | Tumba 3 | `tumba3/tumba3.obj` | B-9 (act. 14) | Volumen | ⏳ | — |
+| 10 | Tumba 4 | `tumba4/tumba4.obj` | B-9 (act. 14) | Volumen | ⏳ (decisión del 19/10: margen del conteo estricto) | — |
+| 11 | Barda perimetral | `barda/barda.obj` | B-10 (act. 20) | Volumen | ⏳ | — |
+| 12 | Cruz de piedra | `cruz/cruz.obj` | B-11 (act. 19) | Volumen | ⏳ | — |
+| 13 | Soportes de madera del papel picado | `soportes/soportes.obj` | B-8 (act. 22) | Volumen | ⏳ | — |
+| 14 | Papel picado | `papel_picado/papel_picado.obj` | B-7 (act. 25) | Plano | ⏳ | — |
+| 15 | Altar de 3 niveles | `altar3/altar3.obj` (nombre a decidir en B-1) | B-1 (act. 24) | Volumen | ⏳ | — |
+| 16 | Vela | `vela/vela.obj` | B-2 (act. 23) | Volumen | ⏳ | — |
+| 17 | Flor de cempasúchil | `cempasuchil/cempasuchil.obj` | B-3 (act. 28) | Planos cruzados | ⏳ | — |
+| 18 | Pan de muerto | `pan/pan.obj` | B-4 (act. 27) | Volumen | ⏳ | — |
+| 19 | Botella de vidrio | `botella/botella.obj` | B-5 (act. 26) | Volumen | ⏳ | — |
+| 20 | Marco con fotografía | `marco/marco.obj` | B-6 (act. 29) | Volumen | ⏳ | — |
+| 21 | Silueta jerárquica (un modelo con sus piezas) | `silueta/` | D-1 (act. 46) | Volumen | ⏳ | — |
+| — | ~~Capilla/tumba con domo y cruz (hoy "altar")~~ | `altar/altar.obj` | A-1 (provisional) → B-9 | Volumen | ✂️ **no cuenta**: hecha en Maya; se retira cuando B-9 la reemplace (#7) | Propia según D2 (19/10) |
+| — | ~~Calavera de azúcar~~ | `calavera/base.obj` | A-1 | Volumen | ✂️ **no cuenta**: hecha en Maya y fuera de la propuesta; se retira en A-1 | Propia según D2 (19/10) |
+| 22 | Copalero de barro (extra) | `copalero/copalero.obj` | B-14 (act. 30) | Volumen | ⏳ **obligatorio** (conteo estricto) | — |
+
+**Conteo (19/10):** existe 1 que cuenta (la fachada). Planeados: **22**, todos de la propuesta y hechos en Blender (21 con 4 tumbas + copalero).
+Margen sobre 18: **4**. Escenario estricto (sin los 4 planos): **18**, justo la meta. Por eso **no se recortan la 4.ª tumba ni el copalero**:
+sin cualquiera de los dos, el escenario estricto baja a 17.
+
 
 ---
 
@@ -156,7 +197,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 11 | Callbacks WASD/ratón | — | ✅ | Del curso; 19/10: cursor capturado en `main.cpp` |
 | 12 | Colisiones AABB | A-9 | ⏳ | |
 | 13 | Textura arena | A-6 | ⏳ | |
-| 14 | Tumbas | B-9 | 🔄 | El modelo "altar" actual sirve como tumba/capilla provisional (si es externo, solo secundario y con crédito) |
+| 14 | Tumbas | B-9 | ⏳ | Faltan las 4 tumbas propias en Blender (decisión del 19/10); una sustituye a la capilla de Maya (`altar/altar.obj`) |
 | 15 | Ciclo deltaTime + render | A-5 | 🔄 | Ciclo ✅; falta la playa |
 | 16 | Fachada con apertura | A-12 | 🔄 | `fachada.obj` con apertura de arco; falta escala real (A-2) y textura de piedra (A-12) |
 | 17 | Arco con dovelas | A-10 | 🔄 | Arco existe; faltan dovelas visibles |
@@ -172,7 +213,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 27 | Pan de muerto | B-4 | ⏳ | |
 | 28 | Cempasúchil | B-3 | ⏳ | |
 | 29 | Marco con foto | B-6 | ⏳ | |
-| 30 | Copalero | B-14 | ⏳ | Primero en la lista de recortes |
+| 30 | Copalero | B-14 | ⏳ | Obligatorio para el conteo de modelos (decisión del 19/10); ya no es el primer recorte |
 | 31 | Descargar texturas PBR 1K | B-12 | ⏳ | |
 | 32 | Texturizar altar | B-12 | ⏳ | |
 | 33 | Texturizar vela, papel, botella | B-7, B-12 | ⏳ | |
@@ -233,9 +274,12 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 19/10 | Las instrucciones del Proyecto de Claude (web) se guardan en `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` | Que los dos integrantes usen las mismas y queden versionadas | Proyecto de Claude |
 | 19/10 | **Excepción única:** los PR #1 (act. 4) y #2 (documentación) se fusionan sin la revisión previa de D1. D1 los revisa **después**, ya en `develop`, con `/verificar 4`; si pide cambios, entran por un PR nuevo. Desde la siguiente tarea vuelve la regla normal: nada entra a `develop` sin la revisión del otro integrante | D1 aún no acepta la invitación al repositorio y el Bloque A empieza hoy; la act. 4 ya compila y corre en la PC de D2 | Act. 4, flujo de trabajo |
 | 19/10 | El Proyecto de Claude (web) tiene el repositorio **con permiso de escritura**: sus hilos leen `develop` directo del repo (sin copias de `docs/` como archivos del proyecto) y pueden hacer cambios con el mismo ciclo (rama → `/cierre` → PR → revisión). Antes del primer commit de cada sesión se comprueba `git config user.name` y se configura la identidad del integrante (tabla en `CLAUDE.md`, sección 5) | En los hilos web Git empieza como `Claude`, lo que rompería la regla de autoría; dos copias del ESTADO se contradirían | CLAUDE.md, FLUJO_DE_TRABAJO, instrucciones del Proyecto, `/cierre` |
+| 19/10 | **Definición de modelo propio** (criterio "≥ 18 modelos propios"): cada objeto distinto modelado por el equipo y exportado a su propio `.obj` en `Models/<objeto>/`. Las copias o instancias cuentan una vez; las variantes con geometría distinta cuentan por separado. Se guarda el archivo fuente como evidencia. El conteo vive en el *Inventario de modelos propios* (sección 2), y ningún recorte puede dejarlo por debajo de 18. El techo se separa de `fachada.obj` en su propio `.obj` (A-11) | La propuesta no definía qué cuenta como modelo, y con el cuarto en un solo archivo el conteo podía bajar de 18 (auditoría del 19/10) | Inventario, A-10, A-11, B-9, orden de recortes, manual técnico |
+| 19/10 | **B-9 se hace con 4 tumbas distintas** (la propuesta dice "3 o 4") | Con 3 tumbas no se llega a 18 en el conteo estricto (sin planos) | B-9 (act. 14), inventario |
+| 19/10 | El "altar" (capilla/tumba con domo y cruz) y la calavera son **propios**, según confirmó D2 de palabra. Cierra la decisión pendiente sobre su origen. Por la decisión siguiente (solo Blender) **no cuentan** y se retiran | Confirmación de D2 | Inventario (filas tachadas), act. 14 |
+| 19/10 | **Solo Blender, como dice la propuesta.** No se registra Maya. La capilla y la calavera, modeladas en Maya, **no se reexportan**: pasar un `.obj` de Maya por Blender solo cambiaría el encabezado, no la herramienta con que se modeló. La capilla se **rehace en Blender** como una de las 4 tumbas de B-9 (usando la de Maya como referencia) y la calavera **sale de la escena** (cierra la pendiente sobre la ofrenda). Mientras tanto, la capilla queda como provisional (A-1, A-2). **Impacto:** B-9 pasa de 3 h a unas 4 h (+1 h, estimado, por el domo y la cruz); la calavera, 0 h; A-1 se reduce (ya no se bajan texturas); el copalero (2.5 h) deja de poder recortarse | La propuesta elige Blender y descarta Maya (tabla 15); D2 pidió seguirla "al pie de la letra". Sin la capilla y la calavera, el conteo estricto solo llega a 18 con la 4.ª tumba y el copalero | A-1, A-2, B-9, B-14, orden de recortes, inventario, Trello (títulos de A-1, A-2 y B-14) |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | A-11 (act. 18) |
-| *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
-| *pendiente* | Origen del "altar" y la calavera. Indicio: nombres de texturas (`texture_diffuse`, `texture_normal`, `shaded`) y el mismo `mtllib base.mtl` en ambos, patrón típico de generadores 3D por IA. Si son externos: crédito, solo secundarios y **no cuentan** para los 18 propios | Criterio de modelado de la propuesta | B-1, B-9 (acts. 14 y 24) |
+| 19/10 | La calavera de azúcar **no** entra a la ofrenda: se quita de la escena y del repo en A-1 | No está en la propuesta y se modeló en Maya (decisión anterior) | A-1, alcance, fichas |
 | *pendiente* | ¿El repositorio queda **público** (portafolio) o **privado**? Hoy es público | Expone los números de cuenta y la configuración de Claude | Repositorio |
 
 ---
@@ -251,9 +295,10 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° | `src/Camera.h` |
 | Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** (A-2) | `src/main.cpp` |
 | "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** (A-2) | `src/main.cpp` |
-| Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **revisar** (A-2) | `src/main.cpp` |
+| Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **se quita** (A-1) | `src/main.cpp` |
 | Texturas | descarte por alfa | alfa < 0.1 | `Shaders/modelLoading.frag` |
 | Fichas | radio de proximidad | 2 m | — (C-7) |
+| Modelos propios | meta / planeados / estricto (sin planos) | ≥ 18 / 22 / 18 (19/10, con 4 tumbas y copalero) | ESTADO, sección 2 (inventario) |
 
 ---
 
@@ -263,12 +308,14 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 |---|---|---|
 | 1 | `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl` *(con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo)* | A-1 |
 | 2 | `altar.mtl`: `map_Kd shaded.png` → `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1` | A-1 |
-| 3 | Texturas del altar y la calavera de 2048 px (la propuesta pide 1K): reducir a 1024 en GIMP | A-1 |
+| 3 | Texturas del altar y la calavera de 2048 px (la propuesta pide 1K). Ya no se reducen: la calavera se borra en A-1 y la capilla se reemplaza en B-9 | A-1 (calavera), B-9 (capilla) |
 | 4 | Escalas fuera de 1 u = 1 m (sección 5) | A-2 |
 | 5 | Falta iluminación: el shader actual solo muestra la textura | A-8 |
 | 6 | El material `Material` de la fachada no tiene textura (se ve negro) | A-12 |
 | 7 | No se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader) | E-1 (o antes, al tocar esas clases) |
 | 8 | `Model.h` no carga mapas normales/de relieve (necesario para el pan) | B-12 |
+| 9 | `fachada.obj` incluye el techo (objeto `roof`); según la definición de modelo propio, el techo va en su propio `.obj` | A-11 |
+| 10 | **Prueba de autoría:** falta guardar el `.blend` de la fachada, y cada modelo nuevo debe guardar el suyo. Si el manual técnico menciona la capilla y la calavera de Maya como trabajo previo, también hay que guardar sus `.ma`/`.mb` | B-13 (antes del manual técnico) |
 
 ---
 
@@ -277,4 +324,5 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 1. **D2:** volver a pegar las instrucciones de `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` en el Proyecto de Claude (cambiaron el 19/10) y quitar del proyecto cualquier copia suelta de `docs/`.
 2. **D1:** dar su nombre y correo de GitHub para la tabla de autoría de `CLAUDE.md`; aceptar la invitación al repositorio, instalar vcpkg (ver README), compilar `develop` (Release x64) y revisar la act. 4 y la documentación con `/verificar 4` (revisión posterior, ver decisiones del 19/10).
 3. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
-4. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+4. Trello: actualizar los títulos de A-1, A-2 y B-14 (cambiaron el 19/10) y guardar el `.blend` de la fachada (problema #10).
+5. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.

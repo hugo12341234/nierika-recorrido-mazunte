@@ -50,7 +50,7 @@
 
 | Categoría | Requerimiento | Criterio de aceptación |
 |---|---|---|
-| Modelado geométrico | Playa, mar, tumbas, barda, cuarto (fachada, arco, piso, paredes, techo), cruz, altar y 7 objetos de ofrenda | **≥ 18 modelos propios**; externos solo secundarios y con crédito |
+| Modelado geométrico | Playa, mar, tumbas, barda, cuarto (fachada, arco, piso, paredes, techo), cruz, altar y 7 objetos de ofrenda | **≥ 18 modelos propios** (qué cuenta como modelo: decisión del 19/10 e inventario en `ESTADO_PROYECTO.md`); externos solo secundarios y con crédito |
 | Modelado jerárquico | Altar de 3 niveles; silueta con hombro, codo, cadera, rodilla por lado | Al mover el padre, los hijos lo siguen |
 | Texturizado | Arena, piedra rústica, madera, mantel bordado, barro, vidrio, papel picado con transparencia | Texturas **1K**, sin estiramientos visibles |
 | Iluminación | Ambiental cálida + 3 luces clave, Blinn-Phong | El interior del cuarto se distingue sin perder el ambiente nocturno |
