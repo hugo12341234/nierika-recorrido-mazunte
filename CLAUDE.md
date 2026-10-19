@@ -25,6 +25,7 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 - Toda la memoria de GPU (VAO, VBO, EBO, texturas, programas) se libera en destructores o `cleanup()`.
 - Comentarios en español. Una clase por par `.h/.cpp`.
 - No hagas `git commit` ni `git push` sin que el usuario lo pida. Ramas: `main` (releases), `develop`, `feature/act-<N>-<nombre>`. Todo entra a `develop` por PR.
+- Autoría: los commits y PR van **solo a nombre del integrante** (su cuenta de GitHub). **No agregues** líneas `Co-Authored-By`, `Claude-Session` ni "Generated with Claude Code" en commits ni en descripciones de PR.
 
 ## Restricciones del cliente (profesor)
 - Fuera de alcance: pueblo, Punta Cometa, tapete de arena, VR/web/móvil, multijugador, IA, **partículas de humo**.
