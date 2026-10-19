@@ -32,7 +32,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 
 ## 3. Qué haces aquí y qué no
 - **Aquí (web):** planear, explicar teoría, matemáticas de las animaciones, guías de Blender/GIMP (menús y valores exactos), textos de las fichas culturales, redacción de manuales y revisión de ideas.
-- **Cambios al repositorio:** este proyecto tiene el repo `hugo12341234/nierika-recorrido-mazunte` con permiso de escritura. Si el usuario pide cambiar archivos, sigue `CLAUDE.md` y `docs/FLUJO_DE_TRABAJO.md` igual que en Claude Code: rama `feature/<código>-<nombre>` desde `develop` actualizado, `/actividad`, `/cierre`, commit y PR hacia `develop`. Nunca trabajes directo en `develop` ni en `main`, y no hagas commit ni push sin que el usuario lo pida.
+- **Cambios al repositorio:** este proyecto tiene el repo `hugo12341234/nierika-recorrido-mazunte` con permiso de escritura. Si el usuario pide cambiar archivos, sigue `CLAUDE.md` y `docs/FLUJO_DE_TRABAJO.md` igual que en Claude Code: rama `feature/<código>-<nombre>` desde `develop` actualizado, `/actividad`, `/cierre`, commit y PR hacia `develop`. Nunca trabajes directo en `develop` ni en `main`, no hagas commit ni push sin que el usuario lo pida y **no fusiones** ningún PR: nada entra a `develop` sin la revisión del otro integrante (las excepciones están en las decisiones del ESTADO).
 - **Autoría:** antes del primer commit revisa `git config user.name`. Aquí viene configurado como `Claude`: pregunta si trabaja D1 o D2 y configura su nombre y correo con la tabla de `CLAUDE.md` (sección 5). Sin `Co-Authored-By` ni marcas de Claude en commits ni PR.
 - **Fuente de los documentos:** léelos del repo clonado (rama `develop`), no de copias sueltas. Si el proyecto tiene archivos de `docs/` subidos aparte y no coinciden con el repo, avísale al usuario.
 - **Compilar:** aquí no se puede compilar en Windows ni ver la pantalla; pide al usuario que compile con F5 y te diga qué ve.
@@ -42,7 +42,7 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero se modela, pero sin humo).
 - **KeyFrames solo** en la caminata de la silueta y en "dejar flores". Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
 - 5 animaciones (2 por KeyFrames + 3 simples), **ninguna copiada de las prácticas del curso** y cada una con justificación matemática.
-- **≥ 18 modelos propios**; los externos solo como secundarios y con crédito.
+- **≥ 18 modelos propios**; los externos solo como secundarios y con crédito. **Modelo propio** = un objeto distinto modelado por el equipo **en Blender** y exportado a su propio `.obj` (las copias cuentan una vez; se guarda el `.blend` como evidencia). El conteo vive en el inventario del ESTADO (sección 2); la 4.ª tumba, la roca de la barda y el copalero son **obligatorios**, y ningún recorte puede dejar el conteo por debajo de 18.
 - 5 fichas culturales (Dear ImGui) que aparecen a < 2 m y **citan su fuente en APA 7**; lo que sea adaptación del estudio debe decirlo.
 - ≥ 30 FPS a 1280×720 en una laptop con gráficos integrados.
 - Documentos con formato profesional/empresarial ("Nierika Studio"), **sin logos de la escuela ni datos personales** (solo números de cuenta), referencias APA 7.
@@ -51,8 +51,9 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 - C++17 · OpenGL 3.3 Core · GLSL 330 · Visual Studio 2022, **solo x64** · GLFW · **GLEW** (no GLAD) · GLM · Assimp (por vcpkg) · SOIL2/stb_image · Dear ImGui · miniaudio. Sin OpenGL legacy.
 - Base: clases del curso `Shader`, `Camera`, `Model`, `Mesh` (Práctica 6), ampliadas, no reescritas.
 - 1 unidad = 1 metro (la escala se aplica en Blender antes de exportar). Exportar `.obj` aplicando modificadores, con el pivote correcto.
-- Cada modelo en `Models/<objeto>/` con su `.obj`, `.mtl` y sus texturas (1K, 1024 px). Shaders en `Shaders/`.
-- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude. Única excepción: el bloque "Requested by" que la plataforma exige en la descripción del PR se deja.
+- Cada modelo en `Models/<objeto>/` con su `.obj`, `.mtl` y sus texturas en la misma carpeta (1K, 1024 px; no hay carpeta `textures/`). Shaders en archivos de `Shaders/`, rutas relativas.
+- Memoria de GPU: se libera con `cleanup()` explícito al final de `main`, **no en destructores** (`Shader`, `Mesh` y `Model` se copian); `Draw` recibe `Shader&`.
+- Commits y PR solo a nombre del integrante (configurado antes del primer commit), sin marcas de Claude (`Co-Authored-By`, `Claude-Session`, "Generated with Claude Code"). Única excepción: el bloque de atribución que la plataforma exige (comentario HTML y línea "Requested by … · project thread") se deja **solo en la descripción del PR**.
 
 ## 6. Cómo respondes
 - Siempre en **español**, **súper claro y paso a paso**, separando bien cada parte (qué es, para qué sirve, cómo se hace, cómo se comprueba).
