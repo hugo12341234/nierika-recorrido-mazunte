@@ -6,7 +6,7 @@
 
 **Última actualización:** 18/10/2026 · **Hoy:** fin de semana 3 · **Días a la entrega:** 31 (18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
-**Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (ramas `main` y `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing
+**Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (ramas `main` y `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
 **Forma de trabajo acordada (18/10):** las columnas Resp./Verif. de la propuesta ya **no se siguen**.
 Quien esté libre toma la siguiente tarea del *Plan vigente* (sección 2); **el otro revisa** antes de
@@ -60,7 +60,7 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
 | 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
 | 4 | VS + dependencias | ✅ | Base de la Práctica 6 (GLEW, SOIL2, Assimp) |
-| 5 | Trello | ❓ | |
+| 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Falta: etiquetas e invitar a D1 |
 | 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
 | 7 | Bocetos del cuarto | ❓ | |
 | 8 | Playa 100×50 | ⏳ | Bloque A |
@@ -91,6 +91,8 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 18/10 | README del repositorio en inglés con resumen en español | Portafolio | Repositorio |
 | 18/10 | Rama por defecto del repo: `develop` (`main` solo para entregas). Los hilos del Proyecto de Claude leen `docs/` directo del repo | Que Claude siempre vea el estado actualizado | Flujo de trabajo |
 | 18/10 | Propuesta v2.0 y plan de trabajo en PDF guardados en `docs/propuesta/` | Consulta desde cualquier hilo | Documentación |
+| 18/10 | Se mantiene **Trello** como tablero Kanban (el de la propuesta); no se usa GitHub Projects | Coherencia con la propuesta | Act. 5, evidencias del manual técnico |
+| 18/10 | En Trello las tarjetas no llevan "#" al inicio (activa el selector de etiquetas): se nombran "Act. N ..." | Evitar errores al capturar | Trello |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | Act. 18 |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
 | *pendiente* | Origen del "altar" y la calavera: si son externos, se documentan con crédito y no cuentan para los 18 propios | Criterio de modelado de la propuesta | Act. 14 y 24 |
