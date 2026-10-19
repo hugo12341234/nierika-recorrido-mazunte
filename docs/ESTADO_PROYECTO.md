@@ -1,86 +1,215 @@
 # ESTADO DEL PROYECTO — documento vivo
 
-> **Este es el archivo que evita que Claude "olvide".** Se actualiza al cerrar cada sesión
-> (`CIERRE` en el Proyecto o `/cierre` en Claude Code) y reemplaza la versión anterior en el
-> Proyecto de Claude y en `docs/ESTADO_PROYECTO.md` del repositorio.
+> **Qué es este archivo:** la memoria del proyecto. Dice **dónde vamos**: qué está hecho, qué sigue,
+> qué decidimos y con qué valores. Lo que no esté aquí, Claude no lo sabrá en la siguiente sesión.
+> **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
+> **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 18/10/2026 · **Hoy:** fin de semana 3 · **Días a la entrega:** 31 (18/11/2026)
+**Última actualización:** 19/10/2026 · **Hoy:** inicio de la semana 4 (Bloque A) · **Días a la entrega:** 30 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
-**Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (ramas `main` y `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
+**Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
 **Forma de trabajo acordada (18/10):** las columnas Resp./Verif. de la propuesta ya **no se siguen**.
 Quien esté libre toma la siguiente tarea del *Plan vigente* (sección 2); **el otro revisa** antes de
-integrarla a `develop`. Los números de actividad (1–60) se siguen usando solo como referencia.
+integrarla a `develop`.
+
+**Contenido:** 1. Lo que ya existe · 2. Plan vigente (tareas con código) · 3. Estado por actividad (1–60) ·
+4. Registro de decisiones · 5. Parámetros fijados · 6. Problemas abiertos · 7. Siguiente paso
 
 ---
 
-## 1. Lo que ya existe (revisado el 18/10/2026)
+## 1. Lo que ya existe (revisado el 19/10/2026)
 
-**Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`):
-- `main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**.
-- Clases del curso: `Shader`, `Camera` (WASD/flechas + ratón), `Model` (Assimp).
-- Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación**.
+**Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; rama `feature/act-4-base-solucion`, aún sin fusionar):
+- `src/main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
+- Clases del curso en `src/`: `Shader.h`, `Camera.h` (WASD/flechas + ratón, pitch ±89°), `Model.h` + `Mesh.h` (Assimp, texturas RGBA).
+- Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación** (descarta píxeles con alfa < 0.1).
 - Carga y dibuja 3 modelos: fachada, "altar" y calavera.
+- Dependencias: Assimp, GLFW, GLEW y GLM por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/SOIL2`.
 
 **Modelos** (`Models/`):
 
 | Modelo | Origen | Geometría | Texturas | Observaciones |
 |---|---|---|---|---|
 | `fachada/fachada.obj` | Blender 4.4.3 (propio) | 204 caras; 3.2 × 2.5 × 2.6 u; muros con **apertura de arco de medio punto** + **techo a dos aguas** | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. El material `Material` no tiene textura. |
-| `altar/altar.obj` | Exportado desde Maya; estructura de texturas tipo herramienta externa (**confirmar origen**) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | 2048×2048 (diffuse, normal, roughness, metallic, pbr, shaded) | **Bug:** el .obj dice `mtllib base.mtl` pero el archivo es `altar.mtl` → no carga su material. `altar.mtl` usa `shaded.png` (con luz "horneada") en vez de `texture_diffuse.png`. |
-| `calavera/base.obj` | Igual que el anterior (**confirmar origen**) | 13 518 caras; 1.5 × 1.9 × 1.7 u | 2048×2048 | Calavera de azúcar; **no está en la lista de objetos de la propuesta**. |
+| `altar/altar.obj` | Exportado desde Maya (**origen sin confirmar**, ver decisión pendiente) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | El .obj dice `mtllib base.mtl` pero el archivo es `altar.mtl`; `altar.mtl` usa `shaded.png` (con luz "horneada") y `Kd 0 0 0` → tarea **A-1**. |
+| `calavera/base.obj` | Igual que el anterior (**origen sin confirmar**) | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | Calavera de azúcar; **no está en la lista de objetos de la propuesta** (decisión pendiente). |
 
-**Transformaciones actuales en `main.cpp`** (rompen la regla 1 u = 1 m):
+**Transformaciones actuales en `main.cpp`** (rompen la regla 1 u = 1 m → tarea **A-2**):
 fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6.6 m de alto** · calavera esc. 0.4 en y = 2.1 m.
+
+---
 
 ## 2. Plan vigente (replaneación del 18/10 — sustituye las fechas de la propuesta)
 
 > Orden pensado para que **siempre haya algo funcionando** y para cubrir primero lo que se evalúa.
-> Los números entre paréntesis son las actividades originales.
+> **Cada tarea tiene un código** (`A-1`, `B-3`…): letra del bloque + número. Ese código se usa en Trello,
+> en el nombre de la rama, en el PR y con `/actividad`. La columna **Act.** dice qué actividades del
+> plan original (1–60) cubre; "—" = corrección de la base que no estaba en el plan.
+> El guion evita confundir la tarea `D-1` (Bloque D) con el integrante **D1**.
 
-| Bloque | Fechas | Objetivo del bloque (hito) | Tareas |
-|---|---|---|---|
-| **A** | 19–25 oct | **Escena base correcta y navegable con luz** | Corregir escalas a 1 u = 1 m · arreglar `mtllib` del altar · ventana 1280×720 · *far plane* 300 · playa (8) + textura arena 1K (13) · mar como malla subdividida (10) · shader Blinn-Phong: ambiental cálida + 3 luces (37) · colisiones AABB suelo/muros (12) · arco con dovelas (17) · piso interior (18) · texturas de piedra rústica 1K (21) |
-| **B** | 26 oct–1 nov | **Panteón + altar con ofrenda** | Altar de 3 niveles **propio** (24) · vela con pivote en la base (23) · cempasúchil de planos cruzados (28) · pan de muerto (27) · botella (26) · marco con foto (29) · papel picado con alfa (25, 33) + soportes (22) · tumbas propias (14) · barda (20) · cruz (19) · texturizar (31–34) · colocar y ajustar (36, 38) |
-| **C** | 2–8 nov | **3 animaciones simples + fichas** | Olas en vertex shader (39) · llama con ruido (40) · velas flotando Bézier + seno (41) · flores flotando (42) · descarte por alfa (44) · Dear ImGui con 5 fichas por proximidad (51) · justificación matemática de las simples (45) |
-| **D** | 9–15 nov | **2 animaciones KeyFrames + audio** | Silueta low-poly jerárquica (46) · caminata con slerp + smoothstep (47, 48) · dejar flores con Bézier cuadrática (49, 50) · audio miniaudio (52) · justificación matemática de las complejas (53) |
-| **E** | 16–18 nov | **Entrega** | Pruebas y fugas (54, 55) · Release x64 en `dist/` (56) · 3 videos (57) · manuales ES/EN (58, 59) · Release GitHub (60) |
+**Leyenda de estado:** ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión (PR abierto, solo mientras se espera la revisión) · ⏳ Pendiente · ⚠️ Atrasado · ❓ Sin confirmar · ✂️ Recortado
+
+### Bloque A · 19–25 oct · Escena base correcta y navegable con luz
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| A-1 | Corregir material del altar (`mtllib`, `map_Kd`, `Kd`) y bajar texturas del altar y la calavera a 1K | — | El altar carga `altar.mtl` con `texture_diffuse.png`; ninguna textura > 1024 px; sin errores en consola | ⏳ |
+| A-2 | Escalas reales 1 u = 1 m (fachada, altar, calavera) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ⏳ |
+| A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720 | ⏳ |
+| A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
+| A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
+| A-6 | Textura de arena 1K con mapeo UV | 13 | Textura 1K sin estiramientos visibles | ⏳ |
+| A-7 | Mar: malla 100×100 m subdividida | 10 | Malla preparada para el vertex shader de olas | ⏳ |
+| A-8 | Shader Blinn-Phong: luz ambiental cálida + 3 luces clave | 37 | El interior del cuarto se distingue sin perder el ambiente nocturno; sin luces puntuales extra | ⏳ |
+| A-9 | Colisiones AABB con suelo y muros | 12 | La cámara no atraviesa el suelo ni los muros | ⏳ |
+| A-10 | Arco de medio punto con dovelas visibles | 17 | Dovelas visibles (detalle obligatorio) | ⏳ |
+| A-11 | Piso interior del cuarto (y decidir el techo) | 18 | Piso, paredes y techo sin detalles innecesarios; decisión del techo registrada | ⏳ |
+| A-12 | Texturas de piedra rústica 1K en muros y fachada | 16, 21 | Piedra rústica coherente con materiales reales, 1K | ⏳ |
+
+### Bloque B · 26 oct–1 nov · Panteón + altar con ofrenda
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| B-1 | Altar de 3 niveles escalonados (**propio**) | 24 | Cabe dentro del cuarto | ⏳ |
+| B-2 | Vela cilíndrica con pivote en la base | 23 | Pivote correcto para animación | ⏳ |
+| B-3 | Flor de cempasúchil con planos cruzados | 28 | Optimizada para instancing | ⏳ |
+| B-4 | Pan de muerto con detalles de huesos | 27 | Decimate activo (pocos polígonos) | ⏳ |
+| B-5 | Botella de vidrio (modificador Screw) | 26 | Exportada aplicando modificadores | ⏳ |
+| B-6 | Marco de madera con plano para la foto | 29 | UV exactas para la foto | ⏳ |
+| B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | ⏳ |
+| B-8 | Soportes de madera para el papel picado | 22 | Postes simples | ⏳ |
+| B-9 | Tumbas propias (3 o 4) | 14 | Lápida y base | ⏳ |
+| B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas | ⏳ |
+| B-11 | Cruz de piedra de la entrada | 19 | Una sola, sin variantes | ⏳ |
+| B-12 | Texturizar altar, vela, botella, pan, cempasúchil y marco (PBR 1K) | 31, 32, 33, 34 | Materiales coherentes; mapa de relieve para el pan | ⏳ |
+| B-13 | Cargar todos los .obj, colocar y ajustar la ofrenda en el cuarto | 35, 36, 38 | Rutas relativas; los 7 objetos caben y se ven | ⏳ |
+| B-14 | Copalero de barro (extra, sin humo) — **primero en recortarse** | 30 | Hueco interno; sin partículas | ⏳ |
+
+### Bloque C · 2–8 nov · 3 animaciones simples + fichas
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| C-1 | Olas: vertex shader con suma de senos | 39 | Frecuencias y amplitudes definidas | ⏳ |
+| C-2 | Llama de las velas: fragment shader con ruido | 40 | Ruido Perlin o similar | ⏳ |
+| C-3 | Velas flotando: trayectoria Bézier + oscilación senoidal | 41 | Desfase entre velas | ⏳ |
+| C-4 | Flores flotando: movimiento circular + rotación | 42 | Velocidad variable con pausas | ⏳ |
+| C-5 | Integrar las 3 animaciones simples en el ciclo de render | 43 | Olas, velas y flores a la vez, ≥ 30 FPS | ⏳ |
+| C-6 | Descarte por alfa en flores y velas | 44 | Sin artefactos de transparencias superpuestas | ⏳ |
+| C-7 | Dear ImGui: 5 fichas culturales por proximidad | 51 | La ficha aparece a < 2 m y cita su fuente | ⏳ |
+| C-8 | Justificación matemática de las 3 simples | 45 | Fórmulas y parámetros reales en `docs/manual_tecnico/` | ⏳ |
+
+### Bloque D · 9–15 nov · 2 animaciones por KeyFrames + audio
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| D-1 | Silueta low-poly jerárquica (hombro, codo, cadera, rodilla) | 46 | Al mover el padre, los hijos lo siguen | ⏳ |
+| D-2 | Caminata por KeyFrames con slerp | 47 | Curvas de aceleración no lineales | ⏳ |
+| D-3 | Smoothstep y desfase de piernas | 48 | Justificación documentada | ⏳ |
+| D-4 | Silueta dejando flores (Bézier cuadrática) | 49 | Caída libre de la flor | ⏳ |
+| D-5 | Integrar las 2 animaciones complejas | 50 | Caminata y dejar flores en la escena | ⏳ |
+| D-6 | Audio ambiental con miniaudio | 52 | Un solo ciclo: mar y música lejana | ⏳ |
+| D-7 | Justificación matemática de las 2 complejas | 53 | Slerp, Bézier y smoothstep en `docs/manual_tecnico/` | ⏳ |
+
+### Bloque E · 16–18 nov · Entrega
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| E-1 | Pruebas de integración y fugas de memoria (VAO, VBO, texturas) | 54 | Lista de errores priorizada | ⏳ |
+| E-2 | Corrección de errores de cámara y colisiones | 55 | Sin atascos en bardas | ⏳ |
+| E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC | ⏳ |
+| E-4 | 3 videos MP4 | 57 | Entorno; recorrido; animaciones e interactividad | ⏳ |
+| E-5 | Manual técnico (ES + EN) | 58 | Arquitectura, cronograma, RACI, justificación, conclusiones | ⏳ |
+| E-6 | Manual de usuario (ES + EN) | 59 | Capturas y explicación de controles | ⏳ |
+| E-7 | Release en GitHub y entrega | 60 | Release final y enlaces | ⏳ |
+
+### Tareas sueltas (sin bloque)
+
+| Código | Tarea | Act. | Criterio de terminado | Estado |
+|---|---|---|---|---|
+| X-1 | Verificar Blender y GIMP con la misma versión en las dos PCs | 6 | Captura de la versión en cada equipo | 🔄 |
+| X-2 | Bocetos del cuarto del cementerio | 7 | Fachada, interior y distribución de la ofrenda, para el manual técnico | ❓ |
 
 **Para no ahogarse al final:** cada bloque deja escritas sus secciones del manual técnico (capturas + parámetros) en `docs/manual_tecnico/`.
 
-**Qué recortar primero si el tiempo no alcanza** (en este orden): copalero (30) → detalle del marco (29) → variantes de rocas en la barda (20) → pausas en la velocidad de las flores (42). **No se recorta:** colisiones, iluminación, 5 fichas, 2 KeyFrames, 3 simples, ≥ 18 modelos propios, 30 FPS, manuales y videos.
+**Qué recortar primero si el tiempo no alcanza** (en este orden): copalero (B-14) → detalle del marco (B-6) → variantes de rocas en la barda (B-10) → pausas en la velocidad de las flores (C-4). **No se recorta:** colisiones, iluminación, 5 fichas, 2 KeyFrames, 3 simples, ≥ 18 modelos propios, 30 FPS, manuales y videos.
 
-## 3. Estado de actividades
+---
 
-Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pendiente · ❓ Sin confirmar · ✂️ Recortado
+## 3. Estado por actividad del plan original (1–60)
 
-| N.º | Actividad (corta) | Estado | Notas / evidencia |
-|---|---|---|---|
-| 1 | Fuentes Mazunte (APA 7) | ✅ | Hoja del plan |
-| 2 | Propuesta técnica | ✅ | Propuesta v2.0 (04/10/2026) |
-| 3 | Repo + .gitignore | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (privado), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
-| 4 | VS + dependencias | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` (assimp, glfw3, glew, glm) + `vendor/SOIL2` + `src/` + 3 modelos. **19/10: compila y corre en la PC de D2** (Release x64, VS 2022, vcpkg con Assimp 6.0.5): se ven fachada, altar y calavera con textura. **19/10 (después):** se fijó `builtin-baseline` de vcpkg y se corrigió el código base (ver decisiones del 19/10) → **recompilar una vez** antes de aprobar. Pendiente: revisión de D1 en el PR |
-| 5 | Trello | ✅ | 18/10: tablero creado con 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde); las etiquetas B–E se crean al cargar esos bloques. Falta: invitar a D1 |
-| 6 | Blender y GIMP | 🔄 | Blender 4.4.3 en al menos un equipo; verificar versión en ambos |
-| 7 | Bocetos del cuarto | ❓ | |
-| 8 | Playa 100×50 | ⏳ | Bloque A |
-| 9 | Clase Camera | ✅ | Clase del curso; verificar límite de pitch ±89° |
-| 10 | Mar 100×100 | ⏳ | Bloque A |
-| 11 | Callbacks WASD/ratón | ✅ | Del curso |
-| 12 | Colisiones AABB | ⏳ | Bloque A |
-| 13 | Textura arena | ⏳ | Bloque A |
-| 14 | Tumbas | 🔄 | El modelo "altar" actual sirve como tumba/capilla (si es externo, solo secundario y con crédito) |
-| 15 | Ciclo deltaTime + render | 🔄 | Ciclo ✅; falta la playa |
-| 16 | Fachada con apertura | 🔄 | `fachada.obj`; falta escala real y textura de piedra |
-| 17 | Arco con dovelas | 🔄 | Arco existe; faltan dovelas visibles (criterio "obligatorio") |
-| 18 | Piso, paredes, techo | 🔄 | Paredes y techo (a dos aguas) existen; confirmar piso interior |
-| 19 | Cruz | ⏳ | |
-| 20 | Barda perimetral | ⏳ | |
-| 21 | Textura piedra rústica | 🔄 | Hoy: concreto/laminado 512 px → cambiar a piedra 1K |
-| 22 | Soportes papel picado | ⏳ | |
-| 23–60 | — | ⏳ | Ver plan vigente (sección 2) |
+> Sirve para el **cronograma real** del manual técnico. Cuando una tarea se termina, `/cierre` marca
+> también aquí las actividades que cubre. Fechas, responsables y criterios originales: `PLAN_ACTIVIDADES.md`.
+
+| N.º | Actividad (corta) | Tarea | Estado | Notas / evidencia |
+|---|---|---|---|---|
+| 1 | Fuentes Mazunte (APA 7) | — | ✅ | Hoja del plan |
+| 2 | Propuesta técnica | — | ✅ | Propuesta v2.0 (04/10/2026), `docs/propuesta/` |
+| 3 | Repo + .gitignore | — | ✅ | 18/10: `hugo12341234/nierika-recorrido-mazunte` (público), ramas `main` y `develop`, README, .gitignore VS corregido, D1 invitado como colaborador (pendiente de aceptar) |
+| 4 | VS + dependencias | — | 👀 | Rama `feature/act-4-base-solucion`: `NierikaStudio.sln` x64 + `vcpkg.json` + `vendor/SOIL2` + `src/` + 3 modelos. 19/10: compila y corre en la PC de D2 (Release x64, Assimp 6.0.5). Después se fijó el baseline de vcpkg y se corrigió el código base → **recompilar una vez** y revisión de D1 en el PR |
+| 5 | Trello | — | ✅ | 18/10: 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado), 6 tarjetas en Terminado y 12 del Bloque A en Pendiente. Etiquetas: Bloque A (azul), prioridad Alta (roja) / Media (amarilla) / Baja (verde). Falta: invitar a D1 y poner el código (A-1…A-12) en el título de cada tarjeta |
+| 6 | Blender y GIMP | X-1 | 🔄 | Blender 4.4.3 en al menos un equipo |
+| 7 | Bocetos del cuarto | X-2 | ❓ | |
+| 8 | Playa 100×50 | A-5 | ⏳ | |
+| 9 | Clase Camera | — | ✅ | Clase del curso; 19/10: pitch limitado a ±89° verificado en `Camera.h` |
+| 10 | Mar 100×100 | A-7 | ⏳ | |
+| 11 | Callbacks WASD/ratón | — | ✅ | Del curso; 19/10: cursor capturado en `main.cpp` |
+| 12 | Colisiones AABB | A-9 | ⏳ | |
+| 13 | Textura arena | A-6 | ⏳ | |
+| 14 | Tumbas | B-9 | 🔄 | El modelo "altar" actual sirve como tumba/capilla provisional (si es externo, solo secundario y con crédito) |
+| 15 | Ciclo deltaTime + render | A-5 | 🔄 | Ciclo ✅; falta la playa |
+| 16 | Fachada con apertura | A-12 | 🔄 | `fachada.obj` con apertura de arco; falta escala real (A-2) y textura de piedra (A-12) |
+| 17 | Arco con dovelas | A-10 | 🔄 | Arco existe; faltan dovelas visibles |
+| 18 | Piso, paredes, techo | A-11 | 🔄 | Paredes y techo (a dos aguas) existen; confirmar piso interior |
+| 19 | Cruz | B-11 | ⏳ | |
+| 20 | Barda perimetral | B-10 | ⏳ | |
+| 21 | Textura piedra rústica | A-12 | 🔄 | Hoy: concreto/laminado 512 px → cambiar a piedra 1K |
+| 22 | Soportes papel picado | B-8 | ⏳ | |
+| 23 | Vela con pivote | B-2 | ⏳ | |
+| 24 | Altar de 3 niveles | B-1 | ⏳ | |
+| 25 | Malla del papel picado | B-7 | ⏳ | |
+| 26 | Botella | B-5 | ⏳ | |
+| 27 | Pan de muerto | B-4 | ⏳ | |
+| 28 | Cempasúchil | B-3 | ⏳ | |
+| 29 | Marco con foto | B-6 | ⏳ | |
+| 30 | Copalero | B-14 | ⏳ | Primero en la lista de recortes |
+| 31 | Descargar texturas PBR 1K | B-12 | ⏳ | |
+| 32 | Texturizar altar | B-12 | ⏳ | |
+| 33 | Texturizar vela, papel, botella | B-7, B-12 | ⏳ | |
+| 34 | Texturizar pan, flor, marco | B-12 | ⏳ | El mapa de relieve del pan requiere ampliar `Model.h` (hoy no carga mapas normales) |
+| 35 | Clase Model con Assimp | B-13 | 🔄 | `Model.h` del curso ya carga .obj con rutas relativas (texturas RGBA desde el 19/10); se cierra al cargar todos los .obj |
+| 36 | Colocar los 7 objetos | B-13 | ⏳ | |
+| 37 | Iluminación | A-8 | ⏳ | |
+| 38 | Ajustar posiciones/escalas | B-13 | ⏳ | |
+| 39 | Olas | C-1 | ⏳ | |
+| 40 | Llama con ruido | C-2 | ⏳ | |
+| 41 | Velas flotando | C-3 | ⏳ | |
+| 42 | Flores flotando | C-4 | ⏳ | |
+| 43 | Integrar simples | C-5 | ⏳ | |
+| 44 | Descarte por alfa | C-6 | ⏳ | |
+| 45 | Justificación simples | C-8 | ⏳ | |
+| 46 | Silueta jerárquica | D-1 | ⏳ | |
+| 47 | Caminata slerp | D-2 | ⏳ | |
+| 48 | Smoothstep y desfases | D-3 | ⏳ | |
+| 49 | Dejar flores (Bézier) | D-4 | ⏳ | |
+| 50 | Integrar complejas | D-5 | ⏳ | |
+| 51 | Fichas Dear ImGui | C-7 | ⏳ | |
+| 52 | Audio | D-6 | ⏳ | |
+| 53 | Justificación complejas | D-7 | ⏳ | |
+| 54 | Pruebas y fugas | E-1 | ⏳ | |
+| 55 | Corrección cámara/colisiones | E-2 | ⏳ | |
+| 56 | Release x64 en dist/ | E-3 | ⏳ | |
+| 57 | Videos | E-4 | ⏳ | |
+| 58 | Manual técnico | E-5 | ⏳ | |
+| 59 | Manual de usuario | E-6 | ⏳ | |
+| 60 | Release GitHub | E-7 | ⏳ | |
+
+---
 
 ## 4. Registro de decisiones
+
+> Todo cambio respecto a la propuesta o a una regla del proyecto se anota aquí **antes** de aplicarlo
+> en el resto de los documentos. Una decisión registrada aquí manda sobre `CONTEXTO_PROYECTO.md`.
 
 | Fecha | Decisión | Motivo | Afecta a |
 |---|---|---|---|
@@ -89,42 +218,61 @@ Leyenda: ✅ Hecho · 🔄 En proceso / parcial · 👀 En revisión · ⏳ Pend
 | 18/10 | Rutas: `Models/<objeto>/<objeto>.obj`, `Shaders/*.vs` / `*.frag` | Estructura heredada de la práctica | Convenciones |
 | 18/10 | `.gitignore` de VS con excepción `!**/Models/**/*.obj` y `.mtl` | La plantilla ignora todos los `.obj` y se perderían los modelos 3D | Repositorio |
 | 18/10 | README del repositorio en inglés con resumen en español | Portafolio | Repositorio |
-| 18/10 | Rama por defecto del repo: `develop` (`main` solo para entregas). Los hilos del Proyecto de Claude leen `docs/` directo del repo | Que Claude siempre vea el estado actualizado | Flujo de trabajo |
+| 18/10 | Rama por defecto del repo: `develop` (`main` solo para entregas). Los hilos del Proyecto de Claude leen `docs/` del repo | Que Claude siempre vea el estado actualizado | Flujo de trabajo |
 | 18/10 | Propuesta v2.0 y plan de trabajo en PDF guardados en `docs/propuesta/` | Consulta desde cualquier hilo | Documentación |
 | 18/10 | Se mantiene **Trello** como tablero Kanban (el de la propuesta); no se usa GitHub Projects | Coherencia con la propuesta | Act. 5, evidencias del manual técnico |
-| 18/10 | En Trello las tarjetas no llevan "#" al inicio (activa el selector de etiquetas): se nombran "Act. N ..." | Evitar errores al capturar | Trello |
-| 19/10 | La solución recibida (P5.rar) estaba compilada en **32 bits** (libs, DLL y .exe x86; configs x64 rotas). Se reestructura a **x64 solo**: dependencias compiladas (Assimp, GLFW, GLEW, GLM) por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/` compilados desde fuente | La propuesta exige x64 y `vendor/`; no hay binarios x64 en la solución; vcpkg es la vía oficial de VS 2022 y deja a D1 y D2 con las mismas versiones. Assimp pasa de 4.x del curso a la versión actual de vcpkg | Act. 4, 56 (dist/ con .exe + DLL), CLAUDE.md |
+| 18/10 | En Trello las tarjetas no llevan "#" al inicio (activa el selector de etiquetas) | Evitar errores al capturar | Trello |
+| 19/10 | La solución recibida (P5.rar) estaba compilada en **32 bits** (libs, DLL y .exe x86; configs x64 rotas). Se reestructura a **x64 solo**: dependencias compiladas (Assimp, GLFW, GLEW, GLM) por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/` compilados desde fuente | La propuesta exige x64 y `vendor/`; no hay binarios x64 en la solución; vcpkg es la vía oficial de VS 2022. Assimp pasa de 4.x del curso a la versión de vcpkg | Act. 4, 56 (dist/ con .exe + DLL), CLAUDE.md |
 | 19/10 | Estructura del repo: `src/`, `vendor/`, `Models/`, `Shaders/`; salida en `build/` (ignorada). No se suben `.pdb`/`.ilk`/`.vs`/`Debug`, los `.rar` ni los modelos de prácticas anteriores (peces, pokebolas) | Repo ligero (la solución pesaba 195 MB) | Repositorio |
 | 19/10 | `vcpkg.json` con `builtin-baseline` `664933b8…` (Assimp 6.0.5, GLFW 3.5.1, GLEW 2.3.1, GLM 1.0.3) | Sin baseline cada PC toma la versión que tenga vcpkg en ese momento; con él D1, D2 y el Release final usan exactamente las mismas versiones (las mismas con que ya compiló D2) | Act. 4, 56 |
 | 19/10 | Correcciones al código base de la práctica: FOV con `glm::radians` (antes 45 se interpretaba como radianes → ~58° por casualidad); cursor capturado (1ª persona); texturas **RGBA** (necesario para el alfa del papel picado y las flores); `TextureFromFile` `inline`; textura faltante → aviso en consola + color magenta; `aiProcess_GenNormals`; se quita `GLEW_STATIC` | Errores latentes que iban a aparecer en las actividades 25, 33, 37 y 44 o al agregar más `.cpp` | `src/main.cpp`, `src/Model.h`, `src/Camera.h` |
-| *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | Act. 18 |
+| 19/10 | Commits y PR **solo a nombre del integrante**, sin `Co-Authored-By` ni marcas de Claude (`.claude/settings.json` + regla en `CLAUDE.md`); se reescribió el historial para que todos los commits sean del integrante | El historial de commits es evidencia del manual técnico | Repositorio, manual técnico |
+| 19/10 | **Códigos de tarea** `A-1`…`E-7` (+ `X-1`, `X-2`) en el *Plan vigente*; se usan en Trello, ramas (`feature/a-1-<nombre>`), PR y `/actividad`. Tarjetas de Trello: `<código> · <tarea>` (sustituye el formato "Act. N …") | Las tareas del Bloque A sin número del plan (escalas, ventana…) no se podían referenciar; el guion evita confundir `D-1` con el integrante D1 | Trello, Git, skills `/actividad` y `/verificar` |
+| 19/10 | Se completa el plan vigente: act. 30 (copalero) → B-14; act. 43 (integrar simples) → C-5; acts. 6 y 7 → tareas sueltas X-1 y X-2; act. 35 → B-13 | Esas actividades no estaban en ningún bloque | Plan vigente |
+| 19/10 | **Orden de autoridad** de los documentos: (1) Registro de decisiones del ESTADO → (2) `CONTEXTO_PROYECTO.md` → (3) `PLAN_ACTIVIDADES.md` y PDFs de `docs/propuesta/`. Si dos documentos se contradicen, se señala y se registra una decisión; no se elige en silencio | Integridad y coherencia del proyecto | Todos los documentos, CLAUDE.md, instrucciones del Proyecto de Claude |
+| 19/10 | Las instrucciones del Proyecto de Claude (web) se guardan en `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` | Que los dos integrantes usen las mismas y queden versionadas | Proyecto de Claude |
+| *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | A-11 (act. 18) |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
-| *pendiente* | Origen del "altar" y la calavera: si son externos, se documentan con crédito y no cuentan para los 18 propios | Criterio de modelado de la propuesta | Act. 14 y 24 |
+| *pendiente* | Origen del "altar" y la calavera. Indicio: nombres de texturas (`texture_diffuse`, `texture_normal`, `shaded`) y el mismo `mtllib base.mtl` en ambos, patrón típico de generadores 3D por IA. Si son externos: crédito, solo secundarios y **no cuentan** para los 18 propios | Criterio de modelado de la propuesta | B-1, B-9 (acts. 14 y 24) |
+| *pendiente* | ¿El repositorio queda **público** (portafolio) o **privado**? Hoy es público | Expone los números de cuenta y la configuración de Claude | Repositorio |
+
+---
 
 ## 5. Parámetros fijados
 
 | Elemento | Parámetro | Valor | Dónde vive |
 |---|---|---|---|
-| Ventana | tamaño | 800×600 → **cambiar a 1280×720** | `main.cpp` |
-| Proyección | near / far | 0.1 / 100 → **cambiar far a 300** | `main.cpp` |
-| Cámara | posición inicial | (0, 2, 6) | `main.cpp` |
-| Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `Camera.h` (`ZOOM`), `main.cpp` (`glm::perspective`) |
-| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° | `Camera.h` |
-| Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** | `main.cpp` |
-| "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** | `main.cpp` |
-| Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **revisar** | `main.cpp` |
-| Fichas | radio de proximidad | 2 m | — |
+| Ventana | tamaño | 800×600 → **cambiar a 1280×720** (A-3) | `src/main.cpp` |
+| Proyección | near / far | 0.1 / 100 → **cambiar far a 300** (A-4) | `src/main.cpp` |
+| Cámara | posición inicial | (0, 2, 6) | `src/main.cpp` |
+| Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `src/Camera.h` (`ZOOM`), `src/main.cpp` (`glm::perspective`) |
+| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° | `src/Camera.h` |
+| Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** (A-2) | `src/main.cpp` |
+| "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** (A-2) | `src/main.cpp` |
+| Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **revisar** (A-2) | `src/main.cpp` |
+| Texturas | descarte por alfa | alfa < 0.1 | `Shaders/modelLoading.frag` |
+| Fichas | radio de proximidad | 2 m | — (C-7) |
+
+---
 
 ## 6. Problemas abiertos
 
-1. `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl`. *(19/10: con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo en la tarea A1.)*
-2. `altar.mtl`: `map_Kd shaded.png` → usar `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1`.
-3. Texturas del altar y la calavera de 2048 px (la propuesta pide 1K): reducir a 1024 en GIMP.
-4. Escalas fuera de 1 u = 1 m (ver sección 5).
-5. Falta iluminación: el shader actual solo muestra la textura.
-6. ~~Revisar el resto del código~~ → revisado el 19/10 (ver decisiones). Siguen pendientes: no se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader: act. 54) y `Model.h` no carga mapas normales/de relieve (act. 34).
+| # | Problema | Se resuelve en |
+|---|---|---|
+| 1 | `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl` *(con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo)* | A-1 |
+| 2 | `altar.mtl`: `map_Kd shaded.png` → `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1` | A-1 |
+| 3 | Texturas del altar y la calavera de 2048 px (la propuesta pide 1K): reducir a 1024 en GIMP | A-1 |
+| 4 | Escalas fuera de 1 u = 1 m (sección 5) | A-2 |
+| 5 | Falta iluminación: el shader actual solo muestra la textura | A-8 |
+| 6 | El material `Material` de la fachada no tiene textura (se ve negro) | A-12 |
+| 7 | No se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader) | E-1 (o antes, al tocar esas clases) |
+| 8 | `Model.h` no carga mapas normales/de relieve (necesario para el pan) | B-12 |
+
+---
 
 ## 7. Siguiente paso concreto
 
-Bloque A, en este orden: (1) corregir problemas 1–2 y las escalas; (2) ventana 1280×720 y far 300;
-(3) playa + mar; (4) shader de iluminación; (5) colisiones.
+1. **Act. 4:** recompilar la rama `feature/act-4-base-solucion` (Release x64) → D1 la revisa con `/verificar 4` → *merge* a `develop`.
+2. Fusionar el PR de documentación (`feature/docs-orden`) después del de la act. 4.
+3. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
+4. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
