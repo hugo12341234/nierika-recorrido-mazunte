@@ -232,6 +232,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 | 19/10 | **Orden de autoridad** de los documentos: (1) Registro de decisiones del ESTADO → (2) `CONTEXTO_PROYECTO.md` → (3) `PLAN_ACTIVIDADES.md` y PDFs de `docs/propuesta/`. Si dos documentos se contradicen, se señala y se registra una decisión; no se elige en silencio | Integridad y coherencia del proyecto | Todos los documentos, CLAUDE.md, instrucciones del Proyecto de Claude |
 | 19/10 | Las instrucciones del Proyecto de Claude (web) se guardan en `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` | Que los dos integrantes usen las mismas y queden versionadas | Proyecto de Claude |
 | 19/10 | **Excepción única:** los PR #1 (act. 4) y #2 (documentación) se fusionan sin la revisión previa de D1. D1 los revisa **después**, ya en `develop`, con `/verificar 4`; si pide cambios, entran por un PR nuevo. Desde la siguiente tarea vuelve la regla normal: nada entra a `develop` sin la revisión del otro integrante | D1 aún no acepta la invitación al repositorio y el Bloque A empieza hoy; la act. 4 ya compila y corre en la PC de D2 | Act. 4, flujo de trabajo |
+| 19/10 | El Proyecto de Claude (web) tiene el repositorio **con permiso de escritura**: sus hilos leen `develop` directo del repo (sin copias de `docs/` como archivos del proyecto) y pueden hacer cambios con el mismo ciclo (rama → `/cierre` → PR → revisión). Antes del primer commit de cada sesión se comprueba `git config user.name` y se configura la identidad del integrante (tabla en `CLAUDE.md`, sección 5) | En los hilos web Git empieza como `Claude`, lo que rompería la regla de autoría; dos copias del ESTADO se contradirían | CLAUDE.md, FLUJO_DE_TRABAJO, instrucciones del Proyecto, `/cierre` |
 | *pendiente* | ¿Techo a dos aguas (como está modelado) o plano (como dice la propuesta)? | | A-11 (act. 18) |
 | *pendiente* | ¿Se agrega la calavera de azúcar a la ofrenda? (no está en la propuesta) | | Alcance, fichas |
 | *pendiente* | Origen del "altar" y la calavera. Indicio: nombres de texturas (`texture_diffuse`, `texture_normal`, `shaded`) y el mismo `mtllib base.mtl` en ambos, patrón típico de generadores 3D por IA. Si son externos: crédito, solo secundarios y **no cuentan** para los 18 propios | Criterio de modelado de la propuesta | B-1, B-9 (acts. 14 y 24) |
@@ -273,6 +274,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 
 ## 7. Siguiente paso concreto
 
-1. **D1:** aceptar la invitación al repositorio, instalar vcpkg (ver README), compilar `develop` (Release x64) y revisar la act. 4 y la documentación con `/verificar 4` (revisión posterior, ver decisiones del 19/10).
-2. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
-3. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+1. **D2:** volver a pegar las instrucciones de `docs/INSTRUCCIONES_PROYECTO_CLAUDE.md` en el Proyecto de Claude (cambiaron el 19/10) y quitar del proyecto cualquier copia suelta de `docs/`.
+2. **D1:** dar su nombre y correo de GitHub para la tabla de autoría de `CLAUDE.md`; aceptar la invitación al repositorio, instalar vcpkg (ver README), compilar `develop` (Release x64) y revisar la act. 4 y la documentación con `/verificar 4` (revisión posterior, ver decisiones del 19/10).
+3. Trello: poner el código en el título de las 12 tarjetas del Bloque A (`A-1 · …`) e invitar a D1.
+4. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
