@@ -100,7 +100,7 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 - **GLFW** (ventana/entrada) · **GLEW** (carga de funciones; la propuesta decía GLAD, se cambió el 18/10) · **GLM** (matemáticas) · **Assimp** (.obj) · **SOIL2 / stb_image** (texturas) · **Dear ImGui** (fichas) · **miniaudio** (audio).
 - Assimp, GLFW, GLEW y GLM se instalan con **vcpkg** (`vcpkg.json`, versiones fijas por `builtin-baseline`); SOIL2/stb en `vendor/SOIL2` (decisiones del 19/10).
 - Base de código: proyecto de la **Práctica 6** del laboratorio (clases del curso `Shader`, `Camera`, `Model`, `Mesh`).
-- **Blender** (modelado, UV, export .obj) · **GIMP** (texturas, canales alfa) · **OBS** (videos).
+- **Blender** (modelado, UV, export .obj) · **Autodesk Maya** (modelado adicional, licencia educativa; decisión del 19/10, desviación de la propuesta) · **GIMP** (texturas, canales alfa) · **OBS** (videos).
 - Texturas **Poly Haven / ambientCG (CC0)**, 1K, albedo + normal.
 - **Git/GitHub** (ramas por funcionalidad, PR) · **Trello** (Kanban).
 - Referencia técnica principal: **LearnOpenGL** (de Vries, 2020).
