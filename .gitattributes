@@ -1,0 +1,28 @@
+# Normaliza finales de línea en archivos de texto
+* text=auto
+
+# Código y shaders siempre con CRLF en Windows/Visual Studio
+*.cpp text eol=crlf
+*.h   text eol=crlf
+*.vs  text eol=crlf
+*.frag text eol=crlf
+*.sln text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Modelos y materiales: texto, sin modificar finales de línea
+*.obj -text diff
+*.mtl -text diff
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.blend binary
+*.dll binary
+*.lib binary
+*.exe binary
+*.wav binary
+*.mp3 binary
+*.mp4 binary
+*.pdf binary

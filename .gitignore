@@ -426,3 +426,23 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# ------------------------------------------------------------------
+# Nierika Studio — reglas propias del proyecto
+# ------------------------------------------------------------------
+# La plantilla de VS ignora *.obj (archivos de compilación de C++),
+# pero nuestros modelos 3D también son .obj: se vuelven a incluir.
+!**/Models/**/*.obj
+!**/Models/**/*.mtl
+
+# Configuración personal de Claude (cada integrante tiene la suya)
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Archivos de respaldo de Blender y swatches de Maya
+*.blend1
+*.blend2
+**/.mayaSwatches/
+
+# Videos crudos de OBS (solo se suben los 3 MP4 finales en docs/videos/)
+*.mkv
