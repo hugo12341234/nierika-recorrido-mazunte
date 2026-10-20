@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 20/10/2026 (A-3 y A-4) · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 29 (mié 18/11/2026)
+**Última actualización:** 20/10/2026 (A-5) · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 29 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -18,13 +18,13 @@ integrarla a `develop`.
 
 ---
 
-## 1. Lo que ya existe (revisado el 19/10/2026; fachada, transformaciones, ventana y *far plane*, el 20/10)
+## 1. Lo que ya existe (revisado el 19/10/2026; fachada, transformaciones, ventana, *far plane* y playa, el 20/10)
 
 **Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; act. 4, PR #1):
 - `src/main.cpp`: ventana GLFW **1280×720** (A-3, 20/10) no redimensionable, proyección con FOV 45° y near/far **0.1 / 300 m** (A-4, 20/10), OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
 - Clases del curso en `src/`: `Shader.h`, `Camera.h` (WASD/flechas + ratón, pitch ±89°), `Model.h` + `Mesh.h` (Assimp, texturas RGBA).
 - Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación** (descarta píxeles con alfa < 0.1).
-- Carga y dibuja 2 modelos: fachada y "altar" (capilla provisional). La calavera se quitó en A-1 (19/10, rama `feature/a-1-quitar-calavera`).
+- Carga y dibuja 3 modelos: playa (A-5, 20/10), fachada y "altar" (capilla provisional). La calavera se quitó en A-1 (19/10, rama `feature/a-1-quitar-calavera`).
 - Dependencias: Assimp, GLFW, GLEW y GLM por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/SOIL2`.
 
 **Modelos** (`Models/`):
@@ -33,6 +33,7 @@ integrarla a `develop`.
 |---|---|---|---|---|
 | `fachada/fachada.obj` | Blender 4.4.3 (propio); **reexportado a escala real en A-2 (20/10)** desde Blender 5.2.2, con `fachada.blend` reconstruido desde el `.obj` | 204 caras; muros 3.93 × 2.62 m y 3.28 m de alto, techo 4.18 × 3.43 m hasta 3.32 m (1 u = 1 m, pivote en el centro del piso); muros con **apertura de arco** (no es de medio punto: 1.18 m de ancho, arranque a 1.14 m y clave a 2.11 m, casi semielíptica; problema #12) + **techo a dos aguas** (decisión 19/10: se queda así) | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. Al reexportar (A-2) desapareció el material sobrante `Material`. |
 | `altar/altar.obj` | **Propio** (confirmado de palabra por D2 el 19/10); exportado desde Maya. **Se retira**: se rehace en Blender como una de las tumbas de B-9 (decisión 19/10, solo Blender) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | A-1 (19/10): el .obj ya dice `mtllib altar.mtl`; `altar.mtl` usa `texture_diffuse.png` y `Kd 1 1 1`. `shaded.png` y `texture_normal.png` siguen en la carpeta sin usarse (se van con la capilla en B-9). |
+| `playa/playa.obj` | **Propio**, Blender 5.2.2 (A-5, 20/10), con `playa.blend` | 1 250 caras (50 × 25 cuadros de 2 m), 1 326 vértices; x −50…+50, z −20…+30; y = 0 hasta z = +20 y pendiente hasta y = −0.5 en z = +30 (vértices en coordenadas del mundo) | `Playa_provisional.png` (1024×1024, un solo color, **provisional** hasta A-6) | UV de 0 a 1 (sin repetir) hasta A-6. Sin luz (problema #5) la pendiente no se distingue en pantalla |
 | ~~`calavera/base.obj`~~ | Propio, exportado desde Maya | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | ✂️ **Retirada en A-1 (19/10):** ya no se carga y `Models/calavera/` se borró del repo (decisión del 19/10). |
 
 **Transformaciones en `main.cpp`** (corregidas en **A-2**, 20/10): fachada esc. 1.0 (rot. Y 180°) · "altar" esc. 1.0 en (0, 0, −0.6), **1.9 m de alto**.
@@ -57,8 +58,8 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ✅ 19/10, PR #9 (`/verificar A-1`: APROBAR): compila en Release x64 en la PC de D2 (1 correcto, 0 fallidos; solo *warnings* C4244/C4267 que ya existían); capturas de D2: capilla con textura, sin magenta ni calavera, consola sin avisos |
 | A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ✅ 20/10, PR #11 (rama `feature/a-2-escalas-reales`): fachada escalada ×1.31 en Blender y reexportada (arco 2.11 × 1.18 m); escalas de `main.cpp` en 1.0; capilla en (0, 0, −0.6). Compila en Release x64 en la PC de D2 (1 correcto) y se ve el cuarto con la capilla al fondo. **Verificada** con `/verificar A-2`: APROBAR (comentario de D2 en el PR #11, 20/10 a las 00:39, hora de México) |
 | A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ✅ 20/10, rama `feature/a-3-a-4-ventana-far-plane`: `WIDTH, HEIGHT = 1280, 720` y `lastX, lastY = 640, 360` en `src/main.cpp`. Compila en Release x64 en la PC de D2; la captura de la ventana completa mide 1280 px de ancho con 720 px de área de dibujo bajo la barra de título, y el cuarto no se ve estirado |
-| A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ✅ 20/10, misma rama que A-3: `glm::perspective(..., 0.1f, 300.0f)` en `src/main.cpp`. Hoy la escena solo es el cuarto (~4 m), así que el criterio se cumple sin prueba real de distancia: **se vuelve a revisar en A-5** con la playa de 100×50 m |
-| A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
+| A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ✅ 20/10, misma rama que A-3: `glm::perspective(..., 0.1f, 300.0f)` en `src/main.cpp`. Hoy la escena solo es el cuarto (~4 m), así que el criterio se cumple sin prueba real de distancia: **se vuelve a revisar en A-5** con la playa de 100×50 m. **Revisado en A-5 (20/10):** desde una esquina de la playa se ve completa hasta la esquina opuesta (~112 m), sin cortes (captura de D2) |
+| A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ✅ 20/10, rama `feature/a-5-playa`: `Models/playa/playa.obj` modelado por D2 en Blender 5.2.2 con los valores de la decisión "Playa y mar" (20/10). Revisado en el `.obj`: 1 250 caras, 1 326 vértices, x −50…+50, z −20…+30, filas z = +22…+30 en y = −0.1…−0.5. `main.cpp` lo dibuja con matriz identidad. Compila y corre (F5) en la PC de D2: arena alrededor y dentro del cuarto (sin piso hasta A-11); *far plane* revisado desde una esquina (sin cortes); z-fighting: D2 no vio parpadeo en la base de muros y capilla (revisión rápida); consola sin avisos. La orilla con el mar se revisa en A-7 |
 | A-6 | Textura de arena 1K con mapeo UV | 13 | Textura 1K sin estiramientos visibles | ⏳ |
 | A-7 | Mar: malla 100×100 m subdividida | 10 | Malla preparada para el vertex shader de olas | ⏳ |
 | A-8 | Shader Blinn-Phong: luz ambiental cálida + 3 luces clave | 37 | El interior del cuarto se distingue sin perder el ambiente nocturno; sin luces puntuales extra; `Draw(Shader&)` por referencia y nada de `glDelete*` en destructores (decisión `cleanup()`, 19/10) | ⏳ |
@@ -149,7 +150,7 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 2 | Techo a dos aguas del cuarto | `techo/techo.obj` (separar de `fachada.obj`) | A-11 (act. 18) | Volumen (con grosor: tiene caras inferiores y tapas) | 🔄 existe dentro de `fachada.obj`; a dos aguas (decisión 19/10) | — |
 | 3 | Arco de medio punto con dovelas | `arco/arco.obj` | A-10 (act. 17) | Volumen | ⏳ | — |
 | 4 | Piso interior del cuarto | `piso/piso.obj` | A-11 (act. 18) | Plano | ⏳ (no existe en `fachada.obj`) | — |
-| 5 | Playa 100×50 m | `playa/playa.obj` | A-5 (act. 8) | Plano | ⏳ | — |
+| 5 | Playa 100×50 m | `playa/playa.obj` | A-5 (act. 8) | Plano | ✅ 20/10 | `playa/playa.blend` (Blender 5.2.2), modelado por D2 el 20/10 |
 | 6 | Mar 100×100 m | `mar/mar.obj` | A-7 (act. 10) | Plano | ⏳ | — |
 | 7 | Tumba 1: capilla con domo y cruz (rehecha en Blender) | `tumba1/tumba1.obj` | B-9 (act. 14) | Volumen | ⏳ (sustituye a `altar/altar.obj`) | — |
 | 8 | Tumba 2 | `tumba2/tumba2.obj` | B-9 (act. 14) | Volumen | ⏳ | — |
@@ -194,14 +195,14 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 5 | Trello | — | ✅ | 4 listas (Pendiente / En proceso máx. 2 por persona / En revisión / Terminado). **19/10 (export JSON):** 56 tarjetas: las 49 tareas A-1…E-7, X-1 y X-2 con código y su etiqueta de bloque (A–E y "Sueltas (X)"), más 7 en Terminado. Prioridades Alta/Media/Baja iguales a la columna *Prior.* del plan original. Falta: invitar a D1, asignar responsable y fecha a cada tarjeta, separar "A-3 + A-4" y archivar "Act. 0" |
 | 6 | Blender y GIMP | X-1 | 🔄 | Blender 4.4.3 en al menos un equipo |
 | 7 | Bocetos del cuarto | X-2 | ❓ | |
-| 8 | Playa 100×50 | A-5 | ⏳ | |
+| 8 | Playa 100×50 | A-5 | ✅ | 20/10, rama `feature/a-5-playa` |
 | 9 | Clase Camera | — | ✅ | Clase del curso; 19/10: pitch limitado a ±89° verificado en `Camera.h` |
 | 10 | Mar 100×100 | A-7 | ⏳ | |
 | 11 | Callbacks WASD/ratón | — | ✅ | Del curso; 19/10: cursor capturado en `main.cpp` |
 | 12 | Colisiones AABB | A-9 | ⏳ | |
 | 13 | Textura arena | A-6 | ⏳ | |
 | 14 | Tumbas | B-9 | ⏳ | Faltan las 4 tumbas propias en Blender (decisión del 19/10); una sustituye a la capilla de Maya (`altar/altar.obj`) |
-| 15 | Ciclo deltaTime + render | A-5 | 🔄 | Ciclo ✅; falta la playa |
+| 15 | Ciclo deltaTime + render | A-5 | ✅ | Ciclo ✅; la playa se dibuja en el ciclo desde A-5 (20/10) |
 | 16 | Fachada con apertura | A-12 | 🔄 | `fachada.obj` con apertura de arco, a escala real desde A-2 (20/10); falta textura de piedra (A-12) |
 | 17 | Arco con dovelas | A-10 | ⏳ | No hay pieza de arco: `fachada.obj` solo tiene la apertura del muro (act. 16) |
 | 18 | Piso, paredes, techo | A-11 | 🔄 | Paredes y techo a dos aguas (decidido el 19/10) existen; **no hay piso interior** (las caras en y = 0 son la base de los muros y miran hacia abajo) |
@@ -346,5 +347,5 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 3. Trello: invitar a D1, asignar responsable y fecha a las tarjetas del Bloque A, y actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
 4. **D2:** confirmar quién verifica mientras D1 no esté (pendiente del 19/10).
 5. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
-6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → ~~A-3 y A-4~~ (✅ 20/10, rama `feature/a-3-a-4-ventana-far-plane`) → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
-7. **A-3 y A-4:** merge del PR solo con `/verificar A-3` y `/verificar A-4` APROBAR (hacer `git pull` de la rama antes de verificar). **Siguiente tarea: A-5, A-6 y A-7**; en A-5 comprobar que la playa (100×50 m) no se recorta con el *far plane* de 300 m desde ningún punto del recorrido.
+6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → ~~A-3 y A-4~~ (✅ 20/10, PR #12) → ~~A-5~~ (✅ 20/10, rama `feature/a-5-playa`) → A-6 → A-7 (un PR por tarea, decisión 20/10) → A-8 → A-9 → A-10, A-11 y A-12.
+7. **A-5:** merge del PR solo con `/verificar A-5` APROBAR (hacer `git pull` de la rama antes de verificar). **Siguiente tarea: A-6** (arena 1K que se repite cada 2 m, sustituye `Playa_provisional.png`) y después **A-7** (mar; ahí se revisa el z-fighting de la orilla en z = +24).
