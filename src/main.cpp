@@ -23,7 +23,7 @@
 #include "stb_image.h"
 
 // Properties
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1280, HEIGHT = 720;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Function prototypes
@@ -34,7 +34,7 @@ void DoMovement();
 // Camera
 Camera camera(glm::vec3(0.0f, 2.0f, 6.0f));
 bool keys[1024];
-GLfloat lastX = 400, lastY = 300;
+GLfloat lastX = 640, lastY = 360;  // centro de la ventana de 1280x720
 bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
@@ -93,7 +93,7 @@ int main()
     Model altar((char*)"Models/altar/altar.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
     // Game loop
     while (!glfwWindowShouldClose(window))
