@@ -117,7 +117,7 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // 1. FACHADA (escala real en el .obj desde A-2: cuarto de 3.93 x 2.62 m, arco de 2.11 m)
+        // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
         glm::mat4 modelFachada(1.0f);
         modelFachada = glm::translate(modelFachada, glm::vec3(0.0f, 0.0f, 0.0f));
         modelFachada = glm::rotate(modelFachada, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));

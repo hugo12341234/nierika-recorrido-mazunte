@@ -18,7 +18,7 @@ integrarla a `develop`.
 
 ---
 
-## 1. Lo que ya existe (revisado el 19/10/2026)
+## 1. Lo que ya existe (revisado el 19/10/2026; fachada y transformaciones, el 20/10)
 
 **Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; act. 4, PR #1):
 - `src/main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
@@ -31,7 +31,7 @@ integrarla a `develop`.
 
 | Modelo | Origen | Geometría | Texturas | Observaciones |
 |---|---|---|---|---|
-| `fachada/fachada.obj` | Blender 4.4.3 (propio); **reexportado a escala real en A-2 (20/10)** desde Blender 5.2.2, con `fachada.blend` reconstruido desde el `.obj` | 204 caras; muros 3.93 × 2.62 m y 3.28 m de alto, techo 4.18 × 3.43 m hasta 3.32 m (1 u = 1 m, pivote en el centro del piso); muros con **apertura de arco de medio punto** + **techo a dos aguas** (decisión 19/10: se queda así) | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. Al reexportar (A-2) desapareció el material sobrante `Material`. |
+| `fachada/fachada.obj` | Blender 4.4.3 (propio); **reexportado a escala real en A-2 (20/10)** desde Blender 5.2.2, con `fachada.blend` reconstruido desde el `.obj` | 204 caras; muros 3.93 × 2.62 m y 3.28 m de alto, techo 4.18 × 3.43 m hasta 3.32 m (1 u = 1 m, pivote en el centro del piso); muros con **apertura de arco** (no es de medio punto: 1.18 m de ancho, arranque a 1.14 m y clave a 2.11 m, casi semielíptica; problema #12) + **techo a dos aguas** (decisión 19/10: se queda así) | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. Al reexportar (A-2) desapareció el material sobrante `Material`. |
 | `altar/altar.obj` | **Propio** (confirmado de palabra por D2 el 19/10); exportado desde Maya. **Se retira**: se rehace en Blender como una de las tumbas de B-9 (decisión 19/10, solo Blender) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | A-1 (19/10): el .obj ya dice `mtllib altar.mtl`; `altar.mtl` usa `texture_diffuse.png` y `Kd 1 1 1`. `shaded.png` y `texture_normal.png` siguen en la carpeta sin usarse (se van con la capilla en B-9). |
 | ~~`calavera/base.obj`~~ | Propio, exportado desde Maya | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | ✂️ **Retirada en A-1 (19/10):** ya no se carga y `Models/calavera/` se borró del repo (decisión del 19/10). |
 
@@ -55,14 +55,14 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
 | A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ✅ 19/10, PR #9 (`/verificar A-1`: APROBAR): compila en Release x64 en la PC de D2 (1 correcto, 0 fallidos; solo *warnings* C4244/C4267 que ya existían); capturas de D2: capilla con textura, sin magenta ni calavera, consola sin avisos |
-| A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | 👀 20/10, rama `feature/a-2-escalas-reales`: fachada escalada ×1.31 en Blender y reexportada (arco 2.11 × 1.18 m); escalas de `main.cpp` en 1.0; capilla en (0, 0, −0.6). Compila en Release x64 en la PC de D2 (1 correcto) y se ve el cuarto con la capilla al fondo |
+| A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ✅ 20/10, PR #11 (rama `feature/a-2-escalas-reales`): fachada escalada ×1.31 en Blender y reexportada (arco 2.11 × 1.18 m); escalas de `main.cpp` en 1.0; capilla en (0, 0, −0.6). Compila en Release x64 en la PC de D2 (1 correcto) y se ve el cuarto con la capilla al fondo |
 | A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ⏳ |
 | A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
 | A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
 | A-6 | Textura de arena 1K con mapeo UV | 13 | Textura 1K sin estiramientos visibles | ⏳ |
 | A-7 | Mar: malla 100×100 m subdividida | 10 | Malla preparada para el vertex shader de olas | ⏳ |
 | A-8 | Shader Blinn-Phong: luz ambiental cálida + 3 luces clave | 37 | El interior del cuarto se distingue sin perder el ambiente nocturno; sin luces puntuales extra; `Draw(Shader&)` por referencia y nada de `glDelete*` en destructores (decisión `cleanup()`, 19/10) | ⏳ |
-| A-9 | Colisiones AABB con suelo y muros | 12 | La cámara no atraviesa el suelo ni los muros; camina en el plano XZ a la altura de ojos fijada en la sección 5 (pendiente de confirmar) | ⏳ |
+| A-9 | Colisiones AABB con suelo y muros | 12 | La cámara no atraviesa el suelo ni los muros; camina en el plano XZ a la altura de ojos fijada en la sección 5 (valor inicial) | ⏳ |
 | A-10 | Arco de medio punto con dovelas visibles | 17 | Dovelas visibles (detalle obligatorio) | ⏳ |
 | A-11 | Piso interior del cuarto y techo a dos aguas en su propio `.obj` | 18 | Piso, paredes y techo sin detalles innecesarios; techo separado de `fachada.obj` (decisión del techo: a dos aguas, 19/10) | ⏳ |
 | A-12 | Texturas de piedra rústica 1K en muros y fachada | 16, 21 | Piedra rústica coherente con materiales reales, 1K | ⏳ |
@@ -293,7 +293,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 19/10 | **Verificación obligatoria antes de todo merge, sin excepciones (vigente desde el 20/10/2026).** Ningún PR entra a `develop` sin pasar `/verificar` (subagente `verificador`) con veredicto APROBAR. Las excepciones de los PR #1 a #7 (fusionados sin revisión el 18–19/10, incluido el #7, que no tenía excepción propia) **se dejan como historial**, tal como están escritas, y ya no se revisan después: D2 decidió ignorarlas ("vamos a ignorar lo de los pull request sin verificación anteriores, a partir de ahora todo va a tener verificación") | Cortar el ciclo de registrar una excepción por PR en otro PR que también se fusionaba sin revisión | Flujo de trabajo, FLUJO §4, INSTRUCCIONES §3, sección 7 |
 | 20/10 | **Escalas de A-2.** (1) El cuarto se escala **×1.31**, no ×1.3: el arco mide 1.610 m a escala 1 y con ×1.3 quedaba en 2.09 m, debajo de los 2.1 m pedidos; con ×1.31 mide **2.11 × 1.18 m**. (2) La escala se aplica **en Blender** (pivote al centro del piso, `Ctrl+A`, reexportado con Forward −Z / Up Y) y `main.cpp` queda en 1.0, como pide CLAUDE.md §4. (3) La capilla provisional (Maya) **no se reexporta** (decisión del 19/10): ya mide 1.9 m, así que solo cambia su escala a 1.0 y se coloca al fondo del cuarto, en (0, 0, −0.6). (4) El `.blend` original de la fachada no apareció; se reconstruyó desde el `.obj` y se versiona en `Models/fachada/fachada.blend` (110 KB). No prueba autoría | (1) Criterio de la pendiente de la cámara. (2) Regla 1 u = 1 m en el `.obj`. (3) B-9 reemplaza la capilla. (4) Tener una fuente editable para A-10/A-11/A-12 | A-2, sección 5, inventario #1, problemas #4, #6 y #11 |
 | *pendiente* | **Quién verifica mientras D1 no esté en el repositorio.** Propuesta de Claude, pendiente de confirmar por D2: D2 corre `/verificar <código>` en una **sesión nueva** de Claude Code (no en la que hizo la tarea, para que la revisión sea independiente), pega el veredicto como comentario en el PR y solo fusiona con APROBAR. Cuando D1 entre, vuelve la regla normal: verifica el otro integrante | D1 aún no acepta la invitación al repositorio | Flujo de trabajo, FLUJO §4 |
-| *pendiente* | **Cámara a pie (antes de A-9). Valores propuestos por Claude, pendientes de confirmar por D2:** (1) movimiento solo en el plano XZ: `front` sin su componente y para avanzar (hoy avanza hacia donde mira, también hacia arriba, `src/Camera.h:60-71`); (2) altura de ojos **1.6 m** sobre el suelo; (3) velocidad al caminar **2.0 m/s** (hoy 6 m/s, `Camera.h:25`, `SPEED = 6.0f`, que es velocidad de carrera); (4) el cuarto se escala para que la apertura del arco mida **≥ 2.1 m de alto** (hoy 1.61 m a escala 1, problema #11): factor ≈ 1.3, que deja muros de ~2.6 m y una puerta de ~1.2 m de ancho. **(4) resuelto en A-2 (20/10) con factor 1.31** (ver decisión "Escalas de A-2"); (1)–(3) siguen como valores iniciales, se ajustan en A-9 si hace falta (D2, 19/10) | (2) Altura de ojos de un adulto de pie (valor de referencia, no medido). (3) A 1.4 m/s, paso normal, cruzar la playa de 100 m toma ~71 s; a 2.0 m/s, ~50 s, mejor para el recorrido y los videos. (4) Una puerta real mide ~2.1 m (valor de referencia); con 1.61 m la cámara a 1.6 m roza el arco | A-2, A-9, sección 5, `Camera.h`, `main.cpp` |
+| 19/10 | **Cámara a pie (antes de A-9). Valores iniciales, ajustables si hace falta** (D2, chat del proyecto, 19/10: "así dejemos lo de los ojos, velocidad y escala, lo vamos modificando si hace falta"; no son valores finales): (1) movimiento solo en el plano XZ: `front` sin su componente y para avanzar (hoy avanza hacia donde mira, también hacia arriba, `src/Camera.h:60-71`); (2) altura de ojos **1.6 m** sobre el suelo; (3) velocidad al caminar **2.0 m/s** (hoy 6 m/s, `Camera.h:25`, `SPEED = 6.0f`, que es velocidad de carrera); (4) el cuarto se escala para que la apertura del arco mida **≥ 2.1 m de alto** (hoy 1.61 m a escala 1, problema #11): factor ≈ 1.3, que deja muros de ~2.6 m y una puerta de ~1.2 m de ancho. **(4) resuelto en A-2 (20/10) con factor 1.31** (ver decisión "Escalas de A-2") | (2) Altura de ojos de un adulto de pie (valor de referencia, no medido). (3) A 1.4 m/s, paso normal, cruzar la playa de 100 m toma ~71 s; a 2.0 m/s, ~50 s, mejor para el recorrido y los videos. (4) Una puerta real mide ~2.1 m (valor de referencia); con 1.61 m la cámara a 1.6 m roza el arco | A-2, A-9, sección 5, `Camera.h`, `main.cpp` |
 | 19/10 | La calavera de azúcar **no** entra a la ofrenda: se quita de la escena y del repo en A-1 | No está en la propuesta y se modeló en Maya (decisión anterior) | A-1, alcance, fichas |
 | *pendiente* | ¿El repositorio queda **público** (portafolio) o **privado**? Hoy es público | Expone los números de cuenta y la configuración de Claude | Repositorio |
 
@@ -307,8 +307,8 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | Proyección | near / far | 0.1 / 100 → **cambiar far a 300** (A-4) | `src/main.cpp` |
 | Cámara | posición inicial | (0, 2, 6), fuera del cuarto mirando al arco (z = +1.31) → y = 1.6 **(valor inicial, se ajusta en A-9)**; x, z se fijan con la escena (A-2, A-5) | `src/main.cpp` |
 | Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `src/Camera.h` (`ZOOM`), `src/main.cpp` (`glm::perspective`) |
-| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° → velocidad 2.0 m/s **(propuesto, pendiente de confirmar)** | `src/Camera.h` |
-| Cámara | altura de ojos / plano de movimiento | 1.6 m / XZ **(propuesto, pendiente de confirmar)**; hoy vuela | `src/Camera.h` (A-9) |
+| Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° → velocidad 2.0 m/s **(valor inicial, se ajusta en A-9)** | `src/Camera.h` |
+| Cámara | altura de ojos / plano de movimiento | 1.6 m / XZ **(valor inicial, se ajusta en A-9)**; hoy vuela | `src/Camera.h` (A-9) |
 | Cuarto | apertura del arco (alto × ancho) | **2.11 × 1.18 m** (factor 1.31 aplicado en Blender, A-2, 20/10) | `Models/fachada/fachada.obj` |
 | Cuarto | muros / techo | muros 3.93 × 2.62 m (planta), 2.62 m hasta el alero y 3.28 m en la cumbrera; techo 4.18 × 3.43 m, cumbre a 3.32 m; pivote en el centro del piso | `Models/fachada/fachada.obj` |
 | Fachada | trans / rot Y / esc | (0,0,0) / 180° / **1.0** (A-2, 20/10); el arco queda en z = +1.31, de cara a la cámara | `src/main.cpp` |
@@ -323,11 +323,14 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 
 | # | Problema | Se resuelve en |
 |---|---|---|
-| 3 | Texturas de la capilla provisional de 2048 px (la propuesta pide 1K). No se reducen: la capilla se reemplaza en B-9. (Los problemas #1 y #2, `mtllib` y material de la capilla, y la calavera se cerraron en A-1, 19/10; #4 escalas, #6 material sobrante y #11 tamaño del arco, en A-2, 20/10) | B-9 |
+| 3 | Texturas de la capilla provisional de 2048 px (la propuesta pide 1K). No se reducen: la capilla se reemplaza en B-9. (Los problemas #1 y #2, `mtllib` y material de la capilla, y la calavera se cerraron en A-1, 19/10) | B-9 |
 | 5 | Falta iluminación: el shader actual solo muestra la textura | A-8 |
 | 7 | No se libera memoria de GPU (VAO/VBO/EBO, texturas, programa de shader). Se hace con `cleanup()` explícito, no con destructores (decisión del 19/10) | E-1 (o antes, al tocar esas clases) |
 | 8 | `Model.h` no carga mapas normales/de relieve (necesario para el pan) | B-12 |
 | 9 | `fachada.obj` incluye el techo (objeto `roof`); según la definición de modelo propio, el techo va en su propio `.obj` | A-11 |
+| 12 | La apertura de `fachada.obj` **no es de medio punto**: 1.18 m de ancho, arranca a 1.14 m y sube 0.97 m hasta la clave (2.11 m); un medio punto de ese ancho sube 0.59 m. Además está descentrada 0.03 m en X. Hay que ajustarla para que encaje el arco con dovelas (o registrar la decisión de dejarla así). Venía así desde antes; A-2 solo la escaló | A-10 / A-12 |
+
+> **Cerrados en A-2 (20/10):** #4 escalas fuera de 1 u = 1 m, #6 material sobrante `Material` (desapareció al reexportar) y #11 tamaño del arco (ahora 2.11 × 1.18 m).
 
 ---
 
@@ -338,5 +341,5 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 3. Trello: invitar a D1, asignar responsable y fecha a las tarjetas del Bloque A, y actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
 4. **D2:** confirmar quién verifica mientras D1 no esté (pendiente del 19/10).
 5. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
-6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → A-2 (👀 20/10) → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
-7. **A-2:** `/verificar A-2` en una sesión nueva y merge solo con APROBAR. **Siguiente tarea: A-3** (ventana 1280×720) y **A-4** (*far plane* a 300 m).
+6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+7. **A-2:** merge del PR #11 solo con `/verificar A-2` APROBAR. **Siguiente tarea: A-3** (ventana 1280×720) y **A-4** (*far plane* a 300 m).
