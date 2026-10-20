@@ -111,6 +111,8 @@
 11. **Trello:** tarjeta a *En revisión* y avisar al compañero.
 
 ### Revisión (la hace el otro integrante)
+> **Desde el 20/10/2026 ningún PR se fusiona sin `/verificar` con veredicto APROBAR**, sin excepciones (ESTADO, sección 4). Mientras D1 no esté en el repositorio, quién verifica está en la decisión pendiente del 20/10.
+
 12. ```
     git fetch
     git checkout feature/<código>-<nombre-corto>
