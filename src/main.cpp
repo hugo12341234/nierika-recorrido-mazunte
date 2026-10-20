@@ -117,19 +117,19 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // 1. FACHADA
+        // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
         glm::mat4 modelFachada(1.0f);
         modelFachada = glm::translate(modelFachada, glm::vec3(0.0f, 0.0f, 0.0f));
         modelFachada = glm::rotate(modelFachada, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        float escalaFachada = 3.0f;
+        float escalaFachada = 1.0f;
         modelFachada = glm::scale(modelFachada, glm::vec3(escalaFachada, escalaFachada, escalaFachada));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelFachada));
         fachada.Draw(shader);
 
-        // 2. ALTAR
+        // 2. ALTAR (capilla provisional de 1.9 m, al fondo del cuarto hasta B-9)
         glm::mat4 modelAltar(1.0f);
-        modelAltar = glm::translate(modelAltar, glm::vec3(0.0f, 0.0f, 2.0f));
-        float escalaAltar = 3.5f;
+        modelAltar = glm::translate(modelAltar, glm::vec3(0.0f, 0.0f, -0.6f));
+        float escalaAltar = 1.0f;
         modelAltar = glm::scale(modelAltar, glm::vec3(escalaAltar, escalaAltar, escalaAltar));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelAltar));
         altar.Draw(shader);
