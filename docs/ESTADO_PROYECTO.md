@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 19/10/2026 · **Hoy:** inicio de la semana 4 (Bloque A) · **Días a la entrega:** 30 (mié 18/11/2026)
+**Última actualización:** 20/10/2026 · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 29 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -24,7 +24,7 @@ integrarla a `develop`.
 - `src/main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
 - Clases del curso en `src/`: `Shader.h`, `Camera.h` (WASD/flechas + ratón, pitch ±89°), `Model.h` + `Mesh.h` (Assimp, texturas RGBA).
 - Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación** (descarta píxeles con alfa < 0.1).
-- Carga y dibuja 3 modelos: fachada, "altar" y calavera.
+- Carga y dibuja 2 modelos: fachada y "altar" (capilla provisional). La calavera se quitó en A-1 (20/10, rama `feature/a-1-quitar-calavera`).
 - Dependencias: Assimp, GLFW, GLEW y GLM por **vcpkg** (`vcpkg.json`); SOIL2/stb en `vendor/SOIL2`.
 
 **Modelos** (`Models/`):
@@ -32,11 +32,11 @@ integrarla a `develop`.
 | Modelo | Origen | Geometría | Texturas | Observaciones |
 |---|---|---|---|---|
 | `fachada/fachada.obj` | Blender 4.4.3 (propio) | 204 caras; 3.2 × 2.5 × 2.6 u; muros con **apertura de arco de medio punto** + **techo a dos aguas** (decisión 19/10: se queda así) | `concreto.jpg`, `laminado1.jpg` (512×512) | Arco sin dovelas visibles. El material `Material` no tiene textura. |
-| `altar/altar.obj` | **Propio** (confirmado de palabra por D2 el 19/10); exportado desde Maya. **Se retira**: se rehace en Blender como una de las tumbas de B-9 (decisión 19/10, solo Blender) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | El .obj dice `mtllib base.mtl` pero el archivo es `altar.mtl`; `altar.mtl` usa `shaded.png` (con luz "horneada") y `Kd 0 0 0` → tarea **A-1**. |
-| `calavera/base.obj` | **Propio**, exportado desde Maya. **Se retira de la escena** en A-1 (decisión 19/10: no está en la propuesta) | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | Calavera de azúcar; no está en la propuesta: se retira (decisión del 19/10). |
+| `altar/altar.obj` | **Propio** (confirmado de palabra por D2 el 19/10); exportado desde Maya. **Se retira**: se rehace en Blender como una de las tumbas de B-9 (decisión 19/10, solo Blender) | 2 148 caras; 1.3 × 1.9 × 0.9 u; **es una capilla/tumba con domo y cruz, no un altar de 3 niveles** | `texture_diffuse.png`, `texture_normal.png`, `shaded.png` (2048×2048) | A-1 (20/10): el .obj ya dice `mtllib altar.mtl`; `altar.mtl` usa `texture_diffuse.png` y `Kd 1 1 1`. `shaded.png` y `texture_normal.png` siguen en la carpeta sin usarse (se van con la capilla en B-9). |
+| ~~`calavera/base.obj`~~ | Propio, exportado desde Maya | 13 518 caras; 1.5 × 1.9 × 1.7 u | `texture_diffuse.png`, `texture_normal.png` (2048×2048) | ✂️ **Retirada en A-1 (20/10):** ya no se carga y `Models/calavera/` se borró del repo (decisión del 19/10). |
 
 **Transformaciones actuales en `main.cpp`** (rompen la regla 1 u = 1 m → tarea **A-2**):
-fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6.6 m de alto** · calavera esc. 0.4 en y = 2.1 m.
+fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6.6 m de alto**.
 
 ---
 
@@ -54,7 +54,7 @@ fachada esc. 3.0 → ~9.6 m de ancho y 7.6 m de alto · "altar" esc. 3.5 → **6
 
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
-| A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ⏳ |
+| A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ✅ 20/10, rama `feature/a-1-quitar-calavera`: compila en Release x64 en la PC de D2 (1 correcto, 0 fallidos; solo *warnings* C4244/C4267 que ya existían); capturas de D2: capilla con textura, sin magenta ni calavera, consola sin avisos |
 | A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ⏳ |
 | A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ⏳ |
 | A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
@@ -169,7 +169,7 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 22 | Silueta jerárquica (sus piezas cuentan como **un** modelo) | `silueta/silueta.obj` (o una pieza por `.obj` en `silueta/`) | D-1 (act. 46) | Volumen | ⏳ | — |
 | 23 | Copalero de barro (sin humo) | `copalero/copalero.obj` | B-14 (act. 30) | Volumen | ⏳ **obligatorio** (conteo estricto) | — |
 | — | ~~Capilla/tumba con domo y cruz (hoy "altar")~~ | `altar/altar.obj` | A-1 (provisional) → B-9 | Volumen | ✂️ **no cuenta**: hecha en Maya; se retira cuando B-9 la reemplace (#7) | Propia según D2 (19/10) |
-| — | ~~Calavera de azúcar~~ | `calavera/base.obj` | A-1 | Volumen | ✂️ **no cuenta**: hecha en Maya y fuera de la propuesta; se retira en A-1 | Propia según D2 (19/10) |
+| — | ~~Calavera de azúcar~~ | `calavera/base.obj` | A-1 | Volumen | ✂️ **no cuenta**: hecha en Maya y fuera de la propuesta; **retirada en A-1 (20/10)** | Propia según D2 (19/10) |
 
 **Conteo (19/10, corregido tras revisar el PR #4):** existe 1 que cuenta (la fachada). Planeados: **23**, todos de la propuesta y hechos en Blender
 (21 con 4 tumbas y la roca de la barda, + silueta y copalero). **Escenario estricto**, sin las 5 mallas planas (piso, playa, mar, papel picado y
@@ -309,7 +309,6 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | Cuarto | apertura del arco (alto × ancho) | hoy 1.61 × 0.90 m a escala 1 → ≥ 2.1 m de alto (factor ≈ 1.3) **(propuesto, pendiente de confirmar)** | `Models/fachada/` (A-2) |
 | Fachada | trans / rot Y / esc | (0,0,0) / 180° / 3.0 → **revisar** (A-2) | `src/main.cpp` |
 | "Altar" (tumba) | trans / esc | (0,0,2) / 3.5 → **revisar** (A-2) | `src/main.cpp` |
-| Calavera | trans / esc | (0,2.1,1.8) / 0.4 → **se quita** (A-1) | `src/main.cpp` |
 | Texturas | descarte por alfa | alfa < 0.1 | `Shaders/modelLoading.frag` |
 | Fichas | radio de proximidad | 2 m | — (C-7) |
 | Modelos propios | meta / planeados / estricto (sin planos) | ≥ 18 / 23 / 18 (19/10, con 4 tumbas, roca y copalero) | ESTADO, sección 2 (inventario) |
@@ -320,9 +319,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 
 | # | Problema | Se resuelve en |
 |---|---|---|
-| 1 | `altar.obj` línea 3: `mtllib base.mtl` → debe decir `mtllib altar.mtl` *(con Assimp 6.0.5 el altar ya se ve con textura; confirmar al corregirlo)* | A-1 |
-| 2 | `altar.mtl`: `map_Kd shaded.png` → `texture_diffuse.png`; `Kd 0 0 0` → `Kd 1 1 1` | A-1 |
-| 3 | Texturas del altar y la calavera de 2048 px (la propuesta pide 1K). Ya no se reducen: la calavera se borra en A-1 y la capilla se reemplaza en B-9 | A-1 (calavera), B-9 (capilla) |
+| 3 | Texturas de la capilla provisional de 2048 px (la propuesta pide 1K). No se reducen: la capilla se reemplaza en B-9. (Los problemas #1 y #2, `mtllib` y material de la capilla, y la calavera se cerraron en A-1, 20/10) | B-9 |
 | 4 | Escalas fuera de 1 u = 1 m (sección 5) | A-2 |
 | 5 | Falta iluminación: el shader actual solo muestra la textura | A-8 |
 | 6 | `fachada.mtl` define el material `Material` sin textura, pero **ninguna cara lo usa** (las 204 caras usan `Material.001` y `Material.003`). Material sobrante: se quita al reexportar | A-12 |
@@ -340,4 +337,5 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 3. Trello: invitar a D1, asignar responsable y fecha a las tarjetas del Bloque A, y actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
 4. **D1:** revisar después los PR #4, #5 y #6 (excepciones del 19/10).
 5. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
-6. Bloque A en este orden: A-1 y A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+6. Bloque A en este orden: ~~A-1~~ (✅ 20/10, en PR) → A-2 → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+7. **Siguiente tarea: A-2** (escalas reales 1 u = 1 m). Antes, D2 debe confirmar o cambiar los valores *pendientes* de la cámara a pie (sección 4), porque el factor de escala del cuarto (≈ 1.3) sale de ahí.
