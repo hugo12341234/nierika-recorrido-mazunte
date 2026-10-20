@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 20/10/2026 · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 29 (mié 18/11/2026)
+**Última actualización:** 20/10/2026 (A-3 y A-4) · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 29 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -18,10 +18,10 @@ integrarla a `develop`.
 
 ---
 
-## 1. Lo que ya existe (revisado el 19/10/2026; fachada y transformaciones, el 20/10)
+## 1. Lo que ya existe (revisado el 19/10/2026; fachada, transformaciones, ventana y *far plane*, el 20/10)
 
 **Código** (base: proyecto de la Práctica 6 del laboratorio, `319266894_REPORTE6_GPO8`; act. 4, PR #1):
-- `src/main.cpp`: ventana GLFW 800×600 no redimensionable, OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
+- `src/main.cpp`: ventana GLFW **1280×720** (A-3, 20/10) no redimensionable, proyección con FOV 45° y near/far **0.1 / 300 m** (A-4, 20/10), OpenGL 3.3 Core, **GLEW** (no GLAD), **SOIL2 + stb_image**, cursor capturado.
 - Clases del curso en `src/`: `Shader.h`, `Camera.h` (WASD/flechas + ratón, pitch ±89°), `Model.h` + `Mesh.h` (Assimp, texturas RGBA).
 - Ciclo con `deltaTime`. Shader `Shaders/modelLoading.vs/.frag`: **solo textura, sin iluminación** (descarta píxeles con alfa < 0.1).
 - Carga y dibuja 2 modelos: fachada y "altar" (capilla provisional). La calavera se quitó en A-1 (19/10, rama `feature/a-1-quitar-calavera`).
@@ -55,9 +55,9 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
 | A-1 | Quitar la calavera de la escena y del repo; dejar la capilla de Maya solo como **provisional** hasta B-9 (corregir `mtllib`, `map_Kd`, `Kd`) | — | La calavera ya no se carga y `Models/calavera/` se borra; la capilla carga `altar.mtl` con `texture_diffuse.png`; sin errores en consola. No se reducen sus texturas, porque B-9 la reemplaza | ✅ 19/10, PR #9 (`/verificar A-1`: APROBAR): compila en Release x64 en la PC de D2 (1 correcto, 0 fallidos; solo *warnings* C4244/C4267 que ya existían); capturas de D2: capilla con textura, sin magenta ni calavera, consola sin avisos |
-| A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ✅ 20/10, PR #11 (rama `feature/a-2-escalas-reales`): fachada escalada ×1.31 en Blender y reexportada (arco 2.11 × 1.18 m); escalas de `main.cpp` en 1.0; capilla en (0, 0, −0.6). Compila en Release x64 en la PC de D2 (1 correcto) y se ve el cuarto con la capilla al fondo |
-| A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ⏳ |
-| A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ⏳ |
+| A-2 | Escalas reales 1 u = 1 m (fachada y capilla provisional) | — | Medidas en metros registradas en la sección 5; escalas en `main.cpp` cercanas a 1 | ✅ 20/10, PR #11 (rama `feature/a-2-escalas-reales`): fachada escalada ×1.31 en Blender y reexportada (arco 2.11 × 1.18 m); escalas de `main.cpp` en 1.0; capilla en (0, 0, −0.6). Compila en Release x64 en la PC de D2 (1 correcto) y se ve el cuarto con la capilla al fondo. **Verificada** con `/verificar A-2`: APROBAR (comentario de D2 en el PR #11, 20/10 a las 00:39, hora de México) |
+| A-3 | Ventana 1280×720 | — | La ventana abre a 1280×720; `lastX`/`lastY` iniciales pasan de 400/300 a 640/360 (`main.cpp:37`) | ✅ 20/10, rama `feature/a-3-a-4-ventana-far-plane`: `WIDTH, HEIGHT = 1280, 720` y `lastX, lastY = 640, 360` en `src/main.cpp`. Compila en Release x64 en la PC de D2; la captura de la ventana completa mide 1280 px de ancho con 720 px de área de dibujo bajo la barra de título, y el cuarto no se ve estirado |
+| A-4 | *Far plane* a 300 m | — | Nada visible se recorta a menos de 300 m | ✅ 20/10, misma rama que A-3: `glm::perspective(..., 0.1f, 300.0f)` en `src/main.cpp`. Hoy la escena solo es el cuarto (~4 m), así que el criterio se cumple sin prueba real de distancia: **se vuelve a revisar en A-5** con la playa de 100×50 m |
 | A-5 | Playa: plano 100×50 m subdividido | 8, 15 | Escala 1 u = 1 m; se dibuja en el ciclo de render | ⏳ |
 | A-6 | Textura de arena 1K con mapeo UV | 13 | Textura 1K sin estiramientos visibles | ⏳ |
 | A-7 | Mar: malla 100×100 m subdividida | 10 | Malla preparada para el vertex shader de olas | ⏳ |
@@ -303,8 +303,8 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 
 | Elemento | Parámetro | Valor | Dónde vive |
 |---|---|---|---|
-| Ventana | tamaño | 800×600 → **cambiar a 1280×720** (A-3) | `src/main.cpp` |
-| Proyección | near / far | 0.1 / 100 → **cambiar far a 300** (A-4) | `src/main.cpp` |
+| Ventana | tamaño | **1280×720** (A-3, 20/10); `lastX`/`lastY` iniciales 640/360 | `src/main.cpp` |
+| Proyección | near / far | **0.1 / 300** (A-4, 20/10; antes 0.1 / 100) | `src/main.cpp` |
 | Cámara | posición inicial | (0, 2, 6), fuera del cuarto mirando al arco (z = +1.31) → y = 1.6 **(valor inicial, se ajusta en A-9)**; x, z se fijan con la escena (A-2, A-5) | `src/main.cpp` |
 | Cámara | campo de visión vertical (FOV) | 45° (`ZOOM` en grados → `glm::radians`) | `src/Camera.h` (`ZOOM`), `src/main.cpp` (`glm::perspective`) |
 | Cámara | velocidad / sensibilidad / pitch | 6 m/s · 0.25 · ±89° → velocidad 2.0 m/s **(valor inicial, se ajusta en A-9)** | `src/Camera.h` |
@@ -341,5 +341,5 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 3. Trello: invitar a D1, asignar responsable y fecha a las tarjetas del Bloque A, y actualizar los títulos de A-1, A-2, A-11, B-10 y B-14 (cambiaron el 19/10).
 4. **D2:** confirmar quién verifica mientras D1 no esté (pendiente del 19/10).
 5. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
-6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → A-3 y A-4 → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
-7. **A-2:** merge del PR #11 solo con `/verificar A-2` APROBAR. **Siguiente tarea: A-3** (ventana 1280×720) y **A-4** (*far plane* a 300 m).
+6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → ~~A-3 y A-4~~ (✅ 20/10, rama `feature/a-3-a-4-ventana-far-plane`) → A-5, A-6 y A-7 → A-8 → A-9 → A-10, A-11 y A-12.
+7. **A-3 y A-4:** merge del PR solo con `/verificar A-3` y `/verificar A-4` APROBAR (hacer `git pull` de la rama antes de verificar). **Siguiente tarea: A-5, A-6 y A-7**; en A-5 comprobar que la playa (100×50 m) no se recorta con el *far plane* de 300 m desde ningún punto del recorrido.
