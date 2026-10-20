@@ -91,7 +91,6 @@ int main()
 
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
-    Model base((char*)"Models/calavera/base.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
@@ -134,14 +133,6 @@ int main()
         modelAltar = glm::scale(modelAltar, glm::vec3(escalaAltar, escalaAltar, escalaAltar));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelAltar));
         altar.Draw(shader);
-
-        // 3. CALAVERA
-        glm::mat4 modelCalavera(1.0f);
-        modelCalavera = glm::translate(modelCalavera, glm::vec3(0.0f, 2.1f, 1.8f));
-        float escalaCalavera = 0.4f;
-        modelCalavera = glm::scale(modelCalavera, glm::vec3(escalaCalavera, escalaCalavera, escalaCalavera));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelCalavera));
-        base.Draw(shader);
 
         // Swap the buffers
         glfwSwapBuffers(window);

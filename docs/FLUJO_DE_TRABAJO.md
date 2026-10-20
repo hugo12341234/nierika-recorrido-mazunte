@@ -157,13 +157,13 @@
 ## 7. Ejemplo: primera tarea del Bloque A
 
 ```
-Trello: "A-1 · Corregir material del altar" → En proceso
+Trello: "A-1 · Quitar la calavera y corregir la capilla" → En proceso
 git checkout develop && git pull
-git checkout -b feature/a-1-material-altar
+git checkout -b feature/a-1-quitar-calavera
 claude  →  /actividad A-1
-   (Claude corrige altar.obj y altar.mtl; F5 en Visual Studio: el altar se ve con su textura)
+   (Claude quita la calavera y corrige altar.obj y altar.mtl; F5 en Visual Studio: la capilla se ve con su textura y sin calavera)
 /cierre  →  revisar el resumen
-"haz commit, push y abre el PR"   →  PR "A-1 · Corregir material del altar"
+"haz commit, push y abre el PR"   →  PR "A-1 · Quitar la calavera y corregir la capilla"
 Trello → En revisión; avisar al compañero
 Compañero: git fetch + checkout + F5 + /verificar A-1 → aprueba → Merge
 Trello → Terminado; los dos: git checkout develop && git pull
