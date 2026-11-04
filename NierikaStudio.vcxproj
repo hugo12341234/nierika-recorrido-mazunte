@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Colisiones.cpp" />
     <ClCompile Include="src\main.cpp" />
     <!-- SOIL2 se compila desde codigo fuente (vendor\SOIL2) para x64 -->
     <ClCompile Include="vendor\SOIL2\SOIL2.c" />
@@ -95,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Colisiones.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Shader.h" />
