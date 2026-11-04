@@ -42,6 +42,22 @@ public:
 		}
 	}
 
+	// Libera la GPU del modelo: buffers de cada malla y las texturas (textures_loaded tiene cada textura una sola vez,
+	// aunque varias mallas la usen). Se llama a mano al final de main (decision del 19/10: sin destructores, porque Model se copia)
+	void cleanup()
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			this->meshes[i].cleanup();
+		}
+		for (GLuint i = 0; i < this->textures_loaded.size(); i++)
+		{
+			glDeleteTextures(1, &this->textures_loaded[i].id);
+		}
+		this->meshes.clear();
+		this->textures_loaded.clear();
+	}
+
 private:
 	/*  Model Data  */
 	vector<Mesh> meshes;

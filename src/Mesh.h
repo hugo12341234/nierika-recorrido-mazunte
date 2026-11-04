@@ -103,9 +103,19 @@ public:
 		}
 	}
 
+	// Libera la memoria de GPU de la malla (VAO, VBO, EBO). Se llama a mano al final de main (decision del 19/10:
+	// sin destructores, porque Mesh se copia). Las texturas NO se borran aqui: las comparte el Model (ver Model::cleanup)
+	void cleanup()
+	{
+		if (this->EBO) glDeleteBuffers(1, &this->EBO);
+		if (this->VBO) glDeleteBuffers(1, &this->VBO);
+		if (this->VAO) glDeleteVertexArrays(1, &this->VAO);
+		this->VAO = this->VBO = this->EBO = 0;
+	}
+
 private:
 	/*  Render data  */
-	GLuint VAO, VBO, EBO;
+	GLuint VAO = 0, VBO = 0, EBO = 0;
 
 	/*  Functions    */
 	// Initializes all the buffer objects/arrays
