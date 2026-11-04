@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 04/11/2026, hora de México (PR #34: `gl_FrontFacing` interior + `piso.obj` corregido de plano vertical a horizontal) · **Hoy:** semana 4 (Bloque A) · **Días a la entrega:** 14 (mié 18/11/2026)
+**Última actualización:** 04/11/2026, hora de México (PR #40: B-9 tumbas del panteón — 4 `.obj` Blender, `main.cpp` sin duplicados, `/verificar B-9` APROBAR, compilado y visto en pantalla por D2) · **Hoy:** semana 4 (Bloque B) · **Días a la entrega:** 14 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -81,7 +81,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | B-6 | Marco de madera con plano para la foto | 29 | UV exactas para la foto | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | ⏳ |
 | B-8 | Soportes de madera para el papel picado | 22 | Postes simples | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
-| B-9 | Tumbas propias: **4** con geometría distinta, en Blender; una es la capilla con domo y cruz (rehecha usando la de Maya como referencia) | 14 | Lápida y base; 4 tumbas distintas, cada una en su `.obj` (inventario #7–#10); la capilla de Maya se retira de `Models/altar/` | 🔄 04/11: las 4 tumbas hechas y cargadas (posición provisional) |
+| B-9 | Tumbas propias: **4** con geometría distinta, en Blender; una es la capilla con domo y cruz (rehecha usando la de Maya como referencia) | 14 | Lápida y base; 4 tumbas distintas, cada una en su `.obj` (inventario #7–#10); la capilla de Maya se retira de `Models/altar/` | ✅ 04/11, PR #40 (`/verificar B-9`: APROBAR, D2 confirmó compilación y captura con las 4 tumbas visibles en el panteón exterior). `altar/altar.obj` ya no se carga; posiciones provisionales en B-13 |
 | B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas; **una roca en su propio `.obj`** (inventario #12, decisión del 19/10) | ⏳ |
 | B-11 | Cruz de piedra de la entrada | 19 | Una sola, sin variantes | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-12 | Texturizar altar, vela, botella, pan, cempasúchil y marco (PBR 1K) | 31, 32, 33, 34 | Materiales coherentes; mapa de relieve para el pan | ⏳ |
@@ -154,10 +154,10 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 4 | Piso interior del cuarto | `piso/piso.obj` | A-11 (act. 18), textura en A-12 | Plano | ✅ 03/11: 1 quad x −1.965..+1.965 z −1.310..+1.310 a y = +0.02; textura `piedra.jpg` desde A-12 (04/11) | Fuente: `Models/piso/piso.blend` |
 | 5 | Playa 100×50 m | `playa/playa.obj` | A-5 (act. 8) | Plano | ✅ 20/10 | `playa/playa.blend` (Blender 5.2.2), modelado por D2 el 20/10 |
 | 6 | Mar 100×100 m | `mar/mar.obj` | A-7 (act. 10) | Plano | ✅ 25/10 | `mar/mar.blend` (Blender 5.2.2), modelado por D2 el 25/10 |
-| 7 | Tumba 1: capilla con domo y cruz (rehecha en Blender) | `tumba1/tumba1.obj` | B-9 (act. 14) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) (sustituye a `altar/altar.obj`) | — |
-| 8 | Tumba 2 | `tumba2/tumba2.obj` | B-9 (act. 14) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
-| 9 | Tumba 3 | `tumba3/tumba3.obj` | B-9 (act. 14) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
-| 10 | Tumba 4 | `tumba4/tumba4.obj` | B-9 (act. 14) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) obligatoria: sin ella el estricto baja de 18 | — |
+| 7 | Tumba 1: capilla con domo y cruz (rehecha en Blender) | `tumba1/tumba1.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40: `.obj`, `.mtl`, `.blend`, `piedra.jpg` en el repo; textura provisional; sustituye a `altar/altar.obj` | `tumba1/tumba1.blend` (Blender 5.2) |
+| 8 | Tumba 2 | `tumba2/tumba2.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 | `tumba2/tumba2.blend` (Blender 5.2) |
+| 9 | Tumba 3 | `tumba3/tumba3.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 | `tumba3/tumba3.blend` (Blender 5.2) |
+| 10 | Tumba 4 | `tumba4/tumba4.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 · obligatoria: sin ella el estricto baja de 18 | `tumba4/tumba4.blend` (Blender 5.2) |
 | 11 | Barda perimetral | `barda/barda.obj` | B-10 (act. 20) | Volumen | ⏳ | — |
 | 12 | Roca de la barda (variante) | `roca/roca.obj` | B-10 (act. 20) | Volumen | ⏳ obligatoria: sin ella el estricto baja de 18 (decisión 19/10) | — |
 | 13 | Cruz de piedra | `cruz/cruz.obj` | B-11 (act. 19) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
@@ -203,7 +203,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 11 | Callbacks WASD/ratón | — | ✅ | Del curso; 19/10: cursor capturado en `main.cpp` |
 | 12 | Colisiones AABB | A-9 | ✅ | 04/11, rama `feature/a-9-colisiones` (PR #18): `Colisiones.h/.cpp` + cámara a pie. Compilado en Windows y probado por D2 (04/11): avanza a 2.0 m/s a 1.6 m, muro y capilla lo frenan, entra por la puerta y se frena en la orilla. `/verificar A-9` = APROBAR CON OBSERVACIONES (04/11) |
 | 13 | Textura arena | A-6 | ✅ | 20/10, PR #14 |
-| 14 | Tumbas | B-9 | ⏳ | Faltan las 4 tumbas propias en Blender (decisión del 19/10); una sustituye a la capilla de Maya (`altar/altar.obj`) |
+| 14 | Tumbas | B-9 | ✅ | 04/11, PR #40: 4 tumbas Blender en el panteón exterior; `altar/altar.obj` retirado de la escena |
 | 15 | Ciclo deltaTime + render | A-5 | ✅ | Ciclo ✅; la playa se dibuja en el ciclo desde A-5 (20/10) |
 | 16 | Fachada con apertura | A-12 | ✅ | `fachada.obj` con apertura de arco semicircular (A-10); `piedra.jpg` 1K aplicada a los muros (A-12, 04/11) |
 | 17 | Arco con dovelas | A-10 | ✅ | 03/11: `Models/arco/arco.obj` (9 dovelas) sobre la apertura semicircular; falta compilar y `/verificar A-10` |
@@ -360,13 +360,14 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 
 | # | Problema | Se resuelve en |
 |---|---|---|
-| 3 | Texturas de la capilla provisional de 2048 px (la propuesta pide 1K). No se reducen: la capilla se reemplaza en B-9. (Los problemas #1 y #2, `mtllib` y material de la capilla, y la calavera se cerraron en A-1, 19/10) | B-9 |
+| ~~3~~ | ~~Texturas de la capilla provisional de 2048 px~~ → **cerrado en B-9 (04/11, PR #40)**: `altar/altar.obj` ya no se carga; las 4 tumbas Blender usan `piedra.jpg` 1K | B-9 ✅ |
 | 5 | ~~Falta iluminación~~ → **cerrado en A-8 (04/11)**: compilado y verificado | A-8 |
 | 7 | ~~No se libera memoria de GPU~~ → **implementado en E-1a (04/11), falta compilar y verificar**: `cleanup()` en `Shader`, `Mesh` y `Model`, llamado al final de `main`. Quedan por revisar con herramienta (p. ej. RenderDoc o el administrador de tareas) las fugas reales; no se midió ninguna | E-1 |
 | 8 | `Model.h` no carga mapas normales/de relieve (necesario para el pan) | B-12 |
 | 9 | ~~`fachada.obj` incluía el techo~~ → **separado en A-11 (03/11)**: `techo.obj` y `fachada.obj` son ahora archivos independientes; falta confirmar al compilar | A-11 |
 | 12 | ~~La apertura de `fachada.obj` no era de medio punto (casi semielíptica, descentrada 0.03 m)~~ → **corregido en A-10 (03/11)**: ahora es semicircular, de radio 0.59 m y centrada; falta confirmarlo al compilar | A-10 |
 | 13 | ~~Animación de las 4 luces (seno de 2t) posiblemente copiada de la Práctica 8~~ → **cerrado por palabra de D2 (04/11): "es propio"**; no se verificó (sin código fuente ni fecha de D1 que lo pruebe). `cleanup()` ya libera todo (E-1a, 04/11, por verificar) | E-1 |
+| 14 | 8 PDFs de materias ajenas al proyecto se colaron en `Models/playa/` (detectados al hacer pull de develop tras PR #40). Deben borrarse del repositorio con un commit de limpieza en `develop`. No afectan la compilación, pero ensucian el historial y la carpeta de un modelo. | Borrar en un commit sobre `develop` |
 
 > **Cerrados en A-2 (20/10):** #4 escalas fuera de 1 u = 1 m, #6 material sobrante `Material` (desapareció al reexportar) y #11 tamaño del arco (ahora 2.11 × 1.18 m).
 
@@ -381,4 +382,4 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 5. Cada viernes: captura del Trello y minuta de 3–5 líneas en `docs/manual_tecnico/evidencias/` (decisión del 19/10).
 6. Bloque A en este orden: ~~A-1~~ (✅ 19/10, PR #9) → ~~A-2~~ (✅ 20/10, PR #11) → ~~A-3 y A-4~~ (✅ 20/10, PR #12) → ~~A-5~~ (✅ 20/10, PR #13) → ~~A-6~~ (✅ 20/10, PR #14) → ~~A-7~~ (✅ 25/10, PR #15) → ~~A-8~~ (✅ 04/11, PR #16) → ~~A-9~~ (✅ 04/11, PR #30) → ~~A-10~~ (✅ 03/11, PR #30) → ~~A-11~~ (✅ 03/11, PR #31) → ~~A-12~~ (✅ 04/11, rama `feature/a-12-texturas`, falta compilar y `/verificar`). **Bloque A casi completo.**
 7. **fix PR #34 (04/11, fusionado):** `gl_FrontFacing` en `lighting.frag` y `piso.obj` corregido de vertical a horizontal. Falta confirmar al compilar (el PR se fusionó sin `/verificar`).
-8. **Siguiente bloque: B** (capilla/panteón propios, B-9 primero). Ver sección 2 para el orden. Antes de B-9, confirmar que A-10, A-11, A-12 y PR #34 se ven bien al compilar en Release x64.
+8. **B-9 ✅ (04/11, PR #40).** Siguiente: **B-10** (barda perimetral del panteón + roca en su propio `.obj`, obligatoria para el inventario). La barda delimita el panteón ya visible con las 4 tumbas. ⚠️ **Problema nuevo (#14):** se colaron 8 PDFs de materias en `Models/playa/` al hacer pull de develop. Deben borrarse del repo (ver sección 6).
