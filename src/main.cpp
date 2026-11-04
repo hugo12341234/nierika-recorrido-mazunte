@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Olas.h"   // C-1: parametros y altura del oleaje
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -260,7 +261,20 @@ int main()
         glm::mat4 modelMar(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMar));
         glUniform1f(specLoc, 0.6f);
+        // C-1: oleaje por vertex shader (suma de senos, parametros en src/Olas.h)
+        {
+            float oA[Olas::N], oK[Olas::N], oW[Olas::N], oDir[2 * Olas::N], oFase[Olas::N];
+            Olas::ParametrosShader(oA, oK, oW, oDir, oFase);
+            glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 1);
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)glfwGetTime());
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaA"), Olas::N, oA);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaK"), Olas::N, oK);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaW"), Olas::N, oW);
+            glUniform2fv(glGetUniformLocation(shader.Program, "ondaDir"), Olas::N, oDir);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaFase"), Olas::N, oFase);
+        }
         mar.Draw(shader);
+        glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 0);   // el resto de los modelos sin oleaje
 
         // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
         glm::mat4 modelFachada(1.0f);
