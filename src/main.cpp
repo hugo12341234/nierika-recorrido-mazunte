@@ -171,8 +171,6 @@ int main()
     Model calavera((char*)"Models/calavera/calavera.obj");
     Model pan((char*)"Models/pan/pan.obj");
     Model flor((char*)"Models/flor/flor.obj");
-    // Capilla provisional de Maya (hasta B-13): vuelve al cuarto mientras los modelos de Blender se posicionan definitivamente
-    Model capilla((char*)"Models/altar/altar.obj");
     // B-13 (provisional): modelos propios de los lotes 1-5 de Blender (escala real ya aplicada en cada .obj; texturas provisionales de un color)
     Model altar3((char*)"Models/altar3/altar3.obj");       // B-1
     Model vela((char*)"Models/vela/vela.obj");             // B-2
@@ -208,7 +206,6 @@ int main()
     colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
     colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
     colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
-    colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // capilla provisional (altar.obj en (0,0,-0.6); hasta B-13)
 
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
     // Entrada de 2 m en el norte (z = 12), centrada en x = 0 (abertura x -1..+1)
@@ -388,14 +385,6 @@ int main()
         glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
         piso.Draw(shader);
 
-        // 2b. CAPILLA PROVISIONAL (hasta B-13): la capilla de Maya vuelve al fondo del cuarto
-        {
-            glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.6f));
-            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
-            glUniform1f(specLoc, 0.1f);
-            capilla.Draw(shader);
-        }
-
         // 3. EXTRAS DE D1 (X-3): calavera, pan y 4 flores sobre los escalones de la capilla.
         // Posiciones de D1 (hechas para la capilla x3.5 en (0, 0, 2)) pasadas por DeCapillaVieja(); escala 1.0 (ya esta en el .obj)
         auto dibuja = [&](Model& m, glm::vec3 posVieja)
@@ -404,16 +393,13 @@ int main()
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
             m.Draw(shader);
         };
-        dibuja(calavera, glm::vec3(0.0f, 2.1f, 1.8f));
-        dibuja(pan, glm::vec3(0.0f, 1.35f, 2.6f));
-        dibuja(flor, glm::vec3(-0.9f, 2.32f, 1.8f));  // izquierda de la calavera
-        dibuja(flor, glm::vec3(0.9f, 2.32f, 1.8f));   // derecha de la calavera
-        dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
-        dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
+        // (04/11) Sin la capilla de Maya estos extras quedarian flotando: no se dibujan hasta que B-13 los coloque sobre altar3.
+        // dibuja(calavera, ...); dibuja(pan, ...); dibuja(flor, ...) x4 -- ver git log antes de este cambio
+        (void)dibuja;
 
         // 3b. MODELOS PROPIOS DE BLENDER (B-1, B-2, B-5, B-6, B-8, B-9, B-11, B-14). Posiciones PROVISIONALES: B-13 las ajusta.
         // Altar de 3 niveles contra el muro derecho del cuarto (interior x +-1.826), girado -90 grados para que su frente (+z local) mire a -x.
-        // Cubre x 0.9..1.8; en esta version no se agrega colision ni se retira la capilla provisional (altar.obj).
+        // Cubre x 0.9..1.8; en esta version no se agrega colision.
         glUniform1f(specLoc, 0.1f);
         auto colocar = [&](Model& m, glm::vec3 pos, float giroY)
         {
@@ -506,7 +492,6 @@ int main()
     calavera.cleanup();
     pan.cleanup();
     flor.cleanup();
-    capilla.cleanup();
     altar3.cleanup();
     vela.cleanup();
     botella.cleanup();
