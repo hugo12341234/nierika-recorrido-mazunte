@@ -14,6 +14,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Fichas.h"
 #include "AnimFlores.h"  // C-4
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
@@ -144,6 +145,9 @@ int main()
         std::cout << "Failed to initialize GLEW" << std::endl;
         return EXIT_FAILURE;
     }
+
+    // C-7b: Dear ImGui para las fichas culturales por proximidad
+    FichasInit(window);
 
     // Define the viewport dimensions
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -429,6 +433,9 @@ int main()
             glBindVertexArray(0);
         }
 
+        // C-7b: ficha cultural si la camara esta a < 2 m de uno de los 5 objetos (se dibuja al final, sobre la escena)
+        FichasDibuja(camera.GetPosition());
+
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -448,6 +455,8 @@ int main()
     glDeleteVertexArrays(1, &siluetaVAO);
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
+
+    FichasCleanup();  // C-7b
 
     glfwTerminate();
     return 0;
