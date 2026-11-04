@@ -55,6 +55,7 @@ private:
     // (T_CICLO = 1 s a velocidad de crucero). La pierna/brazo derechos usan la misma pista que los izquierdos
     // con medio ciclo de desfase.
     anim::Pista recorrido_;   // posicion del torso a lo largo de z (arranque, crucero, frenado)
+    anim::Pista lateral_;     // paso al costado en x despues de cruzar el arco, para no tapar el altar
     anim::Pista altura_;      // altura de la cadera (sube y baja 2 veces por ciclo)
     anim::Pista giro_;        // giro del torso alrededor de Y (una vez por ciclo)
     anim::Pista muslo_, pierna_, brazo_, antebrazo_;  // lado izquierdo
