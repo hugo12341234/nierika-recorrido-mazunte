@@ -159,7 +159,6 @@ int main()
     // Setup and compile our shaders
     Shader shader("Shaders/lighting.vs", "Shaders/lighting.frag");
     Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
-    Shader siluetaShader("Shaders/silueta.vs", "Shaders/silueta.frag");
 
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
@@ -219,18 +218,15 @@ int main()
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
-    // VAO propio de la silueta: mismo cubo (VBO), con posicion y normal
-    GLuint siluetaVAO;
-    glGenVertexArrays(1, &siluetaVAO);
-    glBindVertexArray(siluetaVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, cuboVBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-    glBindVertexArray(0);
-
-    Silueta silueta;  // jerarquia de cubos + KeyFrames (src/Silueta.cpp)
+    Silueta silueta;  // jerarquia + KeyFrames (src/Silueta.cpp)
+    // D-1: una pieza por .obj con el pivote en la articulacion; el orden es el de los nodos de Silueta
+    // (torso, cabeza, brazo/antebrazo izq, brazo/antebrazo der, muslo/pierna izq, muslo/pierna der)
+    const char* piezasSilueta[10] = { "torso", "cabeza", "brazo_izq", "antebrazo_izq", "brazo_der", "antebrazo_der",
+                                      "muslo_izq", "pierna_izq", "muslo_der", "pierna_der" };
+    std::vector<Model> modelosSilueta;
+    modelosSilueta.reserve(10);
+    for (int i = 0; i < 10; i++)
+        modelosSilueta.push_back(Model((char*)("Models/silueta/" + std::string(piezasSilueta[i]) + ".obj").c_str()));
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
@@ -450,22 +446,16 @@ int main()
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
             flor.Draw(shader);
         }
-        // 4. SILUETA (D-1/D-2): 10 cubos jerarquicos, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
-        // Cubos provisionales con su propio shader; se sustituyen por Models/silueta/ (D-1)
+        // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
+        // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
         tSilueta += deltaTime;
         silueta.Actualizar(tSilueta);
-        siluetaShader.Use();
-        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glBindVertexArray(siluetaVAO);
-        for (size_t i = 0; i < silueta.Nodos().size(); i++)
+        glUniform1f(specLoc, 0.1f);
+        for (size_t i = 0; i < modelosSilueta.size(); i++)
         {
-            glm::mat4 mc = silueta.MatrizCubo(i);
-            glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
-            glUniform3fv(glGetUniformLocation(siluetaShader.Program, "color"), 1, glm::value_ptr(silueta.Nodos()[i].color));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(silueta.Nodos()[i].mundo));
+            modelosSilueta[i].Draw(shader);
         }
-        glBindVertexArray(0);
 
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
         if (mostrarLuces)
@@ -514,10 +504,9 @@ int main()
     tumba4.cleanup();
     cruz.cleanup();
     copalero.cleanup();
-    siluetaShader.cleanup();  // D-1/D-2
+    for (Model& m : modelosSilueta) m.cleanup();  // D-1
     shader.cleanup();
     lampShader.cleanup();
-    glDeleteVertexArrays(1, &siluetaVAO);
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
 
