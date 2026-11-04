@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Model.h"
 #include "AnimFlores.h"  // C-4
+#include "Colisiones.h"
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -34,7 +35,8 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 2.0f, 6.0f));
+Camera camera(glm::vec3(0.0f, Colisiones::ALTURA_OJOS, 6.0f));  // ojos a 1.6 m (A-9)
+Colisiones colisiones;  // cajas AABB solidas (se llenan en main)
 bool keys[1024];
 GLfloat lastX = 640, lastY = 360;  // centro de la ventana de 1280x720
 bool firstMouse = true;
@@ -144,6 +146,7 @@ int main()
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
+    Model arco((char*)"Models/arco/arco.obj");   // A-10: dovelas, en coordenadas de la fachada
     Model playa((char*)"Models/playa/playa.obj");
     Model mar((char*)"Models/mar/mar.obj");
     // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
@@ -162,6 +165,17 @@ int main()
     };
     const float ALTURA_MAR = -0.2f;                          // mismo valor que Models/mar (A-7)
     const glm::vec3 centroFlor(0.0f, 0.0f, -0.075f);         // centro de flor.obj (medido en sus vertices), para girar sobre si misma
+
+    // ==========================================
+    // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
+    // la apertura queda en z = +1.31). Muros ~0.1 m de espesor; piso = playa.obj (suelo y = 0, no es caja).
+    // ==========================================
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f, -1.217f) });  // muro del fondo
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3(-1.826f, 2.62f,  1.310f) });  // muro izquierdo
+    colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
+    colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
+    colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // capilla provisional (altar.obj en (0, 0, -0.6))
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -284,6 +298,7 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelFachada));
         glUniform1f(specLoc, 0.1f);
         fachada.Draw(shader);
+        arco.Draw(shader);   // A-10: misma matriz que la fachada
 
         // 2. ALTAR (capilla provisional de 1.9 m, al fondo del cuarto hasta B-9)
         glm::mat4 modelAltar(1.0f);
@@ -352,26 +367,32 @@ int main()
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
-    // Camera controls
+    // Camera controls. Un tiron de deltaTime (ventana arrastrada, etc.) no debe dar un salto enorme: tope de 0.1 s
+    GLfloat dtMov = glm::min(deltaTime, 0.1f);
+    glm::vec3 posAntes = camera.GetPosition();
+
     if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
     {
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.ProcessKeyboard(FORWARD, dtMov);
     }
 
     if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
     {
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.ProcessKeyboard(BACKWARD, dtMov);
     }
 
     if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
     {
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(LEFT, dtMov);
     }
 
     if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
     {
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.ProcessKeyboard(RIGHT, dtMov);
     }
+
+    // A-9: corrige la posicion con las colisiones AABB y la deja a 1.6 m sobre el suelo
+    camera.SetPosition(colisiones.resolver(posAntes, camera.GetPosition()));
 
     // Reflector de la cruz: posicion (T/G = X, Y/H = Y, U/J = Z) y direccion (1/2 = X, 3/4 = Y, 5/6 = Z)
     if (keys[GLFW_KEY_T]) spotLightPos.x += 1.0f * deltaTime;
