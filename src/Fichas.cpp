@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <string>
 
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_glfw.h"
@@ -13,44 +14,59 @@ namespace
     struct Ficha
     {
         const char* titulo;
-        const char* texto;
-        const char* cita;   // cita en el texto (APA 7)
-        const char* nivel;  // nivel de evidencia (CONTEXTO sec. 5)
-        glm::vec3 pos;      // punto que se mide contra la camara (solo X y Z)
+        const char* texto;   // con su cita en el texto (APA 7)
+        const char* nivel;   // nivel de evidencia (CONTEXTO sec. 5)
+        glm::vec3 pos;       // punto que se mide contra la camara (solo X y Z)
     };
 
-    // TEXTOS PROVISIONALES (C-7b): usan solo lo que dice la Propuesta v2.0 (tabla 3). Los textos finales y las
-    // referencias completas en APA 7 salen de C-7a (docs/fichas_culturales.md). ASCII + acentos latinos: la
-    // fuente por defecto de ImGui no trae comillas ni guiones largos tipograficos.
-    // POSICIONES PROVISIONALES: velas, cempasuchil y papel picado aun no existen como modelos (B-2, B-3, B-7);
-    // se ajustan en B-13 / C-3 / C-4. Altar y pan si existen (capilla provisional en (0, 0, -0.6)).
+    // Referencias de la Propuesta v2.0, copiadas en docs/fichas_culturales.md (C-7a). SIGUEN POR VERIFICAR contra la fuente.
+    const char* REF_SEP = "Secretaría de Educación Pública. (2026, 22 de mayo). Elementos básicos para la ofrenda de Día de Muertos. Nueva Escuela Mexicana Digital. https://nuevaescuelamexicana.sep.gob.mx/contenido/recurso/elementos-basicos-para-la-ofrenda-de-dia-de-muertos/";
+    const char* REF_BANOS = "Baños, L. (2025, 27 de octubre). Los pueblos mágicos de Oaxaca donde el Día de Muertos se vive con más alma. Oaxaca Informa. https://www.oaxacainforma.com/es/cultura/2025/pueblos-magicos-oaxaca-dia-de-muertos-2025";
+    const char* REF_UNESCO = "UNESCO. (s. f.). Las fiestas indígenas dedicadas a los muertos. https://ich.unesco.org/es/RL/las-fiestas-indigenas-dedicadas-a-los-muertos-00054";
+
+    // Textos de docs/fichas_culturales.md (C-7a). Fuente UTF-8: el .vcxproj compila con /utf-8.
+    // POSICIONES PROVISIONALES: velas, cempasúchil y papel picado aún no existen como modelos (B-2, B-3, B-8).
+    // Velas y cempasúchil van en z = 23 porque la zona caminable llega solo hasta z = 24 (Colisiones::Z_MAX, A-9).
     const Ficha fichas[] = {
-        { "Velas y veladoras",
-          "Su flama guia a los difuntos de regreso. En Mazunte, al atardecer, residentes y visitantes tambien "
-          "lanzan velas al mar para recordar a quienes partieron.",
-          "(SEP, 2026; Banos, 2025)", "Tradicion general (SEP) y local documentado (Banos)",
-          glm::vec3(-3.0f, 0.0f, 26.0f) },
-        { "Flor de cempasuchil",
-          "Su aroma y su color guian a las almas hacia el altar. En la orilla de Mazunte tambien se lanzan flores "
-          "al mar durante la ceremonia.",
-          "(SEP, 2026; Banos, 2025)", "Tradicion general (SEP) y local documentado (Banos)",
-          glm::vec3(3.0f, 0.0f, 26.0f) },
+        { "Velas",
+          "La flama de la vela guía a los difuntos de regreso a casa (Secretaría de Educación Pública [SEP], 2026). "
+          "En la ceremonia local que se vive al atardecer, se lanzan velas y flores al mar para recordar a quienes partieron (Baños, 2025).",
+          "Tradición general (SEP, 2026) y local documentado (Baños, 2025)",
+          glm::vec3(-3.0f, 0.0f, 23.0f) },
+        { "Flor de cempasúchil",
+          "El aroma y el color del cempasúchil guían a las almas hacia el altar (Secretaría de Educación Pública [SEP], 2026). "
+          "Al atardecer, las flores también se lanzan al mar para recordar a quienes partieron (Baños, 2025).",
+          "Tradición general (SEP, 2026) y local documentado (Baños, 2025)",
+          glm::vec3(3.0f, 0.0f, 23.0f) },
         { "Papel picado",
-          "Da color a la ofrenda y representa el aire. En este recorrido cuelga del arco del cuarto; esa "
-          "disposicion es una adaptacion del estudio.",
-          "(SEP, 2026)", "Tradicion general; ubicacion: adaptacion del estudio",
+          "El papel picado da color a la ofrenda y representa el aire (Secretaría de Educación Pública [SEP], 2026). "
+          "En el recorrido, las tiras cuelgan de soportes de madera en el arco del cuarto.",
+          "Tradición general (SEP, 2026); la escena es del estudio",
           glm::vec3(0.0f, 2.0f, 1.6f) },
         { "Altar de ofrenda",
-          "La ofrenda familiar es el acto central de la velacion. Cada objeto cumple una funcion para recibir a las "
-          "animas. La forma del cuarto y del altar es una adaptacion del estudio, no una reproduccion del panteon real.",
-          "(UNESCO, s. f.; SEP, 2026)", "Adaptacion del estudio sobre tradicion general",
+          "En el altar, cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros "
+          "(Secretaría de Educación Pública [SEP], 2026). La ofrenda familiar es el acto central de la velación (UNESCO, s. f.). "
+          "Aquí la ofrenda se presenta sobre un altar de tres niveles, con una forma que es adaptación del estudio.",
+          "Tradición general (SEP, 2026); altar de tres niveles y cuarto: adaptación del estudio",
           glm::vec3(0.0f, 0.0f, 0.3f) },
         { "Pan de muerto",
-          "Es uno de los objetos de la ofrenda; cada objeto cumple una funcion para recibir a las animas. "
-          "[Significado especifico del pan: por verificar contra la fuente en C-7a.]",
-          "(SEP, 2026)", "Tradicion general",
+          "El pan de muerto representa el afecto y la fraternidad hacia los difuntos (Secretaría de Educación Pública [SEP], 2026). "
+          "Se coloca en el altar junto con las demás ofrendas para recibir a las ánimas.",
+          "Tradición general (SEP, 2026)",
           glm::vec3(0.0f, 0.39f, -0.43f) },
     };
+    // Referencias de cada ficha (mismo orden que la tabla)
+    const char* RefsDe(int i)
+    {
+        static std::string r[5];
+        if (r[0].empty())
+        {
+            r[0] = r[1] = std::string(REF_BANOS) + "\n" + REF_SEP;
+            r[2] = r[4] = REF_SEP;
+            r[3] = std::string(REF_SEP) + "\n" + REF_UNESCO;
+        }
+        return r[i].c_str();
+    }
     const int NUM_FICHAS = (int)(sizeof(fichas) / sizeof(fichas[0]));
 
     // Distancia horizontal (XZ): no depende de la altura de los ojos ni de la del objeto
@@ -68,7 +84,7 @@ void FichasInit(GLFWwindow* window)
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;                          // no escribe imgui.ini
     io.ConfigFlags |= ImGuiConfigFlags_NoMouse;        // fichas de solo lectura
-    io.FontGlobalScale = 1.3f;                         // legible a 1280x720
+    io.FontGlobalScale = 1.1f;                         // legible a 1280x720
     ImGui::StyleColorsDark();
 
     // false = ImGui no instala sus callbacks: main.cpp ya usa los suyos para teclado y raton de la camara
@@ -106,8 +122,9 @@ void FichasDibuja(const glm::vec3& posCamara)
     ImGui::PushTextWrapPos(0.0f);
     ImGui::TextUnformatted(f.texto);
     ImGui::Spacing();
-    ImGui::TextColored(ImVec4(0.7f, 0.85f, 1.0f, 1.0f), "Fuente: %s", f.cita);
-    ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Nivel de evidencia: %s", f.nivel);
+        ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Nivel de evidencia: %s", f.nivel);
+    ImGui::Spacing();
+    ImGui::TextColored(ImVec4(0.55f, 0.55f, 0.55f, 1.0f), "Referencias:\n%s", RefsDe(elegida));
     ImGui::PopTextWrapPos();
     ImGui::End();
 
