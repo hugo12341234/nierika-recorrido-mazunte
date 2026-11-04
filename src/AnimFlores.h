@@ -1,5 +1,5 @@
 // C-4 (act. 42): flores de cempasuchil flotando en la orilla.
-// Animacion simple (sin KeyFrames): movimiento circular de radio pequeño + rotacion continua,
+// Animacion simple (sin KeyFrames): movimiento circular de radio pequeño + rotacion continua + altura de la ola (C-1),
 // con velocidad variable y pausas. Todo es una funcion cerrada del tiempo t (sin acumular deltaTime),
 // asi que el resultado no depende de los FPS. Solo funciones inline: no hay estado ni recursos de GPU.
 #pragma once
@@ -19,7 +19,6 @@ struct FlorFlotante
     float desfase;      // adelanto de tiempo t0 (s): evita que todas pausen a la vez
     float omegaGiro;    // velocidad de rotacion propia alrededor de Y (rad/s)
     float faseGiro;     // angulo inicial de esa rotacion (rad)
-    float faseOla;      // fase de la oscilacion vertical (rad)
 };
 
 const float PI_FLORES = 3.14159265358979f;
@@ -45,24 +44,26 @@ inline float AnguloConPausas(float t, float tMov, float tPausa)
     return n * PI_FLORES + theta;
 }
 
+// Posicion de la flor en el plano XZ en el instante t:
+//     x = cx + R cos(theta),  z = cz + R sin(theta)   con theta = sentido * AnguloConPausas(t + desfase)
+inline glm::vec2 PosicionXZ(const FlorFlotante& f, float t)
+{
+    const float theta = f.sentido * AnguloConPausas(t + f.desfase, f.tMov, f.tPausa);
+    return glm::vec2(f.centro.x + f.radio * std::cos(theta), f.centro.y + f.radio * std::sin(theta));
+}
+
 // Matriz de modelo de una flor en el instante t.
-//   alturaAgua: y de la superficie del mar (hoy constante -0.2; C-1 podra dar la altura de la ola)
+//   alturaAgua: y de la superficie del mar bajo la flor (C-1: Olas::Altura en su posicion XZ), asi sube y baja con las olas
 //   centroMalla: centro del .obj, para girar la flor sobre su propio centro y no sobre el origen del modelo
-// Posicion:  x = cx + R cos(theta),  z = cz + R sin(theta)   con theta = sentido * AnguloConPausas(t + desfase)
-// Altura:    y = alturaAgua + calado + A sin(2*pi*f*t + faseOla)   (A = 2 cm, f = 0.4 Hz: cabeceo suave en el agua)
+// Altura:    y = alturaAgua + calado   (la flor, de 12 cm de alto, queda 2 cm hundida; la ola la sube y baja)
 // Giro:      psi = faseGiro + omegaGiro * t  alrededor de Y (continuo, no se detiene en las pausas)
 inline glm::mat4 MatrizFlorFlotante(const FlorFlotante& f, float t, float alturaAgua, glm::vec3 centroMalla)
 {
-    const float theta = f.sentido * AnguloConPausas(t + f.desfase, f.tMov, f.tPausa);
-    const float calado = 0.02f;           // m: la flor (12 cm de alto) queda algo hundida, no apoyada encima
-    const float amplitudOla = 0.02f;      // m
-    const float frecuenciaOla = 0.4f;     // Hz
-    const float x = f.centro.x + f.radio * std::cos(theta);
-    const float z = f.centro.y + f.radio * std::sin(theta);
-    const float y = alturaAgua + calado + amplitudOla * std::sin(2.0f * PI_FLORES * frecuenciaOla * t + f.faseOla);
+    const float calado = 0.02f;           // m
+    const glm::vec2 p = PosicionXZ(f, t);
     const float psi = f.faseGiro + f.omegaGiro * t;
 
-    glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+    glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, alturaAgua + calado, p.y));
     m = glm::rotate(m, psi, glm::vec3(0.0f, 1.0f, 0.0f));
     m = glm::translate(m, -centroMalla);
     return m;
