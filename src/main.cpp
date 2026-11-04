@@ -153,7 +153,9 @@ int main()
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
-    Model arco((char*)"Models/arco/arco.obj");   // A-10: dovelas, en coordenadas de la fachada
+    Model arco((char*)"Models/arco/arco.obj");    // A-10: dovelas, en coordenadas de la fachada
+    Model techo((char*)"Models/techo/techo.obj"); // A-11: techo a dos aguas separado de fachada.obj
+    Model piso((char*)"Models/piso/piso.obj");    // A-11: piso interior a y = +0.02
     Model playa((char*)"Models/playa/playa.obj");
     Model mar((char*)"Models/mar/mar.obj");
     // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
@@ -319,6 +321,13 @@ int main()
         glUniform1f(specLoc, 0.1f);
         fachada.Draw(shader);
         arco.Draw(shader);   // A-10: misma matriz que la fachada
+        techo.Draw(shader);  // A-11: misma matriz que la fachada (mismo sistema de coord. Blender)
+
+        // 1b. PISO INTERIOR (A-11): plano a y = +0.02 con transformacion identidad
+        glm::mat4 modelPiso(1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPiso));
+        glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
+        piso.Draw(shader);
 
         // 2. ALTAR (capilla provisional de 1.9 m, al fondo del cuarto hasta B-9)
         glm::mat4 modelAltar(1.0f);
