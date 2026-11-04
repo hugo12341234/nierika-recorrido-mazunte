@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 04/11/2026, hora de México (PR #40: B-9 tumbas del panteón — 4 `.obj` Blender, `main.cpp` sin duplicados, `/verificar B-9` APROBAR, compilado y visto en pantalla por D2) · **Hoy:** semana 4 (Bloque B) · **Días a la entrega:** 14 (mié 18/11/2026)
+**Última actualización:** 04/11/2026, hora de México (PR #41: B-10 barda perimetral del panteón + roca decorativa — 5 muros `.obj` Blender + roca irregular seed=7, 6 AABB en `main.cpp`, textura `piedra.jpg`, `/verificar B-10` APROBAR, compilado y visto en pantalla por D2) · **Hoy:** semana 4 (Bloque B) · **Días a la entrega:** 14 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -82,7 +82,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | ⏳ |
 | B-8 | Soportes de madera para el papel picado | 22 | Postes simples | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-9 | Tumbas propias: **4** con geometría distinta, en Blender; una es la capilla con domo y cruz (rehecha usando la de Maya como referencia) | 14 | Lápida y base; 4 tumbas distintas, cada una en su `.obj` (inventario #7–#10); la capilla de Maya se retira de `Models/altar/` | ✅ 04/11, PR #40 (`/verificar B-9`: APROBAR, D2 confirmó compilación y captura con las 4 tumbas visibles en el panteón exterior). `altar/altar.obj` ya no se carga; posiciones provisionales en B-13 |
-| B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas; **una roca en su propio `.obj`** (inventario #12, decisión del 19/10) | ⏳ |
+| B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas; **una roca en su propio `.obj`** (inventario #12, decisión del 19/10) | ✅ 04/11, PR #41 (rama `feature/b-10-barda`): `Models/barda/barda.obj` (recinto x −7..+7, z +3..+12, h 0.70 m, espesor 0.25 m, abertura 2 m al norte) + `Models/roca/roca.obj` (cubo subdividido, seed=7, amplitud=0.07). 6 AABB: 5 muros + roca en (1.5, 0, 12.5). Textura `piedra.jpg` (1K, Voronoi, copiada de `fachada/`). `map_Kd` en ambos `.mtl`. Script Blender en `tools/b10_barda_roca.py`. `/verificar B-10` APROBAR (04/11). Compilado y visto en la PC de D2: barda con geometría U y abertura norte, roca irregular con textura de piedra |
 | B-11 | Cruz de piedra de la entrada | 19 | Una sola, sin variantes | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-12 | Texturizar altar, vela, botella, pan, cempasúchil y marco (PBR 1K) | 31, 32, 33, 34 | Materiales coherentes; mapa de relieve para el pan | ⏳ |
 | B-13 | Cargar todos los .obj, colocar y ajustar la ofrenda en el cuarto | 35, 36, 38 | Rutas relativas; los 7 objetos caben y se ven | ⏳ |
@@ -158,8 +158,8 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 8 | Tumba 2 | `tumba2/tumba2.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 | `tumba2/tumba2.blend` (Blender 5.2) |
 | 9 | Tumba 3 | `tumba3/tumba3.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 | `tumba3/tumba3.blend` (Blender 5.2) |
 | 10 | Tumba 4 | `tumba4/tumba4.obj` | B-9 (act. 14) | Volumen | ✅ 04/11, PR #40 · obligatoria: sin ella el estricto baja de 18 | `tumba4/tumba4.blend` (Blender 5.2) |
-| 11 | Barda perimetral | `barda/barda.obj` | B-10 (act. 20) | Volumen | ⏳ | — |
-| 12 | Roca de la barda (variante) | `roca/roca.obj` | B-10 (act. 20) | Volumen | ⏳ obligatoria: sin ella el estricto baja de 18 (decisión 19/10) | — |
+| 11 | Barda perimetral | `barda/barda.obj` | B-10 (act. 20) | Volumen | ✅ 04/11, PR #41 | `barda/barda.blend` (Blender 5.2, script `tools/b10_barda_roca.py`) |
+| 12 | Roca de la barda (variante) | `roca/roca.obj` | B-10 (act. 20) | Volumen | ✅ 04/11, PR #41 · obligatoria: sin ella el estricto baja de 18 (decisión 19/10) | `roca/roca.blend` (Blender 5.2, script `tools/b10_barda_roca.py`) |
 | 13 | Cruz de piedra | `cruz/cruz.obj` | B-11 (act. 19) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 14 | Soportes de madera del papel picado | `soportes/soportes.obj` | B-8 (act. 22) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 15 | Papel picado | `papel_picado/papel_picado.obj` | B-7 (act. 25) | Plano | ⏳ | — |
@@ -209,7 +209,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 17 | Arco con dovelas | A-10 | ✅ | 03/11: `Models/arco/arco.obj` (9 dovelas) sobre la apertura semicircular; falta compilar y `/verificar A-10` |
 | 18 | Piso, paredes, techo | A-11 | ✅ | 03/11: `techo.obj` separado; `piso.obj` creado a y = +0.02; falta compilar y `/verificar A-11` |
 | 19 | Cruz | B-11 | ⏳ | |
-| 20 | Barda perimetral | B-10 | ⏳ | |
+| 20 | Barda perimetral | B-10 | ✅ | 04/11, PR #41 (rama `feature/b-10-barda`) |
 | 21 | Textura piedra rústica | A-12 | ✅ | 04/11: `piedra.jpg` 1024×1024 generada con ruido Voronoi; aplicada a muros, dovelas y piso (ver decisión del 04/11, A-12) |
 | 22 | Soportes papel picado | B-8 | ⏳ | |
 | 23 | Vela con pivote | B-2 | ⏳ | |
