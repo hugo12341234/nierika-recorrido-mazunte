@@ -75,7 +75,9 @@ void main()
     if (texColor.a < 0.1)
         discard;                      // descarte por alfa (papel picado, flores)
 
-    vec3 norm = normalize(Normal);
+    // gl_FrontFacing: si es back-face (interior del modelo), invertimos la normal
+    // para que la iluminacion difusa funcione desde adentro
+    vec3 norm = normalize(gl_FrontFacing ? Normal : -Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 albedo = texColor.rgb;
 
