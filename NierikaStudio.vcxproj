@@ -94,6 +94,7 @@
     <ClCompile Include="vendor\SOIL2\etc1_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AnimFlores.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
