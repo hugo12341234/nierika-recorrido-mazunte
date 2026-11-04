@@ -13,6 +13,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Audio.h"
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -164,6 +165,10 @@ int main()
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
     // Game loop
+    // D-6: audio ambiental en bucle (si faltan los archivos de Audio/, avisa y sigue sin sonido)
+    Audio audio;
+    audio.init();
+
     while (!glfwWindowShouldClose(window))
     {
         // Set frame time
@@ -322,6 +327,8 @@ int main()
     // Libera lo que se creo aqui (el resto de la GPU se libera en E-1 con cleanup())
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
+
+    audio.cleanup(); // D-6
 
     glfwTerminate();
     return 0;

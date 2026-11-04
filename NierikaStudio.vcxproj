@@ -87,6 +87,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
     <!-- SOIL2 se compila desde codigo fuente (vendor\SOIL2) para x64 -->
     <ClCompile Include="vendor\SOIL2\SOIL2.c" />
     <ClCompile Include="vendor\SOIL2\image_helper.c" />
@@ -94,6 +95,7 @@
     <ClCompile Include="vendor\SOIL2\etc1_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
