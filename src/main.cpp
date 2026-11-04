@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <cstdio>
 
 // GLEW
 #include <GL/glew.h>
@@ -14,6 +15,10 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Fichas.h"
+#include "AnimFlores.h"  // C-4
+#include "Olas.h"   // C-1: parametros y altura del oleaje
+#include "Colisiones.h"
+#include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -34,13 +39,20 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 2.0f, 6.0f));
+Camera camera(glm::vec3(0.0f, Colisiones::ALTURA_OJOS, 6.0f));  // ojos a 1.6 m (A-9)
+Colisiones colisiones;  // cajas AABB solidas (se llenan en main)
 bool keys[1024];
 GLfloat lastX = 640, lastY = 360;  // centro de la ventana de 1280x720
 bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
+
+// Contador de FPS (E-1a): promedio cada 0.5 s, se muestra en el titulo de la ventana
+const char* TITULO_VENTANA = "Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte";
+const double INTERVALO_FPS = 0.5;  // segundos entre actualizaciones del titulo
+double inicioIntervaloFPS = 0.0;
+int framesIntervalo = 0;
 
 // ==========================================
 // ILUMINACION (A-8). Valores de D1 (319266894, Practica 8 adaptada a Mazunte).
@@ -75,6 +87,9 @@ glm::vec3 pointLightPositions[4] = {
 };
 glm::vec3 Light1(0.0f), Light2(0.0f), Light3(0.0f), Light4(0.0f);
 
+// Silueta de cubos (D-1/D-2): el tiempo de su caminata corre con deltaTime; R la reinicia
+float tSilueta = 0.0f;
+
 // Cubo unitario (posicion + normal) para marcar las luces
 float vertices[] = {
     -0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f, 0.5f,-0.5f, 0,0,-1,
@@ -103,7 +118,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, TITULO_VENTANA, nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -143,16 +158,42 @@ int main()
     // Setup and compile our shaders
     Shader shader("Shaders/lighting.vs", "Shaders/lighting.frag");
     Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
+    Shader siluetaShader("Shaders/silueta.vs", "Shaders/silueta.frag");
 
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
+    Model arco((char*)"Models/arco/arco.obj");    // A-10: dovelas, en coordenadas de la fachada
+    Model techo((char*)"Models/techo/techo.obj"); // A-11: techo a dos aguas separado de fachada.obj
+    Model piso((char*)"Models/piso/piso.obj");    // A-11: piso interior a y = +0.02
     Model playa((char*)"Models/playa/playa.obj");
     Model mar((char*)"Models/mar/mar.obj");
     // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
     Model calavera((char*)"Models/calavera/calavera.obj");
     Model pan((char*)"Models/pan/pan.obj");
     Model flor((char*)"Models/flor/flor.obj");
+
+    // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
+    // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
+    const FlorFlotante floresFlotantes[5] = {
+        { glm::vec2(-4.0f, 28.0f), 0.60f,  1.0f, 5.0f, 2.0f, 0.0f, 0.8f, 0.0f },
+        { glm::vec2(-1.5f, 30.0f), 0.45f, -1.0f, 4.5f, 2.5f, 1.7f, 0.6f, 1.3f },
+        { glm::vec2( 1.0f, 27.0f), 0.75f,  1.0f, 5.5f, 1.5f, 3.1f, 1.0f, 2.6f },
+        { glm::vec2( 3.5f, 29.5f), 0.50f, -1.0f, 5.0f, 3.0f, 4.4f, 0.7f, 3.9f },
+        { glm::vec2( 6.0f, 27.5f), 0.65f,  1.0f, 4.0f, 2.0f, 5.8f, 0.9f, 5.2f }
+    };
+    const glm::vec3 centroFlor(0.0f, 0.0f, -0.075f);         // centro de flor.obj (medido en sus vertices), para girar sobre si misma
+
+    // ==========================================
+    // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
+    // la apertura queda en z = +1.31). Muros ~0.1 m de espesor; piso = playa.obj (suelo y = 0, no es caja).
+    // ==========================================
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f, -1.217f) });  // muro del fondo
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3(-1.826f, 2.62f,  1.310f) });  // muro izquierdo
+    colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
+    colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
+    colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // capilla provisional (altar.obj en (0, 0, -0.6))
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -165,6 +206,19 @@ int main()
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
+    // VAO propio de la silueta: mismo cubo (VBO), con posicion y normal
+    GLuint siluetaVAO;
+    glGenVertexArrays(1, &siluetaVAO);
+    glBindVertexArray(siluetaVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cuboVBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    Silueta silueta;  // jerarquia de cubos + KeyFrames (src/Silueta.cpp)
+
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
     // Game loop
@@ -174,6 +228,18 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // FPS promedio de los ultimos 0.5 s: cuadros contados / tiempo transcurrido
+        framesIntervalo++;
+        if (currentFrame - inicioIntervaloFPS >= INTERVALO_FPS)
+        {
+            double fps = framesIntervalo / (currentFrame - inicioIntervaloFPS);
+            char titulo[160];
+            snprintf(titulo, sizeof(titulo), "%s | %.0f FPS (%.1f ms)", TITULO_VENTANA, fps, 1000.0 / fps);
+            glfwSetWindowTitle(window, titulo);
+            inicioIntervaloFPS = currentFrame;
+            framesIntervalo = 0;
+        }
 
         // Check and call events
         glfwPollEvents();
@@ -264,7 +330,20 @@ int main()
         glm::mat4 modelMar(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMar));
         glUniform1f(specLoc, 0.6f);
+        // C-1: oleaje por vertex shader (suma de senos, parametros en src/Olas.h)
+        {
+            float oA[Olas::N], oK[Olas::N], oW[Olas::N], oDir[2 * Olas::N], oFase[Olas::N];
+            Olas::ParametrosShader(oA, oK, oW, oDir, oFase);
+            glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 1);
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)glfwGetTime());
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaA"), Olas::N, oA);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaK"), Olas::N, oK);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaW"), Olas::N, oW);
+            glUniform2fv(glGetUniformLocation(shader.Program, "ondaDir"), Olas::N, oDir);
+            glUniform1fv(glGetUniformLocation(shader.Program, "ondaFase"), Olas::N, oFase);
+        }
         mar.Draw(shader);
+        glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 0);   // el resto de los modelos sin oleaje
 
         // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
         glm::mat4 modelFachada(1.0f);
@@ -275,6 +354,14 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelFachada));
         glUniform1f(specLoc, 0.1f);
         fachada.Draw(shader);
+        arco.Draw(shader);   // A-10: misma matriz que la fachada
+        techo.Draw(shader);  // A-11: misma matriz que la fachada (mismo sistema de coord. Blender)
+
+        // 1b. PISO INTERIOR (A-11): plano a y = +0.02 con transformacion identidad
+        glm::mat4 modelPiso(1.0f);
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPiso));
+        glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
+        piso.Draw(shader);
 
         // 2. ALTAR (capilla provisional de 1.9 m, al fondo del cuarto hasta B-9)
         glm::mat4 modelAltar(1.0f);
@@ -298,6 +385,33 @@ int main()
         dibuja(flor, glm::vec3(0.9f, 2.32f, 1.8f));   // derecha de la calavera
         dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
         dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
+
+        // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
+        glUniform1f(specLoc, 0.1f);
+        for (int i = 0; i < 5; i++)
+        {
+            const float tf = (float)glfwGetTime();
+            glm::vec2 pf = PosicionXZ(floresFlotantes[i], tf);
+            glm::mat4 mf = MatrizFlorFlotante(floresFlotantes[i], tf, Olas::Altura(pf.x, pf.y, tf), centroFlor);
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+            flor.Draw(shader);
+        }
+        // 4. SILUETA (D-1/D-2): 10 cubos jerarquicos, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
+        // Cubos provisionales con su propio shader; se sustituyen por Models/silueta/ (D-1)
+        tSilueta += deltaTime;
+        silueta.Actualizar(tSilueta);
+        siluetaShader.Use();
+        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glBindVertexArray(siluetaVAO);
+        for (size_t i = 0; i < silueta.Nodos().size(); i++)
+        {
+            glm::mat4 mc = silueta.MatrizCubo(i);
+            glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+            glUniform3fv(glGetUniformLocation(siluetaShader.Program, "color"), 1, glm::value_ptr(silueta.Nodos()[i].color));
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        glBindVertexArray(0);
 
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
         if (mostrarLuces)
@@ -326,7 +440,19 @@ int main()
         glfwSwapBuffers(window);
     }
 
-    // Libera lo que se creo aqui (el resto de la GPU se libera en E-1 con cleanup())
+    // Liberacion explicita de la GPU (E-1a, decision del 19/10: cleanup() a mano, no destructores).
+    // Va antes de glfwTerminate(), mientras el contexto de OpenGL sigue vivo.
+    altar.cleanup();
+    fachada.cleanup();
+    playa.cleanup();
+    mar.cleanup();
+    calavera.cleanup();
+    pan.cleanup();
+    flor.cleanup();
+    siluetaShader.cleanup();  // D-1/D-2
+    shader.cleanup();
+    lampShader.cleanup();
+    glDeleteVertexArrays(1, &siluetaVAO);
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
 
@@ -339,26 +465,32 @@ int main()
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
-    // Camera controls
+    // Camera controls. Un tiron de deltaTime (ventana arrastrada, etc.) no debe dar un salto enorme: tope de 0.1 s
+    GLfloat dtMov = glm::min(deltaTime, 0.1f);
+    glm::vec3 posAntes = camera.GetPosition();
+
     if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
     {
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.ProcessKeyboard(FORWARD, dtMov);
     }
 
     if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
     {
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.ProcessKeyboard(BACKWARD, dtMov);
     }
 
     if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
     {
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(LEFT, dtMov);
     }
 
     if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
     {
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.ProcessKeyboard(RIGHT, dtMov);
     }
+
+    // A-9: corrige la posicion con las colisiones AABB y la deja a 1.6 m sobre el suelo
+    camera.SetPosition(colisiones.resolver(posAntes, camera.GetPosition()));
 
     // Reflector de la cruz: posicion (T/G = X, Y/H = Y, U/J = Z) y direccion (1/2 = X, 3/4 = Y, 5/6 = Z)
     if (keys[GLFW_KEY_T]) spotLightPos.x += 1.0f * deltaTime;
@@ -411,6 +543,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
             Light1 = Light2 = Light3 = Light4 = glm::vec3(0.0f);
         }
     }
+
+    // R: reinicia la caminata de la silueta (D-2)
+    if (GLFW_KEY_R == key && GLFW_PRESS == action)
+        tSilueta = 0.0f;
 
     // L: muestra u oculta los cubos que marcan las luces
     if (GLFW_KEY_L == key && GLFW_PRESS == action)
