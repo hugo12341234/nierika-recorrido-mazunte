@@ -119,7 +119,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 |---|---|---|---|---|
 | E-1 | Pruebas de integración y fugas de memoria (VAO, VBO, texturas) | 54 | Lista de errores priorizada | 🔄 **E-1a** (04/11, rama `feature/e-1a-cleanup-fps`, PR por abrir): `cleanup()` en `Shader`, `Mesh` y `Model` (libera programa, VAO/VBO/EBO y texturas) llamado al final de `main` antes de `glfwTerminate()`, y contador de FPS en el título de la ventana. `g++` no pudo comprobar la sintaxis en el entorno web (sin GLEW/GLM/Assimp): **falta compilar en Release x64 y verificar**. El resto de E-1 (pruebas de integración, lista priorizada) sigue ⏳ |
 | E-2 | Corrección de errores de cámara y colisiones | 55 | Sin atascos en bardas | ⏳ |
-| E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC sin Visual Studio; `dist/` incluye `Models/`, `Shaders/` y las DLL; se publica como .zip en el Release (decisión del 19/10), no en Git | 🟡 03/11, rama `feature/e-3-empaquetado`: **solo el script** `tools/empaquetar_release.ps1` (compila Release x64, arma `dist/NierikaStudio/` y genera `dist/NierikaStudio_<fecha>.zip`). **No se ejecutó** (Claude no tiene Windows ni PowerShell aquí) y **no se probó en otra PC**: E-3 sigue ⏳ hasta que D2 corra el script y abra el .zip en una PC sin Visual Studio |
+| E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC sin Visual Studio; `dist/` incluye `Models/`, `Shaders/` y las DLL; se publica como .zip en el Release (decisión del 19/10), no en Git | 🟡 PR #21 (fusionado): `tools/empaquetar_release.ps1` (compila Release x64, arma `dist/NierikaStudio/` y genera `dist/NierikaStudio_<fecha>.zip`). **Ejecutado por D2 en su PC (04/11, captura de D2):** compila, copia 8 DLL de `build/x64/Release/` y crea `NierikaStudio_2026-11-04.zip` (21.3 MB); D2 dice que el .exe funciona al descomprimirlo **en otra carpeta de la misma PC** (según D2, sin captura). **Falta** la prueba en una PC sin Visual Studio, que es el criterio de E-3: sigue 🟡 hasta entonces |
 | E-4 | 3 videos MP4 | 57 | Entorno; recorrido; animaciones e interactividad | ⏳ |
 | E-5 | Manual técnico (ES + EN) | 58 | Arquitectura, cronograma, RACI, justificación, conclusiones | ⏳ |
 | E-6 | Manual de usuario (ES + EN) | 59 | Capturas y explicación de controles | 🔄 Esqueleto en ES en `docs/manual_usuario/` (controles reales según `main.cpp` de `develop`); faltan capturas, secciones de fichas/audio/animaciones, EN y PDF |
@@ -245,7 +245,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 53 | Justificación complejas | D-7 | ⏳ | |
 | 54 | Pruebas y fugas | E-1 | ⏳ | |
 | 55 | Corrección cámara/colisiones | E-2 | ⏳ | |
-| 56 | Release x64 en dist/ | E-3 | 🟡 | Script listo sin probar (03/11); falta correrlo y la prueba en otra PC |
+| 56 | Release x64 en dist/ | E-3 | 🟡 | Script ejecutado en la PC de D2 (04/11): zip de 21.3 MB con 8 DLL; falta la prueba en otra PC |
 | 57 | Videos | E-4 | ⏳ | |
 | 58 | Manual técnico | E-5 | ⏳ | |
 | 59 | Manual de usuario | E-6 | 🔄 | Esqueleto ES |
