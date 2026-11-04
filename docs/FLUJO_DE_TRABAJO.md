@@ -37,6 +37,7 @@
 | `vcpkg.json` | Librerías que instala vcpkg: Assimp, GLFW, GLEW, GLM (versiones fijas por `builtin-baseline`) |
 | `src/` | Código C++: `main.cpp` y las clases `Camera.h`, `Shader.h`, `Model.h`, `Mesh.h` |
 | `vendor/SOIL2/` | SOIL2 + stb_image en código fuente (se compilan con el proyecto) |
+| `vendor/imgui/` | Dear ImGui en código fuente (C-7b; ver `vendor/imgui/LEEME.md`) |
 | `Models/<objeto>/` | Cada modelo con su `.obj`, `.mtl` y **sus texturas** |
 | `Shaders/` | Shaders GLSL 330 (`.vs` y `.frag`) |
 | `build/` | Salida de compilación (no se sube a Git) |

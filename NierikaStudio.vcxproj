@@ -60,7 +60,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <!-- vendor para "SOIL2/SOIL2.h"; vendor\SOIL2 para "stb_image.h" -->
-      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)vendor;$(ProjectDir)vendor\SOIL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)vendor;$(ProjectDir)vendor\SOIL2;$(ProjectDir)vendor\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -89,6 +89,14 @@
     <ClCompile Include="src\Colisiones.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Audio.cpp" />
+    <ClCompile Include="src\Fichas.cpp" />
+    <!-- Dear ImGui se compila desde codigo fuente (vendor\imgui) con los backends de GLFW y OpenGL3 (C-7b) -->
+    <ClCompile Include="vendor\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Animacion.cpp" />
     <ClCompile Include="src\Silueta.cpp" />
     <!-- SOIL2 se compila desde codigo fuente (vendor\SOIL2) para x64 -->
@@ -102,6 +110,7 @@
     <ClInclude Include="src\AnimFlores.h" />
     <ClInclude Include="src\Animacion.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Fichas.h" />
     <ClInclude Include="src\Colisiones.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
