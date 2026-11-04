@@ -22,7 +22,7 @@ enum Camera_Movement
 // Default camera values
 const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 6.0f;
+const GLfloat SPEED = 2.0f;         // m/s al caminar (decision 19/10; antes 6 m/s, velocidad de carrera)
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 45.0f;        // Campo de vision vertical en GRADOS (en main.cpp se convierte con glm::radians)
 
@@ -61,14 +61,17 @@ public:
 	{
 		GLfloat velocity = this->movementSpeed * deltaTime;
 
+		// Camina solo en el plano XZ (decision 19/10): avanzar usa 'front' sin su componente Y, asi mirar arriba o abajo no hace volar
+		glm::vec3 frontPlano = glm::normalize(glm::vec3(this->front.x, 0.0f, this->front.z));
+
 		if (direction == FORWARD)
 		{
-			this->position += this->front * velocity;
+			this->position += frontPlano * velocity;
 		}
 
 		if (direction == BACKWARD)
 		{
-			this->position -= this->front * velocity;
+			this->position -= frontPlano * velocity;
 		}
 
 		if (direction == LEFT)
@@ -123,6 +126,12 @@ public:
 	glm::vec3 GetPosition()
 	{
 		return this->position;
+	}
+
+	// Fija la posicion (A-9: la usan las colisiones para corregirla)
+	void SetPosition(glm::vec3 nuevaPosicion)
+	{
+		this->position = nuevaPosicion;
 	}
 
 	glm::vec3 GetFront()
