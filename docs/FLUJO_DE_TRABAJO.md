@@ -40,6 +40,7 @@
 | `vendor/imgui/` | Dear ImGui en código fuente (C-7b; ver `vendor/imgui/LEEME.md`) |
 | `Models/<objeto>/` | Cada modelo con su `.obj`, `.mtl` y **sus texturas** |
 | `Shaders/` | Shaders GLSL 330 (`.vs` y `.frag`) |
+| `tools/` | Scripts de apoyo; hoy `empaquetar_release.ps1` (compila Release x64 y genera `dist/` y el .zip) |
 | `build/` | Salida de compilación (no se sube a Git) |
 | `dist/` | Release autónomo (.exe + DLL + `Models/` + `Shaders/`); no se sube a Git, va como .zip en el Release (E-3, E-7) |
 
