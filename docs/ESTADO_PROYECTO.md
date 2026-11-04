@@ -92,7 +92,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
-| C-1 | Olas: vertex shader con suma de senos | 39 | Frecuencias y amplitudes definidas | 🔄 04/11, rama `feature/c-1-olas`: 3 ondas definidas (decisión 04/11 "Olas"); `Shaders/lighting.vs` (rama `oleaje`) y `src/Olas.h` (misma altura en CPU). Probado en CPU (g++): altura entre −0.28 y −0.12 m; normal analítica coincide con diferencias finitas (error 3×10⁻⁵). **Falta:** compilar y verlo en Release x64 (D2) y `/verificar C-1`; FPS sin medir |
+| C-1 | Olas: vertex shader con suma de senos | 39 | Frecuencias y amplitudes definidas | 🔄 04/11, rama `feature/c-1-olas`: 3 ondas definidas (decisión 04/11 "Olas"); `Shaders/lighting.vs` (con `uniform int oleaje`) y `src/Olas.h` (misma altura en CPU). Probado en CPU (g++): altura entre −0.28 y −0.12 m; normal analítica coincide con diferencias finitas (error 3×10⁻⁵). **Falta:** compilar y verlo en Release x64 (D2) y `/verificar C-1`; FPS sin medir |
 | C-2 | Llama de las velas: fragment shader con ruido | 40 | Ruido Perlin o similar | ⏳ |
 | C-3 | Velas flotando: trayectoria Bézier + oscilación senoidal | 41 | Desfase entre velas | ⏳ |
 | C-4 | Flores flotando: movimiento circular + rotación | 42 | Velocidad variable con pausas | ⏳ |
