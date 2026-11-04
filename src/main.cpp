@@ -173,6 +173,18 @@ int main()
     Model calavera((char*)"Models/calavera/calavera.obj");
     Model pan((char*)"Models/pan/pan.obj");
     Model flor((char*)"Models/flor/flor.obj");
+    // B-13 (provisional): modelos propios de los lotes 1-5 de Blender (escala real ya aplicada en cada .obj; texturas provisionales de un color)
+    Model altar3((char*)"Models/altar3/altar3.obj");       // B-1
+    Model vela((char*)"Models/vela/vela.obj");             // B-2
+    Model botella((char*)"Models/botella/botella.obj");    // B-5
+    Model marco((char*)"Models/marco/marco.obj");          // B-6
+    Model soportes((char*)"Models/soportes/soportes.obj"); // B-8
+    Model tumba1((char*)"Models/tumba1/tumba1.obj");       // B-9
+    Model tumba2((char*)"Models/tumba2/tumba2.obj");
+    Model tumba3((char*)"Models/tumba3/tumba3.obj");
+    Model tumba4((char*)"Models/tumba4/tumba4.obj");
+    Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
+    Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
 
     // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
     // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
@@ -391,6 +403,43 @@ int main()
         dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
         dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
 
+        // 3b. MODELOS PROPIOS DE BLENDER (B-1, B-2, B-5, B-6, B-8, B-9, B-11, B-14). Posiciones PROVISIONALES: B-13 las ajusta.
+        // Altar de 3 niveles contra el muro derecho del cuarto (interior x +-1.826), girado -90 grados para que su frente (+z local) mire a -x.
+        // Cubre x 0.9..1.8; en esta version no se agrega colision ni se retira la capilla provisional (altar.obj).
+        glUniform1f(specLoc, 0.1f);
+        auto colocar = [&](Model& m, glm::vec3 pos, float giroY)
+        {
+            glm::mat4 mm = glm::translate(glm::mat4(1.0f), pos);
+            mm = glm::rotate(mm, glm::radians(giroY), glm::vec3(0.0f, 1.0f, 0.0f));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+            m.Draw(shader);
+        };
+        {
+            // Posicion local sobre el altar (x, y, z locales) -> mundo: giro -90 grados en Y alrededor de (1.35, 0, 0)
+            const glm::vec3 altarPos(1.35f, 0.0f, 0.0f);
+            auto sobreAltar = [&](Model& m, glm::vec3 loc)
+            {
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), altarPos);
+                mm = glm::rotate(mm, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::translate(mm, loc);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                m.Draw(shader);
+            };
+            colocar(altar3, altarPos, -90.0f);
+            sobreAltar(marco,    glm::vec3( 0.00f, 1.20f, -0.30f));  // nivel superior (y = 1.20), al fondo
+            sobreAltar(vela,     glm::vec3(-0.35f, 1.20f, -0.25f));
+            sobreAltar(vela,     glm::vec3( 0.35f, 1.20f, -0.25f));
+            sobreAltar(botella,  glm::vec3(-0.40f, 0.80f,  0.05f));  // nivel medio (y = 0.80)
+            sobreAltar(copalero, glm::vec3( 0.40f, 0.80f,  0.05f));
+        }
+        // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
+        colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.0f), 0.0f);
+        colocar(tumba2,   glm::vec3(-4.0f, 0.0f,  4.5f), 0.0f);
+        colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
+        colocar(tumba4,   glm::vec3(-4.5f, 0.0f,  9.0f), 0.0f);
+        colocar(tumba1,   glm::vec3( 4.5f, 0.0f, 10.0f), 0.0f);
+        colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado (B-7 pendiente)
+
         // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
         glUniform1f(specLoc, 0.1f);
         for (int i = 0; i < 5; i++)
@@ -454,6 +503,17 @@ int main()
     calavera.cleanup();
     pan.cleanup();
     flor.cleanup();
+    altar3.cleanup();
+    vela.cleanup();
+    botella.cleanup();
+    marco.cleanup();
+    soportes.cleanup();
+    tumba1.cleanup();
+    tumba2.cleanup();
+    tumba3.cleanup();
+    tumba4.cleanup();
+    cruz.cleanup();
+    copalero.cleanup();
     siluetaShader.cleanup();  // D-1/D-2
     shader.cleanup();
     lampShader.cleanup();
