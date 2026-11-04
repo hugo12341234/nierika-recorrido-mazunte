@@ -122,7 +122,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | E-3 | Release x64 autónomo en `dist/` con sus .dll | 56 | El .exe corre en otra PC sin Visual Studio; `dist/` incluye `Models/`, `Shaders/` y las DLL; se publica como .zip en el Release (decisión del 19/10), no en Git | ⏳ |
 | E-4 | 3 videos MP4 | 57 | Entorno; recorrido; animaciones e interactividad | ⏳ |
 | E-5 | Manual técnico (ES + EN) | 58 | Arquitectura, cronograma, RACI, justificación, conclusiones | ⏳ |
-| E-6 | Manual de usuario (ES + EN) | 59 | Capturas y explicación de controles | ⏳ |
+| E-6 | Manual de usuario (ES + EN) | 59 | Capturas y explicación de controles | 🔄 Esqueleto en ES en `docs/manual_usuario/` (controles reales según `main.cpp` de `develop`); faltan capturas, secciones de fichas/audio/animaciones, EN y PDF |
 | E-7 | Release en GitHub y entrega | 60 | Release final y enlaces | ⏳ |
 
 ### Tareas sueltas (sin bloque)
@@ -248,7 +248,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 56 | Release x64 en dist/ | E-3 | ⏳ | |
 | 57 | Videos | E-4 | ⏳ | |
 | 58 | Manual técnico | E-5 | ⏳ | |
-| 59 | Manual de usuario | E-6 | ⏳ | |
+| 59 | Manual de usuario | E-6 | 🔄 | Esqueleto ES |
 | 60 | Release GitHub | E-7 | ⏳ | |
 
 ---
