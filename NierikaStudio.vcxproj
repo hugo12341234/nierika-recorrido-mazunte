@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClCompile Include="src\Colisiones.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\Fichas.cpp" />
     <!-- Dear ImGui se compila desde codigo fuente (vendor\imgui) con los backends de GLFW y OpenGL3 (C-7b) -->
     <ClCompile Include="vendor\imgui\imgui.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="vendor\SOIL2\etc1_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AnimFlores.h" />
     <ClInclude Include="src\Animacion.h" />
     <ClInclude Include="src\Camera.h" />
