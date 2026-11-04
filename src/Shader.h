@@ -97,6 +97,13 @@ public:
 		glUseProgram(this->Program);
 	}
 
+	// Libera el programa de GPU. Se llama a mano al final de main (decision del 19/10: sin destructores, porque Shader se copia)
+	void cleanup()
+	{
+		if (this->Program) glDeleteProgram(this->Program);
+		this->Program = 0;
+	}
+
 	GLuint getColorLocation()
 	{
 		return uniformColor;
