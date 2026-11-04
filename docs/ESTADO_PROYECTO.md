@@ -130,7 +130,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | Código | Tarea | Act. | Criterio de terminado | Estado |
 |---|---|---|---|---|
 | X-1 | Verificar Blender y GIMP con la misma versión en las dos PCs | 6 | Captura de la versión en cada equipo | 🔄 |
-| X-3 | **Extra:** pan, flor y calavera de D1 sobre los escalones de la capilla (sin tarea en el plan) | — | Se ven, con luz, sobre los escalones; con escala real y 1K | 🔄 04/11, rama `feature/x-3-extras-d1`: `Models/pan/`, `Models/flor/`, `Models/calavera/` (Maya, de D1). Falta compilar y ver en Windows y `/verificar X-3` |
+| X-3 | **Extra:** pan, flor y calavera de D1 sobre los escalones de la capilla (sin tarea en el plan) | — | Se ven, con luz, sobre los escalones; con escala real y 1K | 🔄 04/11, rama `feature/x-3-extras-d1`: `Models/pan/`, `Models/flor/`, `Models/calavera/` (Maya, de D1). Compila y corre en la PC de D2 (04/11, captura de D2): calavera, pan y flores se ven sobre los escalones a tamaño real y con luz. Falta `/verificar X-3` |
 | X-2 | Bocetos del cuarto del cementerio | 7 | Fachada, interior y distribución de la ofrenda, para el manual técnico | ❓ |
 
 **Para no ahogarse al final:** cada bloque deja escritas sus secciones del manual técnico (capturas + parámetros) en `docs/manual_tecnico/`.
