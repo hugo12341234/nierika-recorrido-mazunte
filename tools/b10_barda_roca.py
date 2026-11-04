@@ -10,9 +10,9 @@
 
 import bpy, bmesh, os, shutil, random
 
-# auto-detecta la ruta del repo (funciona en Windows con usuario cualquiera)
+# CAMBIA esta línea si tu repo está en otra ruta
 import os as _os
-BASE_PATH = _os.path.join(_os.path.expanduser("~"), "Documents", "CGelHC", "nierika-recorrido-mazunte")
+BASE_PATH = _os.path.join(_os.path.expanduser("~"), "Documents", "CGeIHC", "nierika-recorrido-mazunte")
 
 PIEDRA_SRC = os.path.join(BASE_PATH, "Models", "fachada", "piedra.jpg")
 
