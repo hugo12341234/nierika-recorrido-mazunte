@@ -161,11 +161,6 @@ int main()
     Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
 
     // Load models
-    // B-9: 4 tumbas del panteón (reemplazan la capilla provisional de Maya en altar/)
-    Model tumba1((char*)"Models/tumba1/tumba1.obj");
-    Model tumba2((char*)"Models/tumba2/tumba2.obj");
-    Model tumba3((char*)"Models/tumba3/tumba3.obj");
-    Model tumba4((char*)"Models/tumba4/tumba4.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
     Model arco((char*)"Models/arco/arco.obj");    // A-10: dovelas, en coordenadas de la fachada
     Model techo((char*)"Models/techo/techo.obj"); // A-11: techo a dos aguas separado de fachada.obj
@@ -209,10 +204,7 @@ int main()
     colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
     colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
     colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
-    colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // tumba1: capillita (1.3×0.9×1.9 m) en (0, 0, -0.6)
-    colisiones.agregar({ glm::vec3(-3.300f, 0.0f, -0.100f), glm::vec3(-2.700f, 1.10f,  0.100f) });  // tumba2: lapida, a la izquierda de la capilla
-    colisiones.agregar({ glm::vec3( 2.500f, 0.0f, -1.000f), glm::vec3( 3.500f, 0.90f,  0.000f) });  // tumba3: piramide, a la derecha de la capilla
-    colisiones.agregar({ glm::vec3(-4.300f, 0.0f,  2.150f), glm::vec3(-2.700f, 0.65f,  2.850f) });  // tumba4: sepulcro tumbado, frente-izquierda
+
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -383,25 +375,6 @@ int main()
         glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
         piso.Draw(shader);
 
-        // 2. TUMBAS DEL PANTEÓN (B-9): 4 tumbas propias en Blender, reemplazan la capilla provisional de Maya
-        glUniform1f(specLoc, 0.1f);
-        // Tumba 1 (capillita con domo y cruz): al fondo del cuarto, misma posicion que el altar provisional
-        glm::mat4 modelTumba1 = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.6f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelTumba1));
-        tumba1.Draw(shader);
-        // Tumba 2 (lapida con cabecera redondeada): a la izquierda de la capilla
-        glm::mat4 modelTumba2 = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelTumba2));
-        tumba2.Draw(shader);
-        // Tumba 3 (piramide escalonada): a la derecha de la capilla
-        glm::mat4 modelTumba3 = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, -0.5f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelTumba3));
-        tumba3.Draw(shader);
-        // Tumba 4 (sepulcro tumbado con tapa y cruz): frente a la capilla, hacia la izquierda
-        glm::mat4 modelTumba4 = glm::translate(glm::mat4(1.0f), glm::vec3(-3.5f, 0.0f, 2.5f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelTumba4));
-        tumba4.Draw(shader);
-
         // 3. EXTRAS DE D1 (X-3): calavera, pan y 4 flores sobre los escalones de la capilla.
         // Posiciones de D1 (hechas para la capilla x3.5 en (0, 0, 2)) pasadas por DeCapillaVieja(); escala 1.0 (ya esta en el .obj)
         auto dibuja = [&](Model& m, glm::vec3 posVieja)
@@ -504,10 +477,6 @@ int main()
 
     // Liberacion explicita de la GPU (E-1a, decision del 19/10: cleanup() a mano, no destructores).
     // Va antes de glfwTerminate(), mientras el contexto de OpenGL sigue vivo.
-    tumba1.cleanup();
-    tumba2.cleanup();
-    tumba3.cleanup();
-    tumba4.cleanup();
     fachada.cleanup();
     playa.cleanup();
     mar.cleanup();
