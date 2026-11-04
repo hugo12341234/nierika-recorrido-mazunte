@@ -391,7 +391,6 @@ int main()
         // 2b. CAPILLA PROVISIONAL (hasta B-13): la capilla de Maya vuelve al fondo del cuarto
         {
             glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.6f));
-            mm = glm::rotate(mm, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
             glUniform1f(specLoc, 0.1f);
             capilla.Draw(shader);
