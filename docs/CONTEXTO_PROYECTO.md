@@ -75,6 +75,7 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 
 **Silueta (jerarquía):** Torso (raíz) → Cabeza, Brazo izq/der → Antebrazo izq/der, Muslo izq/der → Pierna izq/der. Cada cuadro clave guarda posición del torso + rotación de cada articulación.
 **Línea de tiempo:** Caminata 0 s → Llega al altar 6 s → Extiende brazo 7 s → Suelta la flor 8 s → Retrocede 10 s.
+> **Actualización 04/11 (decisión en ESTADO §4):** con 23.8 m de recorrido a 1.4 m/s la caminata dura **18.33 s**, no 6 s; los demás tiempos se corren después de ese instante.
 
 ---
 
