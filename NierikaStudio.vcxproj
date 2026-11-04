@@ -88,6 +88,8 @@
   <ItemGroup>
     <ClCompile Include="src\Colisiones.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Animacion.cpp" />
+    <ClCompile Include="src\Silueta.cpp" />
     <!-- SOIL2 se compila desde codigo fuente (vendor\SOIL2) para x64 -->
     <ClCompile Include="vendor\SOIL2\SOIL2.c" />
     <ClCompile Include="vendor\SOIL2\image_helper.c" />
@@ -95,12 +97,14 @@
     <ClCompile Include="vendor\SOIL2\etc1_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animacion.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Colisiones.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Olas.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Silueta.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\modelLoading.vs" />

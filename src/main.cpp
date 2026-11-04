@@ -16,6 +16,7 @@
 #include "Model.h"
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
+#include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -84,6 +85,9 @@ glm::vec3 pointLightPositions[4] = {
 };
 glm::vec3 Light1(0.0f), Light2(0.0f), Light3(0.0f), Light4(0.0f);
 
+// Silueta de cubos (D-1/D-2): el tiempo de su caminata corre con deltaTime; R la reinicia
+float tSilueta = 0.0f;
+
 // Cubo unitario (posicion + normal) para marcar las luces
 float vertices[] = {
     -0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f, 0.5f,-0.5f, 0,0,-1,
@@ -149,6 +153,7 @@ int main()
     // Setup and compile our shaders
     Shader shader("Shaders/lighting.vs", "Shaders/lighting.frag");
     Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
+    Shader siluetaShader("Shaders/silueta.vs", "Shaders/silueta.frag");
 
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
@@ -184,6 +189,19 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
+
+    // VAO propio de la silueta: mismo cubo (VBO), con posicion y normal
+    GLuint siluetaVAO;
+    glGenVertexArrays(1, &siluetaVAO);
+    glBindVertexArray(siluetaVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cuboVBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    Silueta silueta;  // jerarquia de cubos + KeyFrames (src/Silueta.cpp)
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
@@ -352,6 +370,23 @@ int main()
         dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
         dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
 
+        // 4. SILUETA (D-1/D-2): 10 cubos jerarquicos, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
+        // Cubos provisionales con su propio shader; se sustituyen por Models/silueta/ (D-1)
+        tSilueta += deltaTime;
+        silueta.Actualizar(tSilueta);
+        siluetaShader.Use();
+        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glBindVertexArray(siluetaVAO);
+        for (size_t i = 0; i < silueta.Nodos().size(); i++)
+        {
+            glm::mat4 mc = silueta.MatrizCubo(i);
+            glUniformMatrix4fv(glGetUniformLocation(siluetaShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+            glUniform3fv(glGetUniformLocation(siluetaShader.Program, "color"), 1, glm::value_ptr(silueta.Nodos()[i].color));
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        glBindVertexArray(0);
+
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
         if (mostrarLuces)
         {
@@ -385,8 +420,10 @@ int main()
     calavera.cleanup();
     pan.cleanup();
     flor.cleanup();
+    siluetaShader.cleanup();  // D-1/D-2
     shader.cleanup();
     lampShader.cleanup();
+    glDeleteVertexArrays(1, &siluetaVAO);
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
 
@@ -475,6 +512,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
             Light1 = Light2 = Light3 = Light4 = glm::vec3(0.0f);
         }
     }
+
+    // R: reinicia la caminata de la silueta (D-2)
+    if (GLFW_KEY_R == key && GLFW_PRESS == action)
+        tSilueta = 0.0f;
 
     // L: muestra u oculta los cubos que marcan las luces
     if (GLFW_KEY_L == key && GLFW_PRESS == action)
