@@ -143,6 +143,7 @@ int main()
     // Load models
     Model altar((char*)"Models/altar/altar.obj");
     Model fachada((char*)"Models/fachada/fachada.obj");
+    Model arco((char*)"Models/arco/arco.obj");   // A-10: dovelas, en coordenadas de la fachada
     Model playa((char*)"Models/playa/playa.obj");
     Model mar((char*)"Models/mar/mar.obj");
     // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
@@ -271,6 +272,7 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelFachada));
         glUniform1f(specLoc, 0.1f);
         fachada.Draw(shader);
+        arco.Draw(shader);   // A-10: misma matriz que la fachada
 
         // 2. ALTAR (capilla provisional de 1.9 m, al fondo del cuarto hasta B-9)
         glm::mat4 modelAltar(1.0f);
