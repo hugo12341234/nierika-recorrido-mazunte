@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <cstdio>
 
 // GLEW
 #include <GL/glew.h>
@@ -43,6 +44,12 @@ bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
+
+// Contador de FPS (E-1a): promedio cada 0.5 s, se muestra en el titulo de la ventana
+const char* TITULO_VENTANA = "Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte";
+const double INTERVALO_FPS = 0.5;  // segundos entre actualizaciones del titulo
+double inicioIntervaloFPS = 0.0;
+int framesIntervalo = 0;
 
 // ==========================================
 // ILUMINACION (A-8). Valores de D1 (319266894, Practica 8 adaptada a Mazunte).
@@ -105,7 +112,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     // Create a GLFWwindow object
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, TITULO_VENTANA, nullptr, nullptr);
 
     if (nullptr == window)
     {
@@ -185,6 +192,18 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // FPS promedio de los ultimos 0.5 s: cuadros contados / tiempo transcurrido
+        framesIntervalo++;
+        if (currentFrame - inicioIntervaloFPS >= INTERVALO_FPS)
+        {
+            double fps = framesIntervalo / (currentFrame - inicioIntervaloFPS);
+            char titulo[160];
+            snprintf(titulo, sizeof(titulo), "%s | %.0f FPS (%.1f ms)", TITULO_VENTANA, fps, 1000.0 / fps);
+            glfwSetWindowTitle(window, titulo);
+            inicioIntervaloFPS = currentFrame;
+            framesIntervalo = 0;
+        }
 
         // Check and call events
         glfwPollEvents();
@@ -348,7 +367,17 @@ int main()
         glfwSwapBuffers(window);
     }
 
-    // Libera lo que se creo aqui (el resto de la GPU se libera en E-1 con cleanup())
+    // Liberacion explicita de la GPU (E-1a, decision del 19/10: cleanup() a mano, no destructores).
+    // Va antes de glfwTerminate(), mientras el contexto de OpenGL sigue vivo.
+    altar.cleanup();
+    fachada.cleanup();
+    playa.cleanup();
+    mar.cleanup();
+    calavera.cleanup();
+    pan.cleanup();
+    flor.cleanup();
+    shader.cleanup();
+    lampShader.cleanup();
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
 
