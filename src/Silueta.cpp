@@ -16,6 +16,8 @@ namespace
     const float T_MEZCLA = 0.6f;     // s para pasar de la pose de pie al ciclo de paso (y de regreso al llegar)
     const float T_CICLO = ZANCADA / V_CRUCERO;  // 1.0 s por zancada a velocidad de crucero
     const float DISTANCIA = N_ZANCADAS * ZANCADA;  // 23.8 m -> llega a z = +0.2, frente a la capilla (z = -0.6)
+    const float X_FINAL = 1.0f;      // m: se detiene a la DERECHA del altar (el altar mide 1.30 m de ancho, x -0.65..+0.65) y no tapa la vista desde la entrada
+    const float T_LATERAL = 1.0f;    // s finales del recorrido en que se desplaza en x (ya paso el arco: en ese instante z ~ +0.78 < +1.31)
 
     // ---- Medidas de la silueta (m; adulto de ~1.72 m, referencia no medida) ----
     const float ALTURA_REPOSO = 0.90f;  // cadera sobre el piso con las piernas rectas (muslo 0.45 + pierna 0.45)
@@ -31,7 +33,7 @@ int Silueta::Agregar(const char* nombre, int padre, glm::vec3 offset, glm::vec3 
     return (int)nodos_.size() - 1;
 }
 
-Silueta::Silueta() : recorrido_(false), altura_(true), giro_(true), muslo_(true), pierna_(true), brazo_(true), antebrazo_(true)
+Silueta::Silueta() : recorrido_(false), lateral_(false), altura_(true), giro_(true), muslo_(true), pierna_(true), brazo_(true), antebrazo_(true)
 {
     // ---------- Jerarquia (x+ = derecha de la silueta; mira hacia -z) ----------
     const glm::vec3 cTorso(0.20f, 0.25f, 0.35f), cCabeza(0.55f, 0.55f, 0.60f);
@@ -63,6 +65,10 @@ Silueta::Silueta() : recorrido_(false), altura_(true), giro_(true), muslo_(true)
     recorrido_.Agregar(T_RAMPA + tCrucero, glm::vec3(0, 0, z2), ID, Curva::SmoothOut);
     recorrido_.Agregar(2.0f * T_RAMPA + tCrucero, glm::vec3(0, 0, z3), ID, Curva::Lineal);
     duracion_ = 2.0f * T_RAMPA + tCrucero;                         // ~18.3 s
+    // Paso al costado: x = 0 hasta que el cuerpo cruza el arco (entra por el eje, el arco mide 1.18 m) y x = X_FINAL al llegar
+    lateral_.Agregar(0.0f, glm::vec3(0, 0, 0), ID, Curva::Lineal);
+    lateral_.Agregar(duracion_ - T_LATERAL, glm::vec3(0, 0, 0), ID, Curva::Smoothstep);
+    lateral_.Agregar(duracion_, glm::vec3(X_FINAL, 0, 0), ID, Curva::Lineal);
 
     // ---------- KeyFrames del ciclo de paso (1 s; la pierna izq. toca el suelo adelante en t = 0) ----------
     // Cada KeyFrame es un EXTREMO del movimiento (el miembro se detiene y regresa), por eso todos los tramos
@@ -121,7 +127,7 @@ void Silueta::Actualizar(float t)
     auto marcha = [&](const anim::Pista& p, float tc) { return anim::Slerp(ID, p.Evaluar(tc).rot, w); };
 
     float altura = glm::mix(ALTURA_REPOSO, altura_.Evaluar(tIzq).pos.y, w);
-    nodos_[torso_].offset = glm::vec3(ruta.pos.x, altura, ruta.pos.z);
+    nodos_[torso_].offset = glm::vec3(ruta.pos.x + lateral_.Evaluar(t).pos.x, altura, ruta.pos.z);
     nodos_[torso_].rot = marcha(giro_, tIzq);
 
     nodos_[musloIzq_].rot = marcha(muslo_, tIzq);
