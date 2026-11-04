@@ -145,6 +145,10 @@ int main()
     Model fachada((char*)"Models/fachada/fachada.obj");
     Model playa((char*)"Models/playa/playa.obj");
     Model mar((char*)"Models/mar/mar.obj");
+    // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
+    Model calavera((char*)"Models/calavera/calavera.obj");
+    Model pan((char*)"Models/pan/pan.obj");
+    Model flor((char*)"Models/flor/flor.obj");
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -275,6 +279,21 @@ int main()
         modelAltar = glm::scale(modelAltar, glm::vec3(escalaAltar, escalaAltar, escalaAltar));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelAltar));
         altar.Draw(shader);
+
+        // 3. EXTRAS DE D1 (X-3): calavera, pan y 4 flores sobre los escalones de la capilla.
+        // Posiciones de D1 (hechas para la capilla x3.5 en (0, 0, 2)) pasadas por DeCapillaVieja(); escala 1.0 (ya esta en el .obj)
+        auto dibuja = [&](Model& m, glm::vec3 posVieja)
+        {
+            glm::mat4 mm = glm::translate(glm::mat4(1.0f), DeCapillaVieja(posVieja));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+            m.Draw(shader);
+        };
+        dibuja(calavera, glm::vec3(0.0f, 2.1f, 1.8f));
+        dibuja(pan, glm::vec3(0.0f, 1.35f, 2.6f));
+        dibuja(flor, glm::vec3(-0.9f, 2.32f, 1.8f));  // izquierda de la calavera
+        dibuja(flor, glm::vec3(0.9f, 2.32f, 1.8f));   // derecha de la calavera
+        dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
+        dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
 
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
         if (mostrarLuces)
