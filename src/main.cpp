@@ -14,6 +14,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "AnimFlores.h"  // C-4
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
@@ -167,6 +168,17 @@ int main()
     Model calavera((char*)"Models/calavera/calavera.obj");
     Model pan((char*)"Models/pan/pan.obj");
     Model flor((char*)"Models/flor/flor.obj");
+
+    // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
+    // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
+    const FlorFlotante floresFlotantes[5] = {
+        { glm::vec2(-4.0f, 28.0f), 0.60f,  1.0f, 5.0f, 2.0f, 0.0f, 0.8f, 0.0f },
+        { glm::vec2(-1.5f, 30.0f), 0.45f, -1.0f, 4.5f, 2.5f, 1.7f, 0.6f, 1.3f },
+        { glm::vec2( 1.0f, 27.0f), 0.75f,  1.0f, 5.5f, 1.5f, 3.1f, 1.0f, 2.6f },
+        { glm::vec2( 3.5f, 29.5f), 0.50f, -1.0f, 5.0f, 3.0f, 4.4f, 0.7f, 3.9f },
+        { glm::vec2( 6.0f, 27.5f), 0.65f,  1.0f, 4.0f, 2.0f, 5.8f, 0.9f, 5.2f }
+    };
+    const glm::vec3 centroFlor(0.0f, 0.0f, -0.075f);         // centro de flor.obj (medido en sus vertices), para girar sobre si misma
 
     // ==========================================
     // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
@@ -370,6 +382,16 @@ int main()
         dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
         dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
 
+        // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
+        glUniform1f(specLoc, 0.1f);
+        for (int i = 0; i < 5; i++)
+        {
+            const float tf = (float)glfwGetTime();
+            glm::vec2 pf = PosicionXZ(floresFlotantes[i], tf);
+            glm::mat4 mf = MatrizFlorFlotante(floresFlotantes[i], tf, Olas::Altura(pf.x, pf.y, tf), centroFlor);
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+            flor.Draw(shader);
+        }
         // 4. SILUETA (D-1/D-2): 10 cubos jerarquicos, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cubos provisionales con su propio shader; se sustituyen por Models/silueta/ (D-1)
         tSilueta += deltaTime;
