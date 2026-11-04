@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Colisiones.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Animacion.cpp" />
     <ClCompile Include="src\Silueta.cpp" />
@@ -98,8 +99,10 @@
   <ItemGroup>
     <ClInclude Include="src\Animacion.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Colisiones.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\Olas.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Silueta.h" />
   </ItemGroup>
