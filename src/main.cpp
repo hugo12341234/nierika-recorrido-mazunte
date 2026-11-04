@@ -183,6 +183,8 @@ int main()
     Model tumba4((char*)"Models/tumba4/tumba4.obj");
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
+    Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
+    Model roca((char*)"Models/roca/roca.obj");             // B-10: roca decorativa junto a la entrada
 
     // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
     // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
@@ -205,6 +207,13 @@ int main()
     colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
     colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
 
+    // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
+    // Entrada de 2 m en el norte (z = 12), centrada en x = 0 (abertura x -1..+1)
+    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.0f ), glm::vec3( 7.0f, 0.70f,  3.25f) });  // muro sur
+    colisiones.agregar({ glm::vec3(-7.0f, 0.0f, 11.75f), glm::vec3(-1.0f, 0.70f, 12.0f ) });  // muro norte izquierdo
+    colisiones.agregar({ glm::vec3( 1.0f, 0.0f, 11.75f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro norte derecho
+    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
+    colisiones.agregar({ glm::vec3( 6.75f,0.0f,  3.25f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro este
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -426,6 +435,8 @@ int main()
         colocar(tumba4,   glm::vec3(-4.5f, 0.0f,  9.0f), 0.0f);
         colocar(tumba1,   glm::vec3( 4.5f, 0.0f, 10.0f), 0.0f);
         colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado (B-7 pendiente)
+        colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
+        colocar(roca,     glm::vec3( 1.5f, 0.0f, 12.5f), 0.0f);  // B-10: roca junto a la entrada norte
 
         // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
         glUniform1f(specLoc, 0.1f);
@@ -494,6 +505,8 @@ int main()
     tumba4.cleanup();
     cruz.cleanup();
     copalero.cleanup();
+    barda.cleanup();
+    roca.cleanup();
     for (Model& m : modelosSilueta) m.cleanup();  // D-1
     shader.cleanup();
     lampShader.cleanup();
