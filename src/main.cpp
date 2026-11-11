@@ -187,6 +187,9 @@ int main()
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
     Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
     Model roca((char*)"Models/roca/roca.obj");             // B-10: roca decorativa junto a la entrada
+    Model cempasuchil((char*)"Models/cempasuchil/cempasuchil.obj");       // B-3: flor de planos cruzados (alfa)
+    Model panMuerto((char*)"Models/pan_muerto/pan_muerto.obj");           // B-4: pan propio (el de Maya sigue en Models/pan/)
+    Model papelPicado((char*)"Models/papel_picado/papel_picado.obj");     // B-7: tira con alfa, cuelga de los soportes
 
     // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
     // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
@@ -439,6 +442,11 @@ int main()
             sobreAltar(vela,     glm::vec3( 0.35f, 1.20f, -0.25f));
             sobreAltar(botella,  glm::vec3(-0.40f, 0.80f,  0.05f));  // nivel medio (y = 0.80)
             sobreAltar(copalero, glm::vec3( 0.40f, 0.80f,  0.05f));
+            // B-13 (11/11, provisional, sin ver en pantalla): pan propio y cempasuchil en el nivel medio (y = 0.80; la flor
+            // tiene su pivote en el centro y mide 0.07 m, por eso va a 0.80 + 0.035)
+            sobreAltar(panMuerto,   glm::vec3( 0.00f, 0.80f, -0.05f));
+            sobreAltar(cempasuchil, glm::vec3(-0.20f, 0.835f, 0.00f));
+            sobreAltar(cempasuchil, glm::vec3( 0.20f, 0.835f, 0.00f));
         }
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.0f), 0.0f);
@@ -446,7 +454,9 @@ int main()
         colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
         colocar(tumba4,   glm::vec3(-4.5f, 0.0f,  9.0f), 0.0f);
         colocar(tumba1,   glm::vec3( 4.5f, 0.0f, 10.0f), 0.0f);
-        colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado (B-7 pendiente)
+        colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado
+        // B-13: papel picado colgado del travesano (y = 1.95; su pivote es el borde superior). Provisional, sin ver en pantalla.
+        colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         colocar(roca,     glm::vec3( 1.5f, 0.0f, 12.5f), 0.0f);  // B-10: roca junto a la entrada norte
 
@@ -520,6 +530,12 @@ int main()
     copalero.cleanup();
     barda.cleanup();
     roca.cleanup();
+    cempasuchil.cleanup();  // B-3
+    panMuerto.cleanup();    // B-4
+    papelPicado.cleanup();  // B-7
+    arco.cleanup();         // faltaban en E-1a (A-10, A-11)
+    techo.cleanup();
+    piso.cleanup();
     for (Model& m : modelosSilueta) m.cleanup();  // D-1
     shader.cleanup();
     lampShader.cleanup();
