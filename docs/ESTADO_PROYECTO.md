@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 11/11/2026, hora de México (B-4: pan de muerto propio en `Models/pan_muerto/`, generado con `bpy`; sin compilar) · **Hoy:** semana 5 (Bloque B) · **Días a la entrega:** 7 (mié 18/11/2026)
+**Última actualización:** 11/11/2026, hora de México (B-7: papel picado, malla plana subdividida con textura RGBA, en `Models/papel_picado/`, generado con `bpy`; sin compilar) · **Hoy:** semana 5 (Bloque B) · **Días a la entrega:** 7 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -79,7 +79,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | B-4 | Pan de muerto con detalles de huesos | 27 | Decimate activo (pocos polígonos) | 🔄 11/11, rama `feature/b-4-pan-muerto`: `Models/pan_muerto/pan_muerto.obj` (cúpula + 4 huesos con nudillos + bolita; Decimate colapso 0.6 aplicado al exportar: 409 caras en el `.obj`; 0.164 × 0.164 m de planta y 0.078 m de alto; pivote en el centro de la base) con `pan_muerto.png` 1K y `.blend`; script `tools/b4_pan_muerto.py`. **No se usa `Models/pan/`**: ahí está el pan de Maya de D1 (X-3; ver decisión 11/11). **Falta:** cargarlo (B-13), compilar y ver, mapa de relieve (B-12, problema #8) |
 | B-5 | Botella de vidrio (modificador Screw) | 26 | Exportada aplicando modificadores | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-6 | Marco de madera con plano para la foto | 29 | UV exactas para la foto | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
-| B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | ⏳ |
+| B-7 | Papel picado: malla plana con UV y textura con alfa | 25, 33 | Subdividida; descarte por alfa funcionando | 🔄 11/11, rama `feature/b-7-papel-picado`: `Models/papel_picado/papel_picado.obj` (tira de 1.70 × 0.50 m, **34 × 10 cuadros** = 340 caras y 385 vértices, normal +Z del juego, UV 0–1, pivote en el centro del borde superior) con `papel_picado.png` (1024×1024 RGBA: 5 banderines de colores, dientes y perforaciones con alfa 0) y `.blend`; script `tools/b7_papel_picado.py`. El descarte por alfa < 0.1 ya está en `lighting.frag` (A-8), pero **no se vio funcionando**. **Falta:** cargarlo entre los postes de `soportes` (B-13), compilar y ver |
 | B-8 | Soportes de madera para el papel picado | 22 | Postes simples | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-9 | Tumbas propias: **4** con geometría distinta, en Blender; una es la capilla con domo y cruz (rehecha usando la de Maya como referencia) | 14 | Lápida y base; 4 tumbas distintas, cada una en su `.obj` (inventario #7–#10); la capilla de Maya se retira de `Models/altar/` | ✅ 04/11, PR #40 (`/verificar B-9`: APROBAR, D2 confirmó compilación y captura con las 4 tumbas visibles en el panteón exterior). `altar/altar.obj` ya no se carga; posiciones provisionales en B-13 |
 | B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas; **una roca en su propio `.obj`** (inventario #12, decisión del 19/10) | ✅ 04/11, PR #41 (rama `feature/b-10-barda`): `Models/barda/barda.obj` (recinto x −7..+7, z +3..+12, h 0.70 m, espesor 0.25 m, abertura 2 m al norte) + `Models/roca/roca.obj` (cubo subdividido, seed=7, amplitud=0.07). 6 AABB: 5 muros + roca en (1.5, 0, 12.5). Textura `piedra.jpg` (1K, Voronoi, copiada de `fachada/`). `map_Kd` en ambos `.mtl`. Script Blender en `tools/b10_barda_roca.py`. `/verificar B-10` APROBAR (04/11). Compilado y visto en la PC de D2: barda con geometría U y abertura norte, roca irregular con textura de piedra |
@@ -162,7 +162,7 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 12 | Roca de la barda (variante) | `roca/roca.obj` | B-10 (act. 20) | Volumen | ✅ 04/11, PR #41 · obligatoria: sin ella el estricto baja de 18 (decisión 19/10) | `roca/roca.blend` (Blender 5.2, script `tools/b10_barda_roca.py`) |
 | 13 | Cruz de piedra | `cruz/cruz.obj` | B-11 (act. 19) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 14 | Soportes de madera del papel picado | `soportes/soportes.obj` | B-8 (act. 22) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
-| 15 | Papel picado | `papel_picado/papel_picado.obj` | B-7 (act. 25) | Plano | ⏳ | — |
+| 15 | Papel picado | `papel_picado/papel_picado.obj` | B-7 (act. 25) | Plano | 🔄 11/11: `.obj`, `.mtl`, `.blend` y `.png` en el repo (Blender vía `bpy` 5.3; sin cargar en escena) | `papel_picado/papel_picado.blend`, script `tools/b7_papel_picado.py` |
 | 16 | Altar de 3 niveles | `altar3/altar3.obj` (nombre a decidir en B-1) | B-1 (act. 24) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 17 | Vela | `vela/vela.obj` | B-2 (act. 23) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 18 | Flor de cempasúchil | `cempasuchil/cempasuchil.obj` | B-3 (act. 28) | Plano (planos cruzados) | 🔄 11/11: `.obj`, `.mtl`, `.blend` y `.png` en el repo (Blender vía `bpy` 5.3; sin cargar en escena) | `cempasuchil/cempasuchil.blend`, script `tools/b3_cempasuchil.py` |
@@ -214,7 +214,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 22 | Soportes papel picado | B-8 | ⏳ | |
 | 23 | Vela con pivote | B-2 | ⏳ | |
 | 24 | Altar de 3 niveles | B-1 | ⏳ | |
-| 25 | Malla del papel picado | B-7 | ⏳ | |
+| 25 | Malla del papel picado | B-7 | 🔄 | 11/11: malla y textura hechas; falta cargarlas y ver el descarte por alfa (B-13) |
 | 26 | Botella | B-5 | ⏳ | |
 | 27 | Pan de muerto | B-4 | 🔄 | 11/11: modelo hecho (`Models/pan_muerto/`), falta cargarlo y verlo (B-13) |
 | 28 | Cempasúchil | B-3 | 🔄 | 11/11: modelo hecho, falta cargarlo y verlo (B-13) |
@@ -360,6 +360,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | Modelos B (04/11, aceptadas por D2) | tumbas y altar | tumba1: capilla 1.30 × 0.90, 1.90 de alto · tumba2: 1.00 × 2.00, 1.05 de alto, lápida con remate semicircular · tumba3: 1.10 × 2.00, 3 niveles, 1.16 de alto · tumba4: 1.20 × 1.70, cripta con techo a dos aguas, 0.90 de alto · altar3: 1.60 × 0.90 × 1.20, niveles de 0.40 (1.60 × 0.90, 1.30 × 0.65, 1.00 × 0.40) alineados atrás, repisa de 0.25 al frente. **Falta medir el interior real del cuarto** para confirmar que el altar cabe | `Models/tumba1…4/`, `Models/altar3/` |
 | Modelos B (04/11, aceptadas por D2) | silueta | 10 piezas, 1.70 de alto (pelvis 0.90 + torso 0.58 + cabeza 0.22); pivote en cada articulación; izq = +X; articulaciones respecto al padre: cabeza (0, 0.58), hombros (±0.225, 0.52), codo (0, −0.30), caderas (±0.10, 0), rodilla (0, −0.45) | `Models/silueta/` |
 | Modelos B (11/11, propuesto por Claude, pendiente de aceptar por D2) | cempasúchil (B-3) | 3 planos cuadrados de 0.07 m (2 verticales cruzados a 90° + 1 horizontal), pivote en el centro de la flor, textura RGBA 1K con alfa (descarte < 0.1 en el shader); la flor mide 0.07 m (cabeza real ~5–8 cm, valor de referencia, no medido) | `Models/cempasuchil/`, `tools/b3_cempasuchil.py` |
+| Papel picado (B-7, 11/11, propuesto por Claude, pendiente de aceptar por D2) | tira / malla | 1.70 × 0.50 m (los postes de `soportes` están a 1.80 m), 34 × 10 cuadros de 0.05 m; 5 banderines de 0.30 m en magenta, naranja, amarillo, verde y azul; el dibujo se calcula en metros sobre una textura de 1024×1024 estirada a 1.70 × 0.50 m | `Models/papel_picado/`, `tools/b7_papel_picado.py` |
 
 ---
 
