@@ -17,6 +17,7 @@
 #include "Audio.h"
 #include "Fichas.h"
 #include "AnimFlores.h"  // C-4
+#include "AnimVelas.h"    // C-3: velas flotando (Bezier + vaiven senoidal)
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
@@ -199,6 +200,15 @@ int main()
         { glm::vec2( 1.0f, 27.0f), 0.75f,  1.0f, 5.5f, 1.5f, 3.1f, 1.0f, 2.6f },
         { glm::vec2( 3.5f, 29.5f), 0.50f, -1.0f, 5.0f, 3.0f, 4.4f, 0.7f, 3.9f },
         { glm::vec2( 6.0f, 27.5f), 0.65f,  1.0f, 4.0f, 2.0f, 5.8f, 0.9f, 5.2f }
+    };
+    // C-3: 4 velas flotando mar adentro (orilla z = +24; valores en ESTADO, decision del 11/11)
+    // {P0 x,z; P1 x,z; P2 x,z; periodo T; desfase t0; amplitud a; omega_v; fase phi_j = 2 pi j / 4}
+    const float OMEGA_V = 2.0f * 3.14159265f / 2.4f;
+    const VelaFlotante velasFlotantes[4] = {
+        { -2.5f, 25.0f,  5.5f, 40.0f, 0.5f, 60.0f, 100.0f,  0.0f, 0.012f, OMEGA_V, 0.0f },
+        {  0.5f, 25.0f, -7.5f, 40.0f, -2.5f, 60.0f, 110.0f, 17.0f, 0.012f, OMEGA_V, 1.5708f },
+        {  2.5f, 25.0f, 10.5f, 40.0f, 5.5f, 60.0f, 120.0f, 41.0f, 0.012f, OMEGA_V, 3.1416f },
+        {  5.0f, 25.0f, -3.0f, 40.0f, 2.0f, 60.0f, 130.0f, 63.0f, 0.012f, OMEGA_V, 4.7124f }
     };
     const glm::vec3 centroFlor(0.0f, 0.0f, -0.075f);         // centro de flor.obj (medido en sus vertices), para girar sobre si misma
 
@@ -469,6 +479,17 @@ int main()
             glm::mat4 mf = MatrizFlorFlotante(floresFlotantes[i], tf, Olas::Altura(pf.x, pf.y, tf), centroFlor);
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
             flor.Draw(shader);
+        }
+        // C-3: velas flotando (Bezier cuadratica de ida y vuelta + vaiven senoidal + altura de la ola; ver AnimVelas.h)
+        for (int i = 0; i < 4; i++)
+        {
+            const float tv = (float)glfwGetTime();
+            float vx, vz;
+            PosicionVelaXZ(velasFlotantes[i], tv, vx, vz);
+            const float vy = Olas::Altura(vx, vz, tv) + CALADO_VELA + VaivenVela(velasFlotantes[i], tv);
+            glm::mat4 mv = glm::translate(glm::mat4(1.0f), glm::vec3(vx, vy, vz));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mv));
+            vela.Draw(shader);
         }
         // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
