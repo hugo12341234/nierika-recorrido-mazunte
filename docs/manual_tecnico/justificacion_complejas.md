@@ -132,18 +132,21 @@ Es el equivalente de $\beta_{\text{der}}(t)=\beta_{\text{izq}}(t+T_p/2)=-\beta_{
 
 **Estado:** los valores son los escritos en el código. La caminata se compiló y vio en la PC de D2 el 04/11 con cubos (ESTADO, D-2); con el modelo real de D1 sigue **sin compilar**.
 
----|---|---|---|
-| $T_p$ | `[PENDIENTE]` | s | |
-| $\beta_{\max}$ (cadera), rodilla, $\gamma_{\max}$ (hombro) | `[PENDIENTE]` | grados | |
-| desfase entre piernas | $\pi$ (medio ciclo) [repo] | rad | |
-| $\mathbf{p}_A,\ \mathbf{p}_B,\ t_A,\ t_B$ | `[PENDIENTE]` | m, s | |
-
 ---
 
 ## 3. Silueta dejando flores: Bézier cuadrática y caída (D-4)
 
 ### 3.1 Brazo
-El brazo se extiende entre cuadros clave (hombro y codo con slerp, sección 1), con los hitos 6 s → 7 s (extiende) y 8 s (suelta) [repo]. Poses: `[PENDIENTE]`.
+El brazo derecho se mueve por KeyFrames con slerp (`src/Silueta.cpp`, pistas `brazoFlor_` y `antebrazoFlor_`), con $\tau$ = segundos desde que termina la caminata ($t_{\text{caminata}}=18.33$ s, sección 2). El primer KeyFrame es la identidad porque la mezcla $w$ de la sección 2.2 deja el brazo en reposo al llegar:
+
+| $\tau$ (s) | Hombro | Antebrazo | Tramo que sale de ahí |
+|---|---|---|---|
+| 0 | reposo (identidad) | reposo | smoothstep |
+| 1 (`T_EXTIENDE`) | +75° en X (hacia delante, −z) | +10° | lineal (se sostiene) |
+| 3 (`T_REGRESA`) | +75° | +10° | smoothstep |
+| 4 (`T_FIN`) | reposo | reposo | — |
+
+La flor sale de la mano en $\tau=2$ s (`T_SUELTA`), con el brazo ya extendido. Con el torso en $(1.0,\ 0.90,\ 0.2)$ y el hombro en $(+0.22,\ +0.54,\ 0)$ respecto de él, la mano (punta del antebrazo, 0.30 m bajo el codo) queda en $P_0\approx(1.22,\ 1.336,\ -0.389)$ m: se calculó con una réplica en Python de la cadena de matrices el 11/11; el código la calcula en ejecución (`Silueta::ManoAlSoltar`). **"Retrocede" del CONTEXTO se interpreta como el regreso del brazo a reposo** (la silueta no da pasos hacia atrás; simplificación registrada en el ESTADO, 11/11).
 
 ### 3.2 Trayectoria de la flor
 La propuesta dice: la flor sigue una **Bézier cuadrática mano → nivel del altar, con caída final** [repo, CONTEXTO §4]:
@@ -154,28 +157,40 @@ $$
 
 | Punto | Significado | Valor |
 |---|---|---|
-| $P_0$ | posición de la mano en el instante de soltar ($t=8$ s) | `[PENDIENTE]` (sale de la pose del brazo) |
-| $P_1$ | punto de control: define la altura del arco | `[PENDIENTE]` |
-| $P_2$ | posición sobre el nivel del altar donde cae | `[PENDIENTE]` (altura de los escalones: D1 puso flores en y = 1.5 y 2.32, `src/main.cpp:293-296` [repo]; no es la altura final del altar de B-1) |
+| $P_0$ | mano al soltar ($\tau=2$ s) | $\approx(1.22,\ 1.336,\ -0.389)$ m, calculada de la pose del brazo |
+| $P_1$ | punto de control | $\big(\tfrac{x_0+x_2}{2},\ y_0,\ \tfrac{z_0+z_2}{2}\big)$: a la altura de la mano y a medio camino horizontal |
+| $P_2$ | destino sobre la repisa del nivel inferior de `altar3` | $(1.05,\ 0.435,\ z_0)$ m, **provisional** (`src/main.cpp`; B-13 lo ajusta): `altar3` en $(1.35,0,0)$ girado −90° tiene la repisa en $x\in[0.90,1.15]$ con tope a $y=0.40$ [repo, ESTADO §5]; 0.035 m es la mitad de la flor |
 
 Deducción y propiedades de $B(u)$: ver `justificacion_simples.md` §2.1 (De Casteljau; $B'(0)=2(P_1-P_0)$, $B'(1)=2(P_2-P_1)$).
 
-### 3.3 "Caída libre" final [repo, criterio de D-4]
-Una Bézier cuadrática con $P_1$ **sobre** el punto medio da una parábola, pero su parametrización por $u$ no es la de un tiro real. El criterio de D-4 pide "caída libre de la flor". Dos formas de conseguirla `[propuesta]`:
+### 3.3 "Caída libre" final [criterio de D-4]
+Con ese $P_1$ y $u=\tau/T_b$, las componentes de $B$ son:
 
-- **Tramo 1 (Bézier):** mano → punto alto; **Tramo 2 (balístico):** $y(\tau)=y_s-\tfrac12 g\,\tau^2$, con $g=9.81\ \text{m/s}^2$ y $\tau$ = tiempo desde que acaba el tramo 1, hasta tocar el escalón en $y=y_{\text{altar}}$. Tiempo de caída desde una altura $h$: $\tau_c=\sqrt{2h/g}$ (para $h=0.3$ m: $\approx0.25$ s; ejemplo ilustrativo, **no** es un valor del proyecto).
-- Tomar $u(t)=(t-t_8)/T_b$ con $u$ **no lineal** (por ejemplo $u=\sigma^2$ en la bajada) para que la flor acelere al caer.
+$$
+x(u)=x_0+(x_2-x_0)\,u,\qquad z(u)=z_0+(z_2-z_0)\,u,\qquad y(u)=(1-u)^2y_0+2(1-u)u\,y_0+u^2y_2=y_0-u^2\,(y_0-y_2)
+$$
 
-`[PENDIENTE]`: cuál usa el código y la duración de la caída. El hito "retrocede 10 s" [repo] fija que quedan 2 s tras soltar (8 → 10 s).
+(en $x$: $(1-u)^2x_0+2(1-u)u\,\tfrac{x_0+x_2}{2}+u^2x_2=(1-u)x_0+u\,x_2$, porque $x_1$ es el punto medio; igual en $z$). Es decir, **velocidad horizontal constante y $y$ parabólica**. Un tiro horizontal en caída libre cumple $y(\tau)=y_0-\tfrac12g\tau^2$; ambas coinciden si $u^2(y_0-y_2)=\tfrac12g\tau^2$ con $u=\tau/T_b$, es decir
 
-### 3.4 Tabla de parámetros (a llenar con el código)
+$$
+T_b=\sqrt{\frac{2\,h}{g}},\qquad h=y_0-y_2,\qquad g=9.81\ \text{m/s}^2
+$$
+
+Así la Bézier **es** la caída libre: no hace falta un segundo tramo balístico. Con $h=1.336-0.435=0.901$ m, $T_b=0.429$ s. Comprobación numérica (programa aparte con `g++` y réplica en Python, 11/11): el error máximo entre la Bézier y $y_0-\tfrac12g\tau^2$ es $2.4\times10^{-7}$ m en `float` ($4\times10^{-16}$ en Python). `dejarflor::Posicion` (`src/DejarFlor.h`) es función cerrada de $\tau$: antes de soltar la flor está en $P_0$ y después de $T_b$ se queda en $P_2$.
+
+### 3.4 Tabla de parámetros
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|
-| $P_0,P_1,P_2$ | `[PENDIENTE]` | m | |
-| duración del vuelo $T_b$ | `[PENDIENTE]` | s | |
-| $g$ (si hay tramo balístico) | `[PENDIENTE]` (9.81 m/s² si es real) | m/s² | |
-| poses del brazo (hombro, codo) | `[PENDIENTE]` | cuaternión | |
+| $P_0$ | mano al soltar (≈ (1.22, 1.336, −0.389)) | m | `src/Silueta.cpp` (`ManoAlSoltar`) |
+| $P_1$ | punto medio horizontal a la altura de $P_0$ | m | `src/DejarFlor.h` (`Posicion`) |
+| $P_2$ | (1.05, 0.435, $z_0$) | m | `src/main.cpp` (`destinoFlor`) |
+| duración del vuelo $T_b$ | $\sqrt{2h/g}\approx0.429$ | s | `src/DejarFlor.h` (`TiempoCaida`) |
+| $g$ | 9.81 | m/s² | `src/DejarFlor.h` (`G`) |
+| hombro / antebrazo al extender | +75° / +10° (en X) | grados | `src/Silueta.cpp` (`brazoFlor_`, `antebrazoFlor_`) |
+| `T_EXTIENDE`, `T_SUELTA`, `T_REGRESA`, `T_FIN` | 1, 2, 3, 4 | s tras la caminata | `src/Silueta.h` |
+
+**Estado:** escrito, **sin compilar** y sin verse en pantalla; la parte matemática (`DejarFlor.h`) sí se compiló y probó aparte con `g++`.
 
 ---
 

@@ -32,8 +32,20 @@ public:
     Silueta();
 
     // Calcula la pose de la caminata en el instante t (segundos desde el inicio) y las matrices de mundo.
-    // Despues de Duracion() la silueta se queda quieta en el punto de llegada.
+    // Despues de Duracion() la silueta se queda en el punto de llegada y hace la animacion de dejar la flor (D-4):
+    // tau = t - Duracion(): 0-1 s extiende el brazo derecho, 2 s suelta la flor, 3-4 s regresa el brazo.
     void Actualizar(float t);
+
+    // D-4: tiempos (segundos desde que termina la caminata) de la animacion de dejar la flor
+    static constexpr float T_EXTIENDE = 1.0f;   // el brazo termina de extenderse
+    static constexpr float T_SUELTA = 2.0f;     // la flor sale de la mano
+    static constexpr float T_REGRESA = 3.0f;    // empieza a regresar el brazo
+    static constexpr float T_FIN = 4.0f;        // brazo en reposo otra vez
+
+    // D-4: posicion de la mano derecha (punta del antebrazo) segun la pose calculada por el ultimo Actualizar()
+    glm::vec3 PosicionMano() const;
+    // D-4: donde esta la mano en el instante de soltar la flor (Duracion() + T_SUELTA); no cambia la pose actual
+    glm::vec3 ManoAlSoltar() const;
 
     float Duracion() const { return duracion_; }
     const std::vector<Nodo>& Nodos() const { return nodos_; }
@@ -59,4 +71,5 @@ private:
     anim::Pista altura_;      // altura de la cadera (sube y baja 2 veces por ciclo)
     anim::Pista giro_;        // giro del torso alrededor de Y (una vez por ciclo)
     anim::Pista muslo_, pierna_, brazo_, antebrazo_;  // lado izquierdo
+    anim::Pista brazoFlor_, antebrazoFlor_;           // D-4: brazo derecho al dejar la flor (tau desde el fin de la caminata)
 };

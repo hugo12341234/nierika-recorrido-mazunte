@@ -110,6 +110,7 @@
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AnimFlores.h" />
     <ClInclude Include="src\AnimVelas.h" />
+    <ClInclude Include="src\DejarFlor.h" />
     <ClInclude Include="src\Animacion.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Fichas.h" />
