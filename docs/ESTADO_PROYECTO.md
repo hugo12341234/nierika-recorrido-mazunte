@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 11/11/2026, hora de México (C-2: llama de las velas con ruido de Perlin en `lighting.frag`, `Models/llama/`; **sin compilar ni validar el shader**) · **Hoy:** semana 5 (Bloque C) · **Días a la entrega:** 7 (mié 18/11/2026)
+**Última actualización:** 11/11/2026, hora de México (C-8: `docs/manual_tecnico/justificacion_simples.md` con los valores del código de olas, velas, llama y flores; sin compilar) · **Hoy:** semana 5 (Bloque C) · **Días a la entrega:** 7 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -99,7 +99,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | C-5 | Integrar las 3 animaciones simples en el ciclo de render | 43 | Olas, velas y flores a la vez, ≥ 30 FPS | ⏳ |
 | C-6 | Descarte por alfa en flores y velas | 44 | Sin artefactos de transparencias superpuestas | ⏳ |
 | C-7 | Dear ImGui: 5 fichas culturales por proximidad | 51 | La ficha aparece a < 2 m y cita su fuente | 🔄 código listo (C-7b, 04/11); **falta copiar ImGui a `vendor/imgui/`**, compilar y probar; textos y posiciones provisionales (C-7a) |
-| C-8 | Justificación matemática de las 3 simples | 45 | Fórmulas y parámetros reales en `docs/manual_tecnico/` | ⏳ |
+| C-8 | Justificación matemática de las 3 simples | 45 | Fórmulas y parámetros reales en `docs/manual_tecnico/` | 🔄 11/11, rama `feature/c-8-justificacion-simples`: `justificacion_simples.md` ya trae los valores reales con `archivo:línea` de olas (C-1), velas (C-3), llama (C-2) y flores (C-4); corrige la dirección d = (sen θ, −cos θ) que el borrador daba como (cos θ, sen θ). **Falta:** que D2 compile y vea las animaciones, confirme los valores y revise el argumento "no es del curso" (las prácticas no están en el repo) |
 
 ### Bloque D · 9–15 nov · 2 animaciones por KeyFrames + audio
 
@@ -234,7 +234,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 42 | Flores flotando | C-4 | 🔄 | 04/11: código listo, falta compilar y `/verificar C-4` |
 | 43 | Integrar simples | C-5 | ⏳ | |
 | 44 | Descarte por alfa | C-6 | ⏳ | |
-| 45 | Justificación simples | C-8 | ⏳ | |
+| 45 | Justificación simples | C-8 | 🔄 | 11/11: borrador con valores del código; falta verlo funcionando y confirmación de D2 |
 | 46 | Silueta jerárquica | D-1 | ⏳ | Jerarquía de cubos lista (04/11); falta el modelo real |
 | 47 | Caminata slerp | D-2 | ✅ | 04/11 con cubos, compilada y vista en la PC; falta el modelo real (D-1) |
 | 48 | Smoothstep y desfases | D-3 | ⏳ | |
