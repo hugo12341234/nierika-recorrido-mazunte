@@ -191,6 +191,7 @@ int main()
     Model cempasuchil((char*)"Models/cempasuchil/cempasuchil.obj");       // B-3: flor de planos cruzados (alfa)
     Model panMuerto((char*)"Models/pan_muerto/pan_muerto.obj");           // B-4: pan propio (el de Maya sigue en Models/pan/)
     Model papelPicado((char*)"Models/papel_picado/papel_picado.obj");     // B-7: tira con alfa, cuelga de los soportes
+    Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
 
     // C-4: 5 flores flotando en la orilla (mar en y = -0.2, orilla en z = +24; valores en ESTADO, decision del 04/11)
     // {centro XZ, radio, sentido, tMov, tPausa, desfase, omegaGiro, faseGiro}
@@ -452,6 +453,14 @@ int main()
             sobreAltar(vela,     glm::vec3( 0.35f, 1.20f, -0.25f));
             sobreAltar(botella,  glm::vec3(-0.40f, 0.80f,  0.05f));  // nivel medio (y = 0.80)
             sobreAltar(copalero, glm::vec3( 0.40f, 0.80f,  0.05f));
+            // C-2: llamas de las 2 velas del altar (la vela mide 0.15 m; la llama nace en su punta). Sin luz, forma por ruido de Perlin
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)glfwGetTime());
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.0f);
+            sobreAltar(llamaModelo, glm::vec3(-0.35f, 1.35f, -0.25f));
+            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.3f);
+            sobreAltar(llamaModelo, glm::vec3( 0.35f, 1.35f, -0.25f));
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             // B-13 (11/11, provisional, sin ver en pantalla): pan propio y cempasuchil en el nivel medio (y = 0.80; la flor
             // tiene su pivote en el centro y mide 0.07 m, por eso va a 0.80 + 0.035)
             sobreAltar(panMuerto,   glm::vec3( 0.00f, 0.80f, -0.05f));
@@ -491,6 +500,20 @@ int main()
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mv));
             vela.Draw(shader);
         }
+        // C-2: llamas de las velas flotantes (mismo ruido; fase distinta por vela)
+        glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+        for (int i = 0; i < 4; i++)
+        {
+            const float tv = (float)glfwGetTime();
+            float vx, vz;
+            PosicionVelaXZ(velasFlotantes[i], tv, vx, vz);
+            const float vy = Olas::Altura(vx, vz, tv) + CALADO_VELA + VaivenVela(velasFlotantes[i], tv);
+            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 2.1f * i);
+            glm::mat4 ml = glm::translate(glm::mat4(1.0f), glm::vec3(vx, vy + 0.15f, vz));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+            llamaModelo.Draw(shader);
+        }
+        glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
         tSilueta += deltaTime;
@@ -554,6 +577,7 @@ int main()
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7
+    llamaModelo.cleanup();  // C-2
     arco.cleanup();         // faltaban en E-1a (A-10, A-11)
     techo.cleanup();
     piso.cleanup();

@@ -58,6 +58,47 @@ uniform Material material;          // shininess la envia Mesh::Draw
 uniform sampler2D texture_diffuse1; // nombre que envia Mesh::Draw
 uniform float specularStrength;     // brillo especular por objeto (los modelos no traen mapa especular)
 
+// C-2: llama de las velas. Con llama = 1 el fragmento ignora la textura y la luz: la forma, el color y el parpadeo
+// salen de ruido de Perlin 2D (ver docs/manual_tecnico/justificacion_simples.md, seccion 2.3).
+uniform int   llama;
+uniform float tiempo;               // segundos (el mismo uniform del vertex shader)
+uniform float llamaFase;            // desfase de cada llama (s), para que no parpadeen al unisono
+
+// Gradiente pseudoaleatorio unitario de un vertice de la rejilla (hash clasico de seno)
+vec2 gradienteRejilla(vec2 v)
+{
+    float ang = 6.2831853 * fract(sin(dot(v, vec2(127.1, 311.7))) * 43758.5453);
+    return vec2(cos(ang), sin(ang));
+}
+
+// Ruido de Perlin 2D: producto punto de los gradientes de las 4 esquinas de la celda con el vector hacia el punto,
+// interpoladas con la curva suave de Perlin mejorado s(u) = 6u^5 - 15u^4 + 10u^3. Rango aproximado [-0.7, 0.7].
+float perlin(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+    float a = dot(gradienteRejilla(i),                f);
+    float b = dot(gradienteRejilla(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0));
+    float c = dot(gradienteRejilla(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0));
+    float d = dot(gradienteRejilla(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0));
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+// Suma de 3 octavas (frecuencia x2, amplitud x0.5 en cada una)
+float ruidoFbm(vec2 p)
+{
+    float suma = 0.0;
+    float amp = 0.5;
+    for (int k = 0; k < 3; k++)
+    {
+        suma += amp * perlin(p);
+        p *= 2.0;
+        amp *= 0.5;
+    }
+    return suma;
+}
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 albedo);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 albedo);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 albedo);
@@ -71,6 +112,27 @@ float BlinnSpec(vec3 lightDir, vec3 normal, vec3 viewDir)
 
 void main()
 {
+    if (llama == 1)
+    {
+        // El .obj de la llama tiene v = 0 en la base y Assimp voltea las UV (FlipUVs): h = 0 en la base, 1 en la punta
+        float h = 1.0 - TexCoords.y;
+        float x = TexCoords.x * 2.0 - 1.0;                 // -1..1 a lo ancho
+        float t = tiempo + llamaFase;
+        // el ruido sube con el tiempo (se resta a la coordenada vertical) y mueve la llama de lado, mas en la punta
+        float n = ruidoFbm(vec2(TexCoords.x * 2.5, h * 3.0 - t * 2.0));
+        float xd = x + n * 0.55 * h;
+        float ancho = 0.85 * pow(1.0 - h, 0.7);            // silueta de gota: ancha abajo, afilada arriba
+        float forma = 1.0 - abs(xd) / max(ancho, 0.001);   // 1 en el eje, 0 en el borde
+        forma -= (0.5 + 0.5 * n) * 0.25 * h;               // el ruido roe la punta: parpadeo
+        if (forma < 0.1)
+            discard;
+        float calor = clamp(forma * 1.2 - h * 0.5 + 0.3, 0.0, 1.0);
+        vec3 col = mix(vec3(0.9, 0.2, 0.02), vec3(1.0, 0.6, 0.1), smoothstep(0.0, 0.5, calor));
+        col = mix(col, vec3(1.0, 0.95, 0.7), smoothstep(0.5, 1.0, calor));
+        color = vec4(col, 1.0);                            // emisiva: no recibe luz
+        return;
+    }
+
     vec4 texColor = texture(texture_diffuse1, TexCoords);
     if (texColor.a < 0.1)
         discard;                      // descarte por alfa (papel picado, flores)
