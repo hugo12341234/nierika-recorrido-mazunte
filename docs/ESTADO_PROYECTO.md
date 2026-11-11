@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 11/11/2026, hora de México (C-8: `docs/manual_tecnico/justificacion_simples.md` con los valores del código de olas, velas, llama y flores; sin compilar) · **Hoy:** semana 5 (Bloque C) · **Días a la entrega:** 7 (mié 18/11/2026)
+**Última actualización:** 11/11/2026, hora de México (D-3: justificación de smoothstep y del desfase de piernas en `docs/manual_tecnico/justificacion_complejas.md` con los valores del código; solo documentación) · **Hoy:** semana 5 (Bloque D) · **Días a la entrega:** 7 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -107,7 +107,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 |---|---|---|---|---|
 | D-1 | Silueta low-poly jerárquica (hombro, codo, cadera, rodilla) | 46 | Al mover el padre, los hijos lo siguen | ⏳ 04/11, rama `feature/d-2-keyframes`: **jerarquía de 10 cubos provisionales** en `src/Silueta.h/.cpp` (torso → cabeza, brazos → antebrazos, muslos → piernas, articulaciones en hombro, codo, cadera y rodilla). Probada con un programa aparte en Linux (la cabeza queda a +0.60 m del torso al inicio y al final del recorrido, con el torso 23.8 m más adelante). Compilado y visto en la PC (04/11): los hijos siguen al padre. **Modelo real de D1 integrado (04/11, rama `feature/d-1-modelo-silueta`, sin compilar):** `main.cpp` dibuja las 10 piezas de `Models/silueta/` (pivote en la articulación, medidas coinciden con la jerarquía) con la matriz de mundo de cada nodo y el shader de la escena; se quitaron los cubos y `Shaders/silueta.*`. **Falta:** que D2 compile y vea la silueta (F5) |
 | D-2 | Caminata por KeyFrames con slerp | 47 | Curvas de aceleración no lineales | ✅ 04/11 (con cubos) —, rama `feature/d-2-keyframes`: módulo `src/Animacion.h/.cpp` (KeyFrame = tiempo + posición + cuaternión, `Slerp` propio, `Suavizar` con smoothstep/SmoothIn/SmoothOut, `Pista`) y caminata de 18.33 s con los valores de la decisión del 04/11. Matemática comprobada fuera de OpenGL: `Slerp` propio coincide con `glm::slerp` (diferencia 1.2e-7), las curvas no son lineales (smoothstep: s(0.25) = 0.156, s(0.75) = 0.844). Compilado y probado por D2 en la PC (capturas de la caminata en la playa y de la entrada por el arco, `/mnt/project-files/plan/evidencias/`); D2 confirmó los valores y dijo que el `/verificar` dio visto bueno (de palabra, veredicto no pegado en un PR). Después del PR #33 la silueta termina a un lado del altar (x = +1.0). R reinicia la caminata. **Falta:** reemplazar los cubos por el modelo real (D-1) y la justificación escrita (D-3, D-7) |
-| D-3 | Smoothstep y desfase de piernas | 48 | Justificación documentada | ⏳ |
+| D-3 | Smoothstep y desfase de piernas | 48 | Justificación documentada | ✅ 11/11, rama `feature/d-3-justificacion-keyframes`: sección 2 de `justificacion_complejas.md` con deducción de S, de SmoothIn/SmoothOut, de la duración 18.33 s, del desfase de medio ciclo y la tabla de parámetros con `archivo:línea` (valores comprobados de nuevo con Python). Resuelve la advertencia del borrador sobre los 6 s (manda la decisión del 04/11). **Falta** el resto de D-7 (slerp, jerarquía, Bézier de D-4) y que D2 revise el argumento "no es del curso" |
 | D-4 | Silueta dejando flores (Bézier cuadrática) | 49 | Caída libre de la flor | ⏳ |
 | D-5 | Integrar las 2 animaciones complejas | 50 | Caminata y dejar flores en la escena | ⏳ |
 | D-6 | Audio ambiental con miniaudio | 52 | Un solo ciclo: mar y música lejana | ⏳ |
@@ -237,7 +237,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 45 | Justificación simples | C-8 | 🔄 | 11/11: borrador con valores del código; falta verlo funcionando y confirmación de D2 |
 | 46 | Silueta jerárquica | D-1 | ⏳ | Jerarquía de cubos lista (04/11); falta el modelo real |
 | 47 | Caminata slerp | D-2 | ✅ | 04/11 con cubos, compilada y vista en la PC; falta el modelo real (D-1) |
-| 48 | Smoothstep y desfases | D-3 | ⏳ | |
+| 48 | Smoothstep y desfases | D-3 | ✅ | 11/11: justificación documentada (el código es de D-2, 04/11) |
 | 49 | Dejar flores (Bézier) | D-4 | ⏳ | |
 | 50 | Integrar complejas | D-5 | ⏳ | |
 | 51 | Fichas Dear ImGui | C-7 | ⏳ | |

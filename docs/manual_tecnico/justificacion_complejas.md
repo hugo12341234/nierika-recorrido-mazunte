@@ -101,22 +101,38 @@ $$
 
 Variante más suave (no en el repo) $[propuesta]$: $6s^5-15s^4+10s^3$ (también con aceleración cero en los extremos).
 
-**Avance del torso en la caminata:** posición del torso $\mathbf{p}(t)=\mathbf{p}_A+S(s)\,(\mathbf{p}_B-\mathbf{p}_A)$ con $s=\operatorname{clamp}\big((t-t_A)/(t_B-t_A),0,1\big)$. $\mathbf{p}_A$ y $\mathbf{p}_B$: `[PENDIENTE]`. **Advertencia:** suavizar todo el trayecto de 6 s con un solo smoothstep da velocidad ≈ 0 al inicio y al final y un máximo de $1.5\,\bar v$ en medio; con $\bar v\approx4.1$ m/s (sección 0) el máximo sería ≈ 6 m/s. Hay que resolverlo junto con la contradicción de la sección 0.
+**Avance del torso en la caminata (código real, `src/Silueta.cpp:59-68`).** No se usa un solo smoothstep para todo el trayecto (con él la velocidad máxima sería $1.5\,\bar v$). El recorrido de $23.8$ m (17 zancadas de 1.4 m, `Silueta.cpp:12-18`) se parte en **tres tramos con velocidad continua**: arranque `SmoothIn`, crucero lineal y frenado `SmoothOut`. `SmoothIn` y `SmoothOut` son las dos mitades de $S$ reescaladas a $[0,1]$ (`src/Animacion.cpp:19-20`):
+
+$$
+\text{SmoothIn}(u)=2\,S(u/2),\qquad \text{SmoothOut}(u)=2\,S\!\big((u+1)/2\big)-1
+$$
+
+La velocidad al final de `SmoothIn` es $d\cdot\text{SmoothIn}'(1)/T=d\cdot S'(\tfrac12)/T=1.5\,d/T$; igualarla a la de crucero $V$ da $d=V\,T/1.5$. Con $V=1.4$ m/s y $T=2$ s: $d=1.867$ m por rampa, crucero de $23.8-2(1.867)=20.07$ m en $14.33$ s y **duración total $18.33$ s** (cálculo repetido el 11/11 con Python; coincide con el ESTADO, decisión 04/11). Esto **resuelve** la advertencia del borrador: los 6 s de CONTEXTO §4 implicaban 4 m/s y quedan sustituidos por la decisión del ESTADO del 04/11 (el ESTADO manda sobre CONTEXTO). Valores de $S$: $S(0.25)=0.156$ y $S(0.75)=0.844$ (no lineal).
 
 ### 2.2 Desfase de piernas y brazos en oposición
-Ciclo de paso de periodo $T_p$ y fase $\phi=2\pi\,t/T_p$. Ángulo de cadera:
+El código **no evalúa un seno por cuadro**: cada miembro tiene una `Pista` de KeyFrames que son los **extremos** del movimiento (el miembro se detiene y regresa), todos los tramos con `Smoothstep`, así la velocidad es 0 en el extremo y máxima a mitad, como un péndulo. Con ciclo de periodo $T_p$ (1 s a velocidad de crucero, `Silueta.cpp:17`) y KeyFrames en $\phi=0,\ \pi,\ 2\pi$ (tiempos 0, 0.5, 1 s), la pierna izquierda va de $+\beta_{\max}$ a $-\beta_{\max}$ y vuelve (`Silueta.cpp:78-80`). El lado derecho usa **la misma pista con medio ciclo de desfase**:
 
 $$
-\beta_{\text{izq}}(t)=\beta_{\max}\sin(\phi),\qquad
-\beta_{\text{der}}(t)=\beta_{\max}\sin(\phi+\pi)=-\beta_{\text{izq}}(t)
+t_{\text{izq}}=\text{fase}\cdot T_p,\qquad t_{\text{der}}=t_{\text{izq}}+\tfrac12T_p,\qquad \text{fase}=\frac{\text{distancia recorrida}}{\text{zancada}}\ \ (\text{`Silueta.cpp:120-122`})
 $$
 
-El desfase $\pi$ (**medio ciclo**) hace que cuando una pierna va adelante la otra va atrás [repo: "piernas desfasadas medio ciclo"]. Los **brazos en oposición** [repo] llevan el signo contrario al de la pierna del **mismo** lado: $\gamma_{\text{izq}}=-\gamma_{\max}\sin(\phi)$ (hombro izquierdo adelanta cuando la pierna izquierda va atrás).
+Es el equivalente de $\beta_{\text{der}}(t)=\beta_{\text{izq}}(t+T_p/2)=-\beta_{\text{izq}}(t)$ del modelo senoidal: cuando una pierna va adelante la otra va atrás. Los **brazos en oposición** salen del signo contrario de la pista (brazo izquierdo en $-20^\circ$ cuando el muslo izquierdo está en $+23^\circ$, `Silueta.cpp:88`). Dos decisiones propias: (1) la **fase depende de la distancia**, no del tiempo, así en el arranque y el frenado los pasos se acortan en tiempo y el pie no patina de más; (2) al salir y al llegar se mezcla con la pose de pie con `Slerp(identidad, pose, w)` y $w=\min\big(S(t/0.6),\,S((T_{tot}-t)/0.6)\big)$ (`Silueta.cpp:125-126`). Relación entre ángulo y zancada: $\text{zancada}=4\,L\sin\theta=4(0.9)\sin23^\circ=1.41$ m, que cuadra con los 1.4 m del código (cálculo con Python el 11/11; $L=0.9$ m = muslo 0.45 + pierna 0.45).
 
-> Importante: el repo exige que sean **KeyFrames con slerp**, no una función senoidal evaluada por cuadro. La fórmula anterior sirve **para elegir las poses clave** (por ejemplo $\phi=0,\ \pi/2,\ \pi,\ 3\pi/2$ de cada pierna) y luego se interpola con slerp; si el código evaluara el seno directamente no sería "KeyFrames" y no cumpliría la restricción del profesor.
+**Límite conocido (ESTADO, 04/11, medido en Linux):** el pie de apoyo se desliza ≈ 0.41 m/s de media, porque smoothstep frena el muslo en los extremos; es una caminata estilizada, no exacta.
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|
+| $T_p$ | 1.0 (= zancada 1.4 m / crucero 1.4 m/s) | s | `src/Silueta.cpp:17` |
+| $\beta_{\max}$ (muslo) | ±23 | grados | `src/Silueta.cpp:78-80` |
+| rodilla | −3 a −60 (solo hacia atrás; 5 KeyFrames) | grados | `src/Silueta.cpp:82-86` |
+| $\gamma_{\max}$ (brazo) | ±20, antebrazo −10 a −35 | grados | `src/Silueta.cpp:88-94` |
+| desfase entre lados | $\pi$ (medio ciclo, 0.5 s) | rad | `src/Silueta.cpp:122` |
+| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+1.0$ | m | `src/Silueta.cpp:11,19,59-68` |
+| $t_A,\ t_B$ | 0 y 18.33 (rampas de 2 s) | s | `src/Silueta.cpp:15,61` |
+
+**Estado:** los valores son los escritos en el código. La caminata se compiló y vio en la PC de D2 el 04/11 con cubos (ESTADO, D-2); con el modelo real de D1 sigue **sin compilar**.
+
+---|---|---|---|
 | $T_p$ | `[PENDIENTE]` | s | |
 | $\beta_{\max}$ (cadera), rodilla, $\gamma_{\max}$ (hombro) | `[PENDIENTE]` | grados | |
 | desfase entre piernas | $\pi$ (medio ciclo) [repo] | rad | |
