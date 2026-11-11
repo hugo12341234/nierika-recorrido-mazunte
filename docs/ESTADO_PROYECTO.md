@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 04/11/2026, hora de México (PR #41: B-10 barda perimetral del panteón + roca decorativa — 5 muros `.obj` Blender + roca irregular seed=7, 6 AABB en `main.cpp`, textura `piedra.jpg`, `/verificar B-10` APROBAR, compilado y visto en pantalla por D2) · **Hoy:** semana 4 (Bloque B) · **Días a la entrega:** 14 (mié 18/11/2026)
+**Última actualización:** 11/11/2026, hora de México (B-3: flor de cempasúchil con planos cruzados, modelo propio en `Models/cempasuchil/`, generado con `bpy` sin ventana; sin compilar) · **Hoy:** semana 5 (Bloque B) · **Días a la entrega:** 7 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -75,7 +75,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 |---|---|---|---|---|
 | B-1 | Altar de 3 niveles escalonados (**propio**) | 24 | Cabe dentro del cuarto | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-2 | Vela cilíndrica con pivote en la base | 23 | Pivote correcto para animación | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
-| B-3 | Flor de cempasúchil con planos cruzados | 28 | Optimizada para instancing | ⏳ |
+| B-3 | Flor de cempasúchil con planos cruzados | 28 | Optimizada para instancing | 🔄 11/11, rama `feature/b-3-cempasuchil`: `Models/cempasuchil/cempasuchil.obj` (3 planos de 0.07 m: 2 verticales cruzados + 1 horizontal; 3 caras, 12 vértices; pivote en el centro de la flor) con `cempasuchil.png` (1024×1024 RGBA, alfa recortado, generada por script) y `.blend`; script `tools/b3_cempasuchil.py`. **Falta:** cargarla en `main.cpp` (B-13), compilar y ver, y `/verificar B-3` por persona (la revisión de esta rama fue propia) |
 | B-4 | Pan de muerto con detalles de huesos | 27 | Decimate activo (pocos polígonos) | ⏳ |
 | B-5 | Botella de vidrio (modificador Screw) | 26 | Exportada aplicando modificadores | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-6 | Marco de madera con plano para la foto | 29 | UV exactas para la foto | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
@@ -165,7 +165,7 @@ Ningún recorte puede dejar el conteo de modelos propios por debajo de 18 (ver i
 | 15 | Papel picado | `papel_picado/papel_picado.obj` | B-7 (act. 25) | Plano | ⏳ | — |
 | 16 | Altar de 3 niveles | `altar3/altar3.obj` (nombre a decidir en B-1) | B-1 (act. 24) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 17 | Vela | `vela/vela.obj` | B-2 (act. 23) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
-| 18 | Flor de cempasúchil | `cempasuchil/cempasuchil.obj` | B-3 (act. 28) | Plano (planos cruzados) | ⏳ | — |
+| 18 | Flor de cempasúchil | `cempasuchil/cempasuchil.obj` | B-3 (act. 28) | Plano (planos cruzados) | 🔄 11/11: `.obj`, `.mtl`, `.blend` y `.png` en el repo (Blender vía `bpy` 5.3; sin cargar en escena) | `cempasuchil/cempasuchil.blend`, script `tools/b3_cempasuchil.py` |
 | 19 | Pan de muerto | `pan/pan.obj` | B-4 (act. 27) | Volumen | ⏳ | — |
 | 20 | Botella de vidrio | `botella/botella.obj` | B-5 (act. 26) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
 | 21 | Marco con fotografía | `marco/marco.obj` | B-6 (act. 29) | Volumen | 🔄 04/11: `.obj` y `.blend` en el repo (Blender, textura provisional) | — |
@@ -217,7 +217,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 25 | Malla del papel picado | B-7 | ⏳ | |
 | 26 | Botella | B-5 | ⏳ | |
 | 27 | Pan de muerto | B-4 | ⏳ | |
-| 28 | Cempasúchil | B-3 | ⏳ | |
+| 28 | Cempasúchil | B-3 | 🔄 | 11/11: modelo hecho, falta cargarlo y verlo (B-13) |
 | 29 | Marco con foto | B-6 | ⏳ | |
 | 30 | Copalero | B-14 | ⏳ | Obligatorio para el conteo de modelos (decisión del 19/10); ya no es el primer recorte |
 | 31 | Descargar texturas PBR 1K | B-12 | ⏳ | |
@@ -358,6 +358,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | Modelos B (04/11, aceptadas por D2) | medidas en m, 1 u = 1 m; pivote en el centro de la base salvo indicación | vela: cilindro r 0.03 × 0.15 de alto · botella: 0.30 de alto, cuerpo r 0.040, boca r 0.019, pared 3 mm (Screw, 24 pasos) · cruz: 1.50 de alto, base 0.60 × 0.60 × 0.15, brazo 0.60 de ancho · copalero: 0.09 de alto, boca Ø 0.16, pared 8 mm, fondo interno a 0.03 · soportes: 2 postes 0.05 × 0.05 × 2.00 separados 1.80 + travesaño a 1.95 · marco: 0.20 × 0.25, moldura 0.025, grosor 0.02, foto 0.15 × 0.20 con UV 0–1 | `Models/<objeto>/`, `DECISION_MEDIDAS_BLENDER` |
 | Modelos B (04/11, aceptadas por D2) | tumbas y altar | tumba1: capilla 1.30 × 0.90, 1.90 de alto · tumba2: 1.00 × 2.00, 1.05 de alto, lápida con remate semicircular · tumba3: 1.10 × 2.00, 3 niveles, 1.16 de alto · tumba4: 1.20 × 1.70, cripta con techo a dos aguas, 0.90 de alto · altar3: 1.60 × 0.90 × 1.20, niveles de 0.40 (1.60 × 0.90, 1.30 × 0.65, 1.00 × 0.40) alineados atrás, repisa de 0.25 al frente. **Falta medir el interior real del cuarto** para confirmar que el altar cabe | `Models/tumba1…4/`, `Models/altar3/` |
 | Modelos B (04/11, aceptadas por D2) | silueta | 10 piezas, 1.70 de alto (pelvis 0.90 + torso 0.58 + cabeza 0.22); pivote en cada articulación; izq = +X; articulaciones respecto al padre: cabeza (0, 0.58), hombros (±0.225, 0.52), codo (0, −0.30), caderas (±0.10, 0), rodilla (0, −0.45) | `Models/silueta/` |
+| Modelos B (11/11, propuesto por Claude, pendiente de aceptar por D2) | cempasúchil (B-3) | 3 planos cuadrados de 0.07 m (2 verticales cruzados a 90° + 1 horizontal), pivote en el centro de la flor, textura RGBA 1K con alfa (descarte < 0.1 en el shader); la flor mide 0.07 m (cabeza real ~5–8 cm, valor de referencia, no medido) | `Models/cempasuchil/`, `tools/b3_cempasuchil.py` |
 
 ---
 
