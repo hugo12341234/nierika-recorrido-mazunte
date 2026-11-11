@@ -18,6 +18,7 @@
 #include "Fichas.h"
 #include "AnimFlores.h"  // C-4
 #include "AnimVelas.h"    // C-3: velas flotando (Bezier + vaiven senoidal)
+#include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
@@ -253,6 +254,13 @@ int main()
     modelosSilueta.reserve(10);
     for (int i = 0; i < 10; i++)
         modelosSilueta.push_back(Model((char*)("Models/silueta/" + std::string(piezasSilueta[i]) + ".obj").c_str()));
+
+    // D-4: la silueta lleva una flor de cempasuchil en la mano derecha y la suelta en T_SUELTA s despues de llegar al altar.
+    // La mano al soltar sale de la pose del brazo (se calcula una vez); el destino es la repisa del nivel inferior de altar3
+    // (altar3 en (1.35, 0, 0) girado -90 grados: repisa en x 0.90..1.15, tope a y = 0.40; la flor mide 0.07 m, su centro queda 0.035 mas arriba).
+    // PROVISIONAL: se ajusta en B-13 junto con la posicion final de la silueta y del altar.
+    const glm::vec3 manoSuelta = silueta.ManoAlSoltar();
+    const glm::vec3 destinoFlor(1.05f, 0.435f, manoSuelta.z);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
@@ -523,6 +531,22 @@ int main()
         {
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(silueta.Nodos()[i].mundo));
             modelosSilueta[i].Draw(shader);
+        }
+        // D-4: flor de cempasuchil: en la mano hasta T_SUELTA; despues cae en tiro horizontal (Bezier + caida libre, DejarFlor.h) y se queda en el altar
+        {
+            const float tauFlor = tSilueta - silueta.Duracion();     // segundos desde que termino la caminata
+            glm::vec3 pFlor = silueta.PosicionMano();
+            if (tauFlor >= Silueta::T_SUELTA)
+            {
+                const float p0[3] = { manoSuelta.x, manoSuelta.y, manoSuelta.z };
+                const float p2[3] = { destinoFlor.x, destinoFlor.y, destinoFlor.z };
+                float salida[3];
+                dejarflor::Posicion(p0, p2, tauFlor - Silueta::T_SUELTA, salida);
+                pFlor = glm::vec3(salida[0], salida[1], salida[2]);
+            }
+            glm::mat4 mFlor = glm::translate(glm::mat4(1.0f), pFlor);
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mFlor));
+            cempasuchil.Draw(shader);
         }
 
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)

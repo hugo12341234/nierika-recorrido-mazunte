@@ -33,7 +33,8 @@ int Silueta::Agregar(const char* nombre, int padre, glm::vec3 offset, glm::vec3 
     return (int)nodos_.size() - 1;
 }
 
-Silueta::Silueta() : recorrido_(false), lateral_(false), altura_(true), giro_(true), muslo_(true), pierna_(true), brazo_(true), antebrazo_(true)
+Silueta::Silueta() : recorrido_(false), lateral_(false), altura_(true), giro_(true), muslo_(true), pierna_(true), brazo_(true), antebrazo_(true),
+                     brazoFlor_(false), antebrazoFlor_(false)
 {
     // ---------- Jerarquia (x+ = derecha de la silueta; mira hacia -z) ----------
     const glm::vec3 cTorso(0.20f, 0.25f, 0.35f), cCabeza(0.55f, 0.55f, 0.60f);
@@ -105,11 +106,25 @@ Silueta::Silueta() : recorrido_(false), lateral_(false), altura_(true), giro_(tr
     giro_.Agregar(0.50f, glm::vec3(0), RotY(-4), S);
     giro_.Agregar(1.00f, glm::vec3(0), RotY(+4), S);
 
+    // ---------- D-4: dejar la flor con el brazo derecho (KeyFrames con slerp; tau = segundos desde el fin de la caminata) ----------
+    // Al terminar la caminata el brazo esta en reposo (identidad, por la mezcla w = 0), asi que el primer KeyFrame es la identidad.
+    // Hombro +75 grados (hacia delante, -z) y antebrazo +10: la mano queda en el aire frente al altar. Se sostiene hasta
+    // T_REGRESA y vuelve a reposo en T_FIN. La flor se suelta en T_SUELTA (la mueve DejarFlor.h desde main.cpp).
+    brazoFlor_.Agregar(0.0f, glm::vec3(0), ID, Curva::Smoothstep);
+    brazoFlor_.Agregar(T_EXTIENDE, glm::vec3(0), RotX(+75), Curva::Lineal);
+    brazoFlor_.Agregar(T_REGRESA, glm::vec3(0), RotX(+75), Curva::Smoothstep);
+    brazoFlor_.Agregar(T_FIN, glm::vec3(0), ID, Curva::Lineal);
+    antebrazoFlor_.Agregar(0.0f, glm::vec3(0), ID, Curva::Smoothstep);
+    antebrazoFlor_.Agregar(T_EXTIENDE, glm::vec3(0), RotX(+10), Curva::Lineal);
+    antebrazoFlor_.Agregar(T_REGRESA, glm::vec3(0), RotX(+10), Curva::Smoothstep);
+    antebrazoFlor_.Agregar(T_FIN, glm::vec3(0), ID, Curva::Lineal);
+
     Actualizar(0.0f);
 }
 
 void Silueta::Actualizar(float t)
 {
+    const float tau = glm::max(0.0f, t - duracion_);   // D-4: segundos desde que termino la caminata
     t = glm::clamp(t, 0.0f, duracion_);
 
     // 1) Donde esta el torso y cuanto ha avanzado
@@ -139,6 +154,13 @@ void Silueta::Actualizar(float t)
     nodos_[brazoDer_].rot = marcha(brazo_, tDer);
     nodos_[antebrazoDer_].rot = marcha(antebrazo_, tDer);
 
+    // 3b) D-4: despues de la caminata el brazo derecho deja la flor (sustituye al balanceo, que ya vale identidad)
+    if (tau > 0.0f)
+    {
+        nodos_[brazoDer_].rot = brazoFlor_.Evaluar(tau).rot;
+        nodos_[antebrazoDer_].rot = antebrazoFlor_.Evaluar(tau).rot;
+    }
+
     // 4) Jerarquia: mundo(hijo) = mundo(padre) * T(offset) * R(rot). Mover al padre mueve a todos los hijos.
     for (size_t i = 0; i < nodos_.size(); i++)
     {
@@ -146,6 +168,19 @@ void Silueta::Actualizar(float t)
         glm::mat4 local = glm::translate(glm::mat4(1.0f), n.offset) * glm::mat4_cast(n.rot);
         n.mundo = (n.padre < 0) ? local : nodos_[n.padre].mundo * local;
     }
+}
+
+glm::vec3 Silueta::PosicionMano() const
+{
+    // La mano es la punta del antebrazo: 0.30 m bajo su articulacion (el codo), igual que el offset del nodo hijo del brazo
+    return glm::vec3(nodos_[antebrazoDer_].mundo * glm::vec4(0.0f, -0.30f, 0.0f, 1.0f));
+}
+
+glm::vec3 Silueta::ManoAlSoltar() const
+{
+    Silueta copia = *this;
+    copia.Actualizar(duracion_ + T_SUELTA);
+    return copia.PosicionMano();
 }
 
 glm::mat4 Silueta::MatrizCubo(size_t i) const
