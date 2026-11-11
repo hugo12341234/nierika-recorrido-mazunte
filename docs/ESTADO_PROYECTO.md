@@ -5,7 +5,7 @@
 > **Quién lo actualiza:** Claude Code con `/cierre` al terminar cada sesión (se revisa antes de hacer commit).
 > **Dónde vale:** la versión de la rama `develop`.
 
-**Última actualización:** 11/11/2026, hora de México (B-7: papel picado, malla plana subdividida con textura RGBA, en `Models/papel_picado/`, generado con `bpy`; sin compilar) · **Hoy:** semana 5 (Bloque B) · **Días a la entrega:** 7 (mié 18/11/2026)
+**Última actualización:** 11/11/2026, hora de México (B-13 parcial: `main.cpp` carga y coloca cempasúchil, pan de muerto propio y papel picado; **sin compilar**) · **Hoy:** semana 5 (Bloque B) · **Días a la entrega:** 7 (mié 18/11/2026)
 **Integrantes:** D1 = 319266894 · D2 = 321332086
 **Repositorio:** https://github.com/hugo12341234/nierika-recorrido-mazunte (**público**; rama por defecto `develop`) · **Hoja del plan:** https://docs.google.com/spreadsheets/d/13i1yXf3dMuiBWyxka-R17Zw0EG2F-fMPPWCSC70_qXA/edit?usp=sharing · **Tablero Trello:** https://trello.com/b/8FNkEY97/nierika-studio-recorrido-mazunte
 
@@ -85,7 +85,7 @@ Antes: fachada esc. 3.0 (~7.6 m de alto) y "altar" esc. 3.5 (6.6 m de alto).
 | B-10 | Barda perimetral del panteón | 20 | Muros bajos; variantes de rocas; **una roca en su propio `.obj`** (inventario #12, decisión del 19/10) | ✅ 04/11, PR #41 (rama `feature/b-10-barda`): `Models/barda/barda.obj` (recinto x −7..+7, z +3..+12, h 0.70 m, espesor 0.25 m, abertura 2 m al norte) + `Models/roca/roca.obj` (cubo subdividido, seed=7, amplitud=0.07). 6 AABB: 5 muros + roca en (1.5, 0, 12.5). Textura `piedra.jpg` (1K, Voronoi, copiada de `fachada/`). `map_Kd` en ambos `.mtl`. Script Blender en `tools/b10_barda_roca.py`. `/verificar B-10` APROBAR (04/11). Compilado y visto en la PC de D2: barda con geometría U y abertura norte, roca irregular con textura de piedra |
 | B-11 | Cruz de piedra de la entrada | 19 | Una sola, sin variantes | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 | B-12 | Texturizar altar, vela, botella, pan, cempasúchil y marco (PBR 1K) | 31, 32, 33, 34 | Materiales coherentes; mapa de relieve para el pan | ⏳ |
-| B-13 | Cargar todos los .obj, colocar y ajustar la ofrenda en el cuarto | 35, 36, 38 | Rutas relativas; los 7 objetos caben y se ven | ⏳ |
+| B-13 | Cargar todos los .obj, colocar y ajustar la ofrenda en el cuarto | 35, 36, 38 | Rutas relativas; los 7 objetos caben y se ven | 🔄 11/11, rama `feature/b-13-ofrenda` (**sin compilar**; solo se revisó la sintaxis a ojo, el entorno no tiene GLEW/GLM/Assimp): `main.cpp` carga `cempasuchil`, `pan_muerto` y `papel_picado`; en el nivel medio del altar van el pan propio en (0, 0.80, −0.05) y 2 flores en (±0.20, 0.835, 0) locales; el papel picado cuelga de los soportes en (0, 1.95, 6); `cleanup()` de los 3 nuevos y de `arco`, `techo` y `piso` (faltaban). Los 7 objetos de la ofrenda ya están en el código (vela, botella, pan, flor, marco, papel, copalero). **Falta:** compilar y ver que quepan en el altar (el interior del cuarto sigue sin medirse), que el papel picado mida bien entre los postes, retirar la capilla provisional y el pan de Maya, mover las fichas (`Fichas.cpp` aún usa posiciones provisionales, p. ej. papel picado en (0, 2, 1.6) y pan en (0, 0.39, −0.43)) y las colisiones del altar |
 | B-14 | Copalero de barro (sin humo) — **obligatorio para el conteo de modelos** | 30 | Hueco interno; sin partículas | 🔄 04/11, rama `feature/b-modelos-propios`: modelo hecho en Blender y cargado en `main.cpp` (posición provisional; falta `/verificar` y B-13) |
 
 ### Bloque C · 2–8 nov · 3 animaciones simples + fichas
@@ -225,7 +225,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 33 | Texturizar vela, papel, botella | B-7, B-12 | ⏳ | |
 | 34 | Texturizar pan, flor, marco | B-12 | ⏳ | El mapa de relieve del pan requiere ampliar `Model.h` (hoy no carga mapas normales) |
 | 35 | Clase Model con Assimp | B-13 | 🔄 | `Model.h` del curso ya carga .obj con rutas relativas (texturas RGBA desde el 19/10); se cierra al cargar todos los .obj |
-| 36 | Colocar los 7 objetos | B-13 | ⏳ | |
+| 36 | Colocar los 7 objetos | B-13 | 🔄 | 11/11: en el código, sin compilar |
 | 37 | Iluminación | A-8 | ✅ | 04/11: se hace con las luces de D1 (ver decisión del 04/11); supera "ambiental cálida y 3 luces clave" de `PLAN_ACTIVIDADES.md` y de la propuesta. Verificada con `/verificar A-8` (04/11) |
 | 38 | Ajustar posiciones/escalas | B-13 | ⏳ | |
 | 39 | Olas | C-1 | 🔄 | 04/11: implementada, pendiente de compilar en Windows y de `/verificar` (ver decisión 04/11 "Olas") |
