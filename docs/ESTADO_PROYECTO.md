@@ -372,7 +372,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 9 | ~~`fachada.obj` incluía el techo~~ → **separado en A-11 (03/11)**: `techo.obj` y `fachada.obj` son ahora archivos independientes; falta confirmar al compilar | A-11 |
 | 12 | ~~La apertura de `fachada.obj` no era de medio punto (casi semielíptica, descentrada 0.03 m)~~ → **corregido en A-10 (03/11)**: ahora es semicircular, de radio 0.59 m y centrada; falta confirmarlo al compilar | A-10 |
 | 13 | ~~Animación de las 4 luces (seno de 2t) posiblemente copiada de la Práctica 8~~ → **cerrado por palabra de D2 (04/11): "es propio"**; no se verificó (sin código fuente ni fecha de D1 que lo pruebe). `cleanup()` ya libera todo (E-1a, 04/11, por verificar) | E-1 |
-| 14 | 8 PDFs de materias ajenas al proyecto se colaron en `Models/playa/` (detectados al hacer pull de develop tras PR #40). Deben borrarse del repositorio con un commit de limpieza en `develop`. No afectan la compilación, pero ensucian el historial y la carpeta de un modelo. | Borrar en un commit sobre `develop` |
+| 14 | ~~8 PDFs de materias ajenas al proyecto en `Models/playa/`~~ → **borrados el 11/11 (rama `feature/fix-pdfs-playa`)**: `git ls-files Models/playa` ya no los lista. **Siguen en el historial de Git** de un repositorio **público** (incluye `Cuestionario_17-10-2026.pdf`); borrarlos del historial exigiría reescribirlo y no se hizo | Hecho (limpieza); decisión sobre el historial: D2 |
 
 > **Cerrados en A-2 (20/10):** #4 escalas fuera de 1 u = 1 m, #6 material sobrante `Material` (desapareció al reexportar) y #11 tamaño del arco (ahora 2.11 × 1.18 m).
 
