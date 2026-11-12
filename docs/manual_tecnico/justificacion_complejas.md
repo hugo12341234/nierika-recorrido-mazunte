@@ -196,15 +196,17 @@ Así la Bézier **es** la caída libre: no hace falta un segundo tramo balístic
 
 ## 4. Integración con `deltaTime` (D-5)
 
-Las dos animaciones se evalúan con un **reloj propio** $\tau_{\text{anim}}$ que avanza con $\Delta t$ (`src/main.cpp:171` [repo]):
+Las dos animaciones (caminata y dejar la flor) comparten **un solo reloj**, `tSilueta` (`src/main.cpp`), que avanza con $\Delta t$ en cada cuadro:
 
 $$
-\tau_{\text{anim}}\leftarrow\tau_{\text{anim}}+\Delta t,\qquad \text{pose}=\text{Evaluar}(\tau_{\text{anim}})
+t_{\text{sil}}\leftarrow t_{\text{sil}}+\Delta t,\qquad \text{pose}=\text{Actualizar}(t_{\text{sil}})
 $$
 
-Se evalúa $\text{pose}(\tau)$ como función del tiempo (no se acumulan rotaciones), así que el resultado no depende de los FPS: 30 FPS o 144 FPS dan la misma pose al mismo $\tau$. `[PENDIENTE]`: si la animación se dispara (tecla/zona) o corre sola, y qué pasa a los 10 s (¿se reinicia, se queda?), que el repo **no define**.
-
----
+- **Una función del tiempo, no una acumulación.** `Silueta::Actualizar(t)` calcula toda la pose desde $t$ (no suma rotaciones cuadro a cuadro), así que 30 FPS o 144 FPS dan la misma pose al mismo $t$.
+- **Dónde empieza y termina cada una** (valores del código, `Silueta.cpp` y `Silueta.h`): la caminata ocupa $0\le t\le 18.33$ s (`Duracion()`); la de dejar la flor va con $\tau=t_{\text{sil}}-18.33$: el brazo se extiende de 0 a 1 s, la flor sale de la mano a los 2 s, el brazo regresa de 3 a 4 s. Después de $\tau=4$ s todo queda quieto: la silueta en su punto de llegada y la flor sobre la repisa.
+- **Se dispara sola.** No hay tecla ni zona que la active: corre desde que empieza el bucle de dibujo. La tecla **R** pone $t_{\text{sil}}=0$ y todo se repite, porque todo es función de $t_{\text{sil}}$ (incluida la posición de la flor).
+- **Arranque (D-5, 12/11).** `lastFrame` valía 0 al entrar al bucle, así que el primer $\Delta t$ incluía todo el tiempo de carga de modelos y texturas (segundos). Se fija `lastFrame = glfwGetTime()` justo antes del bucle y `tSilueta = 0`: la caminata empieza en la orilla y no ya avanzada.
+- **Fin de la caminata contra el altar (D-5, 12/11).** La caminata termina en $(x,z)=(0.45,\ 0.20)$ (antes $x=1.0$, dentro de la caja del `altar3`, que ocupa $x\in[0.90,1.80]$). Calculado con el código (programa aparte, `Silueta.cpp` + `Animacion.cpp`): en el último segundo las articulaciones y la mano llegan a $x\le 0.67$ m (la mano al soltar queda en $(0.670,\ 1.336,\ -0.389)$); sumando el grosor del brazo ($\approx 0.05$ m) hay $\approx 0.18$ m de holgura. La flor recorre 0.38 m horizontales en $T_b=0.429$ s hasta la repisa en $(1.05,\ 0.435,\ -0.389)$.
 
 ## 5. Por qué no es una animación del curso (D-7) `[PENDIENTE]`
 Se redacta con el código. Argumento base: jerarquía de 9 piezas con cuaterniones por articulación y slerp, tiempo suavizado con smoothstep, y trayectoria Bézier + caída para la flor; las prácticas del curso usan transformaciones simples (traslación/rotación con teclas o `glfwGetTime()`) sin jerarquía ni cuadros clave. Solo se sostiene cuando exista el módulo y se haya comparado con las prácticas. **Cuidado:** el problema #13 del ESTADO ya mostró que una animación puede resultar copiada sin que se note; revisar contra las prácticas antes de escribir esta sección.

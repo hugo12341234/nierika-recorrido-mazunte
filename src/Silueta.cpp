@@ -16,7 +16,7 @@ namespace
     const float T_MEZCLA = 0.6f;     // s para pasar de la pose de pie al ciclo de paso (y de regreso al llegar)
     const float T_CICLO = ZANCADA / V_CRUCERO;  // 1.0 s por zancada a velocidad de crucero
     const float DISTANCIA = N_ZANCADAS * ZANCADA;  // 23.8 m -> llega a z = +0.2, frente a la capilla (z = -0.6)
-    const float X_FINAL = 1.0f;      // m: se detiene a la DERECHA del altar (el altar mide 1.30 m de ancho, x -0.65..+0.65) y no tapa la vista desde la entrada
+    const float X_FINAL = 0.45f;     // m (D-5, 12/11; antes 1.0): se detiene a la izquierda del altar3 (su caja de colision empieza en x = +0.90): torso de 0.34 m + brazo derecho (hasta x ~ +0.72) caben sin entrar en el altar
     const float T_LATERAL = 1.0f;    // s finales del recorrido en que se desplaza en x (ya paso el arco: en ese instante z ~ +0.78 < +1.31)
 
     // ---- Medidas de la silueta (m; adulto de ~1.72 m, referencia no medida) ----
