@@ -1,13 +1,14 @@
 # Justificación matemática de las 2 animaciones por KeyFrames (D-7)
 
-**Nierika Studio · Equipo 15 · Manual técnico — BORRADOR (04/11/2026)**
+**Nierika Studio · Equipo 15 · Manual técnico — versión del 12/11/2026**
 Tarea: D-7 (act. 53), con D-2 (slerp), D-3 (smoothstep y desfase) y D-4 (Bézier de la flor) · Cuentas: 319266894, 321332086
 
-> **Estado del documento: borrador.** Las fórmulas y su deducción son generales y están completas.
-> **No existe código** de la silueta, de los KeyFrames ni de la flor (`src/Animacion.*` no existe; D-1…D-5 están ⏳ en el ESTADO).
-> Los valores del código quedan como `[PENDIENTE]`; no se inventa ninguno.
+> **Estado del documento (12/11): completo con los valores del código.** Las fórmulas, su deducción y los parámetros reales (con archivo)
+> están escritos; **las cifras se comprobaron con un programa** (`tools/d7_pruebas_matematicas.cpp`, 23 comprobaciones sobre `Animacion.cpp`,
+> `Silueta.cpp` y `DejarFlor.h`). Lo que sigue **sin comprobar**: que la animación se vea bien en pantalla con el modelo real de D1 (nadie la ha
+> compilado con MSVC desde el cambio de cubos a modelo) y la comparación con las prácticas del curso (§5, que no están en el repo).
 >
-> **Marcas:** `[repo]` = escrito en el repo · `[PENDIENTE]` = falta el código · `[propuesta]` = idea redactora, no es regla hasta registrarla en el ESTADO (§4/§5).
+> **Marcas:** `[repo]` = escrito en el repo · `[propuesta]` = idea redactora, no es regla hasta registrarla en el ESTADO (§4/§5) · `[inferido]` = deducción de quien escribió, sin fuente en el repo.
 
 ---
 
@@ -27,8 +28,8 @@ Tarea: D-7 (act. 53), con D-2 (slerp), D-3 (smoothstep y desfase) y D-4 (Bézier
 | Suelta la flor | 8 |
 | Retrocede (termina) | 10 |
 
-### Contradicción a resolver antes de implementar (no se elige en silencio)
-La caminata dura 6 s "orilla → altar" **[repo]**, pero los documentos **no fijan el punto de partida ni la altura de la silueta**. Con los únicos números del repo: si parte de la orilla ($z=+24$, ESTADO §5, playa y mar) y el altar queda en $z\approx-0.6$ (capilla provisional, ESTADO §5), la distancia es $\approx 24.6$ m, es decir **$\approx 4.1$ m/s promedio**, más del doble de la velocidad de la cámara (2.0 m/s [repo, valor inicial]) y propia de una carrera, no de una caminata (una caminata humana típica ronda 1.4 m/s: dato general, no del repo). Opciones: (a) acortar el recorrido (partir cerca de la fachada), (b) alargar la fase de caminata, (c) aceptar un ritmo rápido. **Propuesta:** registrar la decisión en el ESTADO §4 antes de D-2. El mismo problema ya estaba en la auditoría del 19/10 (`/mnt/project-files/auditoria/`).
+### Contradicción 6 s contra distancia: **resuelta el 04/11** (decisión del ESTADO; manda sobre CONTEXTO §4)
+Los 6 s "orilla → altar" de CONTEXTO §4 implicaban ≈ 4.1 m/s (24.6 m en 6 s), más del doble de la velocidad de la cámara (2.0 m/s) y propia de una carrera. El ESTADO (decisión del 04/11, "Caminata de la silueta") fijó 17 zancadas de 1.4 m a 1.4 m/s: **23.8 m en 18.33 s** (sección 2.1). Los hitos de la tabla de arriba **ya no valen en segundos absolutos**; los de "extiende, suelta y retrocede" pasan a ser tiempos relativos al final de la caminata (decisión del 11/11, sección 3.1).
 
 ---
 
@@ -55,7 +56,7 @@ $$
 
 **Dos detalles obligatorios en la implementación:**
 1. **Camino corto:** $\mathbf{q}$ y $-\mathbf{q}$ son la misma rotación. Si $\mathbf{q}_0\cdot\mathbf{q}_1<0$, se usa $-\mathbf{q}_1$; si no, la articulación gira "por el camino largo".
-2. **$\Omega\to0$:** $\sin\Omega\to0$ y la fórmula da $0/0$. Si $\mathbf{q}_0\cdot\mathbf{q}_1>1-\varepsilon$ se usa interpolación lineal normalizada (nlerp). `glm::slerp` ya incluye ambos casos `[PENDIENTE: confirmar si el código usa glm::slerp o una implementación propia]`.
+2. **$\Omega\to0$:** $\sin\Omega\to0$ y la fórmula da $0/0$. Si $\mathbf{q}_0\cdot\mathbf{q}_1>1-\varepsilon$ se usa interpolación lineal normalizada (nlerp). El código usa una **implementación propia** (`Slerp` en `src/Animacion.cpp:26-47`, no `glm::slerp`) que hace las dos cosas: invierte $\mathbf{q}_1$ si $\mathbf{q}_0\cdot\mathbf{q}_1<0$ y cae a nlerp si $\mathbf{q}_0\cdot\mathbf{q}_1>0.9995$ (ángulo < 3.6°). Comprobado con `tools/d7_pruebas_matematicas.cpp`: de 0° a 90° en X, $s=0.5$ da 45°; el ángulo es lineal en $s$ con desvío máximo $6.8\times10^{-6}$ rad y $|\mathbf{q}|$ se mantiene en $1\pm1.2\times10^{-7}$; con $-\mathbf{q}_1$ también da 45° (camino corto).
 
 ### 1.3 Jerarquía: cómo "los hijos siguen al padre" (D-1)
 Matriz global de cada pieza = producto de las locales a lo largo de la cadena:
@@ -65,7 +66,16 @@ M_{\text{antebrazo}}=M_{\text{torso}}\cdot M_{\text{brazo}}\cdot M_{\text{antebr
 M^{\text{local}}=T(\text{pivote})\,R(\mathbf{q})\,T(-\text{pivote})
 $$
 
-Con el pivote de cada `.obj` ya **en la articulación** (D-1), basta $M^{\text{local}}=T(\mathbf{o})\,R(\mathbf{q})$, con $\mathbf{o}$ la posición de la articulación respecto al padre. Orden de aplicación: la rotación de la articulación se aplica **antes** de heredar el movimiento del padre; por eso las matrices se multiplican de la raíz hacia la hoja. Criterio de D-1 [repo]: "al mover el padre, los hijos lo siguen". `[PENDIENTE]`: posiciones $\mathbf{o}$ por articulación (dependen del modelo de D-1 y de la altura, **no definida**).
+Con el pivote de cada `.obj` ya **en la articulación** (D-1), basta $M^{\text{local}}=T(\mathbf{o})\,R(\mathbf{q})$, con $\mathbf{o}$ la posición de la articulación respecto al padre. Orden de aplicación: la rotación de la articulación se aplica **antes** de heredar el movimiento del padre; por eso las matrices se multiplican de la raíz hacia la hoja. Criterio de D-1 [repo]: "al mover el padre, los hijos lo siguen". Las posiciones $\mathbf{o}$ del código (`src/Silueta.cpp:42-55`; adulto de ≈ 1.72 m, medida de referencia **no medida** [repo]):
+
+| Articulación | $\mathbf{o}$ respecto del padre (m) |
+|---|---|
+| torso (raíz; cadera) | $(x_{\text{ruta}},\ 0.83\text{–}0.89,\ z_{\text{ruta}})$: la altura oscila con el paso; en reposo 0.90 |
+| cabeza | $(0,\ 0.60,\ 0)$ |
+| hombro izq / der | $(\mp0.22,\ 0.54,\ 0)$ |
+| codo (antebrazo) | $(0,\ -0.30,\ 0)$ |
+| cadera izq / der (muslo) | $(\mp0.09,\ 0,\ 0)$ |
+| rodilla (pierna) | $(0,\ -0.45,\ 0)$ |
 
 ### 1.4 Cuadros clave y tiempo
 Para un tramo entre cuadros clave $k$ y $k+1$ con tiempos $t_k<t_{k+1}$:
@@ -74,17 +84,21 @@ $$
 s_{\text{lineal}}=\frac{t-t_k}{t_{k+1}-t_k}\in[0,1],\qquad \mathbf{q}(t)=\operatorname{slerp}\big(\mathbf{q}_k,\mathbf{q}_{k+1},\,f(s_{\text{lineal}})\big)
 $$
 
-con $f$ = identidad (velocidad angular constante) o $f$ = smoothstep (sección 2). El criterio de D-2 [repo] es "curvas de aceleración no lineales", así que $f$ **no** debe ser la identidad `[PENDIENTE: confirmar]`.
+con $f$ = identidad (velocidad angular constante) o $f$ = smoothstep (sección 2). El criterio de D-2 [repo] es "curvas de aceleración no lineales", así que $f$ **no** es la identidad en los extremos de balanceo: el tramo de cada KeyFrame lleva su propia curva (`Curva` en `src/Animacion.h`): `Smoothstep` en todo el ciclo de paso y en el brazo que deja la flor, `SmoothIn`/`SmoothOut` en la salida y la llegada del torso y `Lineal` solo en el crucero (donde la velocidad ya es constante, sección 2.1) y en el tramo en que el brazo se sostiene extendido.
 
-### 1.5 Tabla de parámetros (a llenar con el código)
+### 1.5 Tabla de parámetros (valores del código)
 
-| Símbolo | Valor en el código | Unidad | Archivo:línea |
+| Símbolo | Valor en el código | Unidad | Archivo |
 |---|---|---|---|
-| tiempos de los cuadros clave $t_k$ | `[PENDIENTE]` (hitos del repo: 0, 6, 7, 8, 10 s) | s | |
-| $\mathbf{q}_k$ por articulación y cuadro | `[PENDIENTE]` | cuaternión | |
-| ciclo de paso (duración de un paso) | `[PENDIENTE]` | s | |
-| ángulo máximo de cadera / rodilla / hombro / codo | `[PENDIENTE]` | grados | |
-| posición de cada articulación $\mathbf{o}$ | `[PENDIENTE]` | m | |
+| tiempos de los cuadros clave del torso $t_k$ | 0, 2, 16.33, 18.33 | s | `src/Silueta.cpp:59-68` |
+| tiempos del ciclo de paso (muslo, brazo, giro) | 0, 0.5, 1 (pierna: 0, 0.15, 0.45, 0.75, 1) | s de ciclo | `src/Silueta.cpp:78-100` |
+| $\mathbf{q}_k$ del muslo | giro en X de +23° y −23° | grados | `src/Silueta.cpp:78-80` |
+| $\mathbf{q}_k$ de la pierna (rodilla) | −3°, −15°, −8°, −60°, −3° en X | grados | `src/Silueta.cpp:82-86` |
+| $\mathbf{q}_k$ del brazo / antebrazo | ±20° / −10° y −35° en X | grados | `src/Silueta.cpp:88-94` |
+| giro del torso | ±4° alrededor de Y (una vez por ciclo) | grados | `src/Silueta.cpp` (`giro_`) |
+| duración de un paso (ciclo) $T_p$ | 1.0 (zancada 1.4 m / crucero 1.4 m/s) | s | `src/Silueta.cpp:17` |
+| mezcla con la pose de pie | 0.6 | s | `src/Silueta.cpp:16` |
+| posición de cada articulación $\mathbf{o}$ | tabla de 1.3 | m | `src/Silueta.cpp:42-55` |
 
 ---
 
@@ -206,19 +220,30 @@ Se evalúa $\text{pose}(\tau)$ como función del tiempo (no se acumulan rotacion
 
 ---
 
-## 5. Por qué no es una animación del curso (D-7) `[PENDIENTE]`
-Se redacta con el código. Argumento base: jerarquía de 9 piezas con cuaterniones por articulación y slerp, tiempo suavizado con smoothstep, y trayectoria Bézier + caída para la flor; las prácticas del curso usan transformaciones simples (traslación/rotación con teclas o `glfwGetTime()`) sin jerarquía ni cuadros clave. Solo se sostiene cuando exista el módulo y se haya comparado con las prácticas. **Cuidado:** el problema #13 del ESTADO ya mostró que una animación puede resultar copiada sin que se note; revisar contra las prácticas antes de escribir esta sección.
+## 5. Por qué no es una animación del curso (D-7)
+
+**Lo que el repo permite afirmar** (código propio de `src/Animacion.h/.cpp`, `src/Silueta.cpp`, `src/DejarFlor.h`):
+
+| Rasgo | En esta animación | Qué buscar en la práctica del curso `[inferido]` |
+|---|---|---|
+| Rotación | cuaternión por articulación con **`Slerp` propio** (camino corto, caso nlerp) | si la práctica interpola ángulos de Euler o con incrementos lineales |
+| Estructura | **10 piezas jerárquicas** (torso → cabeza; brazo → antebrazo; muslo → pierna) cuyas matrices se heredan raíz → hoja | si la práctica mueve un solo modelo o piezas sueltas |
+| Aceleración | `Smoothstep` ($3s^2-2s^3$), `SmoothIn` y `SmoothOut` deducidas aquí; velocidad continua entre rampa y crucero (comprobada: 1.40 m/s a los dos lados) | si la práctica avanza con incremento constante por cuadro |
+| Tiempo | pose = **función del tiempo** (no acumula); misma pose a 30 o 144 FPS | si la práctica suma incrementos por cuadro (`FrameIndex`, pasos) |
+| Fase del paso | ligada a la **distancia recorrida**, no al tiempo (los pies no patinan en arranque y frenado) | — |
+| Flor | Bézier cuadrática cuyo punto de control hace que la curva **sea** un tiro horizontal en caída libre ($T_b=\sqrt{2h/g}$); error máximo $2.4\times10^{-7}$ m | si la práctica usa una trayectoria poligonal o lineal |
+
+**Lo que NO se pudo hacer:** comparar contra las prácticas del curso, porque **no están en el repositorio** (solo el código base de la Práctica 6/8). La columna de la derecha es una lista de preguntas basada en cómo suelen plantearse estas prácticas, **no un hecho comprobado**. Antes de entregar, D2 (o D1) debe abrir sus prácticas de animación por KeyFrames y marcar cada fila (el problema #13 del ESTADO ya mostró que una animación puede resultar copiada sin que se note). Si alguna fila coincide, se cambia el rasgo o se anota como similitud.
 
 ---
 
-## 6. Resumen de huecos que impiden cerrar D-7
+## 6. Qué falta para dar D-7 por terminado
 
-| Hueco | Quién lo cierra | Tarea |
-|---|---|---|
-| Contradicción 6 s vs. distancia (sección 0) | decisión de D2 en el ESTADO §4 | antes de D-2 |
-| Altura de la silueta, posiciones de articulaciones | modelo de D-1 | D-1 |
-| Poses clave, ángulos y tiempos de cada cuadro | módulo de KeyFrames | D-2, D-3 |
-| Puntos Bézier, tramo de caída, altura del altar | hilo de D-4 y B-1 | D-4 |
-| Argumento "no es del curso" | al tener código | D-7 |
+| Hueco | Quién lo cierra |
+|---|---|
+| Comparar la tabla de §5 con las prácticas del curso | D2 / D1 (no están en el repo) |
+| Ver la caminata y la flor en pantalla con el modelo real de D1 | D2, compilando en VS (F5) |
+| Aceptar los valores propuestos por Claude (tiempos de dejar la flor, destino de la flor) | D2, en el ESTADO §4 |
+| Pasar el manual a su versión final (ES + EN, E-5) | E-5 |
 
-**Criterio de terminado de D-7 [repo]:** slerp, Bézier y smoothstep con fórmulas y parámetros **reales** en `docs/manual_tecnico/`. Este borrador **no lo cumple** todavía: lo adelanta.
+**Criterio de terminado de D-7 [repo]:** slerp, Bézier y smoothstep con fórmulas y parámetros **reales** en `docs/manual_tecnico/`. Con este documento, **fórmulas y parámetros están completos y probados con programa**; queda el hueco de la comparación con el curso, que depende de las prácticas.
