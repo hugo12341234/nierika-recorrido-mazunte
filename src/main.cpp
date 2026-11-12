@@ -226,8 +226,10 @@ int main()
     colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // capilla provisional (altar.obj en (0,0,-0.6); hasta B-13)
 
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
-    // Entrada de 2 m en el norte (z = 12), centrada en x = 0 (abertura x -1..+1)
-    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.0f ), glm::vec3( 7.0f, 0.70f,  3.25f) });  // muro sur
+    // Entradas de 2 m en el norte (z = 12) y, desde E-2 (12/11), tambien en el sur (z = 3), las dos centradas en x = 0 (abertura x -1..+1):
+    // la del sur queda frente a la puerta del cuarto y por ella camina la silueta
+    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.0f ), glm::vec3(-1.0f, 0.70f,  3.25f) });  // muro sur izquierdo
+    colisiones.agregar({ glm::vec3( 1.0f, 0.0f,  3.0f ), glm::vec3( 7.0f, 0.70f,  3.25f) });  // muro sur derecho
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f, 11.75f), glm::vec3(-1.0f, 0.70f, 12.0f ) });  // muro norte izquierdo
     colisiones.agregar({ glm::vec3( 1.0f, 0.0f, 11.75f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro norte derecho
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
@@ -476,7 +478,7 @@ int main()
             sobreAltar(cempasuchil, glm::vec3( 0.20f, 0.835f, 0.00f));
         }
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
-        colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.0f), 0.0f);
+        colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
         colocar(tumba2,   glm::vec3(-4.0f, 0.0f,  4.5f), 0.0f);
         colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
         colocar(tumba4,   glm::vec3(-4.5f, 0.0f,  9.0f), 0.0f);
