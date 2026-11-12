@@ -127,7 +127,7 @@ Es el equivalente de $\beta_{\text{der}}(t)=\beta_{\text{izq}}(t+T_p/2)=-\beta_{
 | rodilla | −3 a −60 (solo hacia atrás; 5 KeyFrames) | grados | `src/Silueta.cpp:82-86` |
 | $\gamma_{\max}$ (brazo) | ±20, antebrazo −10 a −35 | grados | `src/Silueta.cpp:88-94` |
 | desfase entre lados | $\pi$ (medio ciclo, 0.5 s) | rad | `src/Silueta.cpp:122` |
-| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+1.0$ | m | `src/Silueta.cpp:11,19,59-68` |
+| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+0.45$ (D-5, 12/11; antes +1.0) | m | `src/Silueta.cpp:11,19,59-68` |
 | $t_A,\ t_B$ | 0 y 18.33 (rampas de 2 s) | s | `src/Silueta.cpp:15,61` |
 
 **Estado:** los valores son los escritos en el código. La caminata se compiló y vio en la PC de D2 el 04/11 con cubos (ESTADO, D-2); con el modelo real de D1 sigue **sin compilar**.
@@ -207,6 +207,8 @@ $$
 - **Se dispara sola.** No hay tecla ni zona que la active: corre desde que empieza el bucle de dibujo. La tecla **R** pone $t_{\text{sil}}=0$ y todo se repite, porque todo es función de $t_{\text{sil}}$ (incluida la posición de la flor).
 - **Arranque (D-5, 12/11).** `lastFrame` valía 0 al entrar al bucle, así que el primer $\Delta t$ incluía todo el tiempo de carga de modelos y texturas (segundos). Se fija `lastFrame = glfwGetTime()` justo antes del bucle y `tSilueta = 0`: la caminata empieza en la orilla y no ya avanzada.
 - **Fin de la caminata contra el altar (D-5, 12/11).** La caminata termina en $(x,z)=(0.45,\ 0.20)$ (antes $x=1.0$, dentro de la caja del `altar3`, que ocupa $x\in[0.90,1.80]$). Calculado con el código (programa aparte, `Silueta.cpp` + `Animacion.cpp`): en el último segundo las articulaciones y la mano llegan a $x\le 0.67$ m (la mano al soltar queda en $(0.670,\ 1.336,\ -0.389)$); sumando el grosor del brazo ($\approx 0.05$ m) hay $\approx 0.18$ m de holgura. La flor recorre 0.38 m horizontales en $T_b=0.429$ s hasta la repisa en $(1.05,\ 0.435,\ -0.389)$.
+
+---
 
 ## 5. Por qué no es una animación del curso (D-7) `[PENDIENTE]`
 Se redacta con el código. Argumento base: jerarquía de 9 piezas con cuaterniones por articulación y slerp, tiempo suavizado con smoothstep, y trayectoria Bézier + caída para la flor; las prácticas del curso usan transformaciones simples (traslación/rotación con teclas o `glfwGetTime()`) sin jerarquía ni cuadros clave. Solo se sostiene cuando exista el módulo y se haya comparado con las prácticas. **Cuidado:** el problema #13 del ESTADO ya mostró que una animación puede resultar copiada sin que se note; revisar contra las prácticas antes de escribir esta sección.
