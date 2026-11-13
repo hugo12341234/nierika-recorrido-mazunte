@@ -249,7 +249,7 @@ como volumen porque tiene grosor (V: `fachada.obj`, objeto `roof`).
 | 57 | Videos | E-4 | ⏳ | |
 | 58 | Manual técnico | E-5 | ⏳ | |
 | 59 | Manual de usuario | E-6 | 🔄 | Esqueleto ES |
-| 60 | Release GitHub | E-7 | ⏳ | |
+| 60 | Release GitHub | E-7 | 🔄 | Preparado en `docs/entrega/` (12/11); sin publicar |
 
 ---
 
