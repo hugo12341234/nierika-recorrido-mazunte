@@ -61,6 +61,7 @@ uniform float specularStrength;     // brillo especular por objeto (los modelos 
 
 // B-12: mapa de relieve (altura en gris). Solo el pan lo trae: Mesh::Draw pone tieneRelieve = 1 en sus mallas.
 uniform int       tieneRelieve;
+uniform int       relieveLuma;     // X-23: 1 = relieve a partir de la luminancia de la textura difusa (barda, tumbas, cruz, roca); la arena usa 'arena'
 uniform sampler2D texture_height1;
 const float RELIEVE_M = 0.003;      // metros de altura que representa el blanco del mapa (3 mm en un pan de 16 cm)
 
@@ -81,6 +82,7 @@ vec3 perturbaNormal(vec3 N, vec3 p, float h)
 
 // C-2: llama de las velas. Con llama = 1 el fragmento ignora la textura y la luz: la forma, el color y el parpadeo
 // salen de ruido de Perlin 2D (ver docs/manual_tecnico/justificacion_simples.md, seccion 2.3).
+uniform int   espuma;               // X-22: 1 solo al dibujar el mar (espuma en la orilla)
 uniform int   arena;                // X-13: 1 solo al dibujar la playa (ver main.cpp)
 uniform int   llama;
 uniform float tiempo;               // segundos (el mismo uniform del vertex shader)
@@ -134,6 +136,14 @@ float BlinnSpec(vec3 lightDir, vec3 normal, vec3 viewDir)
 
 void main()
 {
+    // X-22: luciernaga (llama = 2): punto emisivo; llamaFase = brillo 0..1 (parpadeo calculado en main.cpp); sin luz ni textura
+    if (llama == 2)
+    {
+        if (llamaFase < 0.04) discard;
+        color = vec4(vec3(0.75, 1.0, 0.35) * (0.4 + 1.6 * llamaFase), 1.0);
+        return;
+    }
+
     if (llama == 1)
     {
         // El .obj de la llama tiene v = 0 en la base y Assimp voltea las UV (FlipUVs): h = 0 en la base, 1 en la punta
@@ -164,8 +174,21 @@ void main()
     vec3 norm = normalize(gl_FrontFacing ? Normal : -Normal);
     if (tieneRelieve == 1)   // B-12: la condicion es un uniform, asi que las derivadas de pantalla estan bien definidas
         norm = perturbaNormal(norm, FragPos, texture(texture_height1, TexCoords).r * RELIEVE_M);
+    if (relieveLuma == 1 || arena == 1)   // X-23: mapa de altura = luminancia de la textura (condicion uniforme: las derivadas de pantalla estan bien definidas)
+    {
+        float hl = dot(texColor.rgb, vec3(0.30, 0.59, 0.11));
+        norm = perturbaNormal(norm, FragPos, hl * (arena == 1 ? 0.012 : 0.035));   // 1.2 cm en la arena, 3.5 cm en la piedra
+    }
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 albedo = texColor.rgb;
+    if (espuma == 1)
+    {
+        // X-22: franja de espuma donde el mar toca la orilla (z ~ 24): ruido de Perlin que avanza hacia la playa; f en [0, 1]
+        float borde = smoothstep(26.2, 24.3, FragPos.z);
+        float n = ruidoFbm(vec2(FragPos.x * 0.7, FragPos.z * 0.9 - tiempo * 0.45));
+        float f = borde * smoothstep(0.02, 0.30, n + 0.18 + 0.18 * sin(tiempo * 0.8 - FragPos.z * 1.6));
+        albedo = mix(albedo, vec3(0.80, 0.88, 0.95), clamp(f, 0.0, 0.85));
+    }
     if (arena == 1)
     {
         float manchas = ruidoFbm(FragPos.xz * 0.35);                         // ~[-0.4, 0.4], periodo de ~3 m
@@ -182,6 +205,10 @@ void main()
     for (int i = 0; i < NUMBER_OF_STEP_SPOTS; i++)
         result += CalcSpotLight(escalonSpots[i], norm, FragPos, viewDir, albedo);
 
+    // X-18: bruma de distancia. f = 1 - exp(-(d * k)^1.5): 0 cerca, tiende a 1 lejos; se mezcla con el color del horizonte del cielo
+    float distCam = length(viewPos - FragPos);
+    float bruma = 1.0 - exp(-pow(distCam * 0.012, 1.5));
+    result = mix(result, vec3(0.07, 0.12, 0.20), clamp(bruma, 0.0, 0.85));
     color = vec4(result, texColor.a);
 }
 
