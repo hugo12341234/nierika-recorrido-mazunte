@@ -13,7 +13,7 @@ Qué prueba qué, y dónde está. ✅ **[repo, ESTADO §4, 19/10]** define la ca
 | Capturas de pantalla por tarea | Funcionamiento | Descripción de cada PR | 🔄 existen en los PR; ❓ falta copiarlas aquí |
 | Bocetos del cuarto (X-2) | Diseño de fachada, interior y ofrenda | — | ❓ sin confirmar |
 | Captura de versiones de Blender y GIMP (X-1) | Misma versión en las dos PC | — | 🔄 |
-| Videos | Entorno, recorrido, animaciones | `docs/videos/` | ⏳ E-4 |
+| Videos | Entorno, recorrido, animaciones | `docs/videos/` | 🔄 E-4: guiones listos, sin grabar |
 
 ## Reglas
 
