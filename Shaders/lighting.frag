@@ -53,6 +53,7 @@ uniform vec3 viewPos;
 uniform DirLight dirLight;
 uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
 uniform SpotLight spotLight;
+uniform PointLight velasAltar;   // X-8: luz calida y parpadeante de las velas del altar (una sola puntual, no cuenta entre las 4 de D1)
 uniform SpotLight escalonSpots[NUMBER_OF_STEP_SPOTS];
 uniform Material material;          // shininess la envia Mesh::Draw
 uniform sampler2D texture_diffuse1; // nombre que envia Mesh::Draw
@@ -168,6 +169,7 @@ void main()
     vec3 result = CalcDirLight(dirLight, norm, viewDir, albedo);
     for (int i = 0; i < NUMBER_OF_POINT_LIGHTS; i++)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir, albedo);
+    result += CalcPointLight(velasAltar, norm, FragPos, viewDir, albedo);
     result += CalcSpotLight(spotLight, norm, FragPos, viewDir, albedo);
     for (int i = 0; i < NUMBER_OF_STEP_SPOTS; i++)
         result += CalcSpotLight(escalonSpots[i], norm, FragPos, viewDir, albedo);

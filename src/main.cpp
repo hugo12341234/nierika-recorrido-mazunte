@@ -394,6 +394,20 @@ int main()
             glUniform1f(glGetUniformLocation(shader.Program, (n + "quadratic").c_str()), 0.07f * kCuad);
         }
 
+        // X-8: luz calida de las velas del altar. Parpadeo = suma de dos senos de periodos distintos (sin ruido ni particulas)
+        {
+            float t = (float)glfwGetTime();
+            float parpadeo = 0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f);   // 0.70 .. 1.00
+            glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * parpadeo;
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.25f, 0.0f);
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.ambient"), col.x * 0.10f, col.y * 0.10f, col.z * 0.10f);
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.diffuse"), col.x * 1.1f, col.y * 1.1f, col.z * 1.1f);
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.specular"), col.x * 0.4f, col.y * 0.4f, col.z * 0.4f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.constant"), 1.0f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.linear"), 0.35f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.44f);
+        }
+
         // 3. Reflector de la cruz
         glUniform3f(glGetUniformLocation(shader.Program, "spotLight.position"), spotLightPos.x, spotLightPos.y, spotLightPos.z);
         glUniform3f(glGetUniformLocation(shader.Program, "spotLight.direction"), spotLightDir.x, spotLightDir.y, spotLightDir.z);
