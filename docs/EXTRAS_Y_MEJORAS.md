@@ -92,6 +92,8 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 
 | **Comparsa (12 figuras que marchan por la orilla), música en vivo (5 músicos con guitarras, tambor y trompetas) y 3 alfombras de pétalos de cempasúchil** — **FUERA DEL ALCANCE ORIGINAL** (comparsa, música en vivo y alfombras de flores quedaron fuera en la primera versión de este plan por decisión de alcance) | **X-29** `x-29-comparsa-musica-alfombra` | `Models/tambor/`, `trompeta/`, `alfombra_flores/`, `alfombra_cruz/`, `Audio/banda.wav`, `tools/x29_comparsa.py`, `tools/x29_banda.py` | Marcha con senos y módulo; pulso de 90 bpm (ver `justificacion_extras.md` §9); **música sintetizada, no grabada** | Propio (Blender 5.2, síntesis por código); la alfombra es de pétalos, **no de arena** | ~40 llamadas de dibujo | ✅ detrás de `MOSTRAR_FUERA_DE_ALCANCE` |
 
+| **Pueblo de fondo sobre las colinas (44 casas y 3 caminos de tierra) y promontorio rocoso tipo Punta Cometa con un mirador pequeño** — **FUERA DEL ALCANCE ORIGINAL** (calles y edificios del pueblo; Punta Cometa). Es una **formación genérica**: no reproduce el sendero ni el mirador reales | **X-30** `x-30-pueblo-fondo` | `Models/calles/` (92 caras), `src/PuebloFondo.h` (generado), reutiliza `casa_a`, `casa_b`, `roca_mar` y `palapa`; `tools/x30_pueblo_fondo.py` | — (estático) | Propio (Blender 5.2); relieve compartido con las colinas (X-18) | ~140 llamadas de dibujo (las casas del fondo podrían agruparse si hiciera falta) | ✅ detrás de `MOSTRAR_FUERA_DE_ALCANCE` |
+
 ## 5. Evidencias (antes / después)
 
 Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evidencias/`. Los archivos `antes_*.png` son del 12/11/2026 con develop `c65109f`.

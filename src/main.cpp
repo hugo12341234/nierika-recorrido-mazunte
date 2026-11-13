@@ -25,7 +25,8 @@
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
-#include "VegetacionColinas.h"  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
+#include "VegetacionColinas.h"
+#include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
@@ -230,6 +231,7 @@ int main()
     Model palapa((char*)"Models/palapa/palapa.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model calles((char*)"Models/calles/calles.obj");                  // X-30: caminos de tierra del pueblo de fondo (fuera del alcance original)
     Model tambor((char*)"Models/tambor/tambor.obj");                  // X-29 (fuera del alcance original)
     Model trompeta((char*)"Models/trompeta/trompeta.obj");
     Model alfombraFlores((char*)"Models/alfombra_flores/alfombra_flores.obj");
@@ -1085,6 +1087,19 @@ int main()
                     papelPicado.Draw(shader);
                 }
             }
+            if (fueraAlcance)   // X-30 (FUERA DEL ALCANCE ORIGINAL): pueblo de fondo sobre las colinas y promontorio tipo Punta Cometa
+            {
+                glUniform1f(specLoc, 0.03f);
+                glm::mat4 mcal(1.0f);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mcal));
+                calles.Draw(shader);
+                for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                    poner(PuebloFondo::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
+                for (int i = 0; i < PuebloFondo::N_ROCAS; i++)
+                    poner(rocaMar, glm::vec3(PuebloFondo::ROCAS[i].x, PuebloFondo::ROCAS[i].y, PuebloFondo::ROCAS[i].z), PuebloFondo::ROCAS[i].giro, PuebloFondo::ROCAS[i].esc);
+                poner(palapa, glm::vec3(PuebloFondo::MIRADOR_X, PuebloFondo::MIRADOR_Y, PuebloFondo::MIRADOR_Z), 30.0f, 0.8f);   // mirador pequeno sobre la roca mayor
+                glUniform1f(specLoc, 0.05f);
+            }
             // tortugas marinas nadando en la superficie (Extras::PosicionTortuga) con cabeceo de aletas
             glUniform1f(specLoc, 0.3f);
             for (int i = 0; i < Extras::N_TORTUGAS; i++)
@@ -1310,6 +1325,7 @@ int main()
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
     rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
+    calles.cleanup();  // X-30
     tambor.cleanup(); trompeta.cleanup(); alfombraFlores.cleanup(); alfombraCruz.cleanup();  // X-29
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24
     cempasuchil.cleanup();  // B-3
