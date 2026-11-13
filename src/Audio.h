@@ -22,7 +22,8 @@ public:
     //   oleaje = 0.20 + 0.45 * s,  s = clamp((z - 2) / 22, 0, 1)            (mas fuerte hacia el mar)
     //   musica = 0.10 + 0.40 * clamp(1 - d_altar / 10, 0, 1)                (cerca del altar, en (1.35, 0))
     //   voces  = 0.55 * clamp(1 - d / 14, 0, 1), d = distancia a la ceremonia (11, 19.5) o al panteon (0, 7), la menor
-    void ActualizarZona(float x, float z);
+    //   banda  = 0.80 * clamp(1 - d_banda / 24), d a la banda de la playa (-10, 19.5); solo suena si banda = true (elementos fuera del alcance original)
+    void ActualizarZona(float x, float z, bool banda = false);
 
 private:
     AudioImpl* impl = nullptr;
