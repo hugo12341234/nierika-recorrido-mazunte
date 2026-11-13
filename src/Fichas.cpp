@@ -34,7 +34,7 @@ namespace
           "Tradición general (SEP, 2026) y local documentado (Baños, 2025)",
           glm::vec3(-3.0f, 0.0f, 23.0f) },
         { "Flor de cempasúchil",
-          "El aroma y el color del cempasúchil guían a las almas hacia el altar (Secretaría de Educación Pública [SEP], 2026). "
+          "El aroma de las flores, sobre todo del cempasúchil, guía a las almas hacia el altar (Secretaría de Educación Pública [SEP], 2026). "
           "Al atardecer, las flores también se lanzan al mar para recordar a quienes partieron (Baños, 2025).",
           "Tradición general (SEP, 2026) y local documentado (Baños, 2025)",
           glm::vec3(3.0f, 0.0f, 23.0f) },
@@ -45,7 +45,7 @@ namespace
           glm::vec3(0.0f, 1.95f, 6.0f) },   // B-13: colgado de los soportes (0, 1.95, 6)
         { "Altar de ofrenda",
           "En el altar, cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros "
-          "(Secretaría de Educación Pública [SEP], 2026). La ofrenda familiar es el acto central de la velación (UNESCO, s. f.). "
+          "(Secretaría de Educación Pública [SEP], 2026). Los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.). "
           "Aquí la ofrenda se presenta sobre un altar de tres niveles, con una forma que es adaptación del estudio.",
           "Tradición general (SEP, 2026); altar de tres niveles y cuarto: adaptación del estudio",
           glm::vec3(1.35f, 0.0f, 0.6f) },   // B-13: costado del altar3 (en (1.35, 0, 0)); desde la puerta (d ~ 1.5 m) gana a la del pan

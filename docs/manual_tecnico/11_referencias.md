@@ -6,7 +6,7 @@
 
 Assimp. (s. f.). *The Open Asset Import Library*. https://www.assimp.org/
 
-Baglioni, C. (s. f.). *Sandy gravel* [Textura]. Poly Haven. Recuperado el 20 de octubre de 2026, de https://polyhaven.com/a/sandy_gravel
+Baglioni, C. (2023). *Sandy gravel* [Textura, CC0]. Poly Haven. https://polyhaven.com/a/sandy_gravel
 
 Blender Foundation. (s. f.). *Features*. https://www.blender.org/features/
 
@@ -45,30 +45,50 @@ UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.u
 - 🔄 GLEW, GLM, vcpkg y SOIL2 ya tienen cita (X-15, 12/11, por verificar). stb_image también (X-16).
 - 🔄 Slerp (Shoemake), Bézier (Farin) y Perlin ya tienen cita (X-15, por verificar); ver [§7.4](07_justificacion_matematica.md).
 
-Savva, D., & Cilliers, R. (s. f.). *Clay Floor 001* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/clay_floor_001
+Savva, D., & Cilliers, R. (2021). *Clay floor 001* [Textura, CC0]. Poly Haven. https://polyhaven.com/a/clay_floor_001
 
-Tuytel, R. (s. f.). *Large Sandstone Blocks 01* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/large_sandstone_blocks_01
+Tuytel, R. (2020). *Large sandstone blocks 01* [Textura, CC0]. Poly Haven. https://polyhaven.com/a/large_sandstone_blocks_01
 
 ## Referencias de tecnología y matemática añadidas el 12/11 (X-15)
 
-> Datos de edición escritos por el asistente a partir de su conocimiento, **sin consultar las fuentes**: D2 debe comprobar autores, años y páginas antes de la entrega.
+> Verificadas el 12/11/2026 (X-17) contra Crossref (DOI), GitHub, Poly Haven y las páginas oficiales; ver la tabla de verificación al final de este archivo.
 
-Farin, G. (2002). *Curves and surfaces for CAGD: A practical guide* (5.ª ed.). Morgan Kaufmann.
+Farin, G. (2002). *Curves and surfaces for CAGD: A practical guide* (5th ed.). Morgan Kaufmann.
 
-G-Truc Creation. (s. f.). *OpenGL Mathematics (GLM)* [Software]. GitHub. https://github.com/g-truc/glm
+g-truc. (s. f.). *OpenGL Mathematics (GLM)* [Software]. GitHub. https://github.com/g-truc/glm
 
-Golini, M. L. (s. f.). *SOIL2: Simple OpenGL Image Library 2* [Software]. GitHub. https://github.com/SpartanJ/SOIL2
+SpartanJ. (s. f.). *SOIL2: Simple OpenGL Image Library 2* [Software]. GitHub. https://github.com/SpartanJ/SOIL2
 
-Microsoft. (s. f.). *vcpkg: C++ package manager* [Software]. GitHub. https://github.com/microsoft/vcpkg
+Microsoft. (s. f.). *vcpkg: C++ library manager for Windows, Linux, and macOS* [Software]. GitHub. https://github.com/microsoft/vcpkg
 
-Mikkelsen, M. (2010). *Bump mapping unparametrized surfaces on the GPU*. Journal of Graphics, GPU, and Game Tools, 15(1), 49–61.
+Mikkelsen, M. S. (2010). Bump mapping unparametrized surfaces on the GPU. *Journal of Graphics, GPU, and Game Tools, 15*(1), 49–61.
 
 Perlin, K. (1985). An image synthesizer. *ACM SIGGRAPH Computer Graphics, 19*(3), 287–296.
 
 Perlin, K. (2002). Improving noise. *ACM Transactions on Graphics, 21*(3), 681–682.
 
-Barrett, S. (s. f.). *stb: Single-file public domain libraries for C/C++* [Software]. GitHub. https://github.com/nothings/stb
+Barrett, S. T. (s. f.). *stb: Single-file public domain libraries for C/C++* [Software]. GitHub. https://github.com/nothings/stb
 
 Shoemake, K. (1985). Animating rotation with quaternion curves. *ACM SIGGRAPH Computer Graphics, 19*(3), 245–254.
 
 The GLEW contributors. (s. f.). *The OpenGL Extension Wrangler Library (GLEW)* [Software]. https://glew.sourceforge.net/
+
+## Verificación de referencias (X-17, 12/11/2026)
+
+| Referencia | Contra qué se comprobó (acceso 12/11/2026) | Resultado |
+|---|---|---|
+| Perlin (1985) | Crossref, DOI 10.1145/325165.325247 | ✅ Ken Perlin; *An image synthesizer*; ACM SIGGRAPH Computer Graphics 19(3), 287–296 |
+| Perlin (2002) | Crossref, DOI 10.1145/566654.566636 | ✅ *Improving noise*; ACM Transactions on Graphics 21(3), 681–682 |
+| Shoemake (1985) | Crossref, DOI 10.1145/325334.325242 | ✅ Ken Shoemake; *Animating rotation with quaternion curves*; ACM SIGGRAPH Computer Graphics 19(3), 245–254 |
+| Mikkelsen (2010) | Crossref | ✅ corregido a **Morten S. Mikkelsen**; Journal of Graphics, GPU, and Game Tools 15(1), 49–61 |
+| Farin (2002) | Crossref (libro Elsevier/Morgan Kaufmann 2002, ISBN 9781558607378) y Open Library | 🔄 autor, año y editorial coinciden; **subtítulo y «5th ed.» no se pudieron confirmar** en esas fuentes |
+| GLM | Página de GitHub `g-truc/glm` | 🔄 título correcto; **la página no nombra a una persona autora**: se cita al autor corporativo `g-truc` (antes decía «G-Truc Creation», sin respaldo) |
+| SOIL2 | Página de GitHub `SpartanJ/SOIL2` | 🔄 título «Simple OpenGL Image Library 2»; **no nombra autor persona** (antes «Golini, M. L.», sin respaldo): se cita `SpartanJ`. Es un *fork* de SOIL de Jonathan Dummer |
+| vcpkg | Página de GitHub `microsoft/vcpkg` (licencia MIT) | ✅ autor Microsoft; título corregido a «C++ library manager for Windows, Linux, and macOS» |
+| stb_image | Página de GitHub `nothings/stb` | ✅ autor Sean T. Barrett (corregido «S. T.») |
+| GLEW | Sitio `glew.sourceforge.net` | 🔄 título correcto; **el sitio no nombra autores**, se mantiene el autor colectivo |
+| Textura Sandy Gravel | API de Poly Haven | ✅ Charlotte Baglioni; publicada en 2023 (antes «s. f.») |
+| Textura Clay Floor 001 | API de Poly Haven | ✅ Dimitrios Savva (fotografía) y Rico Cilliers (procesamiento); 2021 (antes «s. f.») |
+| Textura Large Sandstone Blocks 01 | API de Poly Haven | ✅ Rob Tuytel; 2020 (antes «s. f.») |
+
+**Sin abrir:** las referencias de la propuesta v2.0 que no se tocan en X-17 (Assimp, GLFW, miniaudio, learnopengl, etc.) conservan su estado anterior.
