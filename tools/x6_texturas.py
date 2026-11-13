@@ -38,11 +38,11 @@ def mezcla(c1, c2, t):
     return np.array(c1)[None, None, :] * (1 - t[..., None]) + np.array(c2)[None, None, :] * t[..., None]
 
 
-# --- Silueta: tela de algodon crudo con trama visible y hilos rojos (se ve contra el cielo de noche)
+# --- Silueta: tela de algodon crudo con trama visible y hilos finos (clara: se ve contra el cielo de noche)
 yy, xx = np.mgrid[0:N, 0:N]
 trama = 0.5 + 0.25 * np.sin(xx * 2 * np.pi / 8) * np.sin(yy * 2 * np.pi / 8)
 tela = mezcla((0.80, 0.74, 0.62), (0.93, 0.89, 0.78), 0.6 * trama + 0.4 * fbm(8, 4, 100))
-franja = (np.sin(yy * 2 * np.pi / 128) > 0.93).astype(float) * 0.85
+franja = (np.sin(yy * 2 * np.pi / 128) > 0.985).astype(float) * 0.25  # hilos finos y apenas visibles
 tela = tela * (1 - franja[..., None]) + np.array((0.75, 0.15, 0.12))[None, None, :] * franja[..., None]
 guarda(tela, 'Models/silueta/silueta_tela.png')
 
