@@ -219,6 +219,7 @@ int main()
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
     Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
     Model petate((char*)"Models/petate/petate.obj");
+    Model tablaRemo((char*)"Models/tabla_remo/tabla_remo.obj");           // X-21: tabla de remo con su remo
     Model colinas((char*)"Models/colinas/colinas.obj");     // X-18: relieve verde de fondo (malla 300 x 215 m, hueco sobre la playa)
     Model palma((char*)"Models/palma/palma.obj");           // X-9: extra decorativo (no cuenta entre los 18 propios)
     Model arbusto((char*)"Models/arbusto/arbusto.obj");   // X-9: extra decorativo
@@ -745,6 +746,30 @@ int main()
                 llamaModelo.Draw(shader);
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+        }
+        // X-21: personas sobre tablas de remo. Cada tabla recorre un circulo lento (Extras::PosicionTabla), flota sobre la ola
+        // (Olas::Altura) y alinea su vertical con la normal de la ola (Olas::Normal): sin KeyFrames.
+        {
+            const float tb = (float)Reloj();
+            glUniform1f(specLoc, 0.3f);
+            for (int i = 0; i < Extras::N_TABLAS; i++)
+            {
+                float bx, bz, dx, dz, nx, ny, nz;
+                Extras::PosicionTabla(Extras::TABLAS[i], tb, bx, bz, dx, dz);
+                Olas::Normal(bx, bz, tb, nx, ny, nz);
+                const float by = Olas::Altura(bx, bz, tb) + 0.03f;
+                const float yaw = std::atan2(-dx, -dz);                                   // la proa (-z local) apunta a (dx, dz)
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(bx, by, bz));
+                const glm::vec3 eje = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(nx, ny, nz));
+                if (glm::length(eje) > 1e-5f) mm = glm::rotate(mm, std::acos(glm::clamp(ny, -1.0f, 1.0f)), glm::normalize(eje));
+                mm = glm::rotate(mm, yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                tablaRemo.Draw(shader);
+                glm::mat4 mp = glm::translate(mm, glm::vec3(0.0f, 0.12f, 0.0f));          // la persona de pie sobre la cubierta
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                (Extras::TABLAS[i].persona == 0 ? personaPieA : personaPieB).Draw(shader);
+            }
+            glUniform1f(specLoc, 0.05f);
         }
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {

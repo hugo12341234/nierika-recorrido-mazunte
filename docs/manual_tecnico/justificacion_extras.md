@@ -33,3 +33,21 @@
 | φ | 0.8 · i + 2.1 · (tendedero) | las tiras vecinas no oscilan al unísono (evita el efecto «ola uniforme») |
 
 **Comprobación:** `tools/x19_pruebas_extras.cpp` (|θ| ≤ 6° y periodo 3.6 s).
+
+## 3. Personas sobre tablas de remo que siguen la ola (X-21)
+
+**Qué es:** 5 tablas con una persona de pie cada una (pose fija, sin IA) navegan despacio por la bahía y suben y bajan con el oleaje. **No hay KeyFrames.**
+
+**Trayectoria (círculo lento):** (x, z)(t) = (cₓ + R·cos(ωt + φ), c_z + R·sen(ωt + φ)), con ω = 2π/70 s. Con R = 3 m la tabla avanza 2π·3/70 ≈ 0.27 m/s (paso de paseo tranquilo en el agua). La dirección de la proa es la tangente (−sen a, cos a) y el giro de la tabla es `yaw = atan2(−dx, −dz)`.
+
+**Altura y pendiente (de las olas ya justificadas en C-1):**
+- y(t) = `Olas::Altura(x, z, t)` + 0.03 m: la altura de la suma de tres senos de `src/Olas.h`.
+- La vertical de la tabla se alinea con la normal de la superficie n = normalize(−∂h/∂x, 1, −∂h/∂z) (`Olas::Normal`): se gira un ángulo α = arccos(nᵧ) alrededor del eje u = (0,1,0) × n. Como la pendiente máxima es ≈ Σ A·k ≈ 0.08, α ≤ ≈ 5°: la tabla cabecea y alabea poco, como una tabla larga sobre olas pequeñas.
+
+| Parámetro | Valor | Por qué |
+|---|---|---|
+| R | 3 o 4 m | la tabla (3.2 m) se mantiene cerca de la orilla visible desde la playa |
+| PERIODO_TABLA | 70 s | vuelta lenta y calmada |
+| φ | 0, 1.2, 2.4, 3.6, 4.8 rad | las 5 tablas no van en fila |
+
+**Comprobación:** `tools/x19_pruebas_extras.cpp` verifica que la posición recorre el círculo (distancia al centro = R), que la tangente es unitaria y perpendicular al radio, y que α ≤ 6° en el rango de las olas.

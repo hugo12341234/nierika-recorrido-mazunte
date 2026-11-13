@@ -46,6 +46,22 @@ namespace Extras
     struct OfrendaTumba { float x, z; };
     constexpr int N_OFRENDAS_TUMBA = 5;
     inline const OfrendaTumba OFRENDAS_TUMBA[N_OFRENDAS_TUMBA] = { { -4.0f, 5.75f }, { 4.0f, 6.2f }, { -4.5f, 9.95f }, { 4.5f, 10.6f }, { -2.5f, 4.1f } };
+
+    // X-21: personas sobre tablas de remo en el mar (fotos de referencia de D2). La tabla recorre un circulo lento de radio R:
+    //   (x, z)(t) = (cx + R*cos(w*t + fase), cz + R*sen(w*t + fase)),  w = 2*pi / PERIODO_TABLA
+    // y sigue la ola: y = Olas::Altura(x, z, t) y su vertical se alinea con la normal Olas::Normal (cabeceo y alabeo). Sin KeyFrames.
+    struct Tabla { float cx, cz, radio, fase; int persona; };   // persona: 0 persona_pie_a, 1 persona_pie_b
+    constexpr int N_TABLAS = 5;
+    constexpr float PERIODO_TABLA = 70.0f;   // s por vuelta
+    inline const Tabla TABLAS[N_TABLAS] = { { -14.0f, 30.0f, 3.0f, 0.0f, 0 }, { -5.0f, 36.0f, 4.0f, 1.2f, 1 }, { 6.0f, 29.0f, 3.0f, 2.4f, 0 },
+                                            { 15.0f, 38.0f, 4.0f, 3.6f, 1 }, { 26.0f, 33.0f, 3.0f, 4.8f, 0 } };
+    // Posicion y direccion de avance (dx, dz) de la tabla i en el instante t
+    inline void PosicionTabla(const Tabla& b, float t, float& x, float& z, float& dx, float& dz)
+    {
+        const float w = 2.0f * PI / PERIODO_TABLA, a = w * t + b.fase;
+        x = b.cx + b.radio * std::cos(a);  z = b.cz + b.radio * std::sin(a);
+        dx = -std::sin(a);  dz = std::cos(a);   // tangente unitaria (la tabla avanza de proa)
+    }
 }
 
 #endif

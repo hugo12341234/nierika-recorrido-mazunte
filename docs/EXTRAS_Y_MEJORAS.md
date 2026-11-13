@@ -60,7 +60,7 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 | **Colinas verdes de fondo + 70 palmas y 140 arbustos** | **X-18** `x-18-colinas-vegetacion` | `Models/colinas/` (3 720 vértices), `src/VegetacionColinas.h` (generado), `tools/x18_colinas.py` | — (estático); bruma de distancia f = 1 − exp(−(d·0.012)^1.5) | Propio (Blender 5.2, ruido de valor); sin texturas externas | 1 501 → 1 245 FPS (RX 5700 XT) | ✅ (captura abajo) |
 | **Ceremonia en la playa:** 12 figuras estáticas, 3 petates con ofrenda (velas, cempasúchil, pan, copalero) y 26 veladoras sobre la arena | **X-19** `x-19-ceremonia` | `Models/persona_pie_a/`, `persona_pie_b/`, `persona_agachada_a/`, `persona_agachada_b/` (≈ 400 caras cada una), `Models/petate/`, `src/Extras.h`, `tools/x19_ceremonia.py` | Balanceo senoidal θ = A·sen(2πt/T + φ) (A 1.2° o 2°; T 4.5 o 5 s); llamas con ruido de Perlin (C-2) | Propio (Blender 5.2; texturas 1K generadas por código; retrato sin rostro, sin personas reales) | 12 cajas de colisión nuevas | ✅ |
 | **Tendederos de papel picado cruzando la playa (17 tiras) y ofrendas al pie de 4 tumbas y la cruz** | **X-20** `x-20-tendederos` | reusa `Models/soportes/`, `papel_picado/`, `vela/`, `cempasuchil/`; datos en `src/Extras.h` | Péndulo de pequeña amplitud θ = 6°·sen(2πt/3.6 + φ) | Propios | 20 cajas de colisión (postes) | ✅ |
-| Gente en tablas sobre las olas | X-21 | pendiente | Altura y pendiente de `Olas.h` (sin KeyFrames) | — | — | ⏳ |
+| **5 personas de pie sobre tablas de remo en la bahía** | **X-21** `x-21-tablas-remo` | `Models/tabla_remo/` (114 caras, tabla + remo), reusa `persona_pie_a/b`; `tools/x21_tablas.py` | Círculo lento (R 3–4 m, 70 s) + altura y normal de `Olas.h`; sin KeyFrames | Propio (Blender 5.2) | 10 llamadas de dibujo | ✅ |
 | Luciérnagas, espuma y ambiente | X-22 | pendiente | Lissajous + parpadeo senoidal | — | — | ⏳ |
 | Relieve en arena y barda | X-23 | pendiente | Mapa de altura = luminancia de la textura | — | — | ⏳ |
 
@@ -71,5 +71,6 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | Bloque | Antes | Después |
 |---|---|---|
 | X-18 colinas y vegetación | `antes_fondo.png`, `antes_panteon.png`, `antes_orilla.png` | `x18_fondo.png`, `x18_panteon.png`, `x18_costa.png` |
+| X-21 tablas de remo | — | `x21_tablas_a.png`, `x21_tablas_b.png` |
 | X-20 tendederos y ofrendas | — | `x20_tendedero.png`, `x20_ofrenda_tumba.png` |
 | X-19 ceremonia | `antes_playa_este.png` (solo mar y arena; imagen no conservada, ver `antes_orilla.png`) | `x19_ceremonia_a.png`, `x19_ceremonia_b.png`, `x19_ceremonia_c.png` |
