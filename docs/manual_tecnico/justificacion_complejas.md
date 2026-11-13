@@ -141,7 +141,7 @@ Es el equivalente de $\beta_{\text{der}}(t)=\beta_{\text{izq}}(t+T_p/2)=-\beta_{
 | rodilla | −3 a −60 (solo hacia atrás; 5 KeyFrames) | grados | `src/Silueta.cpp:82-86` |
 | $\gamma_{\max}$ (brazo) | ±20, antebrazo −10 a −35 | grados | `src/Silueta.cpp:88-94` |
 | desfase entre lados | $\pi$ (medio ciclo, 0.5 s) | rad | `src/Silueta.cpp:122` |
-| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+1.0$ | m | `src/Silueta.cpp:11,19,59-68` |
+| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+0.45$ (D-5, 12/11; antes +1.0) | m | `src/Silueta.cpp:11,19,59-68` |
 | $t_A,\ t_B$ | 0 y 18.33 (rampas de 2 s) | s | `src/Silueta.cpp:15,61` |
 
 **Estado:** los valores son los escritos en el código. La caminata se compiló y vio en la PC de D2 el 04/11 con cubos (ESTADO, D-2); con el modelo real de D1 sigue **sin compilar**.
@@ -160,7 +160,7 @@ El brazo derecho se mueve por KeyFrames con slerp (`src/Silueta.cpp`, pistas `br
 | 3 (`T_REGRESA`) | +75° | +10° | smoothstep |
 | 4 (`T_FIN`) | reposo | reposo | — |
 
-La flor sale de la mano en $\tau=2$ s (`T_SUELTA`), con el brazo ya extendido. Con el torso en $(1.0,\ 0.90,\ 0.2)$ y el hombro en $(+0.22,\ +0.54,\ 0)$ respecto de él, la mano (punta del antebrazo, 0.30 m bajo el codo) queda en $P_0\approx(1.22,\ 1.336,\ -0.389)$ m: se calculó con una réplica en Python de la cadena de matrices el 11/11; el código la calcula en ejecución (`Silueta::ManoAlSoltar`). **"Retrocede" del CONTEXTO se interpreta como el regreso del brazo a reposo** (la silueta no da pasos hacia atrás; simplificación registrada en el ESTADO, 11/11).
+La flor sale de la mano en $\tau=2$ s (`T_SUELTA`), con el brazo ya extendido. Con el torso en $(0.45,\ 0.90,\ 0.2)$ (D-5, 12/11; antes $x=1.0$) y el hombro en $(+0.22,\ +0.54,\ 0)$ respecto de él, la mano (punta del antebrazo, 0.30 m bajo el codo) queda en $P_0=(0.670,\ 1.336,\ -0.389)$ m: calculada el 12/11 con el código real (`Silueta.cpp` y `Animacion.cpp`, `g++`); el código la calcula en ejecución (`Silueta::ManoAlSoltar`). Con $x=1.0$ daba $(1.22,\ 1.336,\ -0.389)$: solo cambia $x$. **"Retrocede" del CONTEXTO se interpreta como el regreso del brazo a reposo** (la silueta no da pasos hacia atrás; simplificación registrada en el ESTADO, 11/11).
 
 ### 3.2 Trayectoria de la flor
 La propuesta dice: la flor sigue una **Bézier cuadrática mano → nivel del altar, con caída final** [repo, CONTEXTO §4]:
@@ -171,7 +171,7 @@ $$
 
 | Punto | Significado | Valor |
 |---|---|---|
-| $P_0$ | mano al soltar ($\tau=2$ s) | $\approx(1.22,\ 1.336,\ -0.389)$ m, calculada de la pose del brazo |
+| $P_0$ | mano al soltar ($\tau=2$ s) | $(0.670,\ 1.336,\ -0.389)$ m, calculada de la pose del brazo |
 | $P_1$ | punto de control | $\big(\tfrac{x_0+x_2}{2},\ y_0,\ \tfrac{z_0+z_2}{2}\big)$: a la altura de la mano y a medio camino horizontal |
 | $P_2$ | destino sobre la repisa del nivel inferior de `altar3` | $(1.05,\ 0.435,\ z_0)$ m, **provisional** (`src/main.cpp`; B-13 lo ajusta): `altar3` en $(1.35,0,0)$ girado −90° tiene la repisa en $x\in[0.90,1.15]$ con tope a $y=0.40$ [repo, ESTADO §5]; 0.035 m es la mitad de la flor |
 
@@ -190,13 +190,13 @@ $$
 T_b=\sqrt{\frac{2\,h}{g}},\qquad h=y_0-y_2,\qquad g=9.81\ \text{m/s}^2
 $$
 
-Así la Bézier **es** la caída libre: no hace falta un segundo tramo balístico. Con $h=1.336-0.435=0.901$ m, $T_b=0.429$ s. Comprobación numérica (programa aparte con `g++` y réplica en Python, 11/11): el error máximo entre la Bézier y $y_0-\tfrac12g\tau^2$ es $2.4\times10^{-7}$ m en `float` ($4\times10^{-16}$ en Python). `dejarflor::Posicion` (`src/DejarFlor.h`) es función cerrada de $\tau$: antes de soltar la flor está en $P_0$ y después de $T_b$ se queda en $P_2$.
+Así la Bézier **es** la caída libre: no hace falta un segundo tramo balístico. Con $h=1.336-0.435=0.901$ m, $T_b=0.429$ s (la altura de la mano no depende de $x$, por eso $h$ y $T_b$ no cambian con D-5; el vuelo recorre $1.05-0.670=0.38$ m en horizontal). Comprobación numérica (programa aparte con `g++` y réplica en Python, 11/11): el error máximo entre la Bézier y $y_0-\tfrac12g\tau^2$ es $2.4\times10^{-7}$ m en `float` ($4\times10^{-16}$ en Python). `dejarflor::Posicion` (`src/DejarFlor.h`) es función cerrada de $\tau$: antes de soltar la flor está en $P_0$ y después de $T_b$ se queda en $P_2$.
 
 ### 3.4 Tabla de parámetros
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|
-| $P_0$ | mano al soltar (≈ (1.22, 1.336, −0.389)) | m | `src/Silueta.cpp` (`ManoAlSoltar`) |
+| $P_0$ | mano al soltar ((0.670, 1.336, −0.389)) | m | `src/Silueta.cpp` (`ManoAlSoltar`) |
 | $P_1$ | punto medio horizontal a la altura de $P_0$ | m | `src/DejarFlor.h` (`Posicion`) |
 | $P_2$ | (1.05, 0.435, $z_0$) | m | `src/main.cpp` (`destinoFlor`) |
 | duración del vuelo $T_b$ | $\sqrt{2h/g}\approx0.429$ | s | `src/DejarFlor.h` (`TiempoCaida`) |
@@ -210,13 +210,17 @@ Así la Bézier **es** la caída libre: no hace falta un segundo tramo balístic
 
 ## 4. Integración con `deltaTime` (D-5)
 
-Las dos animaciones se evalúan con un **reloj propio** $\tau_{\text{anim}}$ que avanza con $\Delta t$ (`src/main.cpp:171` [repo]):
+Las dos animaciones (caminata y dejar la flor) comparten **un solo reloj**, `tSilueta` (`src/main.cpp`), que avanza con $\Delta t$ en cada cuadro:
 
 $$
-\tau_{\text{anim}}\leftarrow\tau_{\text{anim}}+\Delta t,\qquad \text{pose}=\text{Evaluar}(\tau_{\text{anim}})
+t_{\text{sil}}\leftarrow t_{\text{sil}}+\Delta t,\qquad \text{pose}=\text{Actualizar}(t_{\text{sil}})
 $$
 
-Se evalúa $\text{pose}(\tau)$ como función del tiempo (no se acumulan rotaciones), así que el resultado no depende de los FPS: 30 FPS o 144 FPS dan la misma pose al mismo $\tau$. `[PENDIENTE]`: si la animación se dispara (tecla/zona) o corre sola, y qué pasa a los 10 s (¿se reinicia, se queda?), que el repo **no define**.
+- **Una función del tiempo, no una acumulación.** `Silueta::Actualizar(t)` calcula toda la pose desde $t$ (no suma rotaciones cuadro a cuadro), así que 30 FPS o 144 FPS dan la misma pose al mismo $t$.
+- **Dónde empieza y termina cada una** (valores del código, `Silueta.cpp` y `Silueta.h`): la caminata ocupa $0\le t\le 18.33$ s (`Duracion()`); la de dejar la flor va con $\tau=t_{\text{sil}}-18.33$: el brazo se extiende de 0 a 1 s, la flor sale de la mano a los 2 s, el brazo regresa de 3 a 4 s. Después de $\tau=4$ s todo queda quieto: la silueta en su punto de llegada y la flor sobre la repisa.
+- **Se dispara sola.** No hay tecla ni zona que la active: corre desde que empieza el bucle de dibujo. La tecla **R** pone $t_{\text{sil}}=0$ y todo se repite, porque todo es función de $t_{\text{sil}}$ (incluida la posición de la flor).
+- **Arranque (D-5, 12/11).** `lastFrame` valía 0 al entrar al bucle, así que el primer $\Delta t$ incluía todo el tiempo de carga de modelos y texturas (segundos). Se fija `lastFrame = glfwGetTime()` justo antes del bucle y `tSilueta = 0`: la caminata empieza en la orilla y no ya avanzada.
+- **Fin de la caminata contra el altar (D-5, 12/11).** La caminata termina en $(x,z)=(0.45,\ 0.20)$ (antes $x=1.0$, dentro de la caja del `altar3`, que ocupa $x\in[0.90,1.80]$). Calculado con el código (programa aparte, `Silueta.cpp` + `Animacion.cpp`): en el último segundo las articulaciones y la mano llegan a $x\le 0.67$ m (la mano al soltar queda en $(0.670,\ 1.336,\ -0.389)$); sumando el grosor del brazo ($\approx 0.05$ m) hay $\approx 0.18$ m de holgura. La flor recorre 0.38 m horizontales en $T_b=0.429$ s hasta la repisa en $(1.05,\ 0.435,\ -0.389)$.
 
 ---
 
