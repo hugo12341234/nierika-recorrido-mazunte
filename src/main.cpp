@@ -230,6 +230,10 @@ int main()
     Model palapa((char*)"Models/palapa/palapa.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model tambor((char*)"Models/tambor/tambor.obj");                  // X-29 (fuera del alcance original)
+    Model trompeta((char*)"Models/trompeta/trompeta.obj");
+    Model alfombraFlores((char*)"Models/alfombra_flores/alfombra_flores.obj");
+    Model alfombraCruz((char*)"Models/alfombra_cruz/alfombra_cruz.obj");
     Model farol((char*)"Models/farol/farol.obj");                         // X-24: poste con linterna abierta
     Model guitarra((char*)"Models/guitarra/guitarra.obj");                // X-24: instrumento del musico
     Model cesta((char*)"Models/cesta/cesta.obj");
@@ -302,6 +306,8 @@ int main()
     const bool fueraAlcance = Extras::MOSTRAR_FUERA_DE_ALCANCE && !std::getenv("NIERIKA_SIN_FUERA_ALCANCE");
     if (fueraAlcance)
     {
+        for (int i = 0; i < Extras::N_BANDA; i++)    // X-29: musicos de la banda (cajas de 0.4 m)
+            colisiones.agregar({ glm::vec3(Extras::BANDA[i].x - 0.2f, 0.0f, Extras::BANDA[i].z - 0.2f), glm::vec3(Extras::BANDA[i].x + 0.2f, 1.7f, Extras::BANDA[i].z + 0.2f) });
         for (int i = 0; i < Extras::N_CASAS; i++)    // cada casa: huella de 5 x 4 m (x y z se intercambian con el giro de 90 grados) + porche
         {
             const Extras::Casa& c = Extras::CASAS[i];
@@ -1007,6 +1013,78 @@ int main()
                 for (int i = 0; i < Extras::N_CASAS; i++)
                     poner(Extras::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
             }
+            if (fueraAlcance)   // X-29 (FUERA DEL ALCANCE ORIGINAL): alfombras de petalos, banda de musicos y comparsa
+            {
+                glUniform1f(specLoc, 0.02f);
+                for (int i = 0; i < Extras::N_ALFOMBRAS; i++)
+                {
+                    const Extras::Alfombra& al = Extras::ALFOMBRAS[i];
+                    glm::mat4 ma = glm::translate(glm::mat4(1.0f), glm::vec3(al.x, Colisiones::alturaSuelo(al.z) + 0.01f, al.z));
+                    ma = glm::scale(ma, glm::vec3(al.ancho, 1.0f, al.largo));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ma));
+                    (al.tipo == 1 ? alfombraCruz : alfombraFlores).Draw(shader);
+                }
+                glUniform1f(specLoc, 0.05f);
+                Model* tiposB[2] = { &personaPieA, &personaPieB };
+                const float pulso = 2.0f * Extras::PI * Extras::BPM_BANDA / 60.0f;   // rad/s del pulso de la musica
+                for (int i = 0; i < Extras::N_BANDA; i++)
+                {
+                    const Extras::Musico& mu = Extras::BANDA[i];
+                    glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(mu.x, Colisiones::alturaSuelo(mu.z), mu.z));
+                    mm = glm::rotate(mm, glm::radians(mu.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 60.0f / Extras::BPM_BANDA * 2.0f, mu.fase, 2.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                    tiposB[mu.tipo]->Draw(shader);
+                    glm::mat4 mi = mm;
+                    if (mu.inst == 1)       // guitarra: cruza el pecho y se mece con el pulso (+-4 grados)
+                    {
+                        mi = glm::translate(mm, glm::vec3(0.05f, 1.05f, -0.16f));
+                        mi = glm::rotate(mi, glm::radians(58.0f + 4.0f * std::sin(pulso * tl + mu.fase)), glm::vec3(0.0f, 0.0f, 1.0f));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mi));
+                        guitarra.Draw(shader);
+                    }
+                    else if (mu.inst == 2)  // tambor al frente de la cintura; rebota 1.5 cm con cada golpe
+                    {
+                        mi = glm::translate(mm, glm::vec3(0.0f, 0.62f + 0.015f * std::fabs(std::sin(0.5f * pulso * tl)), -0.38f));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mi));
+                        tambor.Draw(shader);
+                    }
+                    else if (mu.inst == 3)  // trompeta a la altura de la boca, apuntando al frente y un poco arriba; vaiven de 3 grados
+                    {
+                        mi = glm::translate(mm, glm::vec3(0.0f, 1.5f, -0.12f));
+                        mi = glm::rotate(mi, glm::radians(14.0f + 3.0f * std::sin(0.5f * pulso * tl + mu.fase)), glm::vec3(1.0f, 0.0f, 0.0f));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mi));
+                        trompeta.Draw(shader);
+                    }
+                }
+                // comparsa: 12 figuras marchando por la orilla; cada 5.a lleva un tambor; cada par de adelante sostiene una tira de papel picado
+                for (int i = 0; i < Extras::N_COMPARSA; i++)
+                {
+                    float cx, cz, cy;
+                    Extras::ComparsaN(i, tl, cx, cz, cy);
+                    glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(cx, Colisiones::alturaSuelo(cz) + cy, cz));
+                    mm = glm::rotate(mm, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));          // avanzan hacia +x
+                    mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 1.0f / Extras::COMPARSA_F * 2.0f, 0.6f * i, 3.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                    (i % 3 == 0 ? personaPieB : personaPieA).Draw(shader);
+                    if (i % 5 == 0)
+                    {
+                        glm::mat4 mt = glm::translate(mm, glm::vec3(0.0f, 0.62f, -0.38f));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mt));
+                        tambor.Draw(shader);
+                    }
+                }
+                {   // tira de papel picado entre las dos primeras columnas, mecida como pendulo (6 grados, 2.4 s)
+                    float cx0, cz0, cy0, cx1, cz1, cy1;
+                    Extras::ComparsaN(0, tl, cx0, cz0, cy0);  Extras::ComparsaN(1, tl, cx1, cz1, cy1);
+                    glm::mat4 mp = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f * (cx0 + cx1), Colisiones::alturaSuelo(22.6f) + 2.2f, 0.5f * (cz0 + cz1)));
+                    mp = glm::rotate(mp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                    mp = glm::rotate(mp, glm::radians(Extras::Balanceo(tl, 2.4f, 0.0f, 6.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                    mp = glm::scale(mp, glm::vec3(1.0f, 1.0f, 1.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                    papelPicado.Draw(shader);
+                }
+            }
             // tortugas marinas nadando en la superficie (Extras::PosicionTortuga) con cabeceo de aletas
             glUniform1f(specLoc, 0.3f);
             for (int i = 0; i < Extras::N_TORTUGAS; i++)
@@ -1201,7 +1279,7 @@ int main()
             cuadroVideo++;
             if (relojVideo >= rutaVideo.back().t) glfwSetWindowShouldClose(window, GL_TRUE);
         }
-        audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z);  // X-24: volumen por zona
+        audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z, fueraAlcance);  // X-24: volumen por zona
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -1232,6 +1310,7 @@ int main()
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
     rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
+    tambor.cleanup(); trompeta.cleanup(); alfombraFlores.cleanup(); alfombraCruz.cleanup();  // X-29
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4

@@ -152,6 +152,22 @@ int main()
     for (int i = 0; i < Extras::N_LINTERNAS; i++) { float x, z; Extras::LinternaN(i, x, z); lxMin = std::min(lxMin, (double)x); lxMax = std::max(lxMax, (double)x); lzMin = std::min(lzMin, (double)z); lzMax = std::max(lzMax, (double)z); }
     comprueba("Linternas: todas dentro de la bahia (x en [-46, 46], z en [27, 59])", lxMin >= -46.0 && lxMax <= 46.0 && lzMin >= 27.0 && lzMax <= 59.0, lzMax, "<= 59");
 
+    // 7) Comparsa (X-29): x dentro de [-48, 48), avanza a v = 1 m/s y el paso nunca baja del suelo
+    double xMin = 1e9, xMax = -1e9, yMin = 1e9, yMax = -1e9, eV = 0.0;
+    for (int i = 0; i < Extras::N_COMPARSA; i++)
+        for (int k = 0; k < 3000; k++)
+        {
+            const float t = k * 0.0317f;
+            float x, z, y, x2, z2, y2;
+            Extras::ComparsaN(i, t, x, z, y);
+            xMin = std::min(xMin, (double)x); xMax = std::max(xMax, (double)x); yMin = std::min(yMin, (double)y); yMax = std::max(yMax, (double)y);
+            Extras::ComparsaN(i, t + 0.01f, x2, z2, y2);
+            if (x2 > x) eV = std::max(eV, (double)std::fabs((x2 - x) / 0.01f - Extras::COMPARSA_V));
+        }
+    comprueba("Comparsa: x en [-48, 48)", xMin >= -48.0 && xMax < 48.0, xMax, "< 48");
+    comprueba("Comparsa: altura del paso en [0, 0.05] m", yMin >= 0.0 && yMax <= 0.05001, yMax, "<= 0.05");
+    comprueba("Comparsa: rapidez de avance (error maximo, m/s)", eV < 0.05, eV, "< 0.05");
+
     std::printf(fallos == 0 ? "\nTODO OK (0 fallos)\n" : "\n%d FALLOS\n", fallos);
     return fallos == 0 ? 0 : 1;
 }

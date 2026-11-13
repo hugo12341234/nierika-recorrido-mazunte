@@ -236,6 +236,30 @@ namespace Extras
         const float b = std::fmod(std::fabs(std::sin(78.233f * (i + 3)) * 12345.6789f), 1.0f);
         x = -46.0f + 92.0f * a;  z = 27.0f + 32.0f * b;
     }
+
+    // ======== X-29: COMPARSA, MUSICA EN VIVO Y ALFOMBRAS DE FLORES (FUERA DEL ALCANCE ORIGINAL; detras de MOSTRAR_FUERA_DE_ALCANCE) ========
+    // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. La musica es SINTETIZADA (Audio/banda.wav), no hay musicos ni grabaciones reales.
+    // inst: 1 guitarra, 2 tambor, 3 trompeta
+    struct Musico { float x, z, giro; int tipo; float fase; int inst; };
+    constexpr int N_BANDA = 5;
+    constexpr float BANDA_X = -10.0f, BANDA_Z = 19.5f;      // centro del grupo (el audio de la banda sube al acercarse)
+    inline const Musico BANDA[N_BANDA] = { { -11.4f, 19.0f, 200.0f, 0, 0.0f, 1 }, { -10.2f, 18.5f, 195.0f, 1, 1.4f, 1 }, { -9.0f, 18.9f, 190.0f, 0, 2.6f, 2 },
+                                          { -10.8f, 20.4f, 210.0f, 1, 3.7f, 3 }, { -8.8f, 20.3f, 185.0f, 0, 4.9f, 3 } };
+    constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
+    // Comparsa: 12 figuras (2 columnas) que marchan por la orilla; x(t) = -48 + ((v t + s_i) mod 96); paso: y = 0.05 |sen(2 pi f t)|, balanceo +-3 grados
+    constexpr int N_COMPARSA = 12;
+    constexpr float COMPARSA_Z = 22.6f, COMPARSA_L = 96.0f, COMPARSA_V = 1.0f, COMPARSA_F = 1.0f;
+    inline void ComparsaN(int i, float t, float& x, float& z, float& y)
+    {
+        const float s = 1.3f * (i / 2) + 0.0f;
+        x = -48.0f + std::fmod(COMPARSA_V * t + COMPARSA_L * 0.5f + s, COMPARSA_L);
+        z = COMPARSA_Z + ((i % 2) ? 0.9f : -0.9f);
+        y = 0.05f * std::fabs(std::sin(2.0f * PI * COMPARSA_F * t + 0.6f * i));
+    }
+    // Alfombras de PETALOS DE CEMPASUCHIL (relieve de flores de color y hojas; NO son arena de colores): centro x, z; ancho, largo; tipo 0 rect, 1 cruz
+    struct Alfombra { float x, z, ancho, largo; int tipo; };
+    constexpr int N_ALFOMBRAS = 3;
+    inline const Alfombra ALFOMBRAS[N_ALFOMBRAS] = { { 0.0f, 7.6f, 4.0f, 4.0f, 1 }, { -10.0f, 22.0f, 7.0f, 1.6f, 0 }, { 0.0f, 22.2f, 5.0f, 1.8f, 0 } };
 }
 
 #endif

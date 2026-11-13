@@ -107,3 +107,14 @@ Todas son fórmulas simples, **sin KeyFrames**; las posiciones y parámetros est
 | Fogatas | llama = ruido de Perlin del shader de las velas (C-2), **sin humo ni partículas** | 2 fogatas |
 
 **Comprobación:** `tools/x19_pruebas_extras.cpp` (círculos, rapideces, rango de las crías y de las linternas).
+
+## 9. Comparsa, música en vivo y alfombras de flores (X-29, fuera del alcance original)
+
+| Extra | Fórmula | Valores |
+|---|---|---|
+| Comparsa | x(t) = −48 + ((v·t + 48 + s_i) mod 96); paso y = 0.05·\|sen(2π f t + 0.6 i)\|; balanceo 3°·sen(2πt/2 + 0.6 i) | 12 figuras en 2 columnas, v = 1 m/s, f = 1 Hz (un paso por segundo a ritmo de marcha lenta), s_i = 1.3 m·(i div 2) |
+| Músicos | balanceo 2°·sen(2πt/1.33 + φ); guitarra 58° + 4°·sen(ωt + φ); tambor sube 1.5 cm·\|sen(ωt/2)\|; trompeta 14° + 3°·sen(ωt/2 + φ), con ω = 2π·90/60 rad/s | 5 músicos (2 guitarras, 1 tambor, 2 trompetas) |
+| Música | **Audio/banda.wav sintetizada** (`tools/x29_banda.py`): guitarra con el algoritmo de Karplus-Strong, tambor grave con ruido y trompeta de diente de sierra con vibrato; progresión Am–G–F–E a 90 bpm. **No son grabaciones ni músicos reales**; el volumen = 0.80·clamp(1 − d/24) con d la distancia a (−10, 19.5) | 42 s en bucle |
+| Alfombras de flores | Plano texturizado con miles de **pétalos de cempasúchil** (naranja, amarillo y magenta) y hojas verdes con canal alfa; **no es arena de colores** (no es el tapete de arena que sigue fuera de alcance) | 3 alfombras: cruz de 4 × 4 m en el panteón y 2 rectángulos en la orilla |
+
+**Comprobación:** `tools/x19_pruebas_extras.cpp` (rangos y rapidez de la comparsa).
