@@ -37,3 +37,6 @@ Qué prueba qué, y dónde está (estado al 12/11/2026). La carpeta `evidencias/
 | `X-9_palmas_playa_12-11.jpg` | Palmas y arbustos decorativos en la playa |
 | `X-11_piso_cuarto_12-11.jpg` | Piso del cuarto (Poly Haven, CC0) |
 | `X-4_luces_cubos_L_12-11.jpg` | Luces de colores con los cubos visibles (tecla L) |
+| `D-2_caminata_8_cuadros_12-11.jpg` | Caminata: 8 cuadros de un ciclo completo (t = 6.000 a 6.875 s, cada 0.125 s) |
+| `D-4_dejar_flor_6_cuadros_12-11.jpg` | Dejar la flor: brazo que se extiende (tau 0.9 s), se sostiene (1.7 a 2.9 s) y regresa (3.7 s) |
+| `X-13_arena_manchas_12-11.jpg` | Arena con manchas de gran escala y arena mojada bajo el nivel del agua |

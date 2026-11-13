@@ -453,7 +453,9 @@ int main()
         // 0. PLAYA (100 x 50 m, vertices ya en coordenadas del mundo: x -50..50, z -20..30; A-5)
         glm::mat4 modelPlaya(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPlaya));
+        glUniform1i(glGetUniformLocation(shader.Program, "arena"), 1);  // X-13: relieve de manchas y arena mojada
         playa.Draw(shader);
+        glUniform1i(glGetUniformLocation(shader.Program, "arena"), 0);
 
         // 0b. MAR (100 x 100 m en y = -0.2, vertices ya en coordenadas del mundo: x -50..50, z 22..122; orilla en z = 24; A-7)
         glm::mat4 modelMar(1.0f);
