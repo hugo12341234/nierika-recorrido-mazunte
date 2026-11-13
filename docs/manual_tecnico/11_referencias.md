@@ -42,7 +42,7 @@ UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.u
 
 ## Pendientes de formato
 
-- 🔄 GLEW, GLM, vcpkg y SOIL2 ya tienen cita (X-15, 12/11, por verificar); falta stb_image.
+- 🔄 GLEW, GLM, vcpkg y SOIL2 ya tienen cita (X-15, 12/11, por verificar). stb_image también (X-16).
 - 🔄 Slerp (Shoemake), Bézier (Farin) y Perlin ya tienen cita (X-15, por verificar); ver [§7.4](07_justificacion_matematica.md).
 
 Savva, D., & Cilliers, R. (s. f.). *Clay Floor 001* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/clay_floor_001
@@ -66,6 +66,8 @@ Mikkelsen, M. (2010). *Bump mapping unparametrized surfaces on the GPU*. Journal
 Perlin, K. (1985). An image synthesizer. *ACM SIGGRAPH Computer Graphics, 19*(3), 287–296.
 
 Perlin, K. (2002). Improving noise. *ACM Transactions on Graphics, 21*(3), 681–682.
+
+Barrett, S. (s. f.). *stb: Single-file public domain libraries for C/C++* [Software]. GitHub. https://github.com/nothings/stb
 
 Shoemake, K. (1985). Animating rotation with quaternion curves. *ACM SIGGRAPH Computer Graphics, 19*(3), 245–254.
 

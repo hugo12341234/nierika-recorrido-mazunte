@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <algorithm>
 #include <sstream>
 
 // GLEW
@@ -98,6 +99,20 @@ float tSilueta = 0.0f;
 // Modo captura (solo desarrollo): NIERIKA_CAPTURAS="x,y,z,yaw,pitch,t,archivo.png;..." coloca la camara en cada pose,
 // guarda la imagen con glReadPixels (SOIL_save_screenshot) y cierra el programa al terminar. Sin la variable no hace nada.
 struct PoseCaptura { float x, y, z, yaw, pitch, t; std::string archivo; };
+
+// Modo video (solo desarrollo, tarea X-16): NIERIKA_VIDEO="carpeta;fps;ruta_camara.txt". Fija el reloj (Reloj() = cuadro x dt, dt = 1/fps) y
+// guarda cada cuadro como PNG (carpeta/frame_00000.png...) para unirlos con ffmpeg. El archivo de camara tiene una linea por punto:
+// "t x y z yaw pitch" (interpolacion lineal) y opcionalmente "silueta t0" para empezar la caminata en t0 s. Sin la variable, Reloj() = glfwGetTime().
+struct PuntoCamara { float t, x, y, z, yaw, pitch; };
+bool modoVideo = false;
+double relojVideo = 0.0;
+double dtVideo = 1.0 / 30.0;
+int cuadroVideo = 0;
+float siluetaT0 = 0.0f;
+std::string carpetaVideo;
+std::vector<PuntoCamara> rutaVideo;
+inline double Reloj() { return modoVideo ? relojVideo : glfwGetTime(); }
+
 std::vector<PoseCaptura> posesCaptura;
 size_t indiceCaptura = 0;
 int framesCaptura = 0;
@@ -289,7 +304,7 @@ int main()
 
     // D-5: la carga de modelos y texturas tarda segundos antes de este punto. Sin esto, el primer deltaTime los incluye
     // (lastFrame arranca en 0) y la silueta empezaria su caminata ya avanzada o terminada.
-    lastFrame = (GLfloat)glfwGetTime();
+    lastFrame = (GLfloat)Reloj();
     tSilueta = 0.0f;
 
     // Solo para las capturas del manual: NIERIKA_LUCES=1 enciende las luces de colores (como la barra espaciadora), =2 ademas muestra los cubos (L)
@@ -313,6 +328,27 @@ int main()
         }
     }
 
+    if (const char* vid = std::getenv("NIERIKA_VIDEO"))
+    {
+        std::stringstream sv(vid);
+        std::string fpsTxt, rutaTxt;
+        std::getline(sv, carpetaVideo, ';'); std::getline(sv, fpsTxt, ';'); std::getline(sv, rutaTxt, ';');
+        double fps = std::atof(fpsTxt.c_str());
+        FILE* f = std::fopen(rutaTxt.c_str(), "r");
+        if (f && fps > 0.0)
+        {
+            char linea[256];
+            while (std::fgets(linea, sizeof(linea), f))
+            {
+                PuntoCamara pc;
+                if (std::sscanf(linea, "%f %f %f %f %f %f", &pc.t, &pc.x, &pc.y, &pc.z, &pc.yaw, &pc.pitch) == 6) rutaVideo.push_back(pc);
+                else std::sscanf(linea, "silueta %f", &siluetaT0);
+            }
+            std::fclose(f);
+            if (!rutaVideo.empty()) { modoVideo = true; dtVideo = 1.0 / fps; tSilueta = siluetaT0; }
+        }
+        else std::cout << "[Video] No se pudo leer la ruta de camara: " << rutaTxt << std::endl;
+    }
     while (!glfwWindowShouldClose(window))
     {
         if (indiceCaptura < posesCaptura.size() && framesCaptura == 0)
@@ -323,9 +359,21 @@ int main()
             tSilueta = pc.t;
         }
 
+        if (modoVideo)
+        {
+            relojVideo = cuadroVideo * dtVideo;
+            const double tt = relojVideo;
+            size_t k = 0;
+            while (k + 1 < rutaVideo.size() && rutaVideo[k + 1].t <= tt) k++;
+            PuntoCamara a = rutaVideo[k], b2 = rutaVideo[std::min(k + 1, rutaVideo.size() - 1)];
+            float u = (b2.t > a.t) ? glm::clamp((float)((tt - a.t) / (b2.t - a.t)), 0.0f, 1.0f) : 0.0f;
+            camera.SetPosition(glm::vec3(glm::mix(a.x, b2.x, u), glm::mix(a.y, b2.y, u), glm::mix(a.z, b2.z, u)));
+            camera.SetOrientacion(glm::mix(a.yaw, b2.yaw, u), glm::mix(a.pitch, b2.pitch, u));
+        }
         // Set frame time
-        GLfloat currentFrame = glfwGetTime();
+        GLfloat currentFrame = Reloj();
         deltaTime = currentFrame - lastFrame;
+        if (modoVideo) deltaTime = (GLfloat)dtVideo;
         lastFrame = currentFrame;
 
         // FPS promedio de los ultimos 0.5 s: cuadros contados / tiempo transcurrido
@@ -381,7 +429,7 @@ int main()
         glm::vec3 colors[4] = { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) };
         if (active)
         {
-            float ciclo = sin(glfwGetTime() * 2.0f);
+            float ciclo = sin(Reloj() * 2.0f);
             float traseras = glm::max(0.0f, ciclo);
             float delanteras = glm::max(0.0f, -ciclo);
             colors[0] = Light1 * traseras;
@@ -406,7 +454,7 @@ int main()
 
         // X-8: luz calida de las velas del altar. Parpadeo = suma de dos senos de periodos distintos (sin ruido ni particulas)
         {
-            float t = (float)glfwGetTime();
+            float t = (float)Reloj();
             float parpadeo = 0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f);   // 0.70 .. 1.00
             glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * parpadeo;
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.25f, 0.0f);
@@ -466,7 +514,7 @@ int main()
             float oA[Olas::N], oK[Olas::N], oW[Olas::N], oDir[2 * Olas::N], oFase[Olas::N];
             Olas::ParametrosShader(oA, oK, oW, oDir, oFase);
             glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 1);
-            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)glfwGetTime());
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1fv(glGetUniformLocation(shader.Program, "ondaA"), Olas::N, oA);
             glUniform1fv(glGetUniformLocation(shader.Program, "ondaK"), Olas::N, oK);
             glUniform1fv(glGetUniformLocation(shader.Program, "ondaW"), Olas::N, oW);
@@ -524,7 +572,7 @@ int main()
             sobreAltar(botella,  glm::vec3(-0.40f, 0.80f,  0.05f));  // nivel medio (y = 0.80)
             sobreAltar(copalero, glm::vec3( 0.40f, 0.80f,  0.05f));
             // C-2: llamas de las 2 velas del altar (la vela mide 0.15 m; la llama nace en su punta). Sin luz, forma por ruido de Perlin
-            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)glfwGetTime());
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
             glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.0f);
             sobreAltar(llamaModelo, glm::vec3(-0.35f, 1.35f, -0.25f));
@@ -574,7 +622,7 @@ int main()
         glUniform1f(specLoc, 0.1f);
         for (int i = 0; i < 5; i++)
         {
-            const float tf = (float)glfwGetTime();
+            const float tf = (float)Reloj();
             glm::vec2 pf = PosicionXZ(floresFlotantes[i], tf);
             glm::mat4 mf = MatrizFlorFlotante(floresFlotantes[i], tf, Olas::Altura(pf.x, pf.y, tf), centroFlor);
             mf = glm::scale(mf, glm::vec3(ESCALA_FLOR_FLOTANTE));
@@ -584,7 +632,7 @@ int main()
         // C-3: velas flotando (Bezier cuadratica de ida y vuelta + vaiven senoidal + altura de la ola; ver AnimVelas.h)
         for (int i = 0; i < 4; i++)
         {
-            const float tv = (float)glfwGetTime();
+            const float tv = (float)Reloj();
             float vx, vz;
             PosicionVelaXZ(velasFlotantes[i], tv, vx, vz);
             const float vy = Olas::Altura(vx, vz, tv) + CALADO_VELA + VaivenVela(velasFlotantes[i], tv);
@@ -596,7 +644,7 @@ int main()
         glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
         for (int i = 0; i < 4; i++)
         {
-            const float tv = (float)glfwGetTime();
+            const float tv = (float)Reloj();
             float vx, vz;
             PosicionVelaXZ(velasFlotantes[i], tv, vx, vz);
             const float vy = Olas::Altura(vx, vz, tv) + CALADO_VELA + VaivenVela(velasFlotantes[i], tv);
@@ -669,6 +717,14 @@ int main()
             }
         }
 
+        if (modoVideo)
+        {
+            char nombre[512];
+            std::snprintf(nombre, sizeof(nombre), "%s/frame_%05d.png", carpetaVideo.c_str(), cuadroVideo);
+            SOIL_save_screenshot(nombre, SOIL_SAVE_TYPE_PNG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            cuadroVideo++;
+            if (relojVideo >= rutaVideo.back().t) glfwSetWindowShouldClose(window, GL_TRUE);
+        }
         // Swap the buffers
         glfwSwapBuffers(window);
     }
