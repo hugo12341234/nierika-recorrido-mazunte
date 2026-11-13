@@ -2,16 +2,16 @@
 
 ## 2.1 Capas de la aplicación
 
-Arquitectura por capas de la propuesta (Figura 15) ✅ **[repo, CONTEXTO §6]**, con el estado de cada módulo al **12/11** (según el código de `develop`; lo marcado «PR» está abierto y aún no entra):
+Arquitectura por capas de la propuesta (Figura 15) ✅ **[repo, CONTEXTO §6]**, con el estado de cada módulo al **12/11** (según el código de `develop` con los PR #59 a #68 ya fusionados):
 
 ```
 Aplicación del recorrido (C++17, Visual Studio 2022)
  ├─ Cámara y colisiones      (GLFW · GLM)              ✅ Camera.h · Colisiones.cpp (AABB, A-9)
- ├─ Carga de modelos         (Assimp · SOIL2/stb)      ✅ Model.h / Mesh.h (+ mapa de relieve, PR de B-12)
+ ├─ Carga de modelos         (Assimp · SOIL2/stb)      ✅ Model.h / Mesh.h (+ mapa de relieve, B-12)
  ├─ Shaders e iluminación    (GLSL 330)                ✅ lighting.vs/.frag: Blinn-Phong (A-8), olas (C-1), llama (C-2)
  ├─ Animación                (KeyFrames · slerp)       ✅ Animacion.cpp · Silueta.cpp · DejarFlor.h; simples: Olas.h, AnimVelas.h, AnimFlores.h
- ├─ Fichas culturales        (Dear ImGui)              ✅ Fichas.cpp (falta compilar en VS y probar)
- └─ Audio                    (miniaudio)               ✅ Audio.cpp; pistas propias en el PR de D-6
+ ├─ Fichas culturales        (Dear ImGui)              🔄 Fichas.cpp (ImGui ya en `vendor/`; falta compilar en VS y probar)
+ └─ Audio                    (miniaudio)               ✅ Audio.cpp; pistas propias `Audio/oleaje.wav` y `musica.wav` (D-6)
 OpenGL 3.3 Core Profile (GLEW)
 GPU / Recursos (.obj, texturas, audio, keyframes)
 ```
@@ -66,7 +66,7 @@ Los valores vigentes están en `ESTADO_PROYECTO.md` §5 y se copian aquí **al c
 | `docs/` | ESTADO, CONTEXTO, PLAN, FLUJO, propuesta (PDF), manuales, videos |
 | `build/`, `dist/` | Salida de compilación y Release autónomo; **no se versionan** |
 
-✅ **[repo, FLUJO_DE_TRABAJO §1]**. `Audio/` existe con su `README.md`; las pistas propias llegan con el PR de D-6. `tools/` guarda los scripts que generan modelos (`bpy`), texturas y audio.
+✅ **[repo, FLUJO_DE_TRABAJO §1]**. `Audio/` tiene su `README.md` y las dos pistas propias de D-6. `tools/` guarda los scripts que generan modelos (`bpy`), texturas y audio.
 
 ## 2.6 Decisiones de arquitectura (extracto del ESTADO §4)
 

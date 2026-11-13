@@ -3,20 +3,30 @@
 ## 8.1 Cómo se prueba hoy ✅ **[repo]**
 
 - Cada tarea se **compila en Release x64** en la PC de D2 y se corre con F5; se documentan capturas y la consola sin errores.
-- Cada PR pasa `/verificar <código>` (subagente `verificador`) con veredicto APROBAR antes de fusionarse (desde el 20/10).
+- Cada PR pasa `/verificar <código>` (subagente `verificador`) con veredicto APROBAR antes de fusionarse (desde el 20/10); **excepción:** los PR #59 a #68 se fusionaron el 12/11 sin ese veredicto (ESTADO §4).
 - No hay CI ni pruebas automáticas en el repositorio. Claude no puede compilar en Windows ni ver la pantalla, así que la compilación y la inspección visual las hace una persona.
 
 ## 8.2 Rendimiento
 
 | Criterio | Valor | Estado |
 |---|---|---|
-| ≥ 30 FPS a 1280×720 en gráficos integrados | meta del cliente | ❓ **sin medir**: A-8 lo registra como «los FPS están bien» (palabra de D2, sin valor). No hay contador de FPS en el código |
+| ≥ 30 FPS a 1280×720 en gráficos integrados | meta del cliente | ❓ **sin medir**: A-8 lo registra como «los FPS están bien» (palabra de D2, sin valor). El contador existe desde E-1a (sin compilar) |
 | PC de medición | ❓ **POR DEFINIR** (¿integrada o dedicada?) | — |
-| Valor medido | ⏳ | Se llena cuando exista un contador (tarea E-1a/E-1) |
+| Valor medido | ⏳ | El contador ya existe (título de la ventana, promedio cada 0.5 s; E-1a). **Falta que D2 anote los valores** |
 
-Para el manual hace falta: modelo de GPU, FPS medio y mínimo, escena donde se midió y fecha. 📷 **CAPTURA pendiente.**
+**Tabla que D2 llena (hoy vacía):**
+
+| Lugar | FPS (título) | GPU | Conectada a la corriente | Fecha |
+|---|---|---|---|---|
+| (1) Orilla, z ≈ 23, mirando al mar | ⏳ | | | |
+| (2) Panteón, mirando al cuarto | ⏳ | | | |
+| (3) Cuarto, frente al altar | ⏳ | | | |
+
+📷 **CAPTURA pendiente** de cada lugar con el contador visible.
 
 ### 8.2.1 Integración de las 3 animaciones simples (C-5) — lo que se midió el 12/11
+
+> Las mediciones son **anteriores a la fusión** de B-13 y C-6 (PR #59 y #63, ya en `develop`): la fila «con B-13 + C-6» describe hoy el código vigente; la primera, el estado previo.
 
 Olas (C-1, vertex shader), velas flotando (C-3), llamas (C-2, fragment shader) y flores flotando (C-4) ya corren **a la vez** en el ciclo de dibujo de `src/main.cpp`; no hay animación que dependa de otra ni se pisen los `uniform` (`oleaje` y `llama` se encienden y apagan alrededor de cada dibujo).
 
@@ -44,21 +54,23 @@ Olas (C-1, vertex shader), velas flotando (C-3), llamas (C-2, fragment shader) y
 
 ## 8.3 Memoria de GPU
 
-Hoy no se libera la memoria de GPU de `Shader`, `Mesh` y `Model` (problema #7, ESTADO §6); la decisión del 19/10 es resolverlo con `cleanup()` explícito al final de `main`, **no con destructores**, porque las clases se copian. En `main.cpp` solo se libera lo creado ahí (el cubo de luz). ⏳ E-1.
+`cleanup()` explícito existe en `Shader`, `Mesh` y `Model` y se llama al final de `main` antes de `glfwTerminate()` (E-1a, 04/11; decisión del 19/10: no destructores, porque las clases se copian). **Nadie ha comprobado con una herramienta (RenderDoc o similar) que no queden fugas**: el problema #7 sigue «por verificar». ⏳ E-1.
 
-## 8.4 Problemas abiertos al 04/11 ✅ **[repo, ESTADO §6]**
+## 8.4 Problemas del ESTADO §6 al 12/11 ✅ **[repo]**
 
-| # | Problema | Se resuelve en |
+| # | Problema | Estado |
 |---|---|---|
-| 3 | Texturas de la capilla provisional de 2048 px (la propuesta pide 1K) | B-9 |
-| 7 | No se libera memoria de GPU | E-1 |
-| 8 | `Model.h` no carga mapas normales (necesario para el pan) | B-12 |
-| 9 | `fachada.obj` incluye el techo | A-11 |
-| 12 | La apertura del arco no es de medio punto | A-10 / A-12 |
-| 13 | Animación de las 4 luces: cerrado por palabra de D2 («es propio»), sin verificar; `cleanup()` pendiente | E-1 |
+| 3 | Texturas de 2048 px de la capilla provisional | Cerrado en B-9 (04/11); la capilla ya no se carga (B-13) |
+| 5 | Falta de iluminación | Cerrado en A-8 (04/11) |
+| 7 | Memoria de GPU | Implementado (E-1a); **falta compilar y verificar con herramienta** |
+| 8 | `Model.h` sin mapas de relieve | Resuelto en B-12 (12/11); falta verlo compilado |
+| 9 | `fachada.obj` incluía el techo | Separado en A-11 (03/11); falta confirmar |
+| 12 | Arco no semicircular | Corregido en A-10 (03/11); falta confirmar |
+| 13 | Animación de las 4 luces posiblemente de la Práctica 8 | Cerrado **por palabra de D2** («es propio»); sin verificar |
+| 14 | 8 PDFs ajenos en `Models/playa/` | Borrados el 11/11; **siguen en el historial de un repositorio público** (incluye un cuestionario); borrarlos del historial exigiría reescribirlo: decisión de D2 |
 
-Cerrados: #5 (iluminación, A-8), #4, #6 y #11 (A-2), #1 y #2 (A-1).
+Cerrados antes: #1, #2 (A-1), #4, #6, #11 (A-2). **Hallazgos nuevos de E-5 (12/11):** `laminado1.jpg` mide 512×512 (la convención pide 1K) y E-2 corrigió que la barda estaba espejada en z. ✅ **[repo]**
 
 ## 8.5 Registro de errores de la prueba final
 
-⏳ E-1: lista de errores priorizada (tarea E-1, criterio del ESTADO). Se llena al cierre.
+⏳ E-1: lista de errores priorizada (criterio del ESTADO). Se llena después de que D2 compile y pruebe; no se escribe antes.

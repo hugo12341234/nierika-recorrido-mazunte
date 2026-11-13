@@ -21,6 +21,10 @@
     Copia tambien las DLL del runtime de Visual C++ (vcruntime140*.dll, msvcp140*.dll)
     desde el Visual Studio instalado, para PC sin el "Visual C++ Redistributable".
 
+.PARAMETER SinModelosSinUsar
+    No copia Models\altar\ ni Models\pan\ (12 MB): main.cpp ya no los carga (comprobado con grep el 12/11;
+    el pan de Maya y la capilla fueron sustituidos por pan_muerto y altar3). Opcional: por defecto se copia todo.
+
 .EXAMPLE
     # Desde la raiz del repo (Developer PowerShell for VS 2022):
     powershell -ExecutionPolicy Bypass -File tools\empaquetar_release.ps1
@@ -28,7 +32,8 @@
 param(
     [switch]$SinCompilar,
     [string]$Version = (Get-Date -Format 'yyyy-MM-dd'),
-    [switch]$IncluirRuntimeVC
+    [switch]$IncluirRuntimeVC,
+    [switch]$SinModelosSinUsar
 )
 
 $ErrorActionPreference = 'Stop'
@@ -104,18 +109,45 @@ foreach ($carpeta in 'Models', 'Shaders', 'Audio') {
     }
     Copy-Item $origen (Join-Path $paquete $carpeta) -Recurse
 }
+if ($SinModelosSinUsar) {
+    foreach ($m in 'altar', 'pan') {
+        $ruta = Join-Path $paquete "Models\$m"
+        if (Test-Path $ruta) { Remove-Item $ruta -Recurse -Force }
+    }
+}
 Get-ChildItem (Join-Path $paquete 'Models') -Recurse -Include '*.blend', '*.blend1' -ErrorAction SilentlyContinue |
     Remove-Item -Force
+
+# LEEME para quien reciba el .zip (fuente: docs\entrega\LEEME_PAQUETE.txt)
+$leeme = Join-Path $raiz 'docs\entrega\LEEME_PAQUETE.txt'
+if (Test-Path $leeme) { Copy-Item $leeme (Join-Path $paquete 'LEEME.txt') }
+else { Write-Warning 'No existe docs\entrega\LEEME_PAQUETE.txt: el paquete saldra sin LEEME.txt.' }
+
+# Comprobacion de contenido minimo (si falta algo, el paquete NO sirve)
+Paso 'Comprobando el contenido del paquete'
+$faltan = @()
+foreach ($rel in 'NierikaStudio.exe', 'Shaders\lighting.vs', 'Shaders\lighting.frag', 'Shaders\lamp.vs',
+                 'Shaders\lamp.frag', 'Models\altar3\altar3.obj', 'Models\mar\mar.obj',
+                 'Audio\oleaje.wav', 'Audio\musica.wav') {
+    if (-not (Test-Path (Join-Path $paquete $rel))) { $faltan += $rel }
+}
+if ($faltan.Count -gt 0) { Write-Warning ('Faltan en el paquete: ' + ($faltan -join ', ')) }
+else { Write-Host 'Contenido minimo: OK' }
 
 # --- 4. Comprimir ---------------------------------------------------------
 Paso "Creando $(Split-Path -Leaf $zip)"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $paquete '*') -DestinationPath $zip
 
+# Huella SHA-256 para que quien descargue pueda comprobar el .zip
+$hash = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+Set-Content -Path ($zip + '.sha256') -Value "$hash  $(Split-Path -Leaf $zip)" -Encoding ASCII
+
 # --- 5. Resumen -----------------------------------------------------------
 $tam = '{0:N1}' -f ((Get-Item $zip).Length / 1MB)
 Write-Host "`nListo." -ForegroundColor Green
 Write-Host "  Carpeta : $paquete"
 Write-Host "  Zip     : $zip ($tam MB)"
+Write-Host "  SHA-256 : $hash"
 Write-Host "  DLL     : $($dlls.Count) copiadas"
 Write-Host "`nPrueba pendiente (criterio de E-3): descomprimir el .zip en OTRA PC sin Visual Studio y ejecutar $exeNombre."

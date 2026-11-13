@@ -1,6 +1,6 @@
 # 11. Referencias (APA 7)
 
-> Solo se listan fuentes **citadas en el manual** y tomadas de la bibliografía de la propuesta v2.0 (`docs/propuesta/Propuesta_Nierika_v2.0.pdf`, §12) o del ESTADO. Las de las fichas culturales se agregan con la tarea C-7a. Revisar formato y fechas de consulta antes de entregar.
+> Solo se listan fuentes **citadas en el manual**, tomadas de la bibliografía de la propuesta v2.0 (`docs/propuesta/Propuesta_Nierika_v2.0.pdf`, §12), del ESTADO o de `docs/fichas_culturales.md`. Las fechas «s. f.» de Poly Haven las definió D2 (ESTADO, A-6). **Falta que D2 compruebe cada enlace antes de entregar.**
 
 ## Tecnología
 
@@ -30,11 +30,17 @@ Segal, M., y Akeley, K. (2010). *The OpenGL graphics system: A specification* (V
 
 Anderson, D. J. (2010). *Kanban: Successful evolutionary change for your technology business*. Blue Hole Press.
 
-## Fuentes culturales
+## Fuentes culturales (de `docs/fichas_culturales.md`)
 
-⏳ Se agregan desde `docs/fichas_culturales.md` (C-7a). Las fuentes ya previstas por la propuesta son Baños (2025), SEP (2026) y UNESCO (s. f.).
+Baños, L. (2025, 27 de octubre). *Los pueblos mágicos de Oaxaca donde el Día de Muertos se vive con más alma*. Oaxaca Informa. https://www.oaxacainforma.com/es/cultura/2025/pueblos-magicos-oaxaca-dia-de-muertos-2025
+
+Secretaría de Educación Pública. (2026, 22 de mayo). *Elementos básicos para la ofrenda de Día de Muertos*. Nueva Escuela Mexicana Digital. https://nuevaescuelamexicana.sep.gob.mx/contenido/recurso/elementos-basicos-para-la-ofrenda-de-dia-de-muerto
+
+UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.unesco.org/es/RL/las-fiestas-indigenas-dedicadas-a-los-muertos-00054
+
+> Las fichas están marcadas «por verificar contra la fuente» (`fichas_culturales.md` §4): hasta que alguien lea cada fuente, estas tres referencias son las **previstas**, no verificadas por el equipo.
 
 ## Pendientes de formato
 
-- ❓ Las referencias no incluyen **GLEW, GLM, vcpkg ni SOIL2/stb_image**, que se usan pero no estaban en la bibliografía de la propuesta: hay que buscar su fuente y citarla.
-- ❓ Las fechas «s. f.» de Poly Haven las definió D2 (ESTADO, A-6).
+- ❓ **GLEW, GLM, vcpkg y SOIL2/stb_image** se usan pero no están en la bibliografía de la propuesta: hay que buscar su fuente y citarla (no se inventan aquí).
+- ❓ Slerp, Bézier y ruido de Perlin: ver [§7.4](07_justificacion_matematica.md).
