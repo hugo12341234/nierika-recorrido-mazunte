@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
+#include <sstream>
 
 // GLEW
 #include <GL/glew.h>
@@ -93,6 +95,13 @@ glm::vec3 Light1(0.0f), Light2(0.0f), Light3(0.0f), Light4(0.0f);
 // Silueta de cubos (D-1/D-2): el tiempo de su caminata corre con deltaTime; R la reinicia
 float tSilueta = 0.0f;
 
+// Modo captura (solo desarrollo): NIERIKA_CAPTURAS="x,y,z,yaw,pitch,t,archivo.png;..." coloca la camara en cada pose,
+// guarda la imagen con glReadPixels (SOIL_save_screenshot) y cierra el programa al terminar. Sin la variable no hace nada.
+struct PoseCaptura { float x, y, z, yaw, pitch, t; std::string archivo; };
+std::vector<PoseCaptura> posesCaptura;
+size_t indiceCaptura = 0;
+int framesCaptura = 0;
+
 // Cubo unitario (posicion + normal) para marcar las luces
 float vertices[] = {
     -0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f,-0.5f,-0.5f, 0,0,-1,  0.5f, 0.5f,-0.5f, 0,0,-1,
@@ -161,6 +170,9 @@ int main()
     // Setup and compile our shaders
     Shader shader("Shaders/lighting.vs", "Shaders/lighting.frag");
     Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
+    Shader skyShader("Shaders/sky.vs", "Shaders/sky.frag");  // X-5: cielo nocturno procedural
+    GLuint vaoCielo;
+    glGenVertexArrays(1, &vaoCielo);                          // VAO vacio: el vertex shader genera el triangulo con gl_VertexID
 
     // Load models
     Model fachada((char*)"Models/fachada/fachada.obj");
@@ -278,8 +290,29 @@ int main()
     lastFrame = (GLfloat)glfwGetTime();
     tSilueta = 0.0f;
 
+    if (const char* cap = std::getenv("NIERIKA_CAPTURAS"))
+    {
+        std::stringstream ss(cap);
+        std::string item;
+        while (std::getline(ss, item, ';'))
+        {
+            for (char& c : item) if (c == ',') c = ' ';
+            std::stringstream is(item);
+            PoseCaptura pc;
+            if (is >> pc.x >> pc.y >> pc.z >> pc.yaw >> pc.pitch >> pc.t >> pc.archivo) posesCaptura.push_back(pc);
+        }
+    }
+
     while (!glfwWindowShouldClose(window))
     {
+        if (indiceCaptura < posesCaptura.size() && framesCaptura == 0)
+        {
+            const PoseCaptura& pc = posesCaptura[indiceCaptura];
+            camera.SetPosition(glm::vec3(pc.x, pc.y, pc.z));
+            camera.SetOrientacion(pc.yaw, pc.pitch);
+            tSilueta = pc.t;
+        }
+
         // Set frame time
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -305,6 +338,22 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // X-5: cielo (se dibuja primero, sin escribir profundidad; la escena lo tapa)
+        {
+            glm::mat4 vistaCielo = camera.GetViewMatrix();
+            glm::mat4 invPV = glm::inverse(projection * vistaCielo);
+            skyShader.Use();
+            glUniformMatrix4fv(glGetUniformLocation(skyShader.Program, "invProjView"), 1, GL_FALSE, glm::value_ptr(invPV));
+            glUniform3f(glGetUniformLocation(skyShader.Program, "camPos"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+            glm::vec3 haciaLuna = glm::normalize(glm::vec3(0.65f, 0.50f, 0.35f));
+            glUniform3f(glGetUniformLocation(skyShader.Program, "dirLuna"), haciaLuna.x, haciaLuna.y, haciaLuna.z);
+            glDepthMask(GL_FALSE);
+            glBindVertexArray(vaoCielo);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBindVertexArray(0);
+            glDepthMask(GL_TRUE);
+        }
+
         shader.Use();
 
         glm::mat4 view = camera.GetViewMatrix();
@@ -313,9 +362,9 @@ int main()
         glUniform3f(glGetUniformLocation(shader.Program, "viewPos"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
         // 1. Luz direccional (luna / ambiente)
-        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.direction"), -0.2f, -1.0f, -0.3f);
-        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.ambient"), 0.1f, 0.1f, 0.15f);
-        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), 0.2f, 0.2f, 0.2f);
+        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.direction"), -0.65f, -0.50f, -0.35f);  // X-5: luna
+        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.ambient"), 0.16f, 0.20f, 0.32f);
+        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), 0.42f, 0.50f, 0.68f);
         glUniform3f(glGetUniformLocation(shader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
         // 2. Animacion ciclica de las puntuales: las traseras brillan con sen(2t) > 0 y las delanteras con sen(2t) < 0
@@ -565,6 +614,19 @@ int main()
         // C-7b: ficha cultural si la camara esta a < 2 m de uno de los 5 objetos (se dibuja al final, sobre la escena)
         FichasDibuja(camera.GetPosition());
 
+        // Modo captura: espera 3 cuadros con la pose fija y guarda el cuadro actual (antes del swap)
+        if (indiceCaptura < posesCaptura.size())
+        {
+            tSilueta = posesCaptura[indiceCaptura].t;
+            if (++framesCaptura == 3)
+            {
+                SOIL_save_screenshot(posesCaptura[indiceCaptura].archivo.c_str(), SOIL_SAVE_TYPE_PNG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                indiceCaptura++;
+                framesCaptura = 0;
+                if (indiceCaptura == posesCaptura.size()) glfwSetWindowShouldClose(window, GL_TRUE);
+            }
+        }
+
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -599,6 +661,8 @@ int main()
     for (Model& m : modelosSilueta) m.cleanup();  // D-1
     shader.cleanup();
     lampShader.cleanup();
+    skyShader.cleanup();                  // X-5
+    glDeleteVertexArrays(1, &vaoCielo);   // X-5
     glDeleteVertexArrays(1, &cuboVAO);
     glDeleteBuffers(1, &cuboVBO);
 

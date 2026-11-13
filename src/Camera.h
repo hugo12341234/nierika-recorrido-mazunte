@@ -134,6 +134,14 @@ public:
 		this->position = nuevaPosicion;
 	}
 
+	// Fija la orientacion en grados (solo para el modo de captura de pantalla de desarrollo)
+	void SetOrientacion(GLfloat nuevoYaw, GLfloat nuevoPitch)
+	{
+		this->yaw = nuevoYaw;
+		this->pitch = nuevoPitch;
+		this->updateCameraVectors();
+	}
+
 	glm::vec3 GetFront()
 	{
 		return this->front;
