@@ -90,3 +90,20 @@ La normal se perturba con el método de Mikkelsen (2010), que usa las derivadas 
 **Sonido por zona** (`Audio::ActualizarZona`, `src/Audio.cpp`): oleaje = 0.20 + 0.45·clamp((z − 2)/22, 0, 1) (más fuerte hacia el mar); música = 0.10 + 0.40·clamp(1 − d_altar/10, 0, 1); voces = 0.55·clamp(1 − d/14, 0, 1) con d la menor distancia a la ceremonia (11, 19.5) o al panteón (0, 7). Son rampas lineales de la distancia, sin espacialización 3D.
 
 **Comprobación:** `tools/x19_pruebas_extras.cpp` (sendero, murciélagos y las anteriores): ver el resultado en el ESTADO.
+
+## 8. Los lados de la escena (X-25 a X-28)
+
+Todas son fórmulas simples, **sin KeyFrames**; las posiciones y parámetros están en `src/Extras.h`.
+
+| Extra | Fórmula | Valores |
+|---|---|---|
+| Lanchas ancladas | altura y = `Olas::Altura(x, z, t)`, vertical = normal de la ola (como las tablas de remo, §3); giro = base + 8°·sen(2πt/12 + φ) | 6 lanchas |
+| Redes de pesca | péndulo θ = 3°·sen(2πt/5 + 1.3 i) | 3 redes |
+| Hamacas | balanceo θ = 2°·sen(2πt/6 + 2 i) | 2 hamacas |
+| Aves | círculo (x, z) = (cₓ + R·cos(ωt + φ), c_z + R·sen(ωt + φ)), ω = v/R, v = 2.6 a 3.8 m/s; altura 9–20 m + 1.2·sen(0.4t + φ); alas θ = 25°·sen(2π·0.9·t + 1.3 i) | 7 aves; 0.9 Hz de aleteo (un pelícano real bate más lento que un murciélago) |
+| Tortugas marinas | círculo igual de radio 4–6 m a v = 0.4 m/s en la superficie (y = ola + 0.02); cabeceo de aletas θ = 10°·sen(2πt/1.8 + 1.1 i) | 4 tortugas |
+| Crías de tortuga | z(t) = Z₀ + ((v·t + 0.53·i·L) mod L), Z₀ = 20.2 m, L = 4.2 m, v = 0.18 m/s; bamboleo 8°·sen(2πt/0.9 + 1.7 i) | 8 crías; cruzan 4.2 m de arena en 23 s y reinician |
+| Linternas flotantes | y = `Olas::Altura` + 0.06; brillo = 0.55 + 0.30·sen(3.1t + 1.9 i) + 0.15·sen(7.7t + 0.7 i) | 40 linternas, posiciones por hash fijo en x ∈ [−46, 46], z ∈ [27, 59] |
+| Fogatas | llama = ruido de Perlin del shader de las velas (C-2), **sin humo ni partículas** | 2 fogatas |
+
+**Comprobación:** `tools/x19_pruebas_extras.cpp` (círculos, rapideces, rango de las crías y de las linternas).
