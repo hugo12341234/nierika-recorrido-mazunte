@@ -59,7 +59,7 @@ int framesIntervalo = 0;
 
 // ==========================================
 // ILUMINACION (A-8). Valores de D1 (319266894, Practica 8 adaptada a Mazunte).
-// D1 los penso para la capilla a escala 3.5 en (0, 0, 2); hoy la capilla mide 1.9 m y esta en (0, 0, -0.6).
+// D1 los penso para la capilla a escala 3.5 en (0, 0, 2); hoy esa capilla ya no esta (se retiro en B-13): solo siguen usandose para las luces.
 // Por eso cada posicion de D1 se pasa por DeCapillaVieja() y las atenuaciones se multiplican por la escala.
 // ==========================================
 const float ESCALA_CAPILLA_VIEJA = 3.5f;
@@ -171,10 +171,7 @@ int main()
     Model mar((char*)"Models/mar/mar.obj");
     // X-3: extras de D1 (Maya), sin tarea propia; escala real ya aplicada en el .obj
     Model calavera((char*)"Models/calavera/calavera.obj");
-    Model pan((char*)"Models/pan/pan.obj");
     Model flor((char*)"Models/flor/flor.obj");
-    // Capilla provisional de Maya (hasta B-13): vuelve al cuarto mientras los modelos de Blender se posicionan definitivamente
-    Model capilla((char*)"Models/altar/altar.obj");
     // B-13 (provisional): modelos propios de los lotes 1-5 de Blender (escala real ya aplicada en cada .obj; texturas provisionales de un color)
     Model altar3((char*)"Models/altar3/altar3.obj");       // B-1
     Model vela((char*)"Models/vela/vela.obj");             // B-2
@@ -227,11 +224,14 @@ int main()
     colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
     colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
     colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
-    colisiones.agregar({ glm::vec3(-0.650f, 0.0f, -1.050f), glm::vec3( 0.650f, 1.90f, -0.150f) });  // capilla provisional (altar.obj en (0,0,-0.6); hasta B-13)
+    // B-13: altar3 en (1.35, 0, 0) girado -90 grados: su huella (1.6 x 0.9 m) ocupa x 0.90..1.80, z -0.80..+0.80, y 0..1.20
+    colisiones.agregar({ glm::vec3( 0.900f, 0.0f, -0.800f), glm::vec3( 1.800f, 1.20f,  0.800f) });
 
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
-    // Entrada de 2 m en el norte (z = 12), centrada en x = 0 (abertura x -1..+1)
-    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.0f ), glm::vec3( 7.0f, 0.70f,  3.25f) });  // muro sur
+    // Entradas de 2 m en el norte (z = 12) y, desde E-2 (12/11), tambien en el sur (z = 3), las dos centradas en x = 0 (abertura x -1..+1):
+    // la del sur queda frente a la puerta del cuarto y por ella camina la silueta
+    colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.0f ), glm::vec3(-1.0f, 0.70f,  3.25f) });  // muro sur izquierdo
+    colisiones.agregar({ glm::vec3( 1.0f, 0.0f,  3.0f ), glm::vec3( 7.0f, 0.70f,  3.25f) });  // muro sur derecho
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f, 11.75f), glm::vec3(-1.0f, 0.70f, 12.0f ) });  // muro norte izquierdo
     colisiones.agregar({ glm::vec3( 1.0f, 0.0f, 11.75f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro norte derecho
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
@@ -272,6 +272,11 @@ int main()
     // D-6: audio ambiental en bucle (si faltan los archivos de Audio/, avisa y sigue sin sonido)
     Audio audio;
     audio.init();
+
+    // D-5: la carga de modelos y texturas tarda segundos antes de este punto. Sin esto, el primer deltaTime los incluye
+    // (lastFrame arranca en 0) y la silueta empezaria su caminata ya avanzada o terminada.
+    lastFrame = (GLfloat)glfwGetTime();
+    tSilueta = 0.0f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -414,32 +419,9 @@ int main()
         glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
         piso.Draw(shader);
 
-        // 2b. CAPILLA PROVISIONAL (hasta B-13): la capilla de Maya vuelve al fondo del cuarto
-        {
-            glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -0.6f));
-            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
-            glUniform1f(specLoc, 0.1f);
-            capilla.Draw(shader);
-        }
-
-        // 3. EXTRAS DE D1 (X-3): calavera, pan y 4 flores sobre los escalones de la capilla.
-        // Posiciones de D1 (hechas para la capilla x3.5 en (0, 0, 2)) pasadas por DeCapillaVieja(); escala 1.0 (ya esta en el .obj)
-        auto dibuja = [&](Model& m, glm::vec3 posVieja)
-        {
-            glm::mat4 mm = glm::translate(glm::mat4(1.0f), DeCapillaVieja(posVieja));
-            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
-            m.Draw(shader);
-        };
-        dibuja(calavera, glm::vec3(0.0f, 2.1f, 1.8f));
-        dibuja(pan, glm::vec3(0.0f, 1.35f, 2.6f));
-        dibuja(flor, glm::vec3(-0.9f, 2.32f, 1.8f));  // izquierda de la calavera
-        dibuja(flor, glm::vec3(0.9f, 2.32f, 1.8f));   // derecha de la calavera
-        dibuja(flor, glm::vec3(-1.0f, 1.5f, 2.6f));   // izquierda del pan
-        dibuja(flor, glm::vec3(1.0f, 1.5f, 2.6f));    // derecha del pan
-
         // 3b. MODELOS PROPIOS DE BLENDER (B-1, B-2, B-5, B-6, B-8, B-9, B-11, B-14). Posiciones PROVISIONALES: B-13 las ajusta.
         // Altar de 3 niveles contra el muro derecho del cuarto (interior x +-1.826), girado -90 grados para que su frente (+z local) mire a -x.
-        // Cubre x 0.9..1.8; en esta version no se agrega colision ni se retira la capilla provisional (altar.obj).
+        // Cubre x 0.9..1.8 y tiene colision (B-13). La capilla provisional y el pan de Maya se retiraron en B-13 (12/11).
         glUniform1f(specLoc, 0.1f);
         auto colocar = [&](Model& m, glm::vec3 pos, float giroY)
         {
@@ -478,9 +460,15 @@ int main()
             sobreAltar(panMuerto,   glm::vec3( 0.00f, 0.80f, -0.05f));
             sobreAltar(cempasuchil, glm::vec3(-0.20f, 0.835f, 0.00f));
             sobreAltar(cempasuchil, glm::vec3( 0.20f, 0.835f, 0.00f));
+            // B-13 (12/11): extras de D1 (X-3, sin tarea propia) que estaban sobre los escalones de la capilla retirada:
+            // calavera en la repisa del nivel inferior (y = 0.40), en el extremo +x local (mundo z = +0.45), lejos de donde
+            // cae la flor de la silueta (D-4: mundo z ~ -0.39), y una flor de Maya (pivote en el centro, 0.12 m de alto) a cada lado
+            sobreAltar(calavera, glm::vec3( 0.45f, 0.40f, 0.32f));
+            sobreAltar(flor,     glm::vec3( 0.27f, 0.461f, 0.34f));
+            sobreAltar(flor,     glm::vec3( 0.63f, 0.461f, 0.34f));
         }
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
-        colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.0f), 0.0f);
+        colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
         colocar(tumba2,   glm::vec3(-4.0f, 0.0f,  4.5f), 0.0f);
         colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
         colocar(tumba4,   glm::vec3(-4.5f, 0.0f,  9.0f), 0.0f);
@@ -587,9 +575,7 @@ int main()
     playa.cleanup();
     mar.cleanup();
     calavera.cleanup();
-    pan.cleanup();
     flor.cleanup();
-    capilla.cleanup();
     altar3.cleanup();
     vela.cleanup();
     botella.cleanup();
