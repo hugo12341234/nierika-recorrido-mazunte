@@ -81,6 +81,7 @@ vec3 perturbaNormal(vec3 N, vec3 p, float h)
 
 // C-2: llama de las velas. Con llama = 1 el fragmento ignora la textura y la luz: la forma, el color y el parpadeo
 // salen de ruido de Perlin 2D (ver docs/manual_tecnico/justificacion_simples.md, seccion 2.3).
+uniform int   arena;                // X-13: 1 solo al dibujar la playa (ver main.cpp)
 uniform int   llama;
 uniform float tiempo;               // segundos (el mismo uniform del vertex shader)
 uniform float llamaFase;            // desfase de cada llama (s), para que no parpadeen al unisono
@@ -165,6 +166,13 @@ void main()
         norm = perturbaNormal(norm, FragPos, texture(texture_height1, TexCoords).r * RELIEVE_M);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 albedo = texColor.rgb;
+    if (arena == 1)
+    {
+        float manchas = ruidoFbm(FragPos.xz * 0.35);                         // ~[-0.4, 0.4], periodo de ~3 m
+        albedo *= 0.85 + 0.45 * manchas;
+        float mojada = smoothstep(0.0, -0.25, FragPos.y);                    // 0 en seco, 1 a 25 cm bajo y = 0
+        albedo *= mix(1.0, 0.45, mojada);
+    }
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, albedo);
     for (int i = 0; i < NUMBER_OF_POINT_LIGHTS; i++)
