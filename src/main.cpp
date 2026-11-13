@@ -209,7 +209,11 @@ int main()
         {  2.5f, 25.0f, 10.5f, 40.0f, 5.5f, 60.0f, 120.0f, 41.0f, 0.012f, OMEGA_V, 3.1416f },
         {  5.0f, 25.0f, -3.0f, 40.0f, 2.0f, 60.0f, 130.0f, 63.0f, 0.012f, OMEGA_V, 4.7124f }
     };
-    const glm::vec3 centroFlor(0.0f, 0.0f, -0.075f);         // centro de flor.obj (medido en sus vertices), para girar sobre si misma
+    // C-6 (12/11): las flores flotantes usan la flor PROPIA de cempasuchil (B-3, planos con alfa: el descarte por alfa de lighting.frag
+    // las recorta), no la de Maya (flor.obj, RGB sin alfa). cempasuchil.obj mide 0.07 m y tiene su pivote en el centro:
+    // se agranda x2.3 (0.16 m, el tamano que tenia la flor de Maya) y gira sobre su centro (0, 0, 0)
+    const glm::vec3 centroFlor(0.0f, 0.0f, 0.0f);
+    const float ESCALA_FLOR_FLOTANTE = 2.3f;
 
     // ==========================================
     // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
@@ -482,8 +486,9 @@ int main()
             const float tf = (float)glfwGetTime();
             glm::vec2 pf = PosicionXZ(floresFlotantes[i], tf);
             glm::mat4 mf = MatrizFlorFlotante(floresFlotantes[i], tf, Olas::Altura(pf.x, pf.y, tf), centroFlor);
+            mf = glm::scale(mf, glm::vec3(ESCALA_FLOR_FLOTANTE));
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
-            flor.Draw(shader);
+            cempasuchil.Draw(shader);
         }
         // C-3: velas flotando (Bezier cuadratica de ida y vuelta + vaiven senoidal + altura de la ola; ver AnimVelas.h)
         for (int i = 0; i < 4; i++)
