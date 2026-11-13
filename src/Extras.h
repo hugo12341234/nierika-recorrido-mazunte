@@ -156,6 +156,86 @@ namespace Extras
         y = m.altura + 0.8f * std::sin(0.7f * t + m.fase * 2.0f);
         dx = -std::sin(a);  dz = std::cos(a);
     }
+
+    // ======== X-25..X-28: LOS LADOS DE LA ESCENA (costa de Mazunte; ver docs/investigacion_mazunte.md) ========
+    // FUERA DEL ALCANCE ORIGINAL (propuesta v2.0, tabla 2): casas y palapas. Se agregan por decision del equipo del 13/11/2026 (ESTADO seccion 4)
+    // y se pueden QUITAR poniendo MOSTRAR_FUERA_DE_ALCANCE = false o con la variable de entorno NIERIKA_SIN_FUERA_ALCANCE=1.
+    constexpr bool MOSTRAR_FUERA_DE_ALCANCE = true;
+    struct Obj { float x, z, giro, esc; };                       // giro en grados alrededor de Y; esc = escala
+    // Rocas costeras y acantilados (esc 1..8 m): agrupadas en las dos puntas de la bahia
+    constexpr int N_ROCAS = 18;
+    inline const Obj ROCAS[N_ROCAS] = {
+        { -44.0f, 23.0f, 10.0f, 2.2f }, { -41.0f, 26.0f, 70.0f, 1.4f }, { -47.0f, 29.0f, 130.0f, 3.0f }, { -38.0f, 31.0f, 200.0f, 1.0f }, { -50.0f, 20.0f, 20.0f, 4.5f },
+        { -46.0f, 36.0f, 300.0f, 2.6f }, { -52.0f, 12.0f, 80.0f, 6.0f }, { -49.0f, 2.0f, 150.0f, 5.0f }, { -42.0f, 21.0f, 250.0f, 0.9f },
+        {  44.0f, 23.5f, 190.0f, 2.0f }, {  41.0f, 27.0f, 40.0f, 1.5f }, {  47.0f, 30.0f, 100.0f, 3.2f }, {  38.0f, 32.0f, 280.0f, 1.1f }, {  50.0f, 21.0f, 330.0f, 4.8f },
+        {  46.0f, 37.0f, 60.0f, 2.8f }, {  52.0f, 10.0f, 170.0f, 6.5f }, {  49.0f, 0.0f, 20.0f, 5.2f }, {  43.0f, 20.5f, 210.0f, 0.8f }
+    };
+    // Lanchas de pescadores: varadas en la arena (giro 90: el eje largo va a lo largo de la orilla) y ancladas en el agua (suben con la ola)
+    constexpr int N_LANCHAS_VARADAS = 4;
+    inline const Obj LANCHAS_VARADAS[N_LANCHAS_VARADAS] = { { -31.0f, 21.8f, 100.0f, 1.0f }, { -36.0f, 22.6f, 80.0f, 1.0f }, { 30.0f, 21.9f, 80.0f, 1.0f }, { 35.0f, 22.5f, 100.0f, 1.0f } };
+    constexpr int N_LANCHAS_AGUA = 6;
+    inline const Obj LANCHAS_AGUA[N_LANCHAS_AGUA] = { { -26.0f, 31.0f, 80.0f, 0.0f }, { -34.0f, 38.0f, 100.0f, 1.3f }, { -18.0f, 44.0f, 70.0f, 2.6f },
+                                                      { 27.0f, 33.0f, 100.0f, 3.9f }, { 36.0f, 40.0f, 80.0f, 5.1f }, { 20.0f, 48.0f, 110.0f, 0.7f } };
+    // Redes de pesca secandose (cuelgan de un bastidor de Models/soportes estirado x1.3): x, z
+    constexpr int N_REDES = 3;
+    inline const Obj REDES[N_REDES] = { { -33.5f, 18.5f, 0.0f, 1.3f }, { -27.0f, 17.0f, 0.0f, 1.3f }, { 32.0f, 18.0f, 0.0f, 1.3f } };
+    // FUERA DEL ALCANCE ORIGINAL: palapas (techo de palma, abiertas) y casas costeras (tipo 0 = pared turquesa, 1 = pared ocre)
+    constexpr int N_PALAPAS = 5;
+    inline const Obj PALAPAS[N_PALAPAS] = { { -30.0f, 13.5f, 0.0f, 1.0f }, { -38.0f, 9.0f, 20.0f, 1.0f }, { 29.0f, 13.0f, 0.0f, 1.0f }, { 37.0f, 17.5f, 340.0f, 1.0f }, { -27.0f, 3.0f, 0.0f, 1.0f } };
+    struct Casa { float x, z, giro; int tipo; };
+    constexpr int N_CASAS = 6;
+    inline const Casa CASAS[N_CASAS] = { { -45.0f, 8.0f, 270.0f, 0 }, { -45.0f, -2.0f, 270.0f, 1 }, { -45.0f, -12.0f, 270.0f, 0 },
+                                         {  45.0f, 6.0f, 90.0f, 1 }, {  45.0f, -4.0f, 90.0f, 0 }, {  45.0f, -14.0f, 90.0f, 1 } };
+    // Fogatas sin humo (la llama es el shader de las velas), hamacas entre postes, palmas extra en los lados
+    constexpr int N_FOGATAS = 2;
+    inline const Obj FOGATAS[N_FOGATAS] = { { -27.0f, 19.5f, 0.0f, 1.0f }, { 27.0f, 19.5f, 0.0f, 1.0f } };
+    constexpr int N_HAMACAS = 2;
+    inline const Obj HAMACAS[N_HAMACAS] = { { -24.5f, 10.5f, 0.0f, 1.0f }, { 23.5f, 9.5f, 0.0f, 1.0f } };
+    constexpr int N_PALMAS_LADOS = 16;
+    inline const Obj PALMAS_LADOS[N_PALMAS_LADOS] = {
+        { -22.0f, 8.0f, 30.0f, 1.0f }, { -24.0f, 16.0f, 100.0f, 1.2f }, { -28.0f, 6.0f, 200.0f, 0.9f }, { -35.0f, 15.0f, 280.0f, 1.1f }, { -41.0f, 18.0f, 60.0f, 1.0f },
+        { -43.0f, 12.0f, 140.0f, 1.3f }, { -33.0f, 3.0f, 10.0f, 1.0f }, { -47.0f, 16.0f, 220.0f, 1.1f },
+        {  22.0f, 10.0f, 300.0f, 1.0f }, {  25.0f, 17.0f, 120.0f, 1.2f }, {  31.0f, 7.0f, 20.0f, 0.9f }, {  34.0f, 19.0f, 180.0f, 1.1f }, {  41.0f, 14.0f, 260.0f, 1.0f },
+        {  43.0f, 9.0f, 90.0f, 1.3f }, {  38.0f, 3.0f, 340.0f, 1.0f }, {  46.0f, 18.0f, 50.0f, 1.1f }
+    };
+
+    // Aves (pelicanos y fragatas, simplificadas): vuelan en circulos y baten las alas: theta = 25 grados * sen(2*pi*0.9*t + fase)
+    struct Ave { float cx, cz, radio, altura, fase, vel; };
+    constexpr int N_AVES = 7;
+    constexpr float FREC_ALETEO_AVE = 0.9f, AMP_ALETEO_AVE = 25.0f;
+    inline const Ave AVES[N_AVES] = { { -20.0f, 40.0f, 14.0f, 12.0f, 0.0f, 3.0f }, { 20.0f, 42.0f, 16.0f, 16.0f, 1.6f, 3.4f }, { 0.0f, 55.0f, 20.0f, 20.0f, 3.1f, 3.8f },
+                                      { -35.0f, 30.0f, 9.0f, 9.0f, 4.2f, 2.8f }, { 35.0f, 28.0f, 10.0f, 10.0f, 5.0f, 2.6f }, { 0.0f, 35.0f, 12.0f, 14.0f, 2.2f, 3.2f }, { -8.0f, 48.0f, 11.0f, 18.0f, 0.9f, 3.5f } };
+    inline void PosicionAve(const Ave& a, float t, float& x, float& y, float& z, float& dx, float& dz)
+    {
+        const float ang = a.vel / a.radio * t + a.fase;
+        x = a.cx + a.radio * std::cos(ang);  z = a.cz + a.radio * std::sin(ang);
+        y = a.altura + 1.2f * std::sin(0.4f * t + a.fase);
+        dx = -std::sin(ang);  dz = std::cos(ang);
+    }
+    // Tortugas marinas: nadan en circulos lentos en la superficie (R m, 0.4 m/s) con un cabeceo de aletas de +-10 grados cada 1.8 s
+    struct TortugaMar { float cx, cz, radio, fase; };
+    constexpr int N_TORTUGAS = 4;
+    inline const TortugaMar TORTUGAS[N_TORTUGAS] = { { -14.0f, 34.0f, 5.0f, 0.0f }, { 12.0f, 36.0f, 6.0f, 1.7f }, { -3.0f, 44.0f, 5.0f, 3.1f }, { 24.0f, 32.0f, 4.0f, 4.4f } };
+    constexpr float VEL_TORTUGA = 0.4f;
+    inline void PosicionTortuga(const TortugaMar& t, float tiempo, float& x, float& z, float& dx, float& dz)
+    {
+        const float a = VEL_TORTUGA / t.radio * tiempo + t.fase;
+        x = t.cx + t.radio * std::cos(a);  z = t.cz + t.radio * std::sin(a);
+        dx = -std::sin(a);  dz = std::cos(a);
+    }
+    // Crias de tortuga que avanzan hacia el mar (propuesta de Mazunte: Centro Mexicano de la Tortuga): z(t) = Z0 + ((v*t + fase) mod L)
+    constexpr int N_CRIAS = 8;
+    constexpr float CRIA_Z0 = 20.2f, CRIA_L = 4.2f, CRIA_VEL = 0.18f;
+    inline float CriaZ(int i, float t) { return CRIA_Z0 + std::fmod(CRIA_VEL * t + 0.53f * i * CRIA_L, CRIA_L); }
+    inline float CriaX(int i) { return 18.0f + 0.9f * i + 0.3f * std::sin(2.0f * i); }
+    // Linternas de papel flotando en la bahia (mismas ofrendas de luz que las velas); hash determinista por indice
+    constexpr int N_LINTERNAS = 40;
+    inline void LinternaN(int i, float& x, float& z)
+    {
+        const float a = std::fmod(std::fabs(std::sin(12.9898f * (i + 3)) * 43758.5453f), 1.0f);
+        const float b = std::fmod(std::fabs(std::sin(78.233f * (i + 3)) * 12345.6789f), 1.0f);
+        x = -46.0f + 92.0f * a;  z = 27.0f + 32.0f * b;
+    }
 }
 
 #endif

@@ -219,6 +219,17 @@ int main()
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
     Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
     Model petate((char*)"Models/petate/petate.obj");
+    Model rocaMar((char*)"Models/roca_mar/roca_mar.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model lancha((char*)"Models/lancha/lancha.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model redPesca((char*)"Models/red_pesca/red_pesca.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model aveCuerpo((char*)"Models/ave_cuerpo/ave_cuerpo.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model aveAla((char*)"Models/ave_ala/ave_ala.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model tortugaMar((char*)"Models/tortuga/tortuga.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model hamaca((char*)"Models/hamaca/hamaca.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model fogata((char*)"Models/fogata/fogata.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model palapa((char*)"Models/palapa/palapa.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model farol((char*)"Models/farol/farol.obj");                         // X-24: poste con linterna abierta
     Model guitarra((char*)"Models/guitarra/guitarra.obj");                // X-24: instrumento del musico
     Model cesta((char*)"Models/cesta/cesta.obj");
@@ -287,6 +298,30 @@ int main()
             const float px = Extras::TENDEDEROS[t].x0 + Extras::ANCHO_BASTIDOR * k, pz = Extras::TENDEDEROS[t].z;
             colisiones.agregar({ glm::vec3(px - 0.05f, 0.0f, pz - 0.05f), glm::vec3(px + 0.05f, 2.0f, pz + 0.05f) });
         }
+    // X-25..X-28: bandera de lo que esta FUERA DEL ALCANCE ORIGINAL (casas y palapas). Constante Extras::MOSTRAR_FUERA_DE_ALCANCE o NIERIKA_SIN_FUERA_ALCANCE=1
+    const bool fueraAlcance = Extras::MOSTRAR_FUERA_DE_ALCANCE && !std::getenv("NIERIKA_SIN_FUERA_ALCANCE");
+    if (fueraAlcance)
+    {
+        for (int i = 0; i < Extras::N_CASAS; i++)    // cada casa: huella de 5 x 4 m (x y z se intercambian con el giro de 90 grados) + porche
+        {
+            const Extras::Casa& c = Extras::CASAS[i];
+            colisiones.agregar({ glm::vec3(c.x - 2.0f, 0.0f, c.z - 2.6f), glm::vec3(c.x + 2.0f, 3.8f, c.z + 2.6f) });
+        }
+        for (int i = 0; i < Extras::N_PALAPAS; i++)  // cuatro postes de 0.24 m
+            for (int sx = -1; sx <= 1; sx += 2)
+                for (int sz = -1; sz <= 1; sz += 2)
+                    colisiones.agregar({ glm::vec3(Extras::PALAPAS[i].x + 2.2f * sx - 0.12f, 0.0f, Extras::PALAPAS[i].z + 2.2f * sz - 0.12f), glm::vec3(Extras::PALAPAS[i].x + 2.2f * sx + 0.12f, 2.8f, Extras::PALAPAS[i].z + 2.2f * sz + 0.12f) });
+    }
+    for (int i = 0; i < Extras::N_LANCHAS_VARADAS; i++)  // lanchas varadas (5.2 x 1.5 m a lo largo de la orilla)
+        colisiones.agregar({ glm::vec3(Extras::LANCHAS_VARADAS[i].x - 2.7f, 0.0f, Extras::LANCHAS_VARADAS[i].z - 0.85f), glm::vec3(Extras::LANCHAS_VARADAS[i].x + 2.7f, 1.0f, Extras::LANCHAS_VARADAS[i].z + 0.85f) });
+    for (int i = 0; i < Extras::N_FOGATAS; i++)
+        colisiones.agregar({ glm::vec3(Extras::FOGATAS[i].x - 0.6f, 0.0f, Extras::FOGATAS[i].z - 0.6f), glm::vec3(Extras::FOGATAS[i].x + 0.6f, 0.4f, Extras::FOGATAS[i].z + 0.6f) });
+    for (int i = 0; i < Extras::N_HAMACAS; i++)          // dos postes de 0.1 m
+        for (int sx = -1; sx <= 1; sx += 2)
+            colisiones.agregar({ glm::vec3(Extras::HAMACAS[i].x + 1.6f * sx - 0.06f, 0.0f, Extras::HAMACAS[i].z - 0.06f), glm::vec3(Extras::HAMACAS[i].x + 1.6f * sx + 0.06f, 1.5f, Extras::HAMACAS[i].z + 0.06f) });
+    for (int i = 0; i < Extras::N_ROCAS; i++)            // solo las rocas grandes y las que estan en la arena (z < 23)
+        if (Extras::ROCAS[i].esc >= 2.5f && Extras::ROCAS[i].z < 23.0f)
+            colisiones.agregar({ glm::vec3(Extras::ROCAS[i].x - Extras::ROCAS[i].esc * 0.9f, 0.0f, Extras::ROCAS[i].z - Extras::ROCAS[i].esc * 0.8f), glm::vec3(Extras::ROCAS[i].x + Extras::ROCAS[i].esc * 0.9f, 3.0f, Extras::ROCAS[i].z + Extras::ROCAS[i].esc * 0.8f) });
     for (int i = 0; i < Extras::N_FIGURAS_N; i++)  // X-24: figuras de la narrativa (cajas de 0.4 x 0.4 m)
         colisiones.agregar({ glm::vec3(Extras::FIGURAS_N[i].x - 0.2f, 0.0f, Extras::FIGURAS_N[i].z - 0.2f), glm::vec3(Extras::FIGURAS_N[i].x + 0.2f, 1.7f, Extras::FIGURAS_N[i].z + 0.2f) });
     for (int i = 0; i < Extras::N_FAROLES; i++)    // X-24: postes de los faroles (0.1 m)
@@ -907,6 +942,138 @@ int main()
             }
             glUniform1f(specLoc, 0.05f);
         }
+        // ===== X-25..X-28: los lados de la escena (investigacion de Mazunte en docs/investigacion_mazunte.md). Sin KeyFrames: solo formulas simples =====
+        if (!std::getenv("NIERIKA_SIN_LADOS"))   // solo para las capturas "antes" de docs/EXTRAS_Y_MEJORAS.md
+        {
+            const float tl = (float)Reloj();
+            auto enSuelo = [&](float z) { return z < 23.5f ? Colisiones::alturaSuelo(z) : -0.30f; };
+            auto poner = [&](Model& m, glm::vec3 pos, float giro, float esc)
+            {
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), pos);
+                mm = glm::rotate(mm, glm::radians(giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::scale(mm, glm::vec3(esc));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                m.Draw(shader);
+            };
+            // sobre la ola: posicion (x, z), altura = Olas::Altura, vertical = normal de la ola; yaw = giro de proa
+            auto sobreOla = [&](float x, float z, float yawGrados, float subir) -> glm::mat4
+            {
+                float nx, ny, nz;
+                Olas::Normal(x, z, tl, nx, ny, nz);
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(x, Olas::Altura(x, z, tl) + subir, z));
+                const glm::vec3 eje = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(nx, ny, nz));
+                if (glm::length(eje) > 1e-5f) mm = glm::rotate(mm, std::acos(glm::clamp(ny, -1.0f, 1.0f)), glm::normalize(eje));
+                return glm::rotate(mm, glm::radians(yawGrados), glm::vec3(0.0f, 1.0f, 0.0f));
+            };
+            glUniform1f(specLoc, 0.05f);
+            for (int i = 0; i < Extras::N_ROCAS; i++)
+                poner(rocaMar, glm::vec3(Extras::ROCAS[i].x, enSuelo(Extras::ROCAS[i].z), Extras::ROCAS[i].z), Extras::ROCAS[i].giro, Extras::ROCAS[i].esc);
+            for (int i = 0; i < Extras::N_PALMAS_LADOS; i++)
+                poner(palma, glm::vec3(Extras::PALMAS_LADOS[i].x, 0.0f, Extras::PALMAS_LADOS[i].z), Extras::PALMAS_LADOS[i].giro, Extras::PALMAS_LADOS[i].esc);
+            glUniform1f(specLoc, 0.2f);
+            for (int i = 0; i < Extras::N_LANCHAS_VARADAS; i++)
+                poner(lancha, glm::vec3(Extras::LANCHAS_VARADAS[i].x, enSuelo(Extras::LANCHAS_VARADAS[i].z) + 0.05f, Extras::LANCHAS_VARADAS[i].z), Extras::LANCHAS_VARADAS[i].giro, 1.0f);
+            for (int i = 0; i < Extras::N_LANCHAS_AGUA; i++)       // ancladas: suben y bajan con la ola y giran +-8 grados lentamente (T = 12 s)
+            {
+                const Extras::Obj& l = Extras::LANCHAS_AGUA[i];
+                glm::mat4 mm = sobreOla(l.x, l.z, l.giro + Extras::Balanceo(tl, 12.0f, l.esc, 8.0f), 0.0f);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                lancha.Draw(shader);
+            }
+            glUniform1f(specLoc, 0.05f);
+            for (int i = 0; i < Extras::N_REDES; i++)              // red colgada de un bastidor de soportes estirado x1.3; se mece 3 grados (T = 5 s)
+            {
+                const Extras::Obj& r = Extras::REDES[i];
+                poner(soportes, glm::vec3(r.x, enSuelo(r.z), r.z), r.giro, r.esc);
+                glm::mat4 mn = glm::translate(glm::mat4(1.0f), glm::vec3(r.x, enSuelo(r.z) + 1.95f, r.z));
+                mn = glm::rotate(mn, glm::radians(Extras::Balanceo(tl, 5.0f, 1.3f * i, 3.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mn));
+                redPesca.Draw(shader);
+            }
+            for (int i = 0; i < Extras::N_FOGATAS; i++)
+                poner(fogata, glm::vec3(Extras::FOGATAS[i].x, enSuelo(Extras::FOGATAS[i].z), Extras::FOGATAS[i].z), 0.0f, 1.0f);
+            for (int i = 0; i < Extras::N_HAMACAS; i++)            // la tela se balancea +-2 grados (T = 6 s) alrededor de su eje largo
+            {
+                const Extras::Obj& h = Extras::HAMACAS[i];
+                glm::mat4 mh = glm::translate(glm::mat4(1.0f), glm::vec3(h.x, enSuelo(h.z), h.z));
+                mh = glm::rotate(mh, glm::radians(Extras::Balanceo(tl, 6.0f, 2.0f * i, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                hamaca.Draw(shader);
+            }
+            if (fueraAlcance)   // FUERA DEL ALCANCE ORIGINAL (decision del 13/11/2026): palapas y casas costeras
+            {
+                for (int i = 0; i < Extras::N_PALAPAS; i++)
+                    poner(palapa, glm::vec3(Extras::PALAPAS[i].x, Colisiones::alturaSuelo(Extras::PALAPAS[i].z), Extras::PALAPAS[i].z), Extras::PALAPAS[i].giro, 1.0f);
+                for (int i = 0; i < Extras::N_CASAS; i++)
+                    poner(Extras::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
+            }
+            // tortugas marinas nadando en la superficie (Extras::PosicionTortuga) con cabeceo de aletas
+            glUniform1f(specLoc, 0.3f);
+            for (int i = 0; i < Extras::N_TORTUGAS; i++)
+            {
+                float tx, tz, dx, dz;
+                Extras::PosicionTortuga(Extras::TORTUGAS[i], tl, tx, tz, dx, dz);
+                glm::mat4 mm = sobreOla(tx, tz, glm::degrees(std::atan2(-dx, -dz)), 0.02f);
+                mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 1.8f, 1.1f * i, 10.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                tortugaMar.Draw(shader);
+            }
+            // crias de tortuga que cruzan la arena hacia el mar y vuelven a empezar (z = Z0 + (v t + fase) mod L), con bamboleo de +-8 grados
+            glUniform1f(specLoc, 0.1f);
+            for (int i = 0; i < Extras::N_CRIAS; i++)
+            {
+                const float cz = Extras::CriaZ(i, tl), cx = Extras::CriaX(i);
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(cx, Colisiones::alturaSuelo(cz) + 0.02f, cz));
+                mm = glm::rotate(mm, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 0.9f, 1.7f * i, 8.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                mm = glm::scale(mm, glm::vec3(0.22f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                tortugaMar.Draw(shader);
+            }
+            // aves: circulos de 9 a 20 m de radio a 9..20 m de altura; alas con theta = 25 grados * sen(2*pi*0.9*t + fase)
+            glUniform1f(specLoc, 0.05f);
+            for (int i = 0; i < Extras::N_AVES; i++)
+            {
+                float ax, ay, az, dx, dz;
+                Extras::PosicionAve(Extras::AVES[i], tl, ax, ay, az, dx, dz);
+                glm::mat4 mb = glm::translate(glm::mat4(1.0f), glm::vec3(ax, ay, az));
+                mb = glm::rotate(mb, std::atan2(-dx, -dz), glm::vec3(0.0f, 1.0f, 0.0f));
+                mb = glm::rotate(mb, glm::radians(-12.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+                mb = glm::scale(mb, glm::vec3(2.4f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mb));
+                aveCuerpo.Draw(shader);
+                const float th = Extras::AMP_ALETEO_AVE * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO_AVE * tl + 1.3f * i);
+                glm::mat4 mw = glm::rotate(mb, glm::radians(th), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mw));
+                aveAla.Draw(shader);
+                glm::mat4 mw2 = glm::rotate(glm::scale(mb, glm::vec3(-1.0f, 1.0f, 1.0f)), glm::radians(th), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mw2));
+                aveAla.Draw(shader);
+            }
+            // emisivos: llamas de las fogatas (sin humo) y linternas de papel flotando (orbe calido que sube y baja con la ola)
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tl);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            for (int i = 0; i < Extras::N_FOGATAS; i++)
+            {
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.9f * i + 3.0f);
+                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(Extras::FOGATAS[i].x, enSuelo(Extras::FOGATAS[i].z) + 0.3f, Extras::FOGATAS[i].z)), glm::vec3(3.2f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 3);
+            for (int i = 0; i < Extras::N_LINTERNAS; i++)
+            {
+                float lx, lz;
+                Extras::LinternaN(i, lx, lz);
+                const float br = 0.55f + 0.30f * std::sin(3.1f * tl + 1.9f * i) + 0.15f * std::sin(7.7f * tl + 0.7f * i);
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), br);
+                glm::mat4 mo = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(lx, Olas::Altura(lx, lz, tl) + 0.06f, lz)), glm::vec3(5.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mo));
+                luciernaga.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            glUniform1f(specLoc, 0.05f);
+        }
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {
             glUniform1f(specLoc, 0.02f);
@@ -1064,6 +1231,7 @@ int main()
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
+    rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4

@@ -92,3 +92,13 @@ The GLEW contributors. (s. f.). *The OpenGL Extension Wrangler Library (GLEW)* [
 | Textura Large Sandstone Blocks 01 | API de Poly Haven | ✅ Rob Tuytel; 2020 (antes «s. f.») |
 
 **Sin abrir:** las referencias de la propuesta v2.0 que no se tocan en X-17 (Assimp, GLFW, miniaudio, learnopengl, etc.) conservan su estado anterior.
+
+## Referencias de la investigación de Mazunte (X-25, 13/11/2026; por verificar contra las páginas)
+
+Gobierno del Estado de Oaxaca. (2019). *Mazunte* [Documento]. https://www.oaxaca.gob.mx/wp-content/uploads/sites/65/2019/10/MAZUNTE.pdf
+
+México Desconocido. (s. f.). *El Centro Mexicano de la Tortuga en Mazunte, Oaxaca*. https://www.mexicodesconocido.com.mx/el-centro-mexicano-de-la-tortuga-en-mazunte-oaxaca.html
+
+México Desconocido. (s. f.). *El milagro de Mazunte*. https://www.mexicodesconocido.com.mx/el-milagro-de-mazunte-oaxaca.html
+
+Secretaría de Turismo de Oaxaca. (2020). *Plan de marketing Playa Mazunte* [Documento]. https://www.oaxaca.gob.mx/sectur/wp-content/uploads/sites/65/2020/12/Plan-de-Marketing-Playa-Mazunte.pdf

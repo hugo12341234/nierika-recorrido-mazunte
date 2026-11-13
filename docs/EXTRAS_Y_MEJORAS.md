@@ -82,6 +82,14 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 - **Mariposas y aves diurnas:** no aplican de noche; se usaron murciélagos.
 - **Audio:** las voces son un murmullo sintetizado; si D2 prefiere grabaciones libres (CC0), hay que descargarlas y citarlas.
 
+| **Lados de la escena (inspirados en Mazunte):** 18 rocas y acantilados, 16 palmas, 4 lanchas varadas y 6 ancladas, 3 redes de pesca, 40 linternas flotantes, 4 tortugas marinas y 8 crías en la arena, 7 aves, 2 fogatas sin humo y 2 hamacas | **X-25 a X-28** `x-25-lados` | `Models/roca_mar/`, `lancha/`, `red_pesca/`, `ave_cuerpo/`, `ave_ala/`, `tortuga/`, `hamaca/`, `fogata/` (≤ 130 caras cada uno), `tools/x25_lados.py`, `src/Extras.h` | Olas + péndulos + círculos + módulo (ver `justificacion_extras.md` §8) | Propios (Blender 5.2); datos de la investigación en `docs/investigacion_mazunte.md` (fuentes por verificar) | ~250 llamadas de dibujo más | ✅ |
+| **Palapas (5) y casas costeras (6)** — **FUERA DEL ALCANCE ORIGINAL** (edificios del pueblo) | **X-26** `x-25-lados` | `Models/palapa/`, `casa_a/`, `casa_b/` (60 y 36 caras), `tools/x26_construcciones.py` | — (estáticas) | Propios; **según D2, el profesor autorizó agregar extras** (evidencia: ver campo de abajo) | 11 llamadas | ✅ pero **desactivable**: `Extras::MOSTRAR_FUERA_DE_ALCANCE` o `NIERIKA_SIN_FUERA_ALCANCE=1` |
+
+### Autorización del profesor para agregar extras (por completar)
+
+> Según D2 (13/11/2026), **el profesor dio luz verde para agregar extras si el equipo lo considera necesario o bueno**.
+> **Evidencia (correo, mensaje o fecha):** _______________ (D2: pega aquí la evidencia cuando la tengas; **no se inventa la fuente ni la fecha**).
+
 ## 5. Evidencias (antes / después)
 
 Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evidencias/`. Los archivos `antes_*.png` son del 12/11/2026 con develop `c65109f`.
@@ -89,6 +97,7 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | Bloque | Antes | Después |
 |---|---|---|
 | X-18 colinas y vegetación | `antes_fondo.png`, `antes_panteon.png`, `antes_orilla.png` | `x18_fondo.png`, `x18_panteon.png`, `x18_costa.png` |
+| X-25 a X-28 lados | `antes_lado_oeste.png`, `antes_lado_este.png` | `x25_lado_oeste.png`, `x25_lado_este.png`, `x25_bahia.png`, `x25_casas_oeste.png` |
 | X-24 narrativa | `antes24_ruta.jpg` | `x24_ruta.jpg` (misma ruta de 9 poses) |
 | X-22/X-23 ambiente y relieve | — | `x22_ambiente_a.png`, `x22_ambiente_b.png`, `x23_relieve.png` |
 | X-21 tablas de remo | — | `x21_tablas_a.png`, `x21_tablas_b.png` |

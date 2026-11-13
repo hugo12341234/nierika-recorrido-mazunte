@@ -117,6 +117,41 @@ int main()
     for (int k = 0; k < 20000; k++) maxAle = std::max(maxAle, (float)std::fabs(Extras::AMP_ALETEO * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO * k * 0.001f)));
     comprueba("Murcielagos: aleteo maximo (grados)", std::fabs(maxAle - 40.0f) < 0.2f, maxAle, "40 grados");
 
+    // 6) Lados (X-25..X-28): aves, tortugas, crias y linternas
+    double eAveR = 0.0, eAveV = 0.0, eTorR = 0.0, eTorV = 0.0;
+    for (int i = 0; i < Extras::N_AVES; i++)
+        for (int k = 0; k < 300; k++)
+        {
+            const float t = k * 0.2f;
+            float x, y, z, dx, dz, x2, y2, z2;
+            Extras::PosicionAve(Extras::AVES[i], t, x, y, z, dx, dz);
+            eAveR = std::max(eAveR, (double)std::fabs(std::hypot(x - Extras::AVES[i].cx, z - Extras::AVES[i].cz) - Extras::AVES[i].radio));
+            Extras::PosicionAve(Extras::AVES[i], t + 0.01f, x2, y2, z2, dx, dz);
+            eAveV = std::max(eAveV, (double)std::fabs(std::hypot(x2 - x, z2 - z) / 0.01f - Extras::AVES[i].vel));
+        }
+    for (int i = 0; i < Extras::N_TORTUGAS; i++)
+        for (int k = 0; k < 300; k++)
+        {
+            const float t = k * 0.5f;
+            float x, z, dx, dz, x2, z2;
+            Extras::PosicionTortuga(Extras::TORTUGAS[i], t, x, z, dx, dz);
+            eTorR = std::max(eTorR, (double)std::fabs(std::hypot(x - Extras::TORTUGAS[i].cx, z - Extras::TORTUGAS[i].cz) - Extras::TORTUGAS[i].radio));
+            Extras::PosicionTortuga(Extras::TORTUGAS[i], t + 0.01f, x2, z2, dx, dz);
+            eTorV = std::max(eTorV, (double)std::fabs(std::hypot(x2 - x, z2 - z) / 0.01f - Extras::VEL_TORTUGA));
+        }
+    comprueba("Aves: error maximo de la distancia al centro (m)", eAveR < 1e-3, eAveR, "< 1e-3");
+    comprueba("Aves: error maximo de la rapidez lineal (m/s)", eAveV < 0.05, eAveV, "< 0.05");
+    comprueba("Tortugas: error maximo de la distancia al centro (m)", eTorR < 1e-3, eTorR, "< 1e-3");
+    comprueba("Tortugas: error maximo de la rapidez (m/s)", eTorV < 0.01, eTorV, "< 0.01");
+    double zMin = 1e9, zMax = -1e9;
+    for (int i = 0; i < Extras::N_CRIAS; i++)
+        for (int k = 0; k < 2000; k++) { const double z = Extras::CriaZ(i, k * 0.37f); zMin = std::min(zMin, z); zMax = std::max(zMax, z); }
+    comprueba("Crias: z minima >= Z0 (la arena firme)", zMin >= Extras::CRIA_Z0 - 1e-4, zMin, ">= 20.2");
+    comprueba("Crias: z maxima < Z0 + L (llegan al borde del agua)", zMax < Extras::CRIA_Z0 + Extras::CRIA_L + 1e-4, zMax, "< 24.4");
+    double lxMin = 1e9, lxMax = -1e9, lzMin = 1e9, lzMax = -1e9;
+    for (int i = 0; i < Extras::N_LINTERNAS; i++) { float x, z; Extras::LinternaN(i, x, z); lxMin = std::min(lxMin, (double)x); lxMax = std::max(lxMax, (double)x); lzMin = std::min(lzMin, (double)z); lzMax = std::max(lzMax, (double)z); }
+    comprueba("Linternas: todas dentro de la bahia (x en [-46, 46], z en [27, 59])", lxMin >= -46.0 && lxMax <= 46.0 && lzMin >= 27.0 && lzMax <= 59.0, lzMax, "<= 59");
+
     std::printf(fallos == 0 ? "\nTODO OK (0 fallos)\n" : "\n%d FALLOS\n", fallos);
     return fallos == 0 ? 0 : 1;
 }
