@@ -25,7 +25,7 @@ namespace
     const char* REF_UNESCO = "UNESCO. (s. f.). Las fiestas indígenas dedicadas a los muertos. https://ich.unesco.org/es/RL/las-fiestas-indigenas-dedicadas-a-los-muertos-00054";
 
     // Textos de docs/fichas_culturales.md (C-7a). Fuente UTF-8: el .vcxproj compila con /utf-8.
-    // POSICIONES PROVISIONALES: velas, cempasúchil y papel picado aún no existen como modelos (B-2, B-3, B-8).
+    // POSICIONES: papel picado, altar y pan se movieron en B-13 (12/11) a donde están hoy los modelos; velas y cempasúchil siguen provisionales.
     // Velas y cempasúchil van en z = 23 porque la zona caminable llega solo hasta z = 24 (Colisiones::Z_MAX, A-9).
     const Ficha fichas[] = {
         { "Velas",
@@ -42,18 +42,18 @@ namespace
           "El papel picado da color a la ofrenda y representa el aire (Secretaría de Educación Pública [SEP], 2026). "
           "En el recorrido, las tiras cuelgan de soportes de madera en el arco del cuarto.",
           "Tradición general (SEP, 2026); la escena es del estudio",
-          glm::vec3(0.0f, 2.0f, 1.6f) },
+          glm::vec3(0.0f, 1.95f, 6.0f) },   // B-13: colgado de los soportes (0, 1.95, 6)
         { "Altar de ofrenda",
           "En el altar, cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros "
           "(Secretaría de Educación Pública [SEP], 2026). La ofrenda familiar es el acto central de la velación (UNESCO, s. f.). "
           "Aquí la ofrenda se presenta sobre un altar de tres niveles, con una forma que es adaptación del estudio.",
           "Tradición general (SEP, 2026); altar de tres niveles y cuarto: adaptación del estudio",
-          glm::vec3(0.0f, 0.0f, 0.3f) },
+          glm::vec3(1.35f, 0.0f, 0.6f) },   // B-13: costado del altar3 (en (1.35, 0, 0)); desde la puerta (d ~ 1.5 m) gana a la del pan
         { "Pan de muerto",
           "El pan de muerto representa el afecto y la fraternidad hacia los difuntos (Secretaría de Educación Pública [SEP], 2026). "
           "Se coloca en el altar junto con las demás ofrendas para recibir a las ánimas.",
           "Tradición general (SEP, 2026)",
-          glm::vec3(0.0f, 0.39f, -0.43f) },
+          glm::vec3(1.40f, 0.80f, 0.0f) },  // B-13: pan_muerto en el nivel medio del altar3 (mundo (1.40, 0.80, 0.00)); a < 0.9 m de la repisa gana a la del altar
     };
     // Referencias de cada ficha (mismo orden que la tabla)
     const char* RefsDe(int i)
