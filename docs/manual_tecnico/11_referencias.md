@@ -44,3 +44,5 @@ UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.u
 
 - ❓ **GLEW, GLM, vcpkg y SOIL2/stb_image** se usan pero no están en la bibliografía de la propuesta: hay que buscar su fuente y citarla (no se inventan aquí).
 - ❓ Slerp, Bézier y ruido de Perlin: ver [§7.4](07_justificacion_matematica.md).
+
+Savva, D., & Cilliers, R. (s. f.). *Clay Floor 001* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/clay_floor_001
