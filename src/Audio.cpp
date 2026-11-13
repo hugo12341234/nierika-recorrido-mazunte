@@ -7,6 +7,8 @@
 #include "Audio.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <cmath>
 
 namespace
 {
@@ -18,9 +20,10 @@ namespace
     };
     const Pista PISTAS[] = {
         { "oleaje", 0.60f }, // mar: protagonista
-        { "musica", 0.25f }  // musica lejana: de fondo
+        { "musica", 0.25f }, // musica lejana: de fondo
+        { "voces",  0.00f }  // X-24: murmullo de voces lejanas (sintetizado); su volumen depende de la zona
     };
-    const int NUM_PISTAS = 2;
+    const int NUM_PISTAS = 3;
 
     // Formatos que decodifica miniaudio sin librerias extra (se prueban en este orden)
     const char* EXTENSIONES[] = { ".wav", ".mp3", ".flac" };
@@ -30,7 +33,7 @@ struct AudioImpl
 {
     ma_engine engine;
     ma_sound  sonidos[NUM_PISTAS];
-    bool      activo[NUM_PISTAS] = { false, false };
+    bool      activo[NUM_PISTAS] = { false, false, false };
 };
 
 bool Audio::init()
@@ -85,6 +88,19 @@ bool Audio::init()
         return false;
     }
     return true;
+}
+
+void Audio::ActualizarZona(float x, float z)
+{
+    if (!impl) return;
+    auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
+    auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
+    fija(0, 0.20f + 0.45f * lim((z - 2.0f) / 22.0f));
+    const float dAltar = std::sqrt((x - 1.35f) * (x - 1.35f) + z * z);
+    fija(1, 0.10f + 0.40f * lim(1.0f - dAltar / 10.0f));
+    const float dCer = std::sqrt((x - 11.0f) * (x - 11.0f) + (z - 19.5f) * (z - 19.5f));
+    const float dPan = std::sqrt(x * x + (z - 7.0f) * (z - 7.0f));
+    fija(2, 0.55f * lim(1.0f - (std::min)(dCer, dPan) / 14.0f));
 }
 
 void Audio::cleanup()

@@ -219,6 +219,11 @@ int main()
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
     Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
     Model petate((char*)"Models/petate/petate.obj");
+    Model farol((char*)"Models/farol/farol.obj");                         // X-24: poste con linterna abierta
+    Model guitarra((char*)"Models/guitarra/guitarra.obj");                // X-24: instrumento del musico
+    Model cesta((char*)"Models/cesta/cesta.obj");
+    Model murcielagoCuerpo((char*)"Models/murcielago_cuerpo/murcielago_cuerpo.obj");
+    Model murcielagoAla((char*)"Models/murcielago_ala/murcielago_ala.obj");
     Model luciernaga((char*)"Models/luciernaga/luciernaga.obj");         // X-22: icosaedro emisivo de 3 cm
     Model tablaRemo((char*)"Models/tabla_remo/tabla_remo.obj");           // X-21: tabla de remo con su remo
     Model colinas((char*)"Models/colinas/colinas.obj");     // X-18: relieve verde de fondo (malla 300 x 215 m, hueco sobre la playa)
@@ -282,6 +287,10 @@ int main()
             const float px = Extras::TENDEDEROS[t].x0 + Extras::ANCHO_BASTIDOR * k, pz = Extras::TENDEDEROS[t].z;
             colisiones.agregar({ glm::vec3(px - 0.05f, 0.0f, pz - 0.05f), glm::vec3(px + 0.05f, 2.0f, pz + 0.05f) });
         }
+    for (int i = 0; i < Extras::N_FIGURAS_N; i++)  // X-24: figuras de la narrativa (cajas de 0.4 x 0.4 m)
+        colisiones.agregar({ glm::vec3(Extras::FIGURAS_N[i].x - 0.2f, 0.0f, Extras::FIGURAS_N[i].z - 0.2f), glm::vec3(Extras::FIGURAS_N[i].x + 0.2f, 1.7f, Extras::FIGURAS_N[i].z + 0.2f) });
+    for (int i = 0; i < Extras::N_FAROLES; i++)    // X-24: postes de los faroles (0.1 m)
+        colisiones.agregar({ glm::vec3(Extras::FAROLES[i].x - 0.05f, 0.0f, Extras::FAROLES[i].z - 0.05f), glm::vec3(Extras::FAROLES[i].x + 0.05f, 1.7f, Extras::FAROLES[i].z + 0.05f) });
     for (int i = 0; i < Extras::N_FIGURAS; i++)  // X-19: cada figura es una caja de 0.5 x 0.5 m (como el cuerpo del visitante)
         colisiones.agregar({ glm::vec3(Extras::FIGURAS[i].x - 0.25f, 0.0f, Extras::FIGURAS[i].z - 0.25f), glm::vec3(Extras::FIGURAS[i].x + 0.25f, 1.7f, Extras::FIGURAS[i].z + 0.25f) });
 
@@ -791,6 +800,113 @@ int main()
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
+        // X-24: narrativa de la ruta en 5 estaciones (ver docs/EXTRAS_Y_MEJORAS.md). Todo con matematica simple, sin KeyFrames.
+        {
+            const float tn = (float)Reloj();
+            glUniform1f(specLoc, 0.05f);
+            Model* tiposN[4] = { &personaPieA, &personaPieB, &personaAgachadaA, &personaAgachadaB };
+            for (int i = 0; i < Extras::N_FIGURAS_N; i++)
+            {
+                const Extras::FiguraN& f = Extras::FIGURAS_N[i];
+                const bool agachada = f.tipo >= 2;
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(f.x, Colisiones::alturaSuelo(f.z), f.z));
+                mm = glm::rotate(mm, glm::radians(f.giroY), glm::vec3(0.0f, 1.0f, 0.0f));
+                if (agachada) mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tn, 5.0f, f.fase, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                else          mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tn, 4.5f, f.fase, 1.2f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                mm = glm::scale(mm, glm::vec3(f.esc));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                tiposN[f.tipo]->Draw(shader);
+                if (f.inst == 1)   // musico: la guitarra cruza el pecho y se mece al compas (+-4 grados, 1.3 s)
+                {
+                    glm::mat4 mg = glm::translate(mm, glm::vec3(0.05f, 1.05f, -0.16f));
+                    mg = glm::rotate(mg, glm::radians(58.0f + Extras::Balanceo(tn, 1.3f, f.fase, 4.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mg));
+                    guitarra.Draw(shader);
+                }
+            }
+            for (int i = 0; i < Extras::N_CESTAS; i++)
+            {
+                const glm::vec3 base(Extras::CESTAS[i].x, Colisiones::alturaSuelo(Extras::CESTAS[i].z), Extras::CESTAS[i].z);
+                colocar(cesta, base, 20.0f * i);
+                for (int k = 0; k < 5; k++)
+                {
+                    glm::mat4 mf = glm::translate(glm::mat4(1.0f), base + glm::vec3(0.08f * std::cos(1.3f * k + i), 0.19f, 0.08f * std::sin(1.3f * k + i)));
+                    mf = glm::scale(mf, glm::vec3(1.5f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                    cempasuchil.Draw(shader);
+                }
+            }
+            // camino de cempasuchil de la orilla a la puerta del cuarto
+            const int nFlores = Extras::NumFloresSendero();
+            for (int i = 0; i < nFlores; i++)
+            {
+                float fx, fz;
+                if (!Extras::FlorSenderoEn(i, fx, fz)) continue;
+                glm::mat4 mf = glm::translate(glm::mat4(1.0f), glm::vec3(fx, Colisiones::alturaSuelo(fz) + 0.035f, fz));
+                mf = glm::rotate(mf, glm::radians(37.0f * i), glm::vec3(0.0f, 1.0f, 0.0f));
+                mf = glm::scale(mf, glm::vec3(1.25f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                cempasuchil.Draw(shader);
+            }
+            // faroles: poste y luz calida (esfera emisiva que parpadea con dos senos; fase distinta por farol)
+            glUniform1f(specLoc, 0.15f);
+            for (int i = 0; i < Extras::N_FAROLES; i++)
+                colocar(farol, glm::vec3(Extras::FAROLES[i].x, Colisiones::alturaSuelo(Extras::FAROLES[i].z), Extras::FAROLES[i].z), 90.0f * (i % 4));
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 3);
+            for (int i = 0; i < Extras::N_FAROLES; i++)
+            {
+                const float gir = glm::radians(90.0f * (i % 4));
+                const glm::vec3 ob(Extras::FAROLES[i].x + 0.14f * std::cos(gir), Colisiones::alturaSuelo(Extras::FAROLES[i].z) + 1.52f, Extras::FAROLES[i].z - 0.14f * std::sin(gir));
+                const float br = 0.55f + 0.30f * std::sin(5.1f * tn + 1.7f * i) + 0.15f * std::sin(11.3f * tn + 0.9f * i);   // 0.10 .. 1.00
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), br);
+                glm::mat4 mo = glm::scale(glm::translate(glm::mat4(1.0f), ob), glm::vec3(4.4f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mo));
+                luciernaga.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            glUniform1f(specLoc, 0.05f);
+            // veladoras a los lados del sendero (cada 2.2 m, a +-1.3 m del eje) con su llama
+            std::vector<glm::vec3> velasSendero;
+            for (float z = 21.0f; z > 3.5f; z -= 2.2f)
+            {
+                if ((z > 2.7f && z < 3.6f) || (z > 11.3f && z < 12.4f)) continue;      // no sobre los muros de la barda
+                for (int lado = -1; lado <= 1; lado += 2)
+                    velasSendero.push_back(glm::vec3(Extras::EjeSendero(z) + 1.3f * lado, Colisiones::alturaSuelo(z), z));
+            }
+            for (const glm::vec3& v : velasSendero) colocar(vela, v, 0.0f);
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tn);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            int nl2 = 0;
+            for (const glm::vec3& v : velasSendero)
+            {
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.61f * (nl2++) + 7.0f);
+                glm::mat4 ml = glm::translate(glm::mat4(1.0f), v + glm::vec3(0.0f, 0.15f, 0.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            // murcielagos al anochecer: circulos de radio 10..26 m, altura 6.5..14 m; alas con theta = 40 grados * sen(2*pi*3.2*t)
+            glUniform1f(specLoc, 0.02f);
+            for (int i = 0; i < Extras::N_MURCIELAGOS; i++)
+            {
+                float mx, my, mz, dx, dz;
+                Extras::PosicionMurcielago(Extras::MURCIELAGOS[i], tn, mx, my, mz, dx, dz);
+                glm::mat4 mb = glm::translate(glm::mat4(1.0f), glm::vec3(mx, my, mz));
+                mb = glm::rotate(mb, std::atan2(-dx, -dz), glm::vec3(0.0f, 1.0f, 0.0f));
+                mb = glm::rotate(mb, glm::radians(-14.0f), glm::vec3(0.0f, 0.0f, 1.0f));      // se inclina hacia el centro del giro
+                mb = glm::scale(mb, glm::vec3(2.2f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mb));
+                murcielagoCuerpo.Draw(shader);
+                const float th = Extras::AMP_ALETEO * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO * tn + 1.7f * i);
+                glm::mat4 mw = glm::rotate(mb, glm::radians(th), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mw));
+                murcielagoAla.Draw(shader);
+                glm::mat4 mw2 = glm::rotate(glm::scale(mb, glm::vec3(-1.0f, 1.0f, 1.0f)), glm::radians(th), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mw2));
+                murcielagoAla.Draw(shader);
+            }
+            glUniform1f(specLoc, 0.05f);
+        }
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {
             glUniform1f(specLoc, 0.02f);
@@ -918,6 +1034,7 @@ int main()
             cuadroVideo++;
             if (relojVideo >= rutaVideo.back().t) glfwSetWindowShouldClose(window, GL_TRUE);
         }
+        audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z);  // X-24: volumen por zona
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -946,6 +1063,8 @@ int main()
     colinas.cleanup();  // X-18
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
+    tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
+    farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7

@@ -64,6 +64,24 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 | **48 luciérnagas, espuma de la orilla y resplandor del ocaso en el cielo** | **X-22** `x-22-ambiente` | `Models/luciernaga/` (icosaedro de 20 caras), `Shaders/lighting.frag` (`llama = 2`, `espuma`), `Shaders/sky.frag` (`ocaso`), `src/Extras.h` | Lissajous 3D + parpadeo sen³; espuma = ruido de Perlin que avanza hacia la playa | Propio | 48 llamadas de dibujo muy pequeñas | ✅ |
 | **Relieve en arena, barda, tumbas y cruz** | **X-23** (misma rama `x-22-ambiente`) | `Shaders/lighting.frag` (`relieveLuma`, `arena`) | Mapa de altura = luminancia de la textura (Mikkelsen, 2010) | Mikkelsen (2010), ver `11_referencias.md` | Sin costo de geometría | ✅ |
 
+| **Narrativa en 5 estaciones:** sendero de cempasúchil (≈ 70 flores) de la orilla a la puerta, 16 veladoras y 16 faroles con luz parpadeante, 24 figuras (familias, niños, abuelas con vela, músico con guitarra), 4 cestas con flores, 7 murciélagos al anochecer y **sonido por zona** (oleaje, música, voces) | **X-24** `x-24-narrativa` | `Models/farol/`, `guitarra/`, `cesta/`, `murcielago_cuerpo/`, `murcielago_ala/` (≤ 220 caras cada uno), `Audio/voces.wav` (sintetizada), `src/Extras.h`, `src/Audio.cpp`, `tools/x24_narrativa.py`, `tools/x24_voces.py` | Balanceo senoidal de las figuras y de la guitarra; parpadeo de los faroles (dos senos); murciélagos en círculos con aleteo senoidal; volumen = rampa lineal de la distancia | Propio (Blender 5.2, síntesis por código; sin voces reales ni grabaciones) | ≈ 880 FPS en la RX 5700 XT (antes ≈ 1 050); ≈ 330 llamadas de dibujo más | ✅ (el audio no se pudo escuchar desde aquí) |
+
+### Hilo narrativo (coincide con las 5 fichas)
+
+| Estación | Ficha | Dónde | Qué cuenta |
+|---|---|---|---|
+| E1 Llegada a la playa | Velas | orilla oeste (x −11…−3, z ≈ 21.6) | una familia llega con su cesta de flores, una abuela deja velas en la arena y un farol marca la entrada |
+| E2 Ofrendas y velas al mar | Velas y cempasúchil | orilla este (x 3…19, z 17…21) | la ceremonia (X-19) con un músico y un niño; faroles a los lados |
+| E3 Sendero de cempasúchil y papel picado | Papel picado | x ≈ 0, z 22 → 2 | las flores guían de la orilla al panteón entre veladoras y faroles; los tendederos (X-20) cruzan la playa; una familia camina hacia el panteón |
+| E4 Panteón con familias | (altar, tumbas) | dentro de la barda | cada tumba tiene visitantes, ofrendas (X-20) y un farol en cada esquina; un músico toca junto a la tumba 1 |
+| E5 El altar | Altar y pan de muerto | la puerta del cuarto y el altar | una abuela con su vela y un niño esperan afuera; dos faroles flanquean la puerta; el altar con su luz cálida (X-8) |
+
+### Pendiente de decisión de D2
+
+- **Comparsa (figura 7 de la propuesta):** no se incluye.
+- **Mariposas y aves diurnas:** no aplican de noche; se usaron murciélagos.
+- **Audio:** las voces son un murmullo sintetizado; si D2 prefiere grabaciones libres (CC0), hay que descargarlas y citarlas.
+
 ## 5. Evidencias (antes / después)
 
 Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evidencias/`. Los archivos `antes_*.png` son del 12/11/2026 con develop `c65109f`.
@@ -71,6 +89,7 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | Bloque | Antes | Después |
 |---|---|---|
 | X-18 colinas y vegetación | `antes_fondo.png`, `antes_panteon.png`, `antes_orilla.png` | `x18_fondo.png`, `x18_panteon.png`, `x18_costa.png` |
+| X-24 narrativa | `antes24_ruta.jpg` | `x24_ruta.jpg` (misma ruta de 9 poses) |
 | X-22/X-23 ambiente y relieve | — | `x22_ambiente_a.png`, `x22_ambiente_b.png`, `x23_relieve.png` |
 | X-21 tablas de remo | — | `x21_tablas_a.png`, `x21_tablas_b.png` |
 | X-20 tendederos y ofrendas | — | `x20_tendedero.png`, `x20_ofrenda_tumba.png` |
@@ -83,5 +102,6 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | develop antes de la fase (12/11) | 1 680 – 2 100 |
 | tras X-18 (colinas y 210 plantas) | 1 250 – 1 500 |
 | tras X-22/X-23 (todo lo anterior + ceremonia, tendederos, tablas, luciérnagas, espuma, relieve) | 1 020 – 1 120 |
+| tras X-24 (narrativa: sendero, faroles, 24 figuras, murciélagos) | 830 – 920 |
 
 El requisito (≥ 30 FPS en gráficos integrados) **sigue sin probarse en una laptop integrada**: la GPU de D2 es mucho más rápida. El costo más visible es el número de llamadas de dibujo (≈ 450); si hiciera falta recortar, el primer paso es dibujar las 210 plantas de las colinas con instancing o reducirlas.
