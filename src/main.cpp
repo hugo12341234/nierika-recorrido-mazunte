@@ -269,6 +269,11 @@ int main()
     Audio audio;
     audio.init();
 
+    // D-5: la carga de modelos y texturas tarda segundos antes de este punto. Sin esto, el primer deltaTime los incluye
+    // (lastFrame arranca en 0) y la silueta empezaria su caminata ya avanzada o terminada.
+    lastFrame = (GLfloat)glfwGetTime();
+    tSilueta = 0.0f;
+
     while (!glfwWindowShouldClose(window))
     {
         // Set frame time
