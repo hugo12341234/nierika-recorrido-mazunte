@@ -197,6 +197,8 @@ int main()
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
     Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
+    Model palma((char*)"Models/palma/palma.obj");           // X-9: extra decorativo (no cuenta entre los 18 propios)
+    Model arbusto((char*)"Models/arbusto/arbusto.obj");   // X-9: extra decorativo
     Model roca((char*)"Models/roca/roca.obj");             // B-10: roca decorativa junto a la entrada
     Model cempasuchil((char*)"Models/cempasuchil/cempasuchil.obj");       // B-3: flor de planos cruzados (alfa)
     Model panMuerto((char*)"Models/pan_muerto/pan_muerto.obj");           // B-4: pan propio (el de Maya sigue en Models/pan/)
@@ -523,6 +525,11 @@ int main()
             sobreAltar(panMuerto,   glm::vec3( 0.00f, 0.80f, -0.05f));
             sobreAltar(cempasuchil, glm::vec3(-0.20f, 0.835f, 0.00f));
             sobreAltar(cempasuchil, glm::vec3( 0.20f, 0.835f, 0.00f));
+            // X-9: mas cempasuchil (ofrenda mas llena): flanquea el marco, rodea los panes y llena el nivel inferior
+            const glm::vec3 floresExtra[10] = { { -0.17f, 1.235f, -0.32f }, { 0.17f, 1.235f, -0.32f }, { -0.60f, 0.835f, -0.12f }, { 0.60f, 0.835f, -0.12f },
+                                                { -0.62f, 0.835f, 0.20f }, { -0.30f, 0.435f, 0.30f }, { -0.55f, 0.435f, 0.28f }, { -0.75f, 0.435f, 0.12f },
+                                                { 0.05f, 0.435f, 0.33f }, { 0.75f, 0.435f, 0.10f } };
+            for (int i = 0; i < 10; i++) sobreAltar(cempasuchil, floresExtra[i]);
             // B-13 (12/11): extras de D1 (X-3, sin tarea propia) que estaban sobre los escalones de la capilla retirada:
             // calavera en la repisa del nivel inferior (y = 0.40), en el extremo +x local (mundo z = +0.45), lejos de donde
             // cae la flor de la silueta (D-4: mundo z ~ -0.39), y una flor de Maya (pivote en el centro, 0.12 m de alto) a cada lado
@@ -540,6 +547,16 @@ int main()
         // B-13: papel picado colgado del travesano (y = 1.95; su pivote es el borde superior). Provisional, sin ver en pantalla.
         colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
+        // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
+        {
+            const glm::vec3 palmas[8] = { { -6.0f, 0.0f, 15.5f }, { 7.0f, 0.0f, 16.5f }, { -11.0f, 0.0f, 19.0f }, { 12.5f, 0.0f, 18.5f },
+                                          { -16.5f, 0.0f, 15.0f }, { 17.0f, 0.0f, 21.0f }, { 4.8f, 0.0f, 20.0f }, { -3.8f, 0.0f, 21.0f } };
+            for (int i = 0; i < 8; i++) colocar(palma, palmas[i], 47.0f * i);
+            const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -8.0f, 0.0f, 17.2f }, { 9.5f, 0.0f, 15.0f },
+                                            { -13.5f, 0.0f, 17.0f }, { 14.5f, 0.0f, 16.0f }, { -5.0f, 0.0f, 19.5f }, { 8.0f, 0.0f, 19.5f } };
+            glUniform1f(specLoc, 0.05f);
+            for (int i = 0; i < 8; i++) colocar(arbusto, arbustos[i], 31.0f * i);
+        }
         colocar(roca,     glm::vec3( 1.5f, 0.0f, 12.5f), 0.0f);  // B-10: roca junto a la entrada norte
 
         // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
@@ -665,6 +682,8 @@ int main()
     copalero.cleanup();
     barda.cleanup();
     roca.cleanup();
+    palma.cleanup();    // X-9
+    arbusto.cleanup();  // X-9
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7
