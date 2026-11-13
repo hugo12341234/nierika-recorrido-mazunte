@@ -84,13 +84,13 @@ def modelos():
             for loop, uv in zip(f.loops, ((0, filas[i][2]), (1, filas[i][2]), (1, filas[i + 1][2]), (0, filas[i + 1][2]))):
                 loop[uvl].uv = uv
 
-    # --- Palma: tronco curvo de 5 m + 9 hojas de 2.2 m
+    # --- Palma: tronco curvo de 8.5 m (X-32) + 9 hojas de 3 m
     limpiar()
     m_tronco = material("palma_tronco", os.path.join(RAIZ, "Models", "palma", "palma_tronco.png"))
     m_hoja = material("palma_hoja", os.path.join(RAIZ, "Models", "palma", "palma_hoja.png"), alfa=True)
     m_hoja.blend_method = "HASHED" if hasattr(m_hoja, "blend_method") else None
     bm = bmesh.new()
-    seg, alto, cur = 10, 5.0, 0.5
+    seg, alto, cur = 10, 8.5, 0.8
     anillos = []
     for i in range(seg + 1):
         s = i / seg
@@ -108,7 +108,7 @@ def modelos():
     n_antes = len(bm.faces)
     cima = Vector((cur, 0, alto))
     for h in range(9):
-        tira(bm, 2.2, 0.75, (0.9, 1.6), 2 * math.pi * h / 9 + 0.2 * (h % 2), cima + Vector((0, 0, 0.05 * (h % 3))))
+        tira(bm, 3.0, 1.0, (0.9, 1.6), 2 * math.pi * h / 9 + 0.2 * (h % 2), cima + Vector((0, 0, 0.05 * (h % 3))))
     for i, f in enumerate(bm.faces):
         if i >= n_antes:
             f.material_index = 1

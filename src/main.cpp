@@ -937,7 +937,7 @@ int main()
                 glm::mat4 mb = glm::translate(glm::mat4(1.0f), glm::vec3(mx, my, mz));
                 mb = glm::rotate(mb, std::atan2(-dx, -dz), glm::vec3(0.0f, 1.0f, 0.0f));
                 mb = glm::rotate(mb, glm::radians(-14.0f), glm::vec3(0.0f, 0.0f, 1.0f));      // se inclina hacia el centro del giro
-                mb = glm::scale(mb, glm::vec3(2.2f));
+                mb = glm::scale(mb, glm::vec3(1.0f));
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mb));
                 murcielagoCuerpo.Draw(shader);
                 const float th = Extras::AMP_ALETEO * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO * tn + 1.7f * i);
@@ -1108,6 +1108,7 @@ int main()
                 Extras::PosicionTortuga(Extras::TORTUGAS[i], tl, tx, tz, dx, dz);
                 glm::mat4 mm = sobreOla(tx, tz, glm::degrees(std::atan2(-dx, -dz)), 0.02f);
                 mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 1.8f, 1.1f * i, 10.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                mm = glm::scale(mm, glm::vec3(0.85f));  // X-32: caparazon de ~0.8 m
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 tortugaMar.Draw(shader);
             }
@@ -1119,7 +1120,7 @@ int main()
                 glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(cx, Colisiones::alturaSuelo(cz) + 0.02f, cz));
                 mm = glm::rotate(mm, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                 mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 0.9f, 1.7f * i, 8.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
-                mm = glm::scale(mm, glm::vec3(0.22f));
+                mm = glm::scale(mm, glm::vec3(0.12f));
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 tortugaMar.Draw(shader);
             }
@@ -1132,7 +1133,7 @@ int main()
                 glm::mat4 mb = glm::translate(glm::mat4(1.0f), glm::vec3(ax, ay, az));
                 mb = glm::rotate(mb, std::atan2(-dx, -dz), glm::vec3(0.0f, 1.0f, 0.0f));
                 mb = glm::rotate(mb, glm::radians(-12.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-                mb = glm::scale(mb, glm::vec3(2.4f));
+                mb = glm::scale(mb, glm::vec3(1.2f));
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mb));
                 aveCuerpo.Draw(shader);
                 const float th = Extras::AMP_ALETEO_AVE * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO_AVE * tl + 1.3f * i);
