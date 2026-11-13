@@ -76,3 +76,17 @@ El primer factor limita la espuma a la franja z ∈ [24.3, 26.2] (donde el mar t
 La normal se perturba con el método de Mikkelsen (2010), que usa las derivadas de pantalla dFdx/dFdy de la posición y de la altura (ya usado para el pan de muerto en B-12): N' = normalize(|det|·N − sign(det)·(∂h/∂x·(∂p/∂y × N) + ∂h/∂y·(N × ∂p/∂x))). No necesita tangentes ni UV especiales.
 
 **Limitación honesta:** una textura clara no siempre es «alta»; el resultado es un relieve plausible, no la geometría real. Para una arena o piedra con normal maps reales hay que descargar texturas PBR (Poly Haven) y asignarlas por material.
+
+## 7. Narrativa de la ruta: sendero, faroles y figuras (X-24)
+
+**Sendero de cempasúchil.** El eje del camino serpentea: x(z) = 0.9·sen(0.35·z). Entre la orilla (z = 22.4) y la puerta del cuarto (z = 2.3) se coloca una flor cada 0.28 m de z, con una dispersión determinista de ±0.45 m en x y ±0.12 m en z (hash de seno: la misma flor siempre cae en el mismo lugar). La amplitud 0.9 m deja el eje dentro de las dos puertas de la barda (|x| < 1 en z = 3 y z = 12) y las flores que cayeran sobre un muro no se dibujan (`Extras::FlorSenderoEn`). El sendero **no es una trayectoria de la silueta**: ella sigue en x = 0.
+
+**Parpadeo de los faroles.** brillo(t) = 0.55 + 0.30·sen(5.1 t + 1.7 i) + 0.15·sen(11.3 t + 0.9 i), con i el índice del farol: suma de dos senos de frecuencias no múltiplos, que oscila entre 0.10 y 1.00 y no se repite al unísono. El color emisivo es (1.0, 0.62, 0.22)·(0.55 + 1.1·brillo).
+
+**Músico.** La guitarra se mece alrededor de su ángulo base de 58° con θ = 4°·sen(2πt/1.3 + φ) (≈ 46 pulsaciones por minuto: un compás tranquilo). Es un balanceo del objeto, no una animación de manos.
+
+**Murciélagos.** Vuelan en círculos de radio R (10 a 26 m) a rapidez lineal v = 4.5 m/s, así que ω = v/R y (x, z) = (cₓ + R·cos(ωt + φ), c_z + R·sen(ωt + φ)); la altura oscila 0.8·sen(0.7t + 2φ) alrededor de 6.5–14 m. Las alas baten θ = 40°·sen(2π·3.2·t + 1.7 i) alrededor del eje del cuerpo (el ala izquierda es el espejo de la derecha). Un murciélago real bate a 10–20 Hz; se usa 3.2 Hz para que el movimiento se perciba a 60 cuadros por segundo.
+
+**Sonido por zona** (`Audio::ActualizarZona`, `src/Audio.cpp`): oleaje = 0.20 + 0.45·clamp((z − 2)/22, 0, 1) (más fuerte hacia el mar); música = 0.10 + 0.40·clamp(1 − d_altar/10, 0, 1); voces = 0.55·clamp(1 − d/14, 0, 1) con d la menor distancia a la ceremonia (11, 19.5) o al panteón (0, 7). Son rampas lineales de la distancia, sin espacialización 3D.
+
+**Comprobación:** `tools/x19_pruebas_extras.cpp` (sendero, murciélagos y las anteriores): ver el resultado en el ESTADO.

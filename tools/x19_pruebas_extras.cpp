@@ -82,6 +82,41 @@ int main()
     comprueba("Luciernagas: desplazamiento vertical maximo (m)", maxDy <= 0.4501, maxDy, "<= 0.45");
     comprueba("Luciernagas que nunca brillan (> 0.5)", siempreApagadas == 0, siempreApagadas, "0");
 
+    // 4) Sendero de cempasuchil: sigue el eje serpenteante, no pisa los muros y llena el tramo de la orilla a la puerta
+    int dibujadas = 0, enMuro = 0; double maxDesv = 0.0;
+    for (int i = 0; i < Extras::NumFloresSendero(); i++)
+    {
+        float x, z;
+        if (!Extras::FlorSenderoEn(i, x, z)) continue;
+        dibujadas++;
+        if (((z > 2.9f && z < 3.35f) || (z > 11.7f && z < 12.05f)) && std::fabs(x) > 0.95f) enMuro++;
+        maxDesv = std::max(maxDesv, (double)std::fabs(x - Extras::EjeSendero(z)));
+    }
+    comprueba("Sendero: numero de flores dibujadas", dibujadas > 60 && dibujadas <= Extras::NumFloresSendero(), dibujadas, "60..71");
+    comprueba("Sendero: flores sobre los muros de la barda", enMuro == 0, enMuro, "0");
+    comprueba("Sendero: desviacion maxima respecto del eje (m)", maxDesv <= 0.46, maxDesv, "<= 0.45");
+    comprueba("Sendero: el eje cruza las puertas de la barda (|x| < 1 en z = 3 y z = 12)", std::fabs(Extras::EjeSendero(3.1f)) < 1.0f && std::fabs(Extras::EjeSendero(11.9f)) < 1.0f,
+              std::fabs(Extras::EjeSendero(11.9f)), "< 1");
+    // 5) Murcielagos: distancia al centro = radio, rapidez lineal = VEL_MURCIELAGO, aleteo acotado
+    double maxR = 0.0, maxV = 0.0;
+    for (int i = 0; i < Extras::N_MURCIELAGOS; i++)
+    {
+        float x0m, y0m, z0m, dxm, dzm, x1m, y1m, z1m;
+        for (int k = 0; k < 500; k++)
+        {
+            const float t = k * 0.1f;
+            Extras::PosicionMurcielago(Extras::MURCIELAGOS[i], t, x0m, y0m, z0m, dxm, dzm);
+            maxR = std::max(maxR, (double)std::fabs(std::hypot(x0m - Extras::MURCIELAGOS[i].cx, z0m - Extras::MURCIELAGOS[i].cz) - Extras::MURCIELAGOS[i].radio));
+            Extras::PosicionMurcielago(Extras::MURCIELAGOS[i], t + 0.01f, x1m, y1m, z1m, dxm, dzm);
+            maxV = std::max(maxV, (double)std::fabs(std::hypot(x1m - x0m, z1m - z0m) / 0.01f - Extras::VEL_MURCIELAGO));
+        }
+    }
+    comprueba("Murcielagos: error maximo de la distancia al centro (m)", maxR < 1e-3, maxR, "< 1e-3");
+    comprueba("Murcielagos: error maximo de la rapidez lineal (m/s)", maxV < 0.05, maxV, "< 0.05");
+    float maxAle = 0.0f;
+    for (int k = 0; k < 20000; k++) maxAle = std::max(maxAle, (float)std::fabs(Extras::AMP_ALETEO * std::sin(2.0f * Extras::PI * Extras::FREC_ALETEO * k * 0.001f)));
+    comprueba("Murcielagos: aleteo maximo (grados)", std::fabs(maxAle - 40.0f) < 0.2f, maxAle, "40 grados");
+
     std::printf(fallos == 0 ? "\nTODO OK (0 fallos)\n" : "\n%d FALLOS\n", fallos);
     return fallos == 0 ? 0 : 1;
 }

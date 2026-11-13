@@ -137,6 +137,13 @@ float BlinnSpec(vec3 lightDir, vec3 normal, vec3 viewDir)
 void main()
 {
     // X-22: luciernaga (llama = 2): punto emisivo; llamaFase = brillo 0..1 (parpadeo calculado en main.cpp); sin luz ni textura
+    // X-24: orbe del farol (llama = 3): esfera emisiva calida; llamaFase = brillo 0..1 (parpadeo calculado en main.cpp)
+    if (llama == 3)
+    {
+        color = vec4(vec3(1.0, 0.62, 0.22) * (0.55 + 1.1 * llamaFase), 1.0);
+        return;
+    }
+
     if (llama == 2)
     {
         if (llamaFase < 0.04) discard;
