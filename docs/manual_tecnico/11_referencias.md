@@ -42,9 +42,31 @@ UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.u
 
 ## Pendientes de formato
 
-- ❓ **GLEW, GLM, vcpkg y SOIL2/stb_image** se usan pero no están en la bibliografía de la propuesta: hay que buscar su fuente y citarla (no se inventan aquí).
-- ❓ Slerp, Bézier y ruido de Perlin: ver [§7.4](07_justificacion_matematica.md).
+- 🔄 GLEW, GLM, vcpkg y SOIL2 ya tienen cita (X-15, 12/11, por verificar); falta stb_image.
+- 🔄 Slerp (Shoemake), Bézier (Farin) y Perlin ya tienen cita (X-15, por verificar); ver [§7.4](07_justificacion_matematica.md).
 
 Savva, D., & Cilliers, R. (s. f.). *Clay Floor 001* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/clay_floor_001
 
 Tuytel, R. (s. f.). *Large Sandstone Blocks 01* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/large_sandstone_blocks_01
+
+## Referencias de tecnología y matemática añadidas el 12/11 (X-15)
+
+> Datos de edición escritos por el asistente a partir de su conocimiento, **sin consultar las fuentes**: D2 debe comprobar autores, años y páginas antes de la entrega.
+
+Farin, G. (2002). *Curves and surfaces for CAGD: A practical guide* (5.ª ed.). Morgan Kaufmann.
+
+G-Truc Creation. (s. f.). *OpenGL Mathematics (GLM)* [Software]. GitHub. https://github.com/g-truc/glm
+
+Golini, M. L. (s. f.). *SOIL2: Simple OpenGL Image Library 2* [Software]. GitHub. https://github.com/SpartanJ/SOIL2
+
+Microsoft. (s. f.). *vcpkg: C++ package manager* [Software]. GitHub. https://github.com/microsoft/vcpkg
+
+Mikkelsen, M. (2010). *Bump mapping unparametrized surfaces on the GPU*. Journal of Graphics, GPU, and Game Tools, 15(1), 49–61.
+
+Perlin, K. (1985). An image synthesizer. *ACM SIGGRAPH Computer Graphics, 19*(3), 287–296.
+
+Perlin, K. (2002). Improving noise. *ACM Transactions on Graphics, 21*(3), 681–682.
+
+Shoemake, K. (1985). Animating rotation with quaternion curves. *ACM SIGGRAPH Computer Graphics, 19*(3), 245–254.
+
+The GLEW contributors. (s. f.). *The OpenGL Extension Wrangler Library (GLEW)* [Software]. https://glew.sourceforge.net/

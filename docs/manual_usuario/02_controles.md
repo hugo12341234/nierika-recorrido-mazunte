@@ -41,4 +41,6 @@ Si no salen, hay que agregarlas aquí.
 | C-7 (fichas) | Ninguno: la ficha aparece sola a **menos de 2 m** del objeto | Implementado (ver sección 4); falta compilar con ImGui en VS y probar |
 | D-2 / D-4 (silueta) | Arranca sola al abrir el programa; **R** la reinicia | Implementado (D-5, fusionado el 12/11); falta que D2 lo acepte al verlo |
 
-> 📷 Captura pendiente: esquema del teclado con las teclas resaltadas (se hace en GIMP; no se usa ninguna imagen ajena sin crédito).
+![Esquema del teclado y el ratón](capturas/02_teclado_controles.png)
+
+*Esquema dibujado por el equipo con `tools/x15_esquema_teclado.py`; no usa imágenes ajenas.*
