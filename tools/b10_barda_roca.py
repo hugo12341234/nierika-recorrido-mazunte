@@ -92,29 +92,36 @@ def guardar_exportar(nombre):
 #   Dimensiones del recinto (coordenadas de juego):
 #     X: -7 .. +7 (14 m de ancho)
 #     Z: +3 .. +12 (9 m de profundidad)
-#   Entrada (abertura) de 2 m en el muro norte (z=12), centrada en x=0
+#   Entradas (aberturas) de 2 m en el muro norte (z=12) y en el sur (z=3), centradas en x=0
 #   Altura: 0.70 m  |  Espesor: 0.25 m
 #
-#   Mapeo Blender → juego:  Blender X = juego X
-#                            Blender Y = juego Z
+#   Mapeo Blender → juego (E-2, 12/11, corregido): Blender X = juego X
+#                            Blender Y = juego -Z   (el exportador usa Forward -Z, igual que tools/bpy_comun.py)
 #                            Blender Z = juego Y (vertical)
+#   Antes (B-10) el script suponía Blender Y = juego +Z y la barda salía espejada en z (z = -12..-3 en el .obj):
+#   se dibujaba DETRÁS del cuarto mientras sus colisiones estaban delante (z = +3..+12).
+#   E-2 también abre una puerta de 2 m en el muro sur (x -1..+1), alineada con la del cuarto y con la entrada norte,
+#   porque la silueta camina de la orilla al altar por x = 0 y el jugador debe poder pasar del panteón al cuarto.
 # ============================================================
 limpiar()
 
-# Muro sur (fondo, z=3..3.25 en el juego)
-cubo(14.00, 0.25, 0.70, x= 0.000, y= 3.125)   # sx=14, sy=0.25, sz=0.70
+# Muro sur izquierdo (x=-7..-1, z=3..3.25 en el juego)
+cubo( 6.00, 0.25, 0.70, x=-4.000, y=-3.125)   # sx=6, sy=0.25, sz=0.70
+
+# Muro sur derecho (x=+1..+7, z=3..3.25): abertura central de 2 m (x -1..+1)
+cubo( 6.00, 0.25, 0.70, x= 4.000, y=-3.125)
 
 # Muro norte izquierdo (x=-7..-1, z=11.75..12)
-cubo( 6.00, 0.25, 0.70, x=-4.000, y=11.875)   # sx=6, sy=0.25
+cubo( 6.00, 0.25, 0.70, x=-4.000, y=-11.875)  # sx=6, sy=0.25
 
 # Muro norte derecho (x=+1..+7, z=11.75..12)
-cubo( 6.00, 0.25, 0.70, x= 4.000, y=11.875)   # abertura central de 2 m (x -1..+1)
+cubo( 6.00, 0.25, 0.70, x= 4.000, y=-11.875)  # abertura central de 2 m (x -1..+1)
 
 # Muro oeste (x=-7..-6.75, z=3.25..12)
-cubo( 0.25, 8.75, 0.70, x=-6.875, y= 7.625)   # desde z=3.25 (tras el muro sur) a z=12
+cubo( 0.25, 8.75, 0.70, x=-6.875, y=-7.625)   # desde z=3.25 (tras el muro sur) a z=12
 
 # Muro este (x=+6.75..+7, z=3.25..12)
-cubo( 0.25, 8.75, 0.70, x= 6.875, y= 7.625)
+cubo( 0.25, 8.75, 0.70, x= 6.875, y=-7.625)
 
 guardar_exportar("barda")
 
