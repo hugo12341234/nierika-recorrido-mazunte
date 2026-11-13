@@ -1,0 +1,34 @@
+NIERIKA STUDIO - Recorrido virtual: Día de Muertos en Mazunte, Oaxaca
+Proyecto final de Computación Gráfica e Interacción Humano-Computadora, FI UNAM (2027-1)
+Integrantes: 319266894 y 321332086 - Equipo 15
+
+CÓMO ABRIRLO
+ 1. Descomprime TODO el .zip en una carpeta (no ejecutes el .exe desde dentro del .zip).
+ 2. Abre NierikaStudio.exe. No hace falta instalar nada más.
+    Deja el .exe junto a las carpetas Models, Shaders y Audio: el programa las busca ahí.
+
+REQUISITOS
+ - Windows de 64 bits y gráficos compatibles con OpenGL 3.3.
+ - Si Windows avisa que falta VCRUNTIME140.dll o MSVCP140.dll, instala el
+   "Microsoft Visual C++ Redistributable" x64 (gratis, de Microsoft) y vuelve a abrir.
+ - El sonido es opcional: sin tarjeta de sonido el programa sigue sin audio.
+
+CONTROLES
+ W A S D o flechas ... caminar
+ Ratón ................ mirar alrededor
+ Barra espaciadora .... enciende o apaga las luces de colores
+ R .................... reinicia a la silueta (caminata y flor)
+ Esc .................. salir
+
+QUÉ VERÁS
+ La playa con olas, velas y flores flotando; el panteón con sus tumbas, cruz,
+ roca y papel picado; y el cuarto con la ofrenda de tres niveles. Una silueta
+ camina de la orilla al cuarto y deja una flor en el altar. Al acercarte a
+ menos de 2 m de un objeto con ficha cultural, aparece su explicación y su fuente.
+
+SI ALGO FALLA
+ - Ventana negra o se cierra al abrir: actualiza los controladores de video.
+ - Los controles no responden: haz clic dentro de la ventana.
+ - No suena nada: revisa que existan Audio\oleaje.wav y Audio\musica.wav.
+
+Código fuente y manuales: https://github.com/hugo12341234/nierika-recorrido-mazunte

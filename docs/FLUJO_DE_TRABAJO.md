@@ -42,6 +42,7 @@
 | `Shaders/` | Shaders GLSL 330 (`.vs` y `.frag`) |
 | `tools/` | Scripts de apoyo; hoy `empaquetar_release.ps1` (compila Release x64 y genera `dist/` y el .zip) |
 | `build/` | Salida de compilación (no se sube a Git) |
+| `docs/entrega/` | Texto del paquete (`LEEME_PAQUETE.txt`), notas del Release y lista de verificación de la entrega (E-7) |
 | `dist/` | Release autónomo (.exe + DLL + `Models/` + `Shaders/`); no se sube a Git, va como .zip en el Release (E-3, E-7) |
 
 ### Configuración de Claude
