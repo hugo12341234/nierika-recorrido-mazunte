@@ -452,3 +452,6 @@ build/
 vcpkg_installed/
 # Release autonomo: se publica como .zip en el Release de GitHub, no en Git (decision 19/10)
 dist/
+
+# Manuales exportados a PDF (tools/e5_exportar_pdf.sh)
+docs/dist_manuales/
