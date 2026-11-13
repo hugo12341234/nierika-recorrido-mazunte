@@ -26,4 +26,4 @@ Ese punto queda bajo el papel picado, así que **la primera ficha que aparece es
 
 ![Ventana recién abierta](capturas/01_ventana_inicio.jpg)
 
-*Captura tomada con el código de los PR abiertos de B-13, D-5 y E-2 (12/11/2026), en un renderizador por software; con tu equipo se verá igual en forma, pero más fluido.*
+*Captura tomada el 12/11/2026 con el código de `develop` (con B-13, D-5 y E-2 ya fusionados), en un renderizador por software; con tu equipo se verá igual en forma, pero más fluido. Se vuelve a tomar en la PC de D2 con el aspecto final.*
