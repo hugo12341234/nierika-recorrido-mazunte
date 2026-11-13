@@ -58,6 +58,26 @@ uniform Material material;          // shininess la envia Mesh::Draw
 uniform sampler2D texture_diffuse1; // nombre que envia Mesh::Draw
 uniform float specularStrength;     // brillo especular por objeto (los modelos no traen mapa especular)
 
+// B-12: mapa de relieve (altura en gris). Solo el pan lo trae: Mesh::Draw pone tieneRelieve = 1 en sus mallas.
+uniform int       tieneRelieve;
+uniform sampler2D texture_height1;
+const float RELIEVE_M = 0.003;      // metros de altura que representa el blanco del mapa (3 mm en un pan de 16 cm)
+
+// Perturba la normal N con el gradiente de la altura h (en metros) sin necesitar tangentes: usa las derivadas de pantalla
+// de la posicion p y de h (Mikkelsen, "Bump Mapping Unparametrized Surfaces on the GPU", 2010).
+vec3 perturbaNormal(vec3 N, vec3 p, float h)
+{
+    vec3 dpdx = dFdx(p);
+    vec3 dpdy = dFdy(p);
+    float dhdx = dFdx(h);
+    float dhdy = dFdy(h);
+    vec3 r1 = cross(dpdy, N);
+    vec3 r2 = cross(N, dpdx);
+    float det = dot(dpdx, r1);
+    vec3 gradiente = sign(det) * (dhdx * r1 + dhdy * r2);
+    return normalize(abs(det) * N - gradiente);
+}
+
 // C-2: llama de las velas. Con llama = 1 el fragmento ignora la textura y la luz: la forma, el color y el parpadeo
 // salen de ruido de Perlin 2D (ver docs/manual_tecnico/justificacion_simples.md, seccion 2.3).
 uniform int   llama;
@@ -140,6 +160,8 @@ void main()
     // gl_FrontFacing: si es back-face (interior del modelo), invertimos la normal
     // para que la iluminacion difusa funcione desde adentro
     vec3 norm = normalize(gl_FrontFacing ? Normal : -Normal);
+    if (tieneRelieve == 1)   // B-12: la condicion es un uniform, asi que las derivadas de pantalla estan bien definidas
+        norm = perturbaNormal(norm, FragPos, texture(texture_height1, TexCoords).r * RELIEVE_M);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 albedo = texColor.rgb;
 

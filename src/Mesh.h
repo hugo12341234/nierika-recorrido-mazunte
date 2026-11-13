@@ -62,6 +62,8 @@ public:
 		// Bind appropriate textures
 		GLuint diffuseNr = 1;
 		GLuint specularNr = 1;
+		GLuint heightNr = 1;
+		GLint tieneRelieve = 0;   // B-12: 1 si la malla trae mapa de relieve (lighting.frag lo lee)
 
 		for (GLuint i = 0; i < this->textures.size(); i++)
 		{
@@ -79,6 +81,11 @@ public:
 			{
 				ss << specularNr++; // Transfer GLuint to stream
 			}
+			else if (name == "texture_height")
+			{
+				ss << heightNr++;
+				tieneRelieve = 1;
+			}
 
 			number = ss.str();
 			// Now set the sampler to the correct texture unit
@@ -86,6 +93,8 @@ public:
 			// And finally bind the texture
 			glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
 		}
+
+		glUniform1i(glGetUniformLocation(shader.Program, "tieneRelieve"), tieneRelieve);   // se reinicia en cada malla (0 si no hay relieve)
 
 		// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
 		glUniform1f(glGetUniformLocation(shader.Program, "material.shininess"), 16.0f);
