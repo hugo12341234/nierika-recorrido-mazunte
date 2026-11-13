@@ -18,7 +18,7 @@ Qué prueba qué, y dónde está (estado al 12/11/2026). La carpeta `evidencias/
 | Auditorías y autorrevisión | Hallazgos de calidad | Carpeta compartida (`auditoria/`, `revisiones/`) | ❓ fuera del repo |
 | Bocetos del cuarto (X-2) | Diseño de fachada, interior y ofrenda | — | ❓ sin confirmar |
 | Versiones de Blender y GIMP (X-1) | Misma versión en las dos PC | — | 🔄 |
-| Videos | Entorno, recorrido, animaciones | `docs/videos/` (vacía) | ⏳ E-4 |
+| Videos | Entorno, recorrido, animaciones | `docs/videos/` | 🔄 E-4: guiones listos, sin grabar |
 
 ## Reglas
 
