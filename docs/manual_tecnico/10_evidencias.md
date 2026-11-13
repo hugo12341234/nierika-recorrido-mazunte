@@ -25,3 +25,15 @@ Qué prueba qué, y dónde está (estado al 12/11/2026). La carpeta `evidencias/
 - Lo que se cite en el manual debe estar **en el repositorio** o enlazado desde él.
 - Sin datos personales en las capturas (nombres, correos, estados de cuenta): solo números de cuenta. (Ver problema #14: un PDF con datos personales sigue en el historial de Git.)
 - Las capturas llevan fecha en el nombre.
+
+## Capturas reales del programa (12/11/2026, PC de D2, modo de captura de `src/main.cpp`)
+
+| Archivo (`evidencias/`) | Qué muestra |
+|---|---|
+| `X-4_caminata_4_cuadros_12-11.jpg` | La silueta en 4 instantes de un cuarto de ciclo (t = 6.00, 6.25, 6.50, 6.75 s): se ve el balanceo de brazos y piernas |
+| `X-5_panteon_noche_12-11.jpg` | Panteón con cielo, luna y estrellas |
+| `X-7_silueta_orilla_12-11.jpg` | Orilla y mar con la silueta orgánica |
+| `X-8_altar_luz_calida_12-11.jpg` | Altar con la luz cálida de las velas |
+| `X-9_palmas_playa_12-11.jpg` | Palmas y arbustos decorativos en la playa |
+| `X-11_piso_cuarto_12-11.jpg` | Piso del cuarto (Poly Haven, CC0) |
+| `X-4_luces_cubos_L_12-11.jpg` | Luces de colores con los cubos visibles (tecla L) |
