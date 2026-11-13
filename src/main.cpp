@@ -24,6 +24,7 @@
 #include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
+#include "VegetacionColinas.h"  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
@@ -212,6 +213,7 @@ int main()
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
     Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
+    Model colinas((char*)"Models/colinas/colinas.obj");     // X-18: relieve verde de fondo (malla 300 x 215 m, hueco sobre la playa)
     Model palma((char*)"Models/palma/palma.obj");           // X-9: extra decorativo (no cuenta entre los 18 propios)
     Model arbusto((char*)"Models/arbusto/arbusto.obj");   // X-9: extra decorativo
     Model roca((char*)"Models/roca/roca.obj");             // B-10: roca decorativa junto a la entrada
@@ -616,6 +618,24 @@ int main()
             glUniform1f(specLoc, 0.05f);
             for (int i = 0; i < 8; i++) colocar(arbusto, arbustos[i], 31.0f * i);
         }
+        // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
+        {
+            glUniform1f(specLoc, 0.02f);
+            glm::mat4 mc(1.0f);
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+            colinas.Draw(shader);
+            auto conEscala = [&](Model& m, const VegetacionColinas::Instancia& v)
+            {
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(v.x, v.y, v.z));
+                mm = glm::rotate(mm, glm::radians(v.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::scale(mm, glm::vec3(v.escala));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                m.Draw(shader);
+            };
+            for (int i = 0; i < VegetacionColinas::N_PALMAS; i++) conEscala(palma, VegetacionColinas::PALMAS[i]);
+            for (int i = 0; i < VegetacionColinas::N_ARBUSTOS; i++) conEscala(arbusto, VegetacionColinas::ARBUSTOS[i]);
+            glUniform1f(specLoc, 0.05f);
+        }
         colocar(roca,     glm::vec3( 1.5f, 0.0f, 12.5f), 0.0f);  // B-10: roca junto a la entrada norte
 
         // C-4: flores flotando (circulo con velocidad variable y pausas + giro propio + altura de la ola; ver AnimFlores.h)
@@ -750,6 +770,7 @@ int main()
     barda.cleanup();
     roca.cleanup();
     palma.cleanup();    // X-9
+    colinas.cleanup();  // X-18
     arbusto.cleanup();  // X-9
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4

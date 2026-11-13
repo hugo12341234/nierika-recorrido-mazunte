@@ -182,6 +182,10 @@ void main()
     for (int i = 0; i < NUMBER_OF_STEP_SPOTS; i++)
         result += CalcSpotLight(escalonSpots[i], norm, FragPos, viewDir, albedo);
 
+    // X-18: bruma de distancia. f = 1 - exp(-(d * k)^1.5): 0 cerca, tiende a 1 lejos; se mezcla con el color del horizonte del cielo
+    float distCam = length(viewPos - FragPos);
+    float bruma = 1.0 - exp(-pow(distCam * 0.012, 1.5));
+    result = mix(result, vec3(0.07, 0.12, 0.20), clamp(bruma, 0.0, 0.85));
     color = vec4(result, texColor.a);
 }
 
