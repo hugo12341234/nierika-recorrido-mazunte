@@ -23,6 +23,11 @@ void main()
     vec3 cenit     = vec3(0.01, 0.03, 0.10);
     vec3 cielo = mix(horizonte, cenit, pow(h, 0.45));
 
+    // X-22: resplandor del ocaso sobre el mar (la propuesta representa 'del atardecer a la noche'): mas intenso cerca del horizonte
+    // y hacia +z (el mar). ocaso = exp(-9 h) * (0.35 + 0.65 * smoothstep(-0.2, 0.9, d.z))
+    float ocaso = exp(-9.0 * h) * (0.35 + 0.65 * smoothstep(-0.2, 0.9, d.z));
+    cielo += vec3(0.55, 0.26, 0.10) * ocaso * 0.55;
+
     // Estrellas: rejilla 3D sobre la direccion; una celda de cada ~30 tiene una estrella, mas visibles arriba
     vec3 celda = floor(d * 220.0);
     float e = hash(celda);

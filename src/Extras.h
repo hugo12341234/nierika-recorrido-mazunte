@@ -62,6 +62,32 @@ namespace Extras
         x = b.cx + b.radio * std::cos(a);  z = b.cz + b.radio * std::sin(a);
         dx = -std::sin(a);  dz = std::cos(a);   // tangente unitaria (la tabla avanza de proa)
     }
+
+    // X-22: luciernagas. Cada una vuela en una curva de Lissajous 3D alrededor de su centro y parpadea con un seno elevado al cubo:
+    //   p(t) = c + (Ax*sen(ax*t + px), Ay*sen(ay*t + py), Az*sen(az*t + pz)),   brillo(t) = max(0, sen(2*pi*t/Tb + fase))^3
+    // Frecuencias distintas por eje (cocientes casi irracionales) para que la trayectoria no se repita pronto. No es un sistema de particulas
+    // con fisica: cada punto se calcula en forma cerrada. Sin KeyFrames.
+    constexpr int N_LUCIERNAGAS = 48;
+    struct Luciernaga { float cx, cy, cz, fase; };
+    inline Luciernaga LuciernagaN(int i)   // centros repartidos por la playa y el panteon (x -32..32, z 4..21), alturas 0.6..1.8 m
+    {
+        const float u = std::fmod(std::sin(12.9898f * (i + 1)) * 43758.5453f, 1.0f), v = std::fmod(std::sin(78.233f * (i + 1)) * 12345.6789f, 1.0f);
+        const float a = u < 0 ? -u : u, b = v < 0 ? -v : v;
+        return { -32.0f + 64.0f * a, 0.6f + 1.2f * b, 4.0f + 17.0f * std::fmod(a * 7.31f + b * 3.17f, 1.0f), 6.2832f * std::fmod(a * 13.7f, 1.0f) };
+    }
+    inline void PosicionLuciernaga(int i, float t, float& x, float& y, float& z)
+    {
+        const Luciernaga l = LuciernagaN(i);
+        const float k = 1.0f + 0.07f * (i % 5);
+        x = l.cx + 1.6f * std::sin(0.41f * k * t + l.fase);
+        y = l.cy + 0.45f * std::sin(0.67f * k * t + 2.0f * l.fase);
+        z = l.cz + 1.6f * std::sin(0.53f * k * t + 3.0f * l.fase);
+    }
+    inline float BrilloLuciernaga(int i, float t)
+    {
+        const float s = std::sin(2.0f * PI * t / 2.6f + LuciernagaN(i).fase * 3.0f);
+        return s > 0.0f ? s * s * s : 0.0f;
+    }
 }
 
 #endif

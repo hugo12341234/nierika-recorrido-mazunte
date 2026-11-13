@@ -219,6 +219,7 @@ int main()
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
     Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
     Model petate((char*)"Models/petate/petate.obj");
+    Model luciernaga((char*)"Models/luciernaga/luciernaga.obj");         // X-22: icosaedro emisivo de 3 cm
     Model tablaRemo((char*)"Models/tabla_remo/tabla_remo.obj");           // X-21: tabla de remo con su remo
     Model colinas((char*)"Models/colinas/colinas.obj");     // X-18: relieve verde de fondo (malla 300 x 215 m, hueco sobre la playa)
     Model palma((char*)"Models/palma/palma.obj");           // X-9: extra decorativo (no cuenta entre los 18 propios)
@@ -538,7 +539,9 @@ int main()
             glUniform2fv(glGetUniformLocation(shader.Program, "ondaDir"), Olas::N, oDir);
             glUniform1fv(glGetUniformLocation(shader.Program, "ondaFase"), Olas::N, oFase);
         }
+        glUniform1i(glGetUniformLocation(shader.Program, "espuma"), 1);  // X-22: espuma en la orilla
         mar.Draw(shader);
+        glUniform1i(glGetUniformLocation(shader.Program, "espuma"), 0);
         glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 0);   // el resto de los modelos sin oleaje
 
         // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
@@ -614,6 +617,7 @@ int main()
             sobreAltar(flor,     glm::vec3( 0.63f, 0.461f, 0.34f));
         }
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);  // X-23: relieve de piedra en cruz, tumbas y barda
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
         colocar(tumba2,   glm::vec3(-4.0f, 0.0f,  4.5f), 0.0f);
         colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
@@ -623,6 +627,7 @@ int main()
         // B-13: papel picado colgado del travesano (y = 1.95; su pivote es el borde superior). Provisional, sin ver en pantalla.
         colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
         // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
         {
             const glm::vec3 palmas[8] = { { -25.0f, 0.0f, 13.0f }, { -8.5f, 0.0f, 17.0f }, { -11.0f, 0.0f, 19.0f }, { 20.0f, 0.0f, 17.0f },
@@ -770,6 +775,21 @@ int main()
                 (Extras::TABLAS[i].persona == 0 ? personaPieA : personaPieB).Draw(shader);
             }
             glUniform1f(specLoc, 0.05f);
+        }
+        // X-22: luciernagas (Extras::PosicionLuciernaga / BrilloLuciernaga, curvas de Lissajous; no son un sistema de particulas de humo)
+        {
+            const float tl = (float)Reloj();
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 2);
+            for (int i = 0; i < Extras::N_LUCIERNAGAS; i++)
+            {
+                float lx, ly, lz;
+                Extras::PosicionLuciernaga(i, tl, lx, ly, lz);
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), Extras::BrilloLuciernaga(i, tl));
+                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(lx, ly, lz)), glm::vec3(1.8f));  // 5.4 cm: visibles a distancia
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                luciernaga.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {

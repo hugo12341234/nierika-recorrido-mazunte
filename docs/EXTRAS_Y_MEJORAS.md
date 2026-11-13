@@ -61,8 +61,8 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 | **Ceremonia en la playa:** 12 figuras estáticas, 3 petates con ofrenda (velas, cempasúchil, pan, copalero) y 26 veladoras sobre la arena | **X-19** `x-19-ceremonia` | `Models/persona_pie_a/`, `persona_pie_b/`, `persona_agachada_a/`, `persona_agachada_b/` (≈ 400 caras cada una), `Models/petate/`, `src/Extras.h`, `tools/x19_ceremonia.py` | Balanceo senoidal θ = A·sen(2πt/T + φ) (A 1.2° o 2°; T 4.5 o 5 s); llamas con ruido de Perlin (C-2) | Propio (Blender 5.2; texturas 1K generadas por código; retrato sin rostro, sin personas reales) | 12 cajas de colisión nuevas | ✅ |
 | **Tendederos de papel picado cruzando la playa (17 tiras) y ofrendas al pie de 4 tumbas y la cruz** | **X-20** `x-20-tendederos` | reusa `Models/soportes/`, `papel_picado/`, `vela/`, `cempasuchil/`; datos en `src/Extras.h` | Péndulo de pequeña amplitud θ = 6°·sen(2πt/3.6 + φ) | Propios | 20 cajas de colisión (postes) | ✅ |
 | **5 personas de pie sobre tablas de remo en la bahía** | **X-21** `x-21-tablas-remo` | `Models/tabla_remo/` (114 caras, tabla + remo), reusa `persona_pie_a/b`; `tools/x21_tablas.py` | Círculo lento (R 3–4 m, 70 s) + altura y normal de `Olas.h`; sin KeyFrames | Propio (Blender 5.2) | 10 llamadas de dibujo | ✅ |
-| Luciérnagas, espuma y ambiente | X-22 | pendiente | Lissajous + parpadeo senoidal | — | — | ⏳ |
-| Relieve en arena y barda | X-23 | pendiente | Mapa de altura = luminancia de la textura | — | — | ⏳ |
+| **48 luciérnagas, espuma de la orilla y resplandor del ocaso en el cielo** | **X-22** `x-22-ambiente` | `Models/luciernaga/` (icosaedro de 20 caras), `Shaders/lighting.frag` (`llama = 2`, `espuma`), `Shaders/sky.frag` (`ocaso`), `src/Extras.h` | Lissajous 3D + parpadeo sen³; espuma = ruido de Perlin que avanza hacia la playa | Propio | 48 llamadas de dibujo muy pequeñas | ✅ |
+| **Relieve en arena, barda, tumbas y cruz** | **X-23** (misma rama `x-22-ambiente`) | `Shaders/lighting.frag` (`relieveLuma`, `arena`) | Mapa de altura = luminancia de la textura (Mikkelsen, 2010) | Mikkelsen (2010), ver `11_referencias.md` | Sin costo de geometría | ✅ |
 
 ## 5. Evidencias (antes / después)
 
@@ -71,6 +71,17 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | Bloque | Antes | Después |
 |---|---|---|
 | X-18 colinas y vegetación | `antes_fondo.png`, `antes_panteon.png`, `antes_orilla.png` | `x18_fondo.png`, `x18_panteon.png`, `x18_costa.png` |
+| X-22/X-23 ambiente y relieve | — | `x22_ambiente_a.png`, `x22_ambiente_b.png`, `x23_relieve.png` |
 | X-21 tablas de remo | — | `x21_tablas_a.png`, `x21_tablas_b.png` |
 | X-20 tendederos y ofrendas | — | `x20_tendedero.png`, `x20_ofrenda_tumba.png` |
 | X-19 ceremonia | `antes_playa_este.png` (solo mar y arena; imagen no conservada, ver `antes_orilla.png`) | `x19_ceremonia_a.png`, `x19_ceremonia_b.png`, `x19_ceremonia_c.png` |
+
+## 6. Rendimiento medido (RX 5700 XT, Release x64, 1280 × 720, título de la ventana)
+
+| Momento | FPS aproximados |
+|---|---|
+| develop antes de la fase (12/11) | 1 680 – 2 100 |
+| tras X-18 (colinas y 210 plantas) | 1 250 – 1 500 |
+| tras X-22/X-23 (todo lo anterior + ceremonia, tendederos, tablas, luciérnagas, espuma, relieve) | 1 020 – 1 120 |
+
+El requisito (≥ 30 FPS en gráficos integrados) **sigue sin probarse en una laptop integrada**: la GPU de D2 es mucho más rápida. El costo más visible es el número de llamadas de dibujo (≈ 450); si hiciera falta recortar, el primer paso es dibujar las 210 plantas de las colinas con instancing o reducirlas.

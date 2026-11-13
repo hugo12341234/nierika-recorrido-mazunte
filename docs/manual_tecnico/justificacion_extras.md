@@ -42,7 +42,7 @@
 
 **Altura y pendiente (de las olas ya justificadas en C-1):**
 - y(t) = `Olas::Altura(x, z, t)` + 0.03 m: la altura de la suma de tres senos de `src/Olas.h`.
-- La vertical de la tabla se alinea con la normal de la superficie n = normalize(−∂h/∂x, 1, −∂h/∂z) (`Olas::Normal`): se gira un ángulo α = arccos(nᵧ) alrededor del eje u = (0,1,0) × n. Como la pendiente máxima es ≈ Σ A·k ≈ 0.08, α ≤ ≈ 5°: la tabla cabecea y alabea poco, como una tabla larga sobre olas pequeñas.
+- La vertical de la tabla se alinea con la normal de la superficie n = normalize(−∂h/∂x, 1, −∂h/∂z) (`Olas::Normal`): se gira un ángulo α = arccos(nᵧ) alrededor del eje u = (0,1,0) × n. En las olas de `Olas.h` el α máximo **medido** (`tools/x19_pruebas_extras.cpp`) es **3.4°**: la tabla cabecea y alabea poco, como una tabla larga sobre olas pequeñas.
 
 | Parámetro | Valor | Por qué |
 |---|---|---|
@@ -50,4 +50,29 @@
 | PERIODO_TABLA | 70 s | vuelta lenta y calmada |
 | φ | 0, 1.2, 2.4, 3.6, 4.8 rad | las 5 tablas no van en fila |
 
-**Comprobación:** `tools/x19_pruebas_extras.cpp` verifica que la posición recorre el círculo (distancia al centro = R), que la tangente es unitaria y perpendicular al radio, y que α ≤ 6° en el rango de las olas.
+**Comprobación:** `tools/x19_pruebas_extras.cpp` verifica que la posición recorre el círculo (distancia al centro = R), que la tangente es unitaria y perpendicular al radio, y que α ≤ 6° en el rango de las olas (medido: 3.39°).
+
+## 4. Luciérnagas con trayectorias de Lissajous y parpadeo senoidal (X-22)
+
+**Qué es:** 48 puntos de luz verdosa que flotan sobre la playa y el panteón. **No** son un sistema de partículas con física ni humo: cada punto se calcula en forma cerrada.
+
+**Posición:** p(t) = c + (Aₓ·sen(aₓt + φ), A_y·sen(a_yt + 2φ), A_z·sen(a_zt + 3φ)), con Aₓ = A_z = 1.6 m, A_y = 0.45 m y frecuencias aₓ = 0.41k, a_y = 0.67k, a_z = 0.53k (k = 1 + 0.07·(i mod 5)).
+Los cocientes 0.41 : 0.67 : 0.53 son casi irracionales, así que la curva de Lissajous tarda mucho en cerrarse y no se ve un movimiento repetitivo. El centro c y la fase φ de cada luciérnaga salen de una función hash fija (`Extras::LuciernagaN`), por lo que siempre aparecen en los mismos lugares.
+
+**Parpadeo:** brillo(t) = máx(0, sen(2πt/2.6 + 3φ))³. El cubo hace los destellos cortos y deja la luciérnaga apagada la mitad del tiempo; el brillo siempre está en [0, 1] y se envía al shader como intensidad (`llama = 2` en `lighting.frag`: color emisivo sin luz).
+
+**Comprobación:** `tools/x19_pruebas_extras.cpp`: brillo en [0, 1], desplazamientos ≤ 1.6 m y ≤ 0.45 m, y ninguna luciérnaga queda apagada para siempre.
+
+## 5. Espuma en la orilla y resplandor del ocaso (X-22)
+
+**Espuma:** en el fragment shader del mar, f = smoothstep(26.2, 24.3, z) · smoothstep(0.02, 0.30, n + 0.18 + 0.18·sen(0.8t − 1.6z)), con n = ruido de Perlin fBm(0.7x, 0.9z − 0.45t) (el mismo ruido de la llama, C-2).
+El primer factor limita la espuma a la franja z ∈ [24.3, 26.2] (donde el mar toca la arena); el ruido que avanza con −0.45t y el seno que viaja con −1.6z hacen que las manchas se muevan hacia la playa como las olas. Se mezcla el color del mar con blanco azulado (0.80, 0.88, 0.95), tope 0.85.
+
+**Ocaso:** en `sky.frag`, ocaso = e^(−9h) · (0.35 + 0.65·smoothstep(−0.2, 0.9, d_z)), con h la altura del rayo sobre el horizonte y d_z su componente hacia el mar; se suma (0.55, 0.26, 0.10) · ocaso · 0.55. La exponencial concentra el color en el horizonte y representa el «del atardecer a la noche» de la propuesta.
+
+## 6. Relieve a partir de la luminancia de la textura (X-23)
+
+**Qué es:** la arena y la piedra (barda, tumbas, cruz) reciben relieve **sin mapa de normales aparte**: el mapa de altura es la luminancia de la propia textura, h = 0.30 R + 0.59 G + 0.11 B (pesos de luminancia habituales), multiplicada por 1.2 cm (arena) o 3.5 cm (piedra).
+La normal se perturba con el método de Mikkelsen (2010), que usa las derivadas de pantalla dFdx/dFdy de la posición y de la altura (ya usado para el pan de muerto en B-12): N' = normalize(|det|·N − sign(det)·(∂h/∂x·(∂p/∂y × N) + ∂h/∂y·(N × ∂p/∂x))). No necesita tangentes ni UV especiales.
+
+**Limitación honesta:** una textura clara no siempre es «alta»; el resultado es un relieve plausible, no la geometría real. Para una arena o piedra con normal maps reales hay que descargar texturas PBR (Poly Haven) y asignarlas por material.
