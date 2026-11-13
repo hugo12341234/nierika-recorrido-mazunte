@@ -28,7 +28,7 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 ## 2.2 Teclas que NO entran al manual
 
 En el código existen estas teclas, pero son de **depuración** (mueven y orientan el reflector de la cruz) y
-deben salir antes de la entrega; por eso **no se documentan para el visitante** (propuesta del plan de tareas, se decide al cerrar E-2):
+deberían salir antes de la entrega; por eso **no se documentan para el visitante**. **E-2 no las retiró**: siguen en `main.cpp` (líneas 643–654 al 12/11) y la decisión de quitarlas queda **pendiente de D2**:
 
 `T G Y H U J` (posición del reflector) · `1 2 3 4 5 6` (dirección del reflector)
 
@@ -38,7 +38,7 @@ Si no salen, hay que agregarlas aquí.
 
 | Tarea | Posible control | Estado |
 |---|---|---|
-| C-7 (fichas) | Ninguno: la ficha aparece sola a **menos de 2 m** del objeto | Implementado (ver sección 4); falta compilar y probar en VS |
-| D-2 / D-4 (silueta) | Arranca sola al abrir el programa; **R** la reinicia | Resuelto en D-5 (PR abierto); falta aceptar por D2 |
+| C-7 (fichas) | Ninguno: la ficha aparece sola a **menos de 2 m** del objeto | Implementado (ver sección 4); falta compilar con ImGui en VS y probar |
+| D-2 / D-4 (silueta) | Arranca sola al abrir el programa; **R** la reinicia | Implementado (D-5, fusionado el 12/11); falta que D2 lo acepte al verlo |
 
 > 📷 Captura pendiente: esquema del teclado con las teclas resaltadas (se hace en GIMP; no se usa ninguna imagen ajena sin crédito).

@@ -14,7 +14,7 @@ Cada ficha muestra: el título, un texto breve, el **nivel de evidencia** (tradi
 | Altar de ofrenda | cuarto, costado del altar, (1.35, 0.6) |
 | Pan de muerto | cuarto, sobre el altar, (1.40, 0) |
 
-*(Según `src/Fichas.cpp` con el PR de B-13; los textos son los de `docs/fichas_culturales.md`, que siguen **por verificar contra la fuente**.)*
+*(Según `src/Fichas.cpp` de `develop` con B-13; los textos son los de `docs/fichas_culturales.md`, que siguen **por verificar contra la fuente**. Falta compilar con ImGui en Visual Studio y verlas en pantalla.)*
 
 ![Ficha del altar](capturas/03_parada5_cuarto_altar.jpg)
 
