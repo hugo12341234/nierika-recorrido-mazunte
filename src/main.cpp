@@ -292,6 +292,14 @@ int main()
     lastFrame = (GLfloat)glfwGetTime();
     tSilueta = 0.0f;
 
+    // Solo para las capturas del manual: NIERIKA_LUCES=1 enciende las luces de colores (como la barra espaciadora), =2 ademas muestra los cubos (L)
+    if (const char* luces = std::getenv("NIERIKA_LUCES"))
+    {
+        active = true;
+        Light1 = glm::vec3(0.0f, 1.0f, 0.0f); Light2 = glm::vec3(0.0f, 0.2f, 1.0f);
+        Light3 = glm::vec3(1.0f, 0.0f, 0.0f); Light4 = glm::vec3(1.0f, 0.1f, 0.8f);
+        if (luces[0] == '2') mostrarLuces = true;
+    }
     if (const char* cap = std::getenv("NIERIKA_CAPTURAS"))
     {
         std::stringstream ss(cap);
@@ -498,11 +506,12 @@ int main()
         {
             // Posicion local sobre el altar (x, y, z locales) -> mundo: giro -90 grados en Y alrededor de (1.35, 0, 0)
             const glm::vec3 altarPos(1.35f, 0.0f, 0.0f);
-            auto sobreAltar = [&](Model& m, glm::vec3 loc)
+            auto sobreAltar = [&](Model& m, glm::vec3 loc, float esc = 1.0f)
             {
                 glm::mat4 mm = glm::translate(glm::mat4(1.0f), altarPos);
                 mm = glm::rotate(mm, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                 mm = glm::translate(mm, loc);
+                mm = glm::scale(mm, glm::vec3(esc));  // X-10: escala opcional (las flores extra del altar van x1.7)
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 m.Draw(shader);
             };
@@ -529,7 +538,7 @@ int main()
             const glm::vec3 floresExtra[10] = { { -0.17f, 1.235f, -0.32f }, { 0.17f, 1.235f, -0.32f }, { -0.60f, 0.835f, -0.12f }, { 0.60f, 0.835f, -0.12f },
                                                 { -0.62f, 0.835f, 0.20f }, { -0.30f, 0.435f, 0.30f }, { -0.55f, 0.435f, 0.28f }, { -0.75f, 0.435f, 0.12f },
                                                 { 0.05f, 0.435f, 0.33f }, { 0.75f, 0.435f, 0.10f } };
-            for (int i = 0; i < 10; i++) sobreAltar(cempasuchil, floresExtra[i]);
+            for (int i = 0; i < 10; i++) sobreAltar(cempasuchil, floresExtra[i] + glm::vec3(0.0f, 0.025f, 0.0f), 1.7f);  // x1.7: mas visibles (12 cm); +2.5 cm porque el pivote esta al centro
             // B-13 (12/11): extras de D1 (X-3, sin tarea propia) que estaban sobre los escalones de la capilla retirada:
             // calavera en la repisa del nivel inferior (y = 0.40), en el extremo +x local (mundo z = +0.45), lejos de donde
             // cae la flor de la silueta (D-4: mundo z ~ -0.39), y una flor de Maya (pivote en el centro, 0.12 m de alto) a cada lado

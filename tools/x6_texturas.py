@@ -72,3 +72,15 @@ veta = fbm(2, 3, 700)
 fibra = 0.5 + 0.5 * np.sin((xx / N * 18 + veta * 14) * np.pi)
 madera = mezcla((0.28, 0.16, 0.08), (0.52, 0.32, 0.17), 0.6 * fibra + 0.4 * fbm(10, 4, 710))
 guarda(madera, 'Models/soportes/soportes_madera.png')
+
+# --- Marco: fotografia antigua generica (silueta de busto en sepia, sin rostro: no representa a ninguna persona real)
+from PIL import ImageDraw, ImageFilter
+foto = Image.new('RGB', (N, N), (196, 168, 120))
+d = ImageDraw.Draw(foto)
+d.ellipse((330, 190, 694, 600), fill=(86, 62, 40))            # cabeza
+d.rounded_rectangle((440, 560, 584, 700), 40, fill=(86, 62, 40))   # cuello
+d.pieslice((120, 640, 904, 1500), 180, 360, fill=(70, 50, 34))     # hombros
+fotoa = np.asarray(foto.filter(ImageFilter.GaussianBlur(14))).astype(float) / 255
+vig = 1 - 0.55 * ((xx - N / 2) ** 2 + (yy - N / 2) ** 2) / (N / 2) ** 2 / 1.4
+grano = 0.06 * (fbm(256, 2, 800) - 0.5)
+guarda(np.clip(fotoa * vig[..., None] + grano[..., None], 0, 1), 'Models/marco/foto_retrato.png')

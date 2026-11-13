@@ -42,7 +42,7 @@ def texturas():
                 d.line([(cx, yy), (x1, y1)], fill=(int(g[0]), int(g[1]), int(g[2]), 255), width=22)
         im.save(ruta)
 
-    hoja(os.path.join(RAIZ, "Models", "palma", "palma_hoja.png"), 26, (55, 130, 50), (130, 185, 75))
+    hoja(os.path.join(RAIZ, "Models", "palma", "palma_hoja.png"), 26, (90, 170, 70), (170, 225, 100))
     # Arbusto: hoja de agave/pasto: forma de lanza con nervadura clara
     im = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     a = np.zeros((N, N, 4), np.uint8)
