@@ -274,6 +274,12 @@ int main()
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
     colisiones.agregar({ glm::vec3( 6.75f,0.0f,  3.25f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro este
     colisiones.agregar({ glm::vec3( 1.275f, 0.0f, 12.325f), glm::vec3( 1.725f, 0.30f, 12.675f) });  // B-10: roca decorativa
+    for (int t = 0; t < Extras::N_TENDEDEROS; t++)  // X-20: postes de los tendederos (cajas de 0.1 m)
+        for (int k = 0; k <= Extras::TENDEDEROS[t].n; k++)
+        {
+            const float px = Extras::TENDEDEROS[t].x0 + Extras::ANCHO_BASTIDOR * k, pz = Extras::TENDEDEROS[t].z;
+            colisiones.agregar({ glm::vec3(px - 0.05f, 0.0f, pz - 0.05f), glm::vec3(px + 0.05f, 2.0f, pz + 0.05f) });
+        }
     for (int i = 0; i < Extras::N_FIGURAS; i++)  // X-19: cada figura es una caja de 0.5 x 0.5 m (como el cuerpo del visitante)
         colisiones.agregar({ glm::vec3(Extras::FIGURAS[i].x - 0.25f, 0.0f, Extras::FIGURAS[i].z - 0.25f), glm::vec3(Extras::FIGURAS[i].x + 0.25f, 1.7f, Extras::FIGURAS[i].z + 0.25f) });
 
@@ -618,7 +624,7 @@ int main()
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
         {
-            const glm::vec3 palmas[8] = { { -6.0f, 0.0f, 15.5f }, { -8.5f, 0.0f, 17.0f }, { -11.0f, 0.0f, 19.0f }, { 20.0f, 0.0f, 17.0f },
+            const glm::vec3 palmas[8] = { { -25.0f, 0.0f, 13.0f }, { -8.5f, 0.0f, 17.0f }, { -11.0f, 0.0f, 19.0f }, { 20.0f, 0.0f, 17.0f },
                                           { -16.5f, 0.0f, 15.0f }, { 23.0f, 0.0f, 20.0f }, { -5.5f, 0.0f, 21.5f }, { -3.8f, 0.0f, 21.0f } };
             for (int i = 0; i < 8; i++) colocar(palma, palmas[i], 47.0f * i);
             const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -8.0f, 0.0f, 17.2f }, { -9.5f, 0.0f, 15.0f },
@@ -696,6 +702,47 @@ int main()
                 const float vx = 3.0f + 0.62f * i;
                 const float vz = 21.3f + 0.35f * std::sin(0.9f * i) + 0.5f * (i % 2);
                 llamaEn(glm::vec3(vx, Colisiones::alturaSuelo(vz) + 0.7f * 0.15f, vz), 0.7f);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+        }
+        // X-20: tendederos de papel picado cruzando la playa. Cada tira se mece como un pendulo de pequena amplitud: theta = A*sen(2*pi*t/T + fase)
+        {
+            const float tt = (float)Reloj();
+            glUniform1f(specLoc, 0.1f);
+            for (int t = 0; t < Extras::N_TENDEDEROS; t++)
+                for (int i = 0; i < Extras::TENDEDEROS[t].n; i++)
+                {
+                    const float cx = Extras::TENDEDEROS[t].x0 + Extras::ANCHO_BASTIDOR * (i + 0.5f);
+                    const float cz = Extras::TENDEDEROS[t].z;
+                    colocar(soportes, glm::vec3(cx, Colisiones::alturaSuelo(cz), cz), 0.0f);
+                    glm::mat4 mp = glm::translate(glm::mat4(1.0f), glm::vec3(cx, Colisiones::alturaSuelo(cz) + Extras::ALTO_PAPEL, cz));
+                    mp = glm::rotate(mp, glm::radians(Extras::Balanceo(tt, 3.6f, 0.8f * i + 2.1f * t, 6.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                    papelPicado.Draw(shader);
+                }
+            // ofrendas al pie de las tumbas y la cruz: una vela y tres flores
+            glUniform1f(specLoc, 0.05f);
+            for (int i = 0; i < Extras::N_OFRENDAS_TUMBA; i++)
+            {
+                const Extras::OfrendaTumba& o = Extras::OFRENDAS_TUMBA[i];
+                colocar(vela, glm::vec3(o.x + 0.25f, 0.0f, o.z), 0.0f);
+                for (int k = 0; k < 3; k++)
+                {
+                    glm::mat4 mf = glm::translate(glm::mat4(1.0f), glm::vec3(o.x - 0.2f + 0.14f * k, 0.06f, o.z + 0.05f * (k % 2)));
+                    mf = glm::scale(mf, glm::vec3(1.7f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                    cempasuchil.Draw(shader);
+                }
+            }
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tt);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            for (int i = 0; i < Extras::N_OFRENDAS_TUMBA; i++)
+            {
+                const Extras::OfrendaTumba& o = Extras::OFRENDAS_TUMBA[i];
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.7f * i + 0.4f);
+                glm::mat4 ml = glm::translate(glm::mat4(1.0f), glm::vec3(o.x + 0.25f, 0.15f, o.z));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }

@@ -33,6 +33,19 @@ namespace Extras
     struct Petate { float x, z, giroY; };
     constexpr int N_PETATES = 3;
     inline const Petate PETATES[N_PETATES] = { { 8.4f, 20.35f, 0.0f }, { 11.4f, 19.55f, 0.0f }, { 14.35f, 20.55f, 0.0f } };
+
+    // X-20: tendederos de papel picado que cruzan la playa (propuesta, tabla 2.1). Cada tendedero es una hilera de N bastidores
+    // de Models/soportes (1.85 m de ancho, postes de 2 m) con una tira de Models/papel_picado colgada de cada uno.
+    struct Tendedero { float x0, z; int n; };
+    constexpr int N_TENDEDEROS = 2;
+    inline const Tendedero TENDEDEROS[N_TENDEDEROS] = { { -22.0f, 15.0f, 9 }, { 4.0f, 14.2f, 8 } };
+    constexpr float ANCHO_BASTIDOR = 1.85f;   // m (x -0.925..+0.925 en soportes.obj)
+    constexpr float ALTO_PAPEL = 1.95f;       // m: la tira cuelga de aqui (pivote en su borde superior)
+
+    // Ofrendas pequenas al pie de las tumbas y la cruz del panteon (x, z): una vela y tres flores de cempasuchil
+    struct OfrendaTumba { float x, z; };
+    constexpr int N_OFRENDAS_TUMBA = 5;
+    inline const OfrendaTumba OFRENDAS_TUMBA[N_OFRENDAS_TUMBA] = { { -4.0f, 5.75f }, { 4.0f, 6.2f }, { -4.5f, 9.95f }, { 4.5f, 10.6f }, { -2.5f, 4.1f } };
 }
 
 #endif
