@@ -184,6 +184,11 @@ private:
 			// 2. Specular maps
 			vector<Texture> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+			// 3. Mapa de relieve (B-12, 12/11): `map_Bump` del .mtl; Assimp lo entrega como aiTextureType_HEIGHT.
+			//    Se usa como mapa de ALTURA en gris (no como mapa de normales): lighting.frag deriva la normal con dFdx/dFdy.
+			vector<Texture> heightMaps = this->loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
+			textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 		}
 
 		// Return a mesh object created from the extracted mesh data
