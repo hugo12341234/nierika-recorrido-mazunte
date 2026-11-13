@@ -20,18 +20,14 @@ Ambas suenan **en bucle**. Conviene que el final enlace con el inicio sin silenc
   (p. ej. `.mp3` de 30–60 s a 128 kbps).
 - La música lejana va en el **ESTADO §4** como "externo": no cuenta como modelo propio ni como contenido original del estudio.
 
-## Créditos (llenar al elegir cada archivo)
+## Créditos (D-6, 12/11)
 
-Cada pista debe quedar aquí con su referencia **APA 7** y se cita también en el manual y en los créditos finales.
+Las dos pistas son **propias del estudio**: las genera `tools/d6_audio.py` (Python + numpy, semilla fija; correrlo de nuevo da los mismos archivos).
+No hay licencia de terceros que citar. Si algún día se cambian por archivos externos, cada uno debe quedar aquí con su referencia **APA 7**.
 
 | Pista | Autor | Título | Año | Sitio / URL | Licencia | Fecha de consulta |
 |---|---|---|---|---|---|---|
-| oleaje | *pendiente* | *pendiente* | *pendiente* | *pendiente* | *pendiente* | *pendiente* |
-| musica | *pendiente* | *pendiente* | *pendiente* | *pendiente* | *pendiente* | *pendiente* |
+| oleaje | Nierika Studio (Equipo 15) | Oleaje (síntesis de ruido con envolvente de olas de 8, 10 y 20 s; 40 s en bucle) | 2026 | `tools/d6_audio.py` en el repositorio | Propia | — |
+| musica | Nierika Studio (Equipo 15) | Música lejana (pad Am–F–C–G y notas de campana de la pentatónica menor de La; 48 s en bucle) | 2026 | `tools/d6_audio.py` en el repositorio | Propia | — |
 
-Plantilla APA 7 para audio de un sitio web: Autor. (Año). *Título del audio* [Audio]. Sitio. URL
-
-## Librería
-
-miniaudio v0.11.26 (David Reid), dominio público / MIT-0, un solo archivo en `vendor/miniaudio/miniaudio.h`.
-Fuente: <https://github.com/mackron/miniaudio> (etiqueta `0.11.26`).
+Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits), dentro de lo sugerido arriba.
