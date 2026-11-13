@@ -1,22 +1,27 @@
 # 10. Evidencias
 
-Qué prueba qué, y dónde está. ✅ **[repo, ESTADO §4, 19/10]** define la carpeta `evidencias/`.
+Qué prueba qué, y dónde está (estado al 12/11/2026). La carpeta `evidencias/` la fija el ESTADO §4 (19/10).
 
 | Evidencia | Qué demuestra | Dónde está | Estado |
 |---|---|---|---|
-| Captura semanal del Trello | Gestión, avance y límites de «En proceso» | `docs/manual_tecnico/evidencias/AAAA-MM-DD_trello.png` | ⏳ **ninguna guardada**: la carpeta solo tiene su README. Regla: cada viernes |
-| Minuta semanal (3–5 líneas) | Avance, atrasos, recortes y acuerdos | `docs/manual_tecnico/evidencias/AAAA-MM-DD_minuta.md` | ⏳ ninguna guardada |
-| Export JSON de Trello (19/10) | Estado del tablero ese día (56 tarjetas) | ❓ no está en el repo; el ESTADO solo lo cita | ❓ decidir si se guarda en `evidencias/` |
-| Historial de commits y PR | Quién cambió qué y cuándo | GitHub, PR #1 en adelante | ✅ (los commits van a nombre de D2; ver [§5](05_raci.md)) |
-| Veredictos de `/verificar` | Revisión independiente de cada tarea | Comentarios en los PR | 🔄 se registran en el ESTADO; algunos «según D2» sin el comentario en GitHub |
-| Archivos `.blend` | Modelado propio | `Models/<objeto>/*.blend` | 🔄 solo fachada (reconstruida), playa y mar |
-| Capturas de pantalla por tarea | Funcionamiento | Descripción de cada PR | 🔄 existen en los PR; ❓ falta copiarlas aquí |
+| Capturas de escena de B-12, B-13, C-6 y E-2 (12/11) | Texturas propias, ofrenda, flores y llamas, barda | [`evidencias/`](evidencias/) (8 `.jpg`) | 🔄 tomadas en **Linux con Mesa (software)**, con el código de los PR; **no** son capturas de la PC de D2: repetirlas con el aspecto final |
+| Capturas del manual de usuario (6) | Ventana de inicio, orilla, panteón, altar y silueta | [`../manual_usuario/capturas/`](../manual_usuario/capturas/) | 🔄 mismo origen que arriba |
+| Capturas de las tareas A–D (04/11) | Funcionamiento en la PC de D2 | Carpeta compartida del proyecto de Claude (`plan/evidencias_2026-11-04/`, ~70 archivos) | ❓ **no están en el repo**; decidir cuáles se copian a `evidencias/` |
+| Captura semanal del Trello | Gestión y límites de «En proceso» | `evidencias/AAAA-MM-DD_trello.png` | ⏳ ninguna guardada (el Trello no es accesible desde los hilos en la nube) |
+| Minuta semanal (3–5 líneas) | Avance, atrasos y acuerdos | `evidencias/AAAA-MM-DD_minuta.md` | ⏳ ninguna guardada |
+| Export JSON de Trello (19/10) | Estado del tablero ese día (56 tarjetas) | ❓ no está en el repo | ❓ decidir si se guarda |
+| Historial de commits y PR | Quién cambió qué y cuándo | GitHub, PR #1 a #68 | ✅ (a nombre de D2; ver [§5](05_raci.md)) |
+| Veredictos de `/verificar` | Revisión independiente | Comentarios en los PR | 🔄 hay APROBAR en los PR #9, #11, #13–#17, #40 y #41; los PR #59–#68 sin veredicto |
+| Archivos `.blend` | Modelado propio | `Models/<objeto>/*.blend` | ✅ 23 de 23 presentes (el de la fachada fue reconstruido del `.obj`) |
+| Scripts de generación | Cómo se hicieron modelos, texturas y audio | `tools/` | ✅ |
+| Pruebas numéricas | Matemática de las animaciones | `tools/d7_pruebas_matematicas.cpp` | ✅ (se corre con `g++`, ver ESTADO D-7) |
+| Auditorías y autorrevisión | Hallazgos de calidad | Carpeta compartida (`auditoria/`, `revisiones/`) | ❓ fuera del repo |
 | Bocetos del cuarto (X-2) | Diseño de fachada, interior y ofrenda | — | ❓ sin confirmar |
-| Captura de versiones de Blender y GIMP (X-1) | Misma versión en las dos PC | — | 🔄 |
-| Videos | Entorno, recorrido, animaciones | `docs/videos/` | ⏳ E-4 |
+| Versiones de Blender y GIMP (X-1) | Misma versión en las dos PC | — | 🔄 |
+| Videos | Entorno, recorrido, animaciones | `docs/videos/` (vacía) | ⏳ E-4 |
 
 ## Reglas
 
 - Lo que se cite en el manual debe estar **en el repositorio** o enlazado desde él.
-- Sin datos personales en las capturas (nombres, correos, estados de cuenta): solo números de cuenta. Ya se excluyó un archivo con datos personales en X-3.
+- Sin datos personales en las capturas (nombres, correos, estados de cuenta): solo números de cuenta. (Ver problema #14: un PDF con datos personales sigue en el historial de Git.)
 - Las capturas llevan fecha en el nombre.

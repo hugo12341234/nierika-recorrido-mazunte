@@ -1,6 +1,6 @@
 # 5. Matriz RACI
 
-R = Responsable de ejecutar · A = Aprueba y rinde cuentas · C = Consultado · I = Informado. D1 = 319266894, D2 = 321332086.
+R = Responsable de ejecutar · A = Aprueba y rinde cuentas · C = Consultado · I = Informado. D1 = 319266894, D2 = 321332086. Estado al 12/11/2026.
 
 ## 5.1 RACI planeado (propuesta v2.0, Tabla 8) ✅ **[repo, PDF de la propuesta]**
 
@@ -24,24 +24,26 @@ Entre paréntesis, el número de actividades. Esta tabla es **lo que se propuso*
 
 ## 5.2 Cambio de forma de trabajo ✅ **[repo, ESTADO §4, 18/10]**
 
-Desde el 18/10 las columnas Resp./Verif. **ya no se siguen**: quien está libre toma la siguiente tarea y **el otro revisa** antes de integrar. Por eso la Tabla 8 no describe la ejecución real.
+Desde el 18/10 las columnas Resp./Verif. ya no se siguen: quien está libre toma la siguiente tarea y **el otro revisa** antes de integrar. La Tabla 8 no describe la ejecución real.
 
 ## 5.3 Registro real (lo que hoy se puede afirmar)
 
-Solo se anota lo que el ESTADO dice; no se infiere nada de los commits.
+Solo se anota lo que el ESTADO y el repositorio dicen; no se infiere nada de los commits.
 
-| Tarea | Ejecución según el ESTADO | Verificación según el ESTADO |
+| Qué | Quién, según el repositorio | Fuente |
 |---|---|---|
-| A-5, A-7 | Playa y mar «modeladas por D2» | A-5 y A-6: APROBAR, comentario de D2 en el PR; A-7: el ESTADO no registra veredicto |
-| A-1…A-4, A-6 | El ESTADO no nombra al ejecutor (por la decisión del 04/11 los PR están a nombre de D2) | A-1, A-2 y A-6: APROBAR registrado (A-2 y A-6 con comentario de D2 en el PR); A-3 y A-4: el ESTADO no registra veredicto |
-| A-8 | Luces de D1 integradas por D2 | APROBAR «según D2» (04/11) |
-| X-3 | Pan, flor y calavera de D1 (Maya), integrados por D2 | APROBAR «según D2» (04/11) |
+| Código, modelos de Blender, texturas y audio generados por script, documentación | **D2** (`Hugo Chacón`) figura como autor de **189 + 8 commits**; hay 1 commit de la plataforma (`Claude`) | `git shortlog -sne origin/develop`, 12/11 |
+| Iluminación Blinn-Phong con 4 puntuales, reflectores y su animación | **D1** (Práctica 8 adaptada), integrada por D2 en A-8 | ESTADO §4, 04/11 |
+| Pan, flor y calavera (Maya); modelo de la silueta de 10 piezas | **D1**, integrados por D2 (X-3, D-1) | ESTADO X-3 y D-1 |
+| Playa y mar | D2 (Blender 5.2.2) | ESTADO A-5, A-7 |
+| Modelos B-3, B-4, B-7, B-9, B-10, B-12, E-2, audio D-6 | Generados con `bpy` y scripts por Claude a pedido de D2 (revisados por D2 en cada PR; sin `/verificar` de otra persona en los PR #59–#68) | ESTADO §4, 11/11 y 12/11 |
+| Verificaciones | `/verificar` APROBAR registrado para A-1, A-2, A-5, A-6, A-7 (con observaciones), A-8, X-3, B-9 y B-10; **todas por D2** («según D2» en A-8 y X-3). **Ninguna por D1** | ESTADO §2 |
 
-**Importante, sin maquillar:** en este momento **no consta** en el repositorio que D1 haya aceptado la invitación como colaborador (ESTADO, act. 3 y §7) y **el ESTADO no registra ninguna verificación hecha por D1**: la regla «verifica el otro» se sustituyó por la propuesta «D2 verifica en una sesión nueva», que sigue **pendiente de confirmar** (ESTADO §4). El manual no debe presentar el RACI planeado como cumplido.
+**Sin maquillar:** en el repositorio **no consta** que D1 haya aceptado la invitación como colaborador ni que haya verificado un PR; los commits están todos a nombre de D2 por la decisión del 04/11 (D2 corregirá el crédito de D1 después). El RACI planeado de §5.1 **no** debe presentarse como cumplido.
 
-## 5.4 Qué falta
+## 5.4 Qué falta (decisión de D1 y D2, no de Claude)
 
-1. ❓ D1 y D2 deciden qué RACI real se publica (con las horas y tareas de cada uno). Nadie ha entregado ese dato.
-2. ❓ Autoría de commits y PR: D2 puso todo a su nombre (decisión del 04/11, X-3); el crédito de D1 va en la descripción del PR y D2 corregirá después. El RACI real debe coincidir con eso.
-3. ⏳ Cuando D1 revise PR, anotar quién aprobó cada uno.
+1. ❓ **Qué RACI real se publica**, con las tareas y horas que cada uno declare. Este manual no puede inventarlo.
+2. ❓ **Crédito de D1** en la autoría: D2 dijo que lo corregirá; hasta entonces el historial de Git no refleja el aporte de D1.
+3. ⏳ Si D1 revisa PR antes de entregar, anotar quién aprobó cada uno.
 4. ⏳ Matriz RACI final por área con los datos de 1–3.
