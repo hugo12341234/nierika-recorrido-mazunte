@@ -46,3 +46,5 @@ UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.u
 - ❓ Slerp, Bézier y ruido de Perlin: ver [§7.4](07_justificacion_matematica.md).
 
 Savva, D., & Cilliers, R. (s. f.). *Clay Floor 001* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/clay_floor_001
+
+Tuytel, R. (s. f.). *Large Sandstone Blocks 01* [Textura, CC0]. Poly Haven. Recuperado el 12 de noviembre de 2026, de https://polyhaven.com/a/large_sandstone_blocks_01
