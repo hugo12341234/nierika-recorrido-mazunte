@@ -12,7 +12,7 @@ Todas las capturas son del programa propio; **la capilla provisional no sale en 
 | `03_parada4_panteon_papel_picado.jpg` | Papel picado entre los postes | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
 | `03_parada5_cuarto_altar.jpg` | Altar con su ficha | 3, 4.1 | **Repetida 12/11 en la PC de D2** (X-4) |
 | `03_parada5_silueta_con_flor.jpg` | La silueta con la flor frente al altar | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `02_teclado_controles.png` | Esquema del teclado con W A S D, flechas, espacio, R, L y Esc | 2.1 | Pendiente (se hace en GIMP) |
+| `02_teclado_controles.png` | Esquema del teclado con W A S D, flechas, espacio, R, L y Esc | 2.1 | **Hecho 12/11** (`tools/x15_esquema_teclado.py`, Pillow) |
 | `02_luces_espacio.jpg` | Escena con las luces de colores encendidas | 2.1 | **Tomada 12/11** (`NIERIKA_LUCES=1`) |
 | `02_luces_L.jpg` | Escena con los cubos de las luces visibles | 2.1 | **Tomada 12/11** (`NIERIKA_LUCES=2`) |
 
