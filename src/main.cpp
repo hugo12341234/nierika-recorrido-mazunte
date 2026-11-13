@@ -24,6 +24,7 @@
 #include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
 #include "Olas.h"   // C-1: parametros y altura del oleaje
 #include "Colisiones.h"
+#include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
@@ -213,6 +214,11 @@ int main()
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
     Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
+    Model personaPieA((char*)"Models/persona_pie_a/persona_pie_a.obj");               // X-19: figuras estaticas de la ceremonia
+    Model personaPieB((char*)"Models/persona_pie_b/persona_pie_b.obj");
+    Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
+    Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
+    Model petate((char*)"Models/petate/petate.obj");
     Model colinas((char*)"Models/colinas/colinas.obj");     // X-18: relieve verde de fondo (malla 300 x 215 m, hueco sobre la playa)
     Model palma((char*)"Models/palma/palma.obj");           // X-9: extra decorativo (no cuenta entre los 18 propios)
     Model arbusto((char*)"Models/arbusto/arbusto.obj");   // X-9: extra decorativo
@@ -268,6 +274,8 @@ int main()
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
     colisiones.agregar({ glm::vec3( 6.75f,0.0f,  3.25f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro este
     colisiones.agregar({ glm::vec3( 1.275f, 0.0f, 12.325f), glm::vec3( 1.725f, 0.30f, 12.675f) });  // B-10: roca decorativa
+    for (int i = 0; i < Extras::N_FIGURAS; i++)  // X-19: cada figura es una caja de 0.5 x 0.5 m (como el cuerpo del visitante)
+        colisiones.agregar({ glm::vec3(Extras::FIGURAS[i].x - 0.25f, 0.0f, Extras::FIGURAS[i].z - 0.25f), glm::vec3(Extras::FIGURAS[i].x + 0.25f, 1.7f, Extras::FIGURAS[i].z + 0.25f) });
 
     // VAO del cubo que marca las luces (tecla L)
     GLuint cuboVBO, cuboVAO;
@@ -610,13 +618,86 @@ int main()
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
         {
-            const glm::vec3 palmas[8] = { { -6.0f, 0.0f, 15.5f }, { 7.0f, 0.0f, 16.5f }, { -11.0f, 0.0f, 19.0f }, { 12.5f, 0.0f, 18.5f },
-                                          { -16.5f, 0.0f, 15.0f }, { 17.0f, 0.0f, 21.0f }, { 4.8f, 0.0f, 20.0f }, { -3.8f, 0.0f, 21.0f } };
+            const glm::vec3 palmas[8] = { { -6.0f, 0.0f, 15.5f }, { -8.5f, 0.0f, 17.0f }, { -11.0f, 0.0f, 19.0f }, { 20.0f, 0.0f, 17.0f },
+                                          { -16.5f, 0.0f, 15.0f }, { 23.0f, 0.0f, 20.0f }, { -5.5f, 0.0f, 21.5f }, { -3.8f, 0.0f, 21.0f } };
             for (int i = 0; i < 8; i++) colocar(palma, palmas[i], 47.0f * i);
-            const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -8.0f, 0.0f, 17.2f }, { 9.5f, 0.0f, 15.0f },
-                                            { -13.5f, 0.0f, 17.0f }, { 14.5f, 0.0f, 16.0f }, { -5.0f, 0.0f, 19.5f }, { 8.0f, 0.0f, 19.5f } };
+            const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -8.0f, 0.0f, 17.2f }, { -9.5f, 0.0f, 15.0f },
+                                            { -13.5f, 0.0f, 17.0f }, { 24.0f, 0.0f, 16.0f }, { -5.0f, 0.0f, 19.5f }, { -8.0f, 0.0f, 19.5f } };
             glUniform1f(specLoc, 0.05f);
             for (int i = 0; i < 8; i++) colocar(arbusto, arbustos[i], 31.0f * i);
+        }
+        // X-19: ceremonia en la orilla (propuesta, tabla 2.1 y fig. 1 y 6): 12 figuras ESTATICAS (poses fijas, sin IA), 3 petates con ofrenda y
+        // veladoras sobre la arena. Unica animacion: balanceo senoidal Extras::Balanceo (sin KeyFrames).
+        {
+            const float tc = (float)Reloj();
+            glUniform1f(specLoc, 0.05f);
+            Model* tiposFigura[4] = { &personaPieA, &personaPieB, &personaAgachadaA, &personaAgachadaB };
+            for (int i = 0; i < Extras::N_FIGURAS; i++)
+            {
+                const Extras::Figura& f = Extras::FIGURAS[i];
+                const bool agachada = f.tipo >= 2;
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(f.x, Colisiones::alturaSuelo(f.z), f.z));
+                mm = glm::rotate(mm, glm::radians(f.giroY), glm::vec3(0.0f, 1.0f, 0.0f));
+                // de pie: ladeo suave (+-1.2 grados, 4.5 s); de rodillas: cabeceo al respirar (+-2 grados, 5 s) alrededor de las rodillas
+                if (agachada) mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tc, 5.0f, f.fase, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                else          mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tc, 4.5f, f.fase, 1.2f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                tiposFigura[f.tipo]->Draw(shader);
+            }
+            for (int i = 0; i < Extras::N_PETATES; i++)
+            {
+                const Extras::Petate& pt = Extras::PETATES[i];
+                const glm::vec3 base(pt.x, Colisiones::alturaSuelo(pt.z), pt.z);
+                colocar(petate, base, pt.giroY);
+                // ofrenda sobre el petate: velas, cempasuchil, pan y copalero (coordenadas locales del petate)
+                const glm::vec3 vel[2] = { { -0.35f, 0.02f, -0.15f }, { 0.35f, 0.02f, -0.15f } };
+                for (int k = 0; k < 2; k++) colocar(vela, base + vel[k], 0.0f);
+                colocar(panMuerto, base + glm::vec3(0.0f, 0.02f, 0.10f), 0.0f);
+                colocar(copalero, base + glm::vec3(-0.10f, 0.02f, -0.20f), 0.0f);
+                for (int k = 0; k < 6; k++)
+                {
+                    glm::mat4 mf = glm::translate(glm::mat4(1.0f), base + glm::vec3(-0.40f + 0.16f * k, 0.055f, 0.22f + 0.04f * (k % 2)));
+                    mf = glm::scale(mf, glm::vec3(1.7f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                    cempasuchil.Draw(shader);
+                }
+            }
+            // veladoras sobre la arena (fig. 6): 26 velas pequenas en dos hileras ondulantes entre la ceremonia y la orilla
+            for (int i = 0; i < 26; i++)
+            {
+                const float vx = 3.0f + 0.62f * i;
+                const float vz = 21.3f + 0.35f * std::sin(0.9f * i) + 0.5f * (i % 2);
+                glm::mat4 mv = glm::translate(glm::mat4(1.0f), glm::vec3(vx, Colisiones::alturaSuelo(vz), vz));
+                mv = glm::scale(mv, glm::vec3(0.7f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mv));
+                vela.Draw(shader);
+            }
+            // llamas (sin luz, ruido de Perlin del lighting.frag): las de los petates y las veladoras
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tc);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            int nf = 0;
+            auto llamaEn = [&](glm::vec3 p, float esc)
+            {
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nf++));
+                glm::mat4 ml = glm::translate(glm::mat4(1.0f), p);
+                ml = glm::scale(ml, glm::vec3(esc));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
+            };
+            for (int i = 0; i < Extras::N_PETATES; i++)
+            {
+                const Extras::Petate& pt = Extras::PETATES[i];
+                const float y0 = Colisiones::alturaSuelo(pt.z) + 0.02f + 0.15f;
+                llamaEn(glm::vec3(pt.x - 0.35f, y0, pt.z - 0.15f), 1.0f);
+                llamaEn(glm::vec3(pt.x + 0.35f, y0, pt.z - 0.15f), 1.0f);
+            }
+            for (int i = 0; i < 26; i++)
+            {
+                const float vx = 3.0f + 0.62f * i;
+                const float vz = 21.3f + 0.35f * std::sin(0.9f * i) + 0.5f * (i % 2);
+                llamaEn(glm::vec3(vx, Colisiones::alturaSuelo(vz) + 0.7f * 0.15f, vz), 0.7f);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {
@@ -771,6 +852,7 @@ int main()
     roca.cleanup();
     palma.cleanup();    // X-9
     colinas.cleanup();  // X-18
+    personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
