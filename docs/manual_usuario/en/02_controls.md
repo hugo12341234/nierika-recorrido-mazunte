@@ -12,6 +12,7 @@
 | Colored lights | **Space bar** | Turns the 4 colored lights (green, blue, red and pink) on or off |
 | See where the lights are | **L** | Shows or hides the white cubes that mark the lights |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
+| Show or hide FPS | **F3** | Shows or hides the frames per second in the window title bar (visible at startup) |
 | Quit | **Esc** | Closes the program |
 
 Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):

@@ -12,6 +12,7 @@
 | Luces de colores | **Barra espaciadora** | Enciende o apaga las 4 luces de colores (verde, azul, rojo y rosa) |
 | Ver dónde están las luces | **L** | Muestra u oculta los cubos blancos que marcan las luces |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
+| Mostrar u ocultar los FPS | **F3** | Muestra u oculta los cuadros por segundo en la barra de título de la ventana (visibles al iniciar) |
 | Salir | **Esc** | Cierra el programa |
 
 Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):

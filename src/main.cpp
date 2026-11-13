@@ -62,6 +62,7 @@ const char* TITULO_VENTANA = "Nierika Studio - Recorrido virtual: Dia de Muertos
 const double INTERVALO_FPS = 0.5;  // segundos entre actualizaciones del titulo
 double inicioIntervaloFPS = 0.0;
 int framesIntervalo = 0;
+bool mostrarFPS = true;  // F3 muestra u oculta los FPS en el titulo (E-1b); al iniciar esta visible
 
 // ==========================================
 // ILUMINACION (A-8). Valores de D1 (319266894, Practica 8 adaptada a Mazunte).
@@ -451,9 +452,12 @@ int main()
         if (currentFrame - inicioIntervaloFPS >= INTERVALO_FPS)
         {
             double fps = framesIntervalo / (currentFrame - inicioIntervaloFPS);
-            char titulo[160];
-            snprintf(titulo, sizeof(titulo), "%s | %.0f FPS (%.1f ms)", TITULO_VENTANA, fps, 1000.0 / fps);
-            glfwSetWindowTitle(window, titulo);
+            if (mostrarFPS)
+            {
+                char titulo[160];
+                snprintf(titulo, sizeof(titulo), "%s | %.0f FPS (%.1f ms)", TITULO_VENTANA, fps, 1000.0 / fps);
+                glfwSetWindowTitle(window, titulo);
+            }
             inicioIntervaloFPS = currentFrame;
             framesIntervalo = 0;
         }
@@ -1436,6 +1440,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     // R: reinicia la caminata de la silueta (D-2)
     if (GLFW_KEY_R == key && GLFW_PRESS == action)
         tSilueta = 0.0f;
+
+    // F3: muestra u oculta los FPS en el titulo de la ventana (E-1b). Al ocultarlos se restaura el titulo base
+    if (GLFW_KEY_F3 == key && GLFW_PRESS == action)
+    {
+        mostrarFPS = !mostrarFPS;
+        if (!mostrarFPS) glfwSetWindowTitle(window, TITULO_VENTANA);
+    }
 
     // L: muestra u oculta los cubos que marcan las luces
     if (GLFW_KEY_L == key && GLFW_PRESS == action)
