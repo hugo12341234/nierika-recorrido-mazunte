@@ -36,13 +36,39 @@ def texturas():
     madera = np.array((0.34, 0.22, 0.12))[None, None, :] * fibra * (0.85 + 0.3 * r.random((N, N, 1)))
     guarda("palapa", "madera.png", madera)
     # casas: pared encalada con manchas, teja de barro, puertas y marcos de madera
+    # v2 (X-31): estuco con brochazos, humedad en la base y grietas; madera con nudos; teja con tejas individuales y musgo; zocalo de piedra; vidrio
+    def estuco(col, sem):
+        base = (0.80 + 0.22 * per(8, sem)[..., None] + 0.10 * per(32, sem + 1)[..., None]) * np.array(col)[None, None, :]
+        brocha = 0.97 + 0.03 * np.sin((xx + 40 * per(16, sem + 2)) * 2 * math.pi / 37)[..., None]
+        hum = np.clip((yy - N * 0.78) / (N * 0.22), 0, 1)[..., None] * (0.35 + 0.4 * per(16, sem + 3)[..., None])
+        grieta = (np.abs(np.sin(xx * 0.020 + 6 * per(8, sem + 4)) + np.sin(yy * 0.013 + 5 * per(8, sem + 5))) < 0.018)[..., None]
+        img = base * brocha
+        img = img * (1 - 0.45 * hum) + np.array((0.10, 0.085, 0.06))[None, None, :] * hum
+        img = np.where(grieta, img * 0.6, img)
+        return img * (0.94 + 0.08 * r.random((N, N, 1)))
+    nudos = np.zeros((N, N))
+    for _ in range(14):
+        cx, cy = r.integers(0, N), r.integers(0, N)
+        nudos += np.exp(-(((xx - cx) ** 2) / 1200.0 + ((yy - cy) ** 2) / 300.0))
+    madera2 = np.array((0.32, 0.20, 0.11))[None, None, :] * (fibra * (0.85 + 0.3 * r.random((N, N, 1)))) * (1 - 0.35 * np.clip(nudos, 0, 1)[..., None])
+    fila = yy // 64
+    col_t = (xx + 32 * (fila % 2)) // 64
+    var = np.random.default_rng(31).random((20, 20))[fila % 20, col_t % 20][..., None]
+    borde = (np.abs((xx + 32 * (fila % 2)) % 64 - 32) > 29) | ((yy % 64) > 58)
+    teja = np.array((0.60, 0.26, 0.14))[None, None, :] * (0.75 + 0.45 * var) * (0.85 + 0.15 * (0.5 + 0.5 * np.sin(yy * 2 * math.pi / 64))[..., None])
+    teja = np.where(borde[..., None], teja * 0.55, teja)
+    musgo = np.clip((per(16, 3300) - 0.62) * 5, 0, 1)[..., None]
+    teja = teja * (1 - 0.5 * musgo) + np.array((0.16, 0.26, 0.10))[None, None, :] * 0.5 * musgo
+    piedra = np.array((0.30, 0.28, 0.26))[None, None, :] * (0.7 + 0.6 * per(10, 3400)[..., None]) * (0.9 + 0.2 * r.random((N, N, 1)))
+    junta = ((xx + 64 * ((yy // 64) % 2)) % 128 < 3) | (yy % 64 < 3)
+    piedra = np.where(junta[..., None], piedra * 0.6, piedra)
+    vidrio = np.array((0.08, 0.14, 0.20))[None, None, :] * (0.7 + 0.5 * np.clip(1 - (xx + yy) / (2.0 * N), 0, 1)[..., None]) + 0.05
     for tag, col in (("a", (0.20, 0.55, 0.60)), ("b", (0.88, 0.70, 0.35))):
-        pared = np.array(col)[None, None, :] * (0.78 + 0.3 * per(8, 2700 + ord(tag))[..., None]) * (0.92 + 0.1 * r.random((N, N, 1)))
-        guarda("casa_" + tag, "pared.png", pared)
-        guarda("casa_" + tag, "madera.png", madera)
-        teja = (np.sin(xx * 2 * math.pi / 64) > -0.2)[..., None]
-        tejas = np.array((0.62, 0.27, 0.15))[None, None, :] * (0.7 + 0.3 * (0.5 + 0.5 * np.sin(yy * 2 * math.pi / 64))[..., None]) * (0.85 + 0.2 * r.random((N, N, 1)))
-        guarda("casa_" + tag, "teja.png", tejas * np.where(teja, 1.0, 0.75))
+        guarda("casa_" + tag, "pared.png", estuco(col, 2700 + ord(tag)))
+        guarda("casa_" + tag, "madera.png", madera2)
+        guarda("casa_" + tag, "teja.png", teja)
+        guarda("casa_" + tag, "zocalo.png", piedra)
+        guarda("casa_" + tag, "vidrio.png", vidrio)
     print("texturas OK")
 
 
@@ -108,10 +134,11 @@ def modelos():
     # --- casa costera de 5 x 4 m: paredes de 2.6 m, techo de teja a dos aguas (cumbrera a 3.8 m), puerta y dos ventanas
     for tag in ("a", "b"):
         bm = bmesh.new()
-        W, D, H, RH = 5.0, 4.0, 2.6, 3.8
-        caja(bm, (0, 0, H / 2), (W, D, H), 0)
-        # techo a dos aguas: 2 planos inclinados con alero de 0.4 m
-        e = 0.45
+        W, D, H, RH = 5.0, 4.0, 2.7, 3.8
+        # v2 (X-31): materiales 0 pared, 1 teja, 2 madera, 3 zocalo de piedra, 4 vidrio
+        caja(bm, (0, 0, H / 2 + 0.25), (W, D, H - 0.5), 0)
+        caja(bm, (0, 0, 0.25), (W + 0.08, D + 0.08, 0.5), 3)
+        e = 0.50
         v = [bm.verts.new(p) for p in ((-W / 2 - e, -D / 2 - e, H - 0.05), (W / 2 + e, -D / 2 - e, H - 0.05), (W / 2 + e, 0, RH), (-W / 2 - e, 0, RH),
                                         (-W / 2 - e, D / 2 + e, H - 0.05), (W / 2 + e, D / 2 + e, H - 0.05))]
         bm.faces.new((v[0], v[1], v[2], v[3])).material_index = 1
@@ -123,11 +150,35 @@ def modelos():
         for sx in (-1, 1):
             t = [bm.verts.new((sx * W / 2, -D / 2, H)), bm.verts.new((sx * W / 2, D / 2, H)), bm.verts.new((sx * W / 2, 0, RH - 0.05))]
             bm.faces.new(t if sx > 0 else t[::-1]).material_index = 0
-        caja(bm, (0, D / 2 + 0.02, 1.0), (1.0, 0.06, 2.0), 2)                # puerta en la cara +Y (frente)
+        caja(bm, (0, D / 2 + 0.07, 2.17), (1.06, 0.14, 0.08), 2)           # cumbrera/tabla de alero frontal
+        fy = D / 2 + 0.02
+        # puerta de 1.0 x 2.1 m: hoja, marco y dos paneles
+        caja(bm, (0, fy + 0.02, 1.05), (0.84, 0.05, 2.04), 2)
         for sx in (-1, 1):
-            caja(bm, (sx * 1.6, D / 2 + 0.02, 1.5), (0.9, 0.06, 0.8), 2)      # ventanas
-        caja(bm, (0, D / 2 + 0.5, 0.06), (2.4, 1.0, 0.12), 0)              # escalon/porche
-        exporta("casa_" + tag, bm, ["pared.png", "teja.png", "madera.png"], lambda c, n, mi: ((c.x + c.y) * 0.25, c.z * 0.25))
+            caja(bm, (sx * 0.52, fy + 0.03, 1.07), (0.08, 0.08, 2.14), 2)
+        caja(bm, (0, fy + 0.03, 2.13), (1.12, 0.08, 0.08), 2)
+        caja(bm, (0, fy + 0.05, 0.62), (0.62, 0.02, 0.62), 2)
+        caja(bm, (0, fy + 0.05, 1.50), (0.62, 0.02, 0.72), 2)
+        caja(bm, (0.33, fy + 0.07, 1.0), (0.05, 0.05, 0.05), 3)
+        # ventanas de 1.0 x 1.1 m con marco, cruceta, repisa y postigos abiertos
+        for sx in (-1, 1):
+            cx = sx * 1.65
+            caja(bm, (cx, fy + 0.02, 1.55), (0.94, 0.04, 1.04), 4)
+            for dx, dz, ax, az in ((0, 0.57, 1.12, 0.08), (0, -0.57, 1.12, 0.08), (-0.56, 0, 0.08, 1.2), (0.56, 0, 0.08, 1.2), (0, 0, 0.05, 1.0), (0, 0, 1.0, 0.05)):
+                caja(bm, (cx + dx, fy + 0.05, 1.55 + dz), (ax, 0.07, az), 2)
+            caja(bm, (cx, fy + 0.10, 0.96), (1.24, 0.16, 0.06), 3)
+            for sh in (-1, 1):
+                caja(bm, (cx + sh * 0.78, fy + 0.07, 1.55), (0.42, 0.04, 1.06), 2)
+        # porche: dos postes, techo de un agua, piso y escalon
+        for sx in (-1, 1):
+            tubo(bm, (sx * 1.15, fy + 0.95, 0.0), (sx * 1.15, fy + 0.95, 2.55), 0.07, 0.07, 2, 8)
+        pv = [bm.verts.new(q) for q in ((-1.45, fy, 2.75), (1.45, fy, 2.75), (1.45, fy + 1.2, 2.40), (-1.45, fy + 1.2, 2.40))]
+        bm.faces.new(pv).material_index = 1
+        pv2 = [bm.verts.new((q.co.x, q.co.y, q.co.z - 0.05)) for q in pv]
+        bm.faces.new(pv2[::-1]).material_index = 2
+        caja(bm, (0, fy + 0.6, 0.06), (2.6, 1.2, 0.12), 3)
+        caja(bm, (0, fy + 1.3, 0.03), (1.6, 0.35, 0.06), 3)
+        exporta("casa_" + tag, bm, ["pared.png", "teja.png", "madera.png", "zocalo.png", "vidrio.png"], lambda c, n, mi: ((c.x + c.y) * 0.25, c.z * 0.25))
 
 
 if modo == "texturas":

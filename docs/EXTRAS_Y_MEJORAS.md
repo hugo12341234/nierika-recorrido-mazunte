@@ -94,6 +94,11 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 
 | **Pueblo de fondo sobre las colinas (44 casas y 3 caminos de tierra) y promontorio rocoso tipo Punta Cometa con un mirador pequeño** — **FUERA DEL ALCANCE ORIGINAL** (calles y edificios del pueblo; Punta Cometa). Es una **formación genérica**: no reproduce el sendero ni el mirador reales | **X-30** `x-30-pueblo-fondo` | `Models/calles/` (92 caras), `src/PuebloFondo.h` (generado), reutiliza `casa_a`, `casa_b`, `roca_mar` y `palapa`; `tools/x30_pueblo_fondo.py` | — (estático) | Propio (Blender 5.2); relieve compartido con las colinas (X-18) | ~140 llamadas de dibujo (las casas del fondo podrían agruparse si hiciera falta) | ✅ detrás de `MOSTRAR_FUERA_DE_ALCANCE` |
 
+## 4b. Detalle y dimensiones (X-31 y X-32)
+
+- **X-31 · casas con más detalle:** `casa_a` y `casa_b` pasan de 3 a 5 materiales (estuco con brochazos, humedad y grietas; teja con tejas individuales y musgo; madera con nudos; zócalo de piedra; vidrio) y de ~30 a 220 caras: puerta de 1.0 × 2.1 m con marco y dos paneles, ventanas con marco, cruceta, repisa y postigos, tabla de alero, porche con dos postes, techo de un agua y escalón (`tools/x26_construcciones.py`). Texturas generadas por código (propias).
+- **X-32 · dimensiones:** `tools/x32_dimensiones.py` mide cada `.obj` × su escala en escena y lo compara con una medida esperada (tablas `docs/DIMENSIONES_ANTES.md` y `docs/DIMENSIONES_VERIFICADAS.md`). Antes: 5 de 28 fuera de rango. Correcciones: lancha 5.2 → 6.0 m, palma 5 → 8.5 m de tronco (hojas de 3 m), escala de aves 2.4 → 1.2, murciélagos 2.2 → 1.0, tortuga marina 1.0 → 0.85, crías 0.22 → 0.12. Después: 0 de 28 fuera de rango. **Las medidas esperadas son referencias típicas o indicadas por D2, no mediciones en Mazunte.**
+
 ## 5. Evidencias (antes / después)
 
 Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evidencias/`. Los archivos `antes_*.png` son del 12/11/2026 con develop `c65109f`.
@@ -116,5 +121,7 @@ Capturas reales con el modo de captura (`NIERIKA_CAPTURAS`), en `docs/extras_evi
 | tras X-18 (colinas y 210 plantas) | 1 250 – 1 500 |
 | tras X-22/X-23 (todo lo anterior + ceremonia, tendederos, tablas, luciérnagas, espuma, relieve) | 1 020 – 1 120 |
 | tras X-24 (narrativa: sendero, faroles, 24 figuras, murciélagos) | 830 – 920 |
+| tras X-25…X-28 (lados de la escena) | ≈ 700 |
+| tras X-29 a X-32 (comparsa, banda, alfombras, pueblo de fondo, casas con detalle, dimensiones corregidas) | ≈ 590 (vista inicial, medido el 13/11) |
 
 El requisito (≥ 30 FPS en gráficos integrados) **sigue sin probarse en una laptop integrada**: la GPU de D2 es mucho más rápida. El costo más visible es el número de llamadas de dibujo (≈ 450); si hiciera falta recortar, el primer paso es dibujar las 210 plantas de las colinas con instancing o reducirlas.

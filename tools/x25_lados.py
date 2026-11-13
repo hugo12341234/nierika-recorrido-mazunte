@@ -129,7 +129,7 @@ def modelos():
     exporta("roca_mar", bm, plano_uv=lambda c: (c.x * 0.5 + c.y * 0.3, c.z * 0.5 + c.y * 0.2))
     # --- lancha de pescador: casco de 5.2 x 1.5 x 0.75 m con proa y popa, bancas y motor fuera de borda
     bm = bmesh.new()
-    L, B, H, sec = 5.2, 1.5, 0.75, 12
+    L, B, H, sec = 6.0, 1.7, 0.85, 12
     perfiles = []
     for i in range(sec + 1):
         s = i / sec
