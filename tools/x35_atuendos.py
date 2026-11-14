@@ -65,7 +65,7 @@ def ropas():
     guarda("atuendos", "ropa_0.png", de_pil(im))
     # 1: huipil azul indigo con franjas y florecitas amarillas y naranjas
     im = a_pil(tela((0.09, 0.15, 0.36))); d = ImageDraw.Draw(im)
-    for y in (96, 480, 864):
+    for y in (96,):
         d.rectangle((0, y, N, y + 40), fill=c255((0.92, 0.62, 0.12)))
         d.rectangle((0, y + 52, N, y + 60), fill=c255((0.90, 0.88, 0.80)))
     for fila in range(3):
@@ -94,9 +94,12 @@ def ropas():
     rojo, azul, mezcla = np.array((0.70, 0.10, 0.10)), np.array((0.10, 0.14, 0.32)), np.array((0.38, 0.12, 0.21))
     cuad = np.where((a + b)[..., None] == 0, rojo, np.where((a + b)[..., None] == 2, azul, mezcla))
     guarda("atuendos", "ropa_4.png", cuad * (0.85 + 0.15 * tela((1, 1, 1))))
-    # 5: camiseta de rayas marineras (playero)
-    rayas = ((yy // 24) % 4 == 0).astype(float)[..., None]   # rayas FINAS (1 de cada 4 franjas de 24 px): antes eran anchas y parecian pijama
-    guarda("atuendos", "ropa_5.png", (np.array((0.90, 0.86, 0.74)) * (1 - rayas) + np.array((0.12, 0.30, 0.55)) * rayas) * (0.85 + 0.15 * tela((1, 1, 1))))
+    # 5: camiseta azul marino con un sol blanco al pecho (X-36: antes rayas marineras; las rayas azul/blanco dominaban la escena)
+    im = a_pil(tela((0.10, 0.20, 0.42))); d = ImageDraw.Draw(im)
+    d.ellipse((392, 300, 632, 540), fill=c255((0.93, 0.90, 0.80)))
+    for k in range(12):
+        a = 2 * math.pi * k / 12; d.line((512 + 140 * math.cos(a), 420 + 140 * math.sin(a), 512 + 190 * math.cos(a), 420 + 190 * math.sin(a)), fill=c255((0.93, 0.90, 0.80)), width=14)
+    guarda("atuendos", "ropa_5.png", de_pil(im))
 
     # ---- 6 a 13 (X-36): mas ropas, para que la gente no se repita
     # 6: huipil rojo con greca negra y amarilla
@@ -112,11 +115,10 @@ def ropas():
         for col in range(4):
             flor(d, 128 + col * 256 + (128 if fila % 2 else 0), 128 + fila * 256, 56, c255((0.95, 0.40, 0.65)), c255((0.98, 0.88, 0.30)))
     guarda("atuendos", "ropa_7.png", de_pil(im))
-    # 8: blusa amarilla con listones azules
+    # 8: blusa amarilla con cuello bordado de flores (X-36: antes tres listones azules, parecian rayas)
     im = a_pil(tela((0.93, 0.76, 0.14))); d = ImageDraw.Draw(im)
-    for y in (100, 420, 740):
-        d.rectangle((0, y, N, y + 44), fill=c255((0.10, 0.30, 0.65)))
-        d.rectangle((0, y + 56, N, y + 62), fill=c255((0.78, 0.12, 0.20)))
+    for x in range(64, N, 128):
+        flor(d, x, 150, 44, c255((0.78, 0.12, 0.20)), c255((0.10, 0.30, 0.65)))
     guarda("atuendos", "ropa_8.png", de_pil(im))
     # 9: camisa celeste con una hilera de botones
     base = tela((0.55, 0.74, 0.88), grano=0.10); xs = np.arange(N)[None, :, None]
@@ -252,7 +254,7 @@ def rebozo():
     for i, (base, rayas) in enumerate((((0.06, 0.09, 0.22), (0.92, 0.90, 0.85)), ((0.45, 0.06, 0.12), (0.95, 0.75, 0.25)), ((0.18, 0.28, 0.10), (0.92, 0.88, 0.70)))):
         t = tela(base)
         yy = np.arange(N)[:, None, None]
-        franja = ((yy // 6) % 24 == 0).astype(float)
+        franja = ((yy // 3) % 40 == 0).astype(float)   # X-36: rayas del rebozo 4 veces mas finas
         jasp = (r.random((N, N, 1)) > 0.93).astype(float) * 0.6
         t = t * (1 - franja) + np.array(rayas)[None, None, :] * franja
         t = t * (1 - jasp) + np.array(rayas)[None, None, :] * jasp

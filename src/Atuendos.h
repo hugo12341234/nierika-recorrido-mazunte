@@ -49,12 +49,12 @@ public:
         return s;
     }
 
-    // Talla propia: altura x 0.94..1.06 y ancho x 0.90..1.10 (hash de la semilla; no cambia las cajas de colision)
+    // Talla propia: altura x 0.88..1.10 y ancho x 0.86..1.14 (X-36 pulido; antes 0.94..1.06 y 0.90..1.10) (hash de la semilla; no cambia las cajas de colision)
     static glm::vec3 talla(int semilla)
     {
         const uint32_t h = mezcla((uint32_t)semilla * 40503u + 7u);
-        const float a = 0.94f + 0.12f * (float)(h & 0xFFu) / 255.0f;
-        const float w = 0.90f + 0.20f * (float)((h >> 8) & 0xFFu) / 255.0f;
+        const float a = 0.88f + 0.22f * (float)(h & 0xFFu) / 255.0f;
+        const float w = 0.86f + 0.28f * (float)((h >> 8) & 0xFFu) / 255.0f;
         return glm::vec3(w, a, w);
     }
 

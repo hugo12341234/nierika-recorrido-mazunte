@@ -155,7 +155,7 @@ def arco():
     tubo(car, (-1.05, 1.95, 0), (1.05, 1.95, 0), 0.03, 0.03, 6, 0.0, 1.0, 1.0)
     flo = Parte("flores_arco", "flores_arco.png")
     # guirnalda: semicirculo de radio 1.05 centrado en y = 1.95, tubo de radio 0.13 (con flores) que sube 0.0..1.05 de altura
-    pasos, seg = 24, 8
+    pasos, seg = 48, 12
     filas = []
     for i in range(pasos + 1):
         th = math.pi * i / pasos
@@ -165,22 +165,26 @@ def arco():
         for k in range(seg + 1):
             a = 2 * math.pi * k / seg
             n = tuple(rad[j] * math.cos(a) + (0, 0, 1)[j] * math.sin(a) for j in range(3))
-            rr = 0.13 * (1.0 + 0.18 * math.sin(11 * th + 2 * k))                 # relieve de racimos de flores
-            fila.append(flo.vert(tuple(c[j] + n[j] * rr for j in range(3)), (6.0 * i / pasos, 1.0 * k / seg), n))
+            rr = 0.13 * (1.0 + 0.30 * abs(math.sin(9 * th)) * abs(math.sin(k * 1.3 + 4 * th)))   # relieve de racimos (pompones); antes un tubo casi liso
+            fila.append(flo.vert(tuple(c[j] + n[j] * rr for j in range(3)), (4.0 * i / pasos, 1.0 * k / seg), n))
         filas.append(fila)
     for i in range(pasos):
         for k in range(seg):
             flo.cara(filas[i][k], filas[i][k + 1], filas[i + 1][k + 1], filas[i + 1][k])
     escribe("arco_cempasuchil", "arco_cempasuchil", [car, flo])
     # texturas: flores de cempasuchil (naranja y amarillo con centro oscuro) y carrizo (tallo con nudos)
-    im = Image.new("RGB", (N, N), (30, 70, 20)); d = ImageDraw.Draw(im)
-    for _ in range(1500):
-        x, y = rnd.randrange(N), rnd.randrange(N); rad = rnd.randrange(14, 30)
-        col = rnd.choice(((240, 140, 10), (250, 170, 20), (225, 105, 5), (255, 195, 40)))
-        for k in range(9):
-            a = 2 * math.pi * k / 9
-            d.ellipse((x + rad * 0.6 * math.cos(a) - rad * 0.45, y + rad * 0.6 * math.sin(a) - rad * 0.45, x + rad * 0.6 * math.cos(a) + rad * 0.45, y + rad * 0.6 * math.sin(a) + rad * 0.45), fill=col)
-        d.ellipse((x - rad * 0.25, y - rad * 0.25, x + rad * 0.25, y + rad * 0.25), fill=(120, 55, 5))
+    im = Image.new("RGB", (N, N), (14, 40, 12)); d = ImageDraw.Draw(im)
+    for _ in range(420):                                                   # flores grandes y con contraste (antes 1500 chicas: de lejos era un tubo amarillo liso)
+        x, y = rnd.randrange(N), rnd.randrange(N); rad = rnd.randrange(34, 62)
+        terciopelo = rnd.random() < 0.10                                   # flor de terciopelo (magenta), tambien tipica de la ofrenda
+        col = (150, 20, 75) if terciopelo else rnd.choice(((240, 130, 10), (250, 165, 20), (215, 95, 5), (255, 190, 40)))
+        sombra = tuple(int(v * 0.55) for v in col)
+        for k in range(10):
+            a = 2 * math.pi * k / 10
+            cx_, cy_ = x + rad * 0.62 * math.cos(a), y + rad * 0.62 * math.sin(a)
+            d.ellipse((cx_ - rad * 0.46, cy_ - rad * 0.46, cx_ + rad * 0.46, cy_ + rad * 0.46), fill=sombra)
+            d.ellipse((cx_ - rad * 0.40, cy_ - rad * 0.40, cx_ + rad * 0.40, cy_ + rad * 0.40), fill=col)
+        d.ellipse((x - rad * 0.22, y - rad * 0.22, x + rad * 0.22, y + rad * 0.22), fill=(95, 40, 5))
     guarda("arco_cempasuchil", "flores_arco.png", np.asarray(im).astype(float) / 255.0)
     yy, xx = np.mgrid[0:N, 0:N]
     nudo = (np.abs(((yy % 300) - 150)) > 140).astype(float)
@@ -222,6 +226,7 @@ def sendero_textura():
     alfa = ancho.astype(float)
     rgba = np.concatenate([np.clip(col, 0, 1), alfa[..., None]], axis=2)
     guarda("sendero", "tierra_sendero.png", rgba, "RGBA")
+    guarda("sendero", "tierra_plaza.png", np.clip(col, 0, 1))              # misma tierra, opaca y sin borde (plazas del mirador y la cima)
 
 
 if __name__ == "__main__":

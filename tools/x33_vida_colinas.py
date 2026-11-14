@@ -287,10 +287,47 @@ while len(res["rocas"]) < 70 and intentos < 80000:
     esc = rnd.uniform(0.6, 2.4)
     res["rocas"].append((x, altm(x, z) - 0.12 * esc, z, rnd.uniform(0, 360), esc)); ocupado.append((x, z, 1.0 * esc))
 
+# --- X-36 (pulido): la franja norte de la playa era un plano de arena vacio. Generador aparte (semilla 3301) para no mover nada de lo anterior ---
+rb = random.Random(3301)
+for i in range(11):                                            # sendero de petalos: de la capilla (z -4) al arranque del camino norte (z -21)
+    z = -4.0 - 1.55 * i; x = 0.9 * math.sin(i * 0.9)
+    for lado in (-1, 1):
+        res["racimos"].append((x + lado * rb.uniform(0.9, 1.25), 0.01, z + rb.uniform(-0.3, 0.3), rb.uniform(0, 360)))
+for i in range(3):
+    z = -7.0 - 5.5 * i
+    res["faroles"].append((2.6 * (1 if i % 2 else -1), 0.0, z, rb.choice((0, 90, 180, 270))))
+n = 0
+while n < 18:                                                  # matas de cempasuchil sueltas (grupos de 3) entre las fogatas
+    x, z = rb.uniform(-46, 46), rb.uniform(-19, -4)
+    if abs(x) < 4 or any(math.hypot(x - f[0], z - f[2]) < 3.5 for f in res["fogatas"]): continue
+    n += 1
+    for _ in range(3):
+        res["racimos"].append((x + rb.uniform(-0.7, 0.7), 0.01, z + rb.uniform(-0.7, 0.7), rb.uniform(0, 360)))
+for lista, cuantos, esc in (("arbustos", 16, (0.7, 1.3)), ("palmas", 8, (0.9, 1.4))):   # pasto de duna y palmas bajas junto al pie de las colinas
+    n = 0
+    while n < cuantos:
+        x, z = rb.uniform(-46, 46), rb.uniform(-19.5, -9)
+        if abs(x) < 8 or any(math.hypot(x - f[0], z - f[2]) < 4.0 for f in res["fogatas"]) or any(math.hypot(x - a[0], z - a[2]) < 1.8 for a in res["palmas"] + res["arbustos"]): continue
+        n += 1
+        res[lista].append((x, 0.0, z, rb.uniform(0, 360), rb.uniform(*esc)))
+n = 0
+while n < 14:                                                  # piedras de playa (unas pocas, de 0.3 a 1.0 m)
+    x, z = rb.uniform(-47, 47), rb.uniform(-19, 16)
+    if abs(x) < 8 and z > -19: continue
+    if any(math.hypot(x - f[0], z - f[2]) < 3.0 for f in res["fogatas"]): continue
+    n += 1
+    esc = rb.uniform(0.3, 1.0)
+    res["rocas"].append((x, -0.12 * esc, z, rb.uniform(0, 360), esc))
+for (cx, cz) in ((-27.0, -5.0), (29.0, -6.0), (-42.0, -5.0)):  # grupitos con vela caminando por la arena
+    for j in range(3):
+        x, z = cx + 1.2 * j, cz + rb.uniform(-0.6, 0.6)
+        res["personas"].append((x, 0.0, z, rb.uniform(150, 210), j % 2, 0.62 if j == 2 else 1.0, rb.uniform(0, 6.28), 1))
+
 # --- malla del sendero de tierra (sigue la malla de las colinas; 1.7 m de ancho + plazas redondas en el mirador y la cima) ---
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import x36_camino_animas as x36
 par = x36.Parte("tierra_sendero", "tierra_sendero.png")
+pla = x36.Parte("tierra_plaza", "tierra_plaza.png")      # plazas: textura SIN alfa y UV planar (con la de la franja se veian como bandas enroscadas)
 def y_s(x, z): return altm(x, z) + 0.035
 for pts, M, P in SEND_PTS:
     izq, der, acum = [], [], 0.0
@@ -302,14 +339,16 @@ for pts, M, P in SEND_PTS:
         der.append(par.vert((xb, y_s(xb, zb), zb), (1.0, acum / 4.0), (0, 1, 0)))
     for i in range(len(pts) - 1):
         par.cara(izq[i], der[i], der[i + 1], izq[i + 1])
-    for (cx, cz), rad in ((M, 3.2), (P, 2.5)):                      # plaza redonda de tierra (alfa = 1 en el centro de la textura)
-        c = par.vert((cx, y_s(cx, cz), cz), (0.5, 0.0), (0, 1, 0)); borde = []
-        for k in range(20):
-            a = 2 * math.pi * k / 20; x, z = cx + rad * math.cos(a), cz + rad * math.sin(a)
-            borde.append(par.vert((x, y_s(x, z), z), (0.5, rad * 0.5 * (1 + math.sin(a)) / 4.0), (0, 1, 0)))
-        for k in range(20):
-            par.cara(c, borde[k], borde[(k + 1) % 20])
-x36.escribe("sendero", "sendero", [par])
+    for (cx, cz), rad in ((M, 3.2), (P, 2.5)):                      # plaza de tierra: borde algo irregular, 0.007 m bajo la franja (sin z-fighting)
+        yp = lambda x, z: altm(x, z) + 0.028
+        c = pla.vert((cx, yp(cx, cz), cz), (cx / 4.0, cz / 4.0), (0, 1, 0)); borde = []
+        for k in range(28):
+            a = 2 * math.pi * k / 28; rr = rad * (1 + 0.07 * math.sin(3 * a + cx) + 0.04 * math.sin(7 * a))
+            x, z = cx + rr * math.cos(a), cz + rr * math.sin(a)
+            borde.append(pla.vert((x, yp(x, z), z), (x / 4.0, z / 4.0), (0, 1, 0)))
+        for k in range(28):
+            pla.cara(c, borde[k], borde[(k + 1) % 28])
+x36.escribe("sendero", "sendero", [par, pla])
 
 def arr(nombre, tipo, lst, fmt):
     return "    inline const %s %s[%d] = {\n%s\n    };\n    constexpr int N_%s = %d;\n" % (tipo, nombre, len(lst), ",\n".join("        { " + fmt % tuple(r) + " }" for r in lst), nombre, len(lst))

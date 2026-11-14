@@ -216,8 +216,8 @@ void main()
         float m1 = ruidoFbm(FragPos.xz * 0.025);
         float m2 = ruidoFbm(FragPos.xz * 0.18);
         float alto = smoothstep(2.0, 26.0, FragPos.y);
-        vec3 tinte = mix(vec3(0.65, 1.00, 0.72), vec3(1.35, 1.10, 0.55), clamp(0.45 + m1 * 1.8 + alto * 0.45, 0.0, 1.0));
-        albedo *= tinte * (0.80 + 0.75 * m2);
+        vec3 tinte = mix(vec3(0.82, 1.18, 0.86), vec3(1.55, 1.28, 0.68), clamp(0.45 + m1 * 1.8 + alto * 0.45, 0.0, 1.0));
+        albedo *= tinte * (0.95 + 0.75 * m2);   // X-36 (pulido): colinas ~30 % mas claras (se veian casi negras de noche)
     }
     if (arena == 1)
     {
