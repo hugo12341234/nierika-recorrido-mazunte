@@ -244,7 +244,15 @@ void main()
     float bruma = 1.0 - exp(-pow(distCam * 0.010, 1.5));          // X-36: 0.012 -> 0.010 (mas alcance de vista)
     vec3 haciaFondo = normalize(FragPos - viewPos);
     vec3 colBruma = mix(vec3(0.08, 0.13, 0.21), vec3(0.24, 0.16, 0.16), 0.6 * smoothstep(-0.2, 0.9, haciaFondo.z));   // X-36: calida hacia el ocaso (+z)
-    result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
+    if (espuma == 1)
+    {
+        // Mar (14/11): lejos se funde del todo con colBruma, el MISMO color que sky.frag pone debajo del horizonte,
+        // asi el borde de la malla (z = +122) no se distingue de la franja que sigue. Sin el tope de 0.85.
+        float fondoMar = max(bruma, smoothstep(70.0, 115.0, distCam));
+        result = mix(result, colBruma, clamp(fondoMar, 0.0, 1.0));
+    }
+    else
+        result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
     color = vec4(result, texColor.a);
 }
 

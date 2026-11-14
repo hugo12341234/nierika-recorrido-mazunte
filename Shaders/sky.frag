@@ -41,8 +41,9 @@ void main()
     cielo += vec3(0.95, 0.93, 0.80) * smoothstep(0.9990, 0.9995, c);
     cielo += vec3(0.25, 0.30, 0.45) * pow(max(c, 0.0), 80.0);
 
-    // Debajo del horizonte se funde con el color del horizonte (la playa y el mar tapan casi todo)
-    if (d.y < 0.0) cielo = horizonte * 0.6;
+    // Debajo del horizonte (14/11): el MISMO color que lighting.frag da a la bruma (colBruma, calido hacia +z). Antes era
+    // 'horizonte * 0.6', mas oscuro que el mar lejano, y se veia una franja azul plana entre el borde del mar (z = +122) y el horizonte
+    if (d.y < 0.0) cielo = mix(vec3(0.08, 0.13, 0.21), vec3(0.24, 0.16, 0.16), 0.6 * smoothstep(-0.2, 0.9, d.z));
 
     color = vec4(cielo, 1.0);
 }

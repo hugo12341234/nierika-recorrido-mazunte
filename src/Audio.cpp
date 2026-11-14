@@ -96,9 +96,9 @@ void Audio::ActualizarZona(float x, float z, bool banda)
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
-    // Oleaje (D-6b): sube con el cuadrado de la cercania a la orilla (z = 24); lejos casi no se oye
+    // Oleaje (D-6b): sube con s^2.5 (mas lento cerca que s^2) segun la cercania a la orilla (z = 24); lejos casi no se oye
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
-    fija(0, 0.03f + 0.25f * sMar * sMar);
+    fija(0, 0.03f + 0.15f * std::pow(sMar, 2.5f));   // 14/11 (2.a version): 0.03 + 0.15*s^2.5, antes 0.03 + 0.25*s^2
     const float dAltar = std::sqrt((x - 1.35f) * (x - 1.35f) + z * z);
     // Musica (D-6b): el mp3 de Xochipitzahuatl mide -10 LUFS contra -16.4 de la pista sintetizada anterior;
     // 0.48 = 10^(-6.4/20) iguala la sonoridad, asi la curva 0.10..0.50 conserva su balance con el oleaje
