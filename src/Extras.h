@@ -238,11 +238,11 @@ namespace Extras
     }
 
     // ======== X-29: COMPARSA, MUSICA EN VIVO Y ALFOMBRAS DE FLORES (FUERA DEL ALCANCE ORIGINAL; detras de MOSTRAR_FUERA_DE_ALCANCE) ========
-    // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. La musica es SINTETIZADA (Audio/banda.wav), no hay musicos ni grabaciones reales.
+    // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. Sin musica propia (D-6c, 14/11: se quito Audio/banda.wav); no hay musicos ni grabaciones reales.
     // inst: 1 guitarra, 2 tambor, 3 trompeta
     struct Musico { float x, z, giro; int tipo; float fase; int inst; };
     constexpr int N_BANDA = 5;
-    constexpr float BANDA_X = -10.0f, BANDA_Z = 19.5f;      // centro del grupo (el audio de la banda sube al acercarse)
+    constexpr float BANDA_X = -10.0f, BANDA_Z = 19.5f;      // centro del grupo
     inline const Musico BANDA[N_BANDA] = { { -11.4f, 19.0f, 200.0f, 0, 0.0f, 1 }, { -10.2f, 18.5f, 195.0f, 1, 1.4f, 1 }, { -9.0f, 18.9f, 190.0f, 0, 2.6f, 2 },
                                           { -10.8f, 20.4f, 210.0f, 1, 3.7f, 3 }, { -8.8f, 20.3f, 185.0f, 0, 4.9f, 3 } };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
