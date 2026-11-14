@@ -36,7 +36,7 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 
 | Archivo | Qué suena | Volumen (según la posición del visitante) |
 |---|---|---|
-| `oleaje.wav` | Oleaje | 0.03 + 0.15·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (C-1b, 14/11): casi inaudible lejos, 0.18 en la orilla (z = 24) |
+| `oleaje.mp3` | Oleaje | 0.03 + 0.15·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (C-1b, 14/11): casi inaudible lejos, 0.18 en la orilla (z = 24) |
 | `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
 | `voces.wav` | Murmullo de voces lejanas | 0.55·clamp(1 − d/14, 0, 1), con d la distancia a la ceremonia (11, 19.5) o al panteón (0, 7): suena cerca de la gente |
 
@@ -60,3 +60,17 @@ Volumen: el mp3 mide −10.0 LUFS (medido con ffmpeg `loudnorm`) y la pista ante
 
 - `oleaje.wav` se **regeneró** con `tools/d6_audio.py` (48 s, 2.1 MB, mismo nombre y mismo bucle sin corte): ahora son 7 olas individuales e irregulares (marejada grave + rompiente + espuma que se apaga despacio) en vez de ruido con envolvente suave, que sonaba a motor. Propia del estudio, sin licencia de terceros. RMS ≈ 0.106 contra 0.114 de la anterior, así que la curva de volumen no cambia. **No escuchada por Claude** (solo se midió el empalme y el nivel): se ajusta al oído de D2.
 - Se **quitó la pista `banda`** (`Audio/banda.wav` y `tools/x29_banda.py`): la música en vivo sintetizada de los músicos de la playa se encimaba con el oleaje y con la música nueva. Los músicos siguen en pantalla, sin sonido propio.
+
+## D-6d (14/11): oleaje = grabación real de D2 (externa)
+
+`Audio/oleaje.mp3` sustituye al oleaje sintetizado (`oleaje.wav` se quitó del repo; hay que quitarlo porque el código prueba `.wav` antes que `.mp3`). `tools/d6_audio.py` **ya no se usa para el oleaje** (si se corre, recrea `Audio/oleaje.wav` y ese archivo tendría prioridad: no correrlo o borrar el resultado).
+
+- **Origen:** pista de un video de YouTube que D2 aportó como `oleaje_hugo.mp3` (10 min 06 s, 8.7 MB, estéreo 48 kHz, −26.0 LUFS). **Externa, uso educativo no comercial, sin licencia libre confirmada** (misma decisión de D2 que la música).
+- **Qué se hizo:** tramo de 123 s (de 2:00 a 4:03; niveles estables entre −24.5 y −28.8 dB por 10 s), ganancia +5.5 dB con limitador a 0.89 y **bucle de 120 s con fundido cruzado de 3 s de potencia constante** (el final se mezcla con el inicio: salto en el empalme 0.008 contra 0.005 de diferencia típica entre muestras). Resultado: **1.92 MB**, estéreo 48 kHz, mp3 128 kb/s, **−21.2 LUFS** (la pista sintetizada anterior medía −20.5, por eso la curva de volumen no cambia). El mp3 puede dejar un hueco de milisegundos al repetir (retardo del codificador); no medido.
+- **No escuchado por Claude:** el tramo se eligió por estabilidad de nivel, no al oído; si trae voces, aplausos o saltos, D2 dice el minuto y se cambia el tramo.
+
+| Pista | Autor / canal | Título | Año | Sitio / URL | Licencia | Consulta |
+|---|---|---|---|---|---|---|
+| oleaje | **PENDIENTE (D2): canal de YouTube** | Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD [Video] | **PENDIENTE (D2)** | YouTube, https://www.youtube.com/watch?v=6TGHwQHdDlo | Sin licencia libre confirmada; uso educativo no comercial | **PENDIENTE (D2)** |
+
+Referencia APA 7 (incompleta hasta tener el canal y el año): *Canal desconocido.* (Año). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo
