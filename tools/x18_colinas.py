@@ -125,8 +125,19 @@ def modelos():
             x0 = X_MIN + i * PASO; x1 = x0 + PASO; z0 = Z_MIN + j * PASO; z1 = z0 + PASO
             # hueco sobre la playa (|x| <= 50 y z >= -20): la playa ya existe ahi
             if x0 >= -PLAYA_X and x1 <= PLAYA_X and z1 > PLAYA_Z0:
-                continue
-            f = bm.faces.new((vert(i, j), vert(i + 1, j), vert(i + 1, j + 1), vert(i, j + 1)))
+                if z0 >= PLAYA_Z0:
+                    continue
+                # X-40: la rejilla (z = -170 + 4k) no cae en z = -20: la celda -22..-18 cruza el borde de la playa. En vez de quitarla entera
+                # (dejaba una franja de 2 m sin suelo, a traves de la cual se veia el cielo), se recorta hasta z = -20 (h = 0, igual que la playa)
+                z1 = PLAYA_Z0
+            def vert2(i2, x, z):
+                if (i2, z) not in fila:
+                    fila[(i2, z)] = bm.verts.new((x, -z, alturaColinas(x, z)))
+                return fila[(i2, z)]
+            if z1 == PLAYA_Z0 and x0 >= -PLAYA_X and x1 <= PLAYA_X:
+                f = bm.faces.new((vert(i, j), vert(i + 1, j), vert2(i + 1, x1, z1), vert2(i, x0, z1)))
+            else:
+                f = bm.faces.new((vert(i, j), vert(i + 1, j), vert(i + 1, j + 1), vert(i, j + 1)))
             for loop, (x, z) in zip(f.loops, ((x0, z0), (x1, z0), (x1, z1), (x0, z1))):
                 loop[uvl].uv = (x / TILE, -z / TILE)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
