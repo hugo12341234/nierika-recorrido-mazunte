@@ -36,7 +36,7 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 
 | Archivo | Qué suena | Volumen (según la posición del visitante) |
 |---|---|---|
-| `oleaje.wav` | Oleaje | 0.03 + 0.25·s², con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6b, 14/11): casi inaudible lejos, 0.28 en la orilla (z = 24) |
+| `oleaje.wav` | Oleaje | 0.03 + 0.15·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (C-1b, 14/11): casi inaudible lejos, 0.18 en la orilla (z = 24) |
 | `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
 | `voces.wav` | Murmullo de voces lejanas | 0.55·clamp(1 − d/14, 0, 1), con d la distancia a la ceremonia (11, 19.5) o al panteón (0, 7): suena cerca de la gente |
 
@@ -55,3 +55,8 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 Mientras falten esos campos, el crédito APA 7 no está completo.
 
 Volumen: el mp3 mide −10.0 LUFS (medido con ffmpeg `loudnorm`) y la pista anterior −16.4, por eso la música lleva el factor 0.48 (= 10^(−6.4/20)).
+
+## D-6c (14/11): oleaje nuevo y se quita la banda
+
+- `oleaje.wav` se **regeneró** con `tools/d6_audio.py` (48 s, 2.1 MB, mismo nombre y mismo bucle sin corte): ahora son 7 olas individuales e irregulares (marejada grave + rompiente + espuma que se apaga despacio) en vez de ruido con envolvente suave, que sonaba a motor. Propia del estudio, sin licencia de terceros. RMS ≈ 0.106 contra 0.114 de la anterior, así que la curva de volumen no cambia. **No escuchada por Claude** (solo se midió el empalme y el nivel): se ajusta al oído de D2.
+- Se **quitó la pista `banda`** (`Audio/banda.wav` y `tools/x29_banda.py`): la música en vivo sintetizada de los músicos de la playa se encimaba con el oleaje y con la música nueva. Los músicos siguen en pantalla, sin sonido propio.
