@@ -36,8 +36,12 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 
 | Archivo | Qué suena | Volumen (según la posición del visitante) |
 |---|---|---|
-| `oleaje.wav` | Oleaje | 0.20 + 0.45·s, con s = clamp((z − 2)/22, 0, 1): más fuerte hacia el mar |
+| `oleaje.wav` | Oleaje | 0.03 + 0.25·s², con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6b, 14/11): casi inaudible lejos, 0.28 en la orilla (z = 24) |
 | `musica.wav` | Música lejana | 0.10 + 0.40·clamp(1 − d/10, 0, 1), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
 | `voces.wav` | Murmullo de voces lejanas | 0.55·clamp(1 − d/14, 0, 1), con d la distancia a la ceremonia (11, 19.5) o al panteón (0, 7): suena cerca de la gente |
 
 `voces.wav` es **propia**: la genera `tools/x24_voces.py` por síntesis (ruido filtrado en las bandas de las vocales con envolventes silábicas; no usa grabaciones ni voces reales).
+
+## D-6b (14/11): música de Mazunte
+
+No se agregó ninguna pista externa: no se encontró (en una búsqueda web rápida) una grabación de Mazunte u Oaxaca costa con licencia CC0/CC BY verificada. Si D2 aporta una (chilena o son de la Costa Chica, con permiso o licencia libre), va como `Audio/musica.*` con su referencia APA 7 en la tabla de créditos y entra a ESTADO §4 como externa.

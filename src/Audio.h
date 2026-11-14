@@ -19,7 +19,7 @@ public:
     void cleanup();
 
     // X-24: volumen por zona segun donde esta el visitante (x, z en metros). Cada cuadro desde main:
-    //   oleaje = 0.20 + 0.45 * s,  s = clamp((z - 2) / 22, 0, 1)            (mas fuerte hacia el mar)
+    //   oleaje = 0.03 + 0.25 * s^2, s = clamp(1 - max(0, 24 - z) / 24, 0, 1)  (D-6b: cuadratico, maximo 0.28 en la orilla z = 24)
     //   musica = 0.10 + 0.40 * clamp(1 - d_altar / 10, 0, 1)                (cerca del altar, en (1.35, 0))
     //   voces  = 0.55 * clamp(1 - d / 14, 0, 1), d = distancia a la ceremonia (11, 19.5) o al panteon (0, 7), la menor
     //   banda  = 0.80 * clamp(1 - d_banda / 24), d a la banda de la playa (-10, 19.5); solo suena si banda = true (elementos fuera del alcance original)
