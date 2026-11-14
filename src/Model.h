@@ -42,6 +42,45 @@ public:
 		}
 	}
 
+	// X-35: dibuja la persona con ropa, piel y pelo propios. Cada malla usa la textura cuyo nombre de archivo contiene "ropa", "piel" o "pelo"
+	// (asi vienen los materiales de persona_*.obj); aqui se cambia SOLO el id de la textura difusa mientras se dibuja y se restaura al terminar.
+	void DrawAtuendo(Shader& shader, GLuint ropa, GLuint piel, GLuint pelo)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			vector<Texture>& tx = this->meshes[i].textures;
+			vector<GLuint> originales;
+			for (size_t k = 0; k < tx.size(); k++)
+			{
+				originales.push_back(tx[k].id);
+				if (tx[k].type != "texture_diffuse") continue;
+				const string ruta = tx[k].path.C_Str();
+				if (ruta.find("ropa") != string::npos)      tx[k].id = ropa;
+				else if (ruta.find("piel") != string::npos) tx[k].id = piel;
+				else if (ruta.find("pelo") != string::npos) tx[k].id = pelo;
+			}
+			this->meshes[i].Draw(shader);
+			for (size_t k = 0; k < tx.size(); k++) tx[k].id = originales[k];
+		}
+	}
+
+	// X-35: dibuja una prenda de una sola malla (falda, rebozo, sombrero) con la tela elegida en lugar de la del .mtl
+	void DrawConTextura(Shader& shader, GLuint tela)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			vector<Texture>& tx = this->meshes[i].textures;
+			vector<GLuint> originales;
+			for (size_t k = 0; k < tx.size(); k++)
+			{
+				originales.push_back(tx[k].id);
+				if (tx[k].type == "texture_diffuse") tx[k].id = tela;
+			}
+			this->meshes[i].Draw(shader);
+			for (size_t k = 0; k < tx.size(); k++) tx[k].id = originales[k];
+		}
+	}
+
 	// Libera la GPU del modelo: buffers de cada malla y las texturas (textures_loaded tiene cada textura una sola vez,
 	// aunque varias mallas la usen). Se llama a mano al final de main (decision del 19/10: sin destructores, porque Model se copia)
 	void cleanup()
