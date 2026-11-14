@@ -1,7 +1,7 @@
 # Audio/ — sonido ambiental (tarea D-6)
 
 El código (`src/Audio.h/.cpp`, miniaudio) busca **dos pistas** aquí, con estos nombres exactos
-(sin importar si es `.wav`, `.mp3` o `.flac`; se prueban en ese orden). Si falta una, el programa
+(sin importar si es `.wav`, `.mp3` o `.flac`; **desde D-6e se prueban en el orden `.mp3`, `.wav`, `.flac`**). Si falta una, el programa
 lo avisa en la consola y sigue sin ella. No hace falta recompilar al añadirlas.
 
 | Archivo | Qué debe sonar | Volumen en el código |
@@ -63,7 +63,7 @@ Volumen: el mp3 mide −10.0 LUFS (medido con ffmpeg `loudnorm`) y la pista ante
 
 ## D-6d (14/11): oleaje = grabación real de D2 (externa)
 
-`Audio/oleaje.mp3` sustituye al oleaje sintetizado (`oleaje.wav` se quitó del repo; hay que quitarlo porque el código prueba `.wav` antes que `.mp3`). `tools/d6_audio.py` **ya no se usa para el oleaje** (si se corre, recrea `Audio/oleaje.wav` y ese archivo tendría prioridad: no correrlo o borrar el resultado).
+`Audio/oleaje.mp3` sustituye al oleaje sintetizado (`oleaje.wav` se quitó del repo; desde D-6e el código ya prueba `.mp3` primero, pero conviene que no quede ningún `.wav` viejo en la carpeta). `tools/d6_audio.py` **ya no se usa para el oleaje** (si se corre, recrea `Audio/oleaje.wav` y ese archivo tendría prioridad: no correrlo o borrar el resultado).
 
 - **Origen:** pista de un video de YouTube que D2 aportó como `oleaje_hugo.mp3` (10 min 06 s, 8.7 MB, estéreo 48 kHz, −26.0 LUFS). **Externa, uso educativo no comercial, sin licencia libre confirmada** (misma decisión de D2 que la música).
 - **Qué se hizo:** tramo de 123 s (de 2:00 a 4:03; niveles estables entre −24.5 y −28.8 dB por 10 s), ganancia +5.5 dB con limitador a 0.89 y **bucle de 120 s con fundido cruzado de 3 s de potencia constante** (el final se mezcla con el inicio: salto en el empalme 0.008 contra 0.005 de diferencia típica entre muestras). Resultado: **1.92 MB**, estéreo 48 kHz, mp3 128 kb/s, **−21.2 LUFS** (la pista sintetizada anterior medía −20.5, por eso la curva de volumen no cambia). El mp3 puede dejar un hueco de milisegundos al repetir (retardo del codificador); no medido.
@@ -74,3 +74,7 @@ Volumen: el mp3 mide −10.0 LUFS (medido con ffmpeg `loudnorm`) y la pista ante
 | oleaje | **PENDIENTE (D2): canal de YouTube** | Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD [Video] | **PENDIENTE (D2)** | YouTube, https://www.youtube.com/watch?v=6TGHwQHdDlo | Sin licencia libre confirmada; uso educativo no comercial | **PENDIENTE (D2)** |
 
 Referencia APA 7 (incompleta hasta tener el canal y el año): *Canal desconocido.* (Año). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo
+
+## D-6e (14/11): único sonido de mar
+
+En `develop` ya no queda ningún otro audio de mar: solo `Audio/oleaje.mp3`. Si en una PC se sigue oyendo el oleaje sintético, es un `Audio/oleaje.wav` viejo que quedó en esa carpeta (no está en el repo): borrarlo. El código ahora prefiere el `.mp3` de todos modos. La consola imprime `[Audio] Suena en bucle: Audio/oleaje.mp3` al arrancar.

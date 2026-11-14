@@ -25,8 +25,8 @@ namespace
     };   // D-6c (14/11): se quito la pista "banda" (musica sintetizada de los musicos): se encimaba con el oleaje y la musica nueva
     const int NUM_PISTAS = 3;
 
-    // Formatos que decodifica miniaudio sin librerias extra (se prueban en este orden)
-    const char* EXTENSIONES[] = { ".wav", ".mp3", ".flac" };
+    // Formatos que decodifica miniaudio sin librerias extra (se prueban en este orden; D-6e: .mp3 antes que .wav)
+    const char* EXTENSIONES[] = { ".mp3", ".wav", ".flac" };   // D-6e: .mp3 primero, asi un oleaje.wav viejo que quede en la carpeta no tapa al mp3
 }
 
 struct AudioImpl

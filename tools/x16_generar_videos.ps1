@@ -28,8 +28,8 @@ foreach ($ruta in Get-ChildItem (Join-Path $raiz 'tools\video_rutas') -Filter *.
     Start-Process $exe -WorkingDirectory $raiz -Wait
     Remove-Item Env:NIERIKA_VIDEO
     Write-Host "== $nombre : ffmpeg"
-    & $Ffmpeg -y -framerate $Fps -i (Join-Path $cuadros 'frame_%05d.png') -stream_loop -1 -i (Join-Path $raiz 'Audio\oleaje.wav') `
-        -stream_loop -1 -i (Join-Path $raiz 'Audio\musica.wav') `
+    & $Ffmpeg -y -framerate $Fps -i (Join-Path $cuadros 'frame_%05d.png') -stream_loop -1 -i (Join-Path $raiz 'Audio\oleaje.mp3') `
+        -stream_loop -1 -i (Join-Path $raiz 'Audio\musica.mp3') `
         -filter_complex "[1:a]volume=0.7[o];[2:a]volume=0.25[m];[o][m]amix=inputs=2:duration=longest[a]" `
         -map 0:v -map "[a]" -c:v libx264 -pix_fmt yuv420p -crf 18 -c:a aac -shortest (Join-Path $salida "$nombre.mp4")
     # Los cuadros PNG pesan ~25 MB por segundo de video: se borran al terminar el .mp4 (si ffmpeg fallo, el script se detiene antes por $ErrorActionPreference)

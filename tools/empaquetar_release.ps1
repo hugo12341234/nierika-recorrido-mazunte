@@ -128,7 +128,7 @@ Paso 'Comprobando el contenido del paquete'
 $faltan = @()
 foreach ($rel in 'NierikaStudio.exe', 'Shaders\lighting.vs', 'Shaders\lighting.frag', 'Shaders\lamp.vs',
                  'Shaders\lamp.frag', 'Models\altar3\altar3.obj', 'Models\mar\mar.obj',
-                 'Audio\oleaje.wav', 'Audio\musica.wav') {
+                 'Audio\oleaje.mp3', 'Audio\musica.mp3') {
     if (-not (Test-Path (Join-Path $paquete $rel))) { $faltan += $rel }
 }
 if ($faltan.Count -gt 0) { Write-Warning ('Faltan en el paquete: ' + ($faltan -join ', ')) }
