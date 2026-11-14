@@ -21,7 +21,8 @@ public:
     static constexpr float ALTURA_CUERPO = 1.7f;  // el cuerpo mide 1.7 m: la cabeza queda 0.1 m sobre los ojos
     static constexpr float RADIO = 0.25f;         // el cuerpo es una caja de 0.5 x 0.5 m en planta
 
-    // Zona caminable en planta (la playa llega a x +-50, z -20...30; la orilla esta en z = +24)
+    // Zona caminable en planta. Desde X-33 ya no es un rectangulo: la define Terreno::caminable (playa + colinas; la orilla
+    // sigue en z = +24). Estas constantes son las de la playa (A-9) y se conservan porque otros archivos las citan.
     static constexpr float X_MAX = 50.0f;
     static constexpr float Z_MIN = -20.0f;
     static constexpr float Z_MAX = 24.0f;
@@ -29,8 +30,11 @@ public:
     // Agrega una caja solida (muro, capilla...)
     void agregar(const AABB& caja);
 
-    // Altura del suelo en z: y = 0 hasta z = +20 y baja 0.05 m por metro (perfil de playa.obj, A-5)
+    // Altura del suelo de la PLAYA en z: y = 0 hasta z = +20 y baja 0.05 m por metro (perfil de playa.obj, A-5)
     static float alturaSuelo(float z);
+
+    // X-33: altura del suelo en (x, z) contando las colinas (Terreno.h). Dentro de la playa vale lo mismo que alturaSuelo(z)
+    static float alturaTerreno(float x, float z);
 
     // Recibe donde estaba la camara y donde quiere ir; devuelve la posicion final (con ojos a 1.6 m del suelo).
     // Resuelve cada eje por separado: si choca de frente en un eje, se desliza por el otro.

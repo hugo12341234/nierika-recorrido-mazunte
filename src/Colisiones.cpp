@@ -1,6 +1,7 @@
 #include "Colisiones.h"
 
 #include <algorithm>
+#include "Terreno.h"
 
 void Colisiones::agregar(const AABB& caja)
 {
@@ -9,13 +10,18 @@ void Colisiones::agregar(const AABB& caja)
 
 float Colisiones::alturaSuelo(float z)
 {
-    return (z <= 20.0f) ? 0.0f : -0.05f * (z - 20.0f);
+    return Terreno::alturaPlaya(z);
+}
+
+float Colisiones::alturaTerreno(float x, float z)
+{
+    return Terreno::altura(x, z);
 }
 
 bool Colisiones::choca(float x, float z) const
 {
     // Caja del cuerpo: de los pies (suelo) a la cabeza
-    float suelo = alturaSuelo(z);
+    float suelo = alturaTerreno(x, z);   // X-33: el suelo depende tambien de x (colinas)
     glm::vec3 cMin(x - RADIO, suelo, z - RADIO);
     glm::vec3 cMax(x + RADIO, suelo + ALTURA_CUERPO, z + RADIO);
 
@@ -34,13 +40,11 @@ glm::vec3 Colisiones::resolver(const glm::vec3& actual, const glm::vec3& deseada
 {
     float x = actual.x, z = actual.z;
 
-    // Primero el eje X (con z antes del movimiento), luego el eje Z (con la x ya resuelta)
-    float nx = std::clamp(deseada.x, -X_MAX + RADIO, X_MAX - RADIO);
-    if (!choca(nx, z)) x = nx;
+    // Primero el eje X (con z antes del movimiento), luego el eje Z (con la x ya resuelta).
+    // X-33: un paso solo vale si el terreno es caminable (dentro de la malla, fuera del mar y con pendiente <= 0.70) y no hay caja delante
+    if (Terreno::caminable(deseada.x, z, RADIO) && !choca(deseada.x, z)) x = deseada.x;
+    if (Terreno::caminable(x, deseada.z, RADIO) && !choca(x, deseada.z)) z = deseada.z;
 
-    float nz = std::clamp(deseada.z, Z_MIN + RADIO, Z_MAX - RADIO);
-    if (!choca(x, nz)) z = nz;
-
-    // Siempre a 1.6 m sobre el suelo de ese punto (camina en el plano XZ; sigue la pendiente de la orilla)
-    return glm::vec3(x, alturaSuelo(z) + ALTURA_OJOS, z);
+    // Siempre a 1.6 m sobre el suelo de ese punto (camina en el plano XZ y sigue el relieve: orilla y colinas)
+    return glm::vec3(x, alturaTerreno(x, z) + ALTURA_OJOS, z);
 }
