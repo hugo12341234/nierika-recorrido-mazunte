@@ -19,8 +19,8 @@ namespace
         float       volumen;
     };
     const Pista PISTAS[] = {
-        { "oleaje", 0.60f }, // mar: protagonista
-        { "musica", 0.25f }, // musica lejana: de fondo
+        { "oleaje", 0.03f }, // mar: volumen inicial = el de lejos de la orilla; ActualizarZona lo ajusta
+        { "musica", 0.05f }, // musica de fondo; ActualizarZona la ajusta
         { "voces",  0.00f }, // X-24: murmullo de voces lejanas (sintetizado); su volumen depende de la zona
         { "banda",  0.00f }  // X-29: musica en vivo sintetizada de los musicos de la playa (guitarra, tambor y trompeta)
     };
@@ -96,9 +96,13 @@ void Audio::ActualizarZona(float x, float z, bool banda)
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
-    fija(0, 0.20f + 0.45f * lim((z - 2.0f) / 22.0f));
+    // Oleaje (D-6b): sube con el cuadrado de la cercania a la orilla (z = 24); lejos casi no se oye
+    const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
+    fija(0, 0.03f + 0.25f * sMar * sMar);
     const float dAltar = std::sqrt((x - 1.35f) * (x - 1.35f) + z * z);
-    fija(1, 0.10f + 0.40f * lim(1.0f - dAltar / 10.0f));
+    // Musica (D-6b): el mp3 de Xochipitzahuatl mide -10 LUFS contra -16.4 de la pista sintetizada anterior;
+    // 0.48 = 10^(-6.4/20) iguala la sonoridad, asi la curva 0.10..0.50 conserva su balance con el oleaje
+    fija(1, 0.48f * (0.10f + 0.40f * lim(1.0f - dAltar / 10.0f)));
     const float dCer = std::sqrt((x - 11.0f) * (x - 11.0f) + (z - 19.5f) * (z - 19.5f));
     const float dPan = std::sqrt(x * x + (z - 7.0f) * (z - 7.0f));
     fija(2, 0.55f * lim(1.0f - (std::min)(dCer, dPan) / 14.0f));

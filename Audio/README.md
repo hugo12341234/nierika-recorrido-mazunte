@@ -36,8 +36,22 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 
 | Archivo | Qué suena | Volumen (según la posición del visitante) |
 |---|---|---|
-| `oleaje.wav` | Oleaje | 0.20 + 0.45·s, con s = clamp((z − 2)/22, 0, 1): más fuerte hacia el mar |
-| `musica.wav` | Música lejana | 0.10 + 0.40·clamp(1 − d/10, 0, 1), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
+| `oleaje.wav` | Oleaje | 0.03 + 0.25·s², con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6b, 14/11): casi inaudible lejos, 0.28 en la orilla (z = 24) |
+| `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
 | `voces.wav` | Murmullo de voces lejanas | 0.55·clamp(1 − d/14, 0, 1), con d la distancia a la ceremonia (11, 19.5) o al panteón (0, 7): suena cerca de la gente |
 
 `voces.wav` es **propia**: la genera `tools/x24_voces.py` por síntesis (ruido filtrado en las bandas de las vocales con envolventes silábicas; no usa grabaciones ni voces reales).
+
+## D-6b (14/11): música de fondo `musica.mp3`
+
+`Audio/musica.mp3` (4 min 20 s, 2.3 MB, estéreo 48 kHz) sustituye a la pista sintetizada (`musica.wav` se quitó del repo; `tools/d6_audio.py` la sigue generando). Empieza y termina en silencio, así que el bucle empalma sin clic.
+
+**Es externa y no es de Mazunte ni de Oaxaca:** es un arreglo de «Xochipitzahuatl (Flor Menudita)», canción tradicional náhuatl del centro de México. Uso **educativo no comercial, sin licencia libre**, aportado por D2.
+
+| Pista | Autor / intérprete | Título | Año | Sitio / URL | Licencia | Consulta |
+|---|---|---|---|---|---|---|
+| musica | **PENDIENTE (D2)** | Xochipitzahuatl (Flor Menudita) | **PENDIENTE (D2)** | **PENDIENTE: canal y URL (D2)** | Sin licencia libre; uso educativo no comercial | **PENDIENTE (D2)** |
+
+Mientras falten esos campos, el crédito APA 7 no está completo.
+
+Volumen: el mp3 mide −10.0 LUFS (medido con ffmpeg `loudnorm`) y la pista anterior −16.4, por eso la música lleva el factor 0.48 (= 10^(−6.4/20)).
