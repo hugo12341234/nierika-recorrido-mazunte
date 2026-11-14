@@ -95,8 +95,55 @@ def ropas():
     cuad = np.where((a + b)[..., None] == 0, rojo, np.where((a + b)[..., None] == 2, azul, mezcla))
     guarda("atuendos", "ropa_4.png", cuad * (0.85 + 0.15 * tela((1, 1, 1))))
     # 5: camiseta de rayas marineras (playero)
-    rayas = ((yy // 64) % 2).astype(float)[..., None]
-    guarda("atuendos", "ropa_5.png", (np.array((0.93, 0.93, 0.90)) * (1 - rayas) + np.array((0.10, 0.22, 0.45)) * rayas) * (0.85 + 0.15 * tela((1, 1, 1))))
+    rayas = ((yy // 24) % 4 == 0).astype(float)[..., None]   # rayas FINAS (1 de cada 4 franjas de 24 px): antes eran anchas y parecian pijama
+    guarda("atuendos", "ropa_5.png", (np.array((0.90, 0.86, 0.74)) * (1 - rayas) + np.array((0.12, 0.30, 0.55)) * rayas) * (0.85 + 0.15 * tela((1, 1, 1))))
+
+    # ---- 6 a 13 (X-36): mas ropas, para que la gente no se repita
+    # 6: huipil rojo con greca negra y amarilla
+    im = a_pil(tela((0.72, 0.09, 0.10))); d = ImageDraw.Draw(im)
+    for y in (80, 460, 840):
+        for x in range(0, N, 64):
+            d.polygon([(x, y), (x + 32, y + 40), (x + 64, y), (x + 32, y + 12)], fill=c255((0.08, 0.06, 0.06)))
+        d.rectangle((0, y + 46, N, y + 56), fill=c255((0.95, 0.78, 0.15)))
+    guarda("atuendos", "ropa_6.png", de_pil(im))
+    # 7: huipil verde con flores rosas
+    im = a_pil(tela((0.10, 0.42, 0.22))); d = ImageDraw.Draw(im)
+    for fila in range(4):
+        for col in range(4):
+            flor(d, 128 + col * 256 + (128 if fila % 2 else 0), 128 + fila * 256, 56, c255((0.95, 0.40, 0.65)), c255((0.98, 0.88, 0.30)))
+    guarda("atuendos", "ropa_7.png", de_pil(im))
+    # 8: blusa amarilla con listones azules
+    im = a_pil(tela((0.93, 0.76, 0.14))); d = ImageDraw.Draw(im)
+    for y in (100, 420, 740):
+        d.rectangle((0, y, N, y + 44), fill=c255((0.10, 0.30, 0.65)))
+        d.rectangle((0, y + 56, N, y + 62), fill=c255((0.78, 0.12, 0.20)))
+    guarda("atuendos", "ropa_8.png", de_pil(im))
+    # 9: camisa celeste con una hilera de botones
+    base = tela((0.55, 0.74, 0.88), grano=0.10); xs = np.arange(N)[None, :, None]
+    base = base * (1 - 0.25 * ((np.abs(xs - 512) < 3).astype(float)))
+    guarda("atuendos", "ropa_9.png", base)
+    # 10: camisa a cuadros verde y blanco
+    a2 = ((xx2 // 48) % 2).astype(float); b2 = ((yy // 48) % 2).astype(float)
+    verde, blanco, med = np.array((0.12, 0.45, 0.25)), np.array((0.93, 0.93, 0.88)), np.array((0.52, 0.69, 0.56))
+    c10 = np.where((a2 + b2)[..., None] == 0, blanco, np.where((a2 + b2)[..., None] == 2, verde, med))
+    guarda("atuendos", "ropa_10.png", c10 * (0.85 + 0.15 * tela((1, 1, 1))))
+    # 11: camiseta naranja con franja blanca al pecho
+    im = a_pil(tela((0.92, 0.45, 0.10))); d = ImageDraw.Draw(im); d.rectangle((0, 380, N, 470), fill=c255((0.95, 0.93, 0.88)))
+    guarda("atuendos", "ropa_11.png", de_pil(im))
+    # 12: manta cruda con costuras
+    base = tela((0.86, 0.80, 0.64), grano=0.16); yy3 = np.arange(N)[:, None, None]
+    base = base * (1 - 0.18 * ((yy3 % 256 < 3).astype(float)))
+    guarda("atuendos", "ropa_12.png", base)
+    # 13: huipil negro con flores de colores vivos (estilo bordado grande)
+    im = a_pil(tela((0.06, 0.06, 0.08))); d = ImageDraw.Draw(im)
+    pal = (((0.92, 0.20, 0.25), (0.98, 0.85, 0.2)), ((0.98, 0.55, 0.12), (0.85, 0.15, 0.4)), ((0.25, 0.55, 0.92), (0.98, 0.9, 0.4)))
+    for fila in range(3):
+        for col in range(3):
+            pe, ce = pal[(fila + col) % 3]
+            cx, cy = 170 + col * 340, 170 + fila * 340
+            hoja(d, cx, cy, 120, c255((0.10, 0.50, 0.22)), 0.4); hoja(d, cx, cy, 120, c255((0.10, 0.50, 0.22)), 2.7)
+            flor(d, cx, cy, 100, c255(pe), c255(ce), 7)
+    guarda("atuendos", "ropa_13.png", de_pil(im))
     # piel y pelo: colores lisos de 256 px (la resolucion no aporta detalle a un color liso; ver decision X-35)
     for i, col in enumerate(((0.55, 0.38, 0.27), (0.64, 0.45, 0.32), (0.45, 0.30, 0.21), (0.72, 0.53, 0.39))):
         guarda("atuendos", "piel_%d.png" % i, np.array(col)[None, None, :] * (0.94 + 0.10 * r.random((256, 256, 1))))
@@ -177,6 +224,8 @@ def falda():
     # corte de la falda (persona de pie: cadera a 0.80..0.96 m): cintura, vuelo y dos olanes escalonados; dobladillo a 0.22 m del piso
     filas = [(0.98, 0.0, 0.0), (0.97, 0.185, 0.165), (0.80, 0.225, 0.205), (0.66, 0.265, 0.245), (0.645, 0.310, 0.290), (0.50, 0.350, 0.330),
              (0.485, 0.395, 0.375), (0.36, 0.425, 0.405), (0.345, 0.455, 0.435), (0.22, 0.480, 0.460)]
+    cin = 0.185
+    filas = [(y, (cin + (ax - cin) * 0.60) if ax > 0 else 0.0, (0.165 + (az - 0.165) * 0.60) if az > 0 else 0.0) for (y, ax, az) in filas]   # X-36: 40 % menos vuelo
     ond = lambda th, y: 1.0 + 0.045 * math.sin(14 * th + 3.0 * y) * min(1.0, max(0.0, (0.75 - y) / 0.5))   # dobladillo ondulado, mas hacia abajo
     superficie("falda_tehuana", "falda_tehuana", filas, 36, 4.0, ond, "falda_0.png")
     cols = (((0.75, 0.08, 0.10), (0.98, 0.85, 0.20), (0.97, 0.95, 0.90)),    # roja con flores amarillas

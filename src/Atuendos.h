@@ -17,7 +17,7 @@
 class Atuendos
 {
 public:
-    static constexpr int N_ROPAS = 6, N_PIELES = 4, N_PELOS = 4, N_FALDAS = 5, N_REBOZOS = 3, N_SOMBREROS = 2;
+    static constexpr int N_ROPAS = 14, N_PIELES = 4, N_PELOS = 4, N_FALDAS = 5, N_REBOZOS = 3, N_SOMBREROS = 2;
 
     // Eleccion para una persona (-1 = sin esa prenda)
     struct Seleccion { int ropa, piel, pelo, falda, rebozo, sombrero; };
@@ -29,25 +29,33 @@ public:
         return h;
     }
 
-    // 7 estilos: 0 huipil bordado + falda · 1 huipil azul + falda + rebozo · 2 blusa fucsia + falda · 3 guayabera + sombrero ·
-    // 4 camisa a cuadros + sombrero · 5 camiseta de rayas (playero) · 6 guayabera sin sombrero.
+    // 14 estilos (X-36; antes 7): ropa 0..13 de Models/atuendos (huipiles bordados, blusas, guayaberas, camisas a cuadros, camisetas, manta).
+    // Llevan falda de olanes los estilos 0, 1, 2, 6, 7, 8 y 13; rebozo el 1, 6 y 13; sombrero de palma el 3, 4, 9, 10 y 12.
     // De rodillas (agachada) no se dibujan falda ni rebozo (la pose no coincide con la prenda de pie); si el estilo lleva sombrero, si.
     static Seleccion elegir(int semilla, bool agachada)
     {
         const uint32_t h = mezcla((uint32_t)semilla * 2654435761u + 35u);
-        const int estilo = (int)((h >> 4) % 7u);
-        static const int ROPA[7]    = { 0, 1, 2, 3, 4, 5, 3 };
-        static const bool FALDA[7]  = { true, true, true, false, false, false, false };
-        static const bool REBOZO[7] = { false, true, false, false, false, false, false };
-        static const bool SOMBR[7]  = { false, false, false, true, true, false, false };
+        const int estilo = (int)((h >> 4) % 14u);
+        static const bool FALDA[14]  = { true, true, true, false, false, false, true, true, true, false, false, false, false, true };
+        static const bool REBOZO[14] = { false, true, false, false, false, false, true, false, false, false, false, false, false, true };
+        static const bool SOMBR[14]  = { false, false, false, true, true, false, false, false, false, true, true, false, true, false };
         Seleccion s;
-        s.ropa = ROPA[estilo];
+        s.ropa = estilo;                                   // el estilo i usa la ropa i
         s.piel = (int)((h >> 8) % (uint32_t)N_PIELES);
         s.pelo = (int)((h >> 11) % (uint32_t)N_PELOS);
         s.falda = (FALDA[estilo] && !agachada) ? (int)((h >> 14) % (uint32_t)N_FALDAS) : -1;
         s.rebozo = (REBOZO[estilo] && !agachada) ? (int)((h >> 18) % (uint32_t)N_REBOZOS) : -1;
         s.sombrero = SOMBR[estilo] ? (int)((h >> 21) % (uint32_t)N_SOMBREROS) : -1;
         return s;
+    }
+
+    // Talla propia: altura x 0.94..1.06 y ancho x 0.90..1.10 (hash de la semilla; no cambia las cajas de colision)
+    static glm::vec3 talla(int semilla)
+    {
+        const uint32_t h = mezcla((uint32_t)semilla * 40503u + 7u);
+        const float a = 0.94f + 0.12f * (float)(h & 0xFFu) / 255.0f;
+        const float w = 0.90f + 0.20f * (float)((h >> 8) & 0xFFu) / 255.0f;
+        return glm::vec3(w, a, w);
     }
 
     // Carga las prendas y todas las telas (requiere el contexto de OpenGL ya creado)
@@ -70,13 +78,14 @@ public:
     {
         const Seleccion s = elegir(semilla, agachada);
         const GLint loc = glGetUniformLocation(shader.Program, "model");
-        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mm));
+        const glm::mat4 mt = glm::scale(mm, talla(semilla));   // X-36: talla propia (las prendas la heredan)
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mt));
         m.DrawAtuendo(shader, ropa[s.ropa], piel[s.piel], pelo[s.pelo]);
         if (s.falda >= 0)  faldaM.DrawConTextura(shader, falda[s.falda]);
         if (s.rebozo >= 0) rebozoM.DrawConTextura(shader, rebozo[s.rebozo]);
         if (s.sombrero >= 0)
         {
-            const glm::mat4 mh = agachada ? glm::translate(mm, glm::vec3(0.0f, -0.61f, -0.29f)) : mm;
+            const glm::mat4 mh = agachada ? glm::translate(mt, glm::vec3(0.0f, -0.61f, -0.29f)) : mt;
             glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mh));
             sombreroM.DrawConTextura(shader, sombrero[s.sombrero]);
         }

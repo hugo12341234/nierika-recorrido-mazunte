@@ -84,6 +84,7 @@ vec3 perturbaNormal(vec3 N, vec3 p, float h)
 // C-2: llama de las velas. Con llama = 1 el fragmento ignora la textura y la luz: la forma, el color y el parpadeo
 // salen de ruido de Perlin 2D (ver docs/manual_tecnico/justificacion_simples.md, seccion 2.3).
 uniform int   espuma;               // X-22: 1 solo al dibujar el mar (espuma en la orilla)
+uniform int   colina;               // X-36: 1 solo al dibujar las colinas (manchas de color a gran escala: selva y pasto seco)
 uniform int   arena;                // X-13: 1 solo al dibujar la playa (ver main.cpp)
 uniform int   llama;
 uniform float tiempo;               // segundos (el mismo uniform del vertex shader)
@@ -145,6 +146,17 @@ void main()
         return;
     }
 
+    // X-36: halo calido (llama = 4): resplandor radial sobre un plano (UV 0..1); se dibuja con mezcla aditiva y sin escribir profundidad (main.cpp).
+    // llamaFase = intensidad. Alfa = resplandor, para que la mezcla (SRC_ALPHA, ONE) lo sume sin cuadro visible en los bordes.
+    if (llama == 4)
+    {
+        float rr = length(TexCoords - vec2(0.5)) * 2.0;
+        float a = pow(clamp(1.0 - rr, 0.0, 1.0), 2.2) * llamaFase;
+        if (a < 0.004) discard;
+        color = vec4(vec3(1.0, 0.55, 0.20), a);
+        return;
+    }
+
     if (llama == 2)
     {
         if (llamaFase < 0.04) discard;
@@ -197,6 +209,16 @@ void main()
         float f = borde * smoothstep(0.02, 0.30, n + 0.18 + 0.18 * sin(tiempo * 0.8 - FragPos.z * 1.6));
         albedo = mix(albedo, vec3(0.80, 0.88, 0.95), clamp(f, 0.0, 0.85));
     }
+    if (colina == 1)
+    {
+        // X-36: la textura se repite cada 10 m y las colinas se veian como una sabana lisa. Dos octavas de ruido en el mundo la tinen:
+        // manchas de ~40 m (selva oscura <-> pasto seco ocre; mas seco en lo alto) y de ~5 m (matas claras y oscuras)
+        float m1 = ruidoFbm(FragPos.xz * 0.025);
+        float m2 = ruidoFbm(FragPos.xz * 0.18);
+        float alto = smoothstep(2.0, 26.0, FragPos.y);
+        vec3 tinte = mix(vec3(0.65, 1.00, 0.72), vec3(1.35, 1.10, 0.55), clamp(0.45 + m1 * 1.8 + alto * 0.45, 0.0, 1.0));
+        albedo *= tinte * (0.80 + 0.75 * m2);
+    }
     if (arena == 1)
     {
         float manchas = ruidoFbm(FragPos.xz * 0.35);                         // ~[-0.4, 0.4], periodo de ~3 m
@@ -217,8 +239,10 @@ void main()
 
     // X-18: bruma de distancia. f = 1 - exp(-(d * k)^1.5): 0 cerca, tiende a 1 lejos; se mezcla con el color del horizonte del cielo
     float distCam = length(viewPos - FragPos);
-    float bruma = 1.0 - exp(-pow(distCam * 0.012, 1.5));
-    result = mix(result, vec3(0.07, 0.12, 0.20), clamp(bruma, 0.0, 0.85));
+    float bruma = 1.0 - exp(-pow(distCam * 0.010, 1.5));          // X-36: 0.012 -> 0.010 (mas alcance de vista)
+    vec3 haciaFondo = normalize(FragPos - viewPos);
+    vec3 colBruma = mix(vec3(0.08, 0.13, 0.21), vec3(0.24, 0.16, 0.16), 0.6 * smoothstep(-0.2, 0.9, haciaFondo.z));   // X-36: calida hacia el ocaso (+z)
+    result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
     color = vec4(result, texColor.a);
 }
 

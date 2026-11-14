@@ -254,6 +254,10 @@ int main()
     Model panMuerto((char*)"Models/pan_muerto/pan_muerto.obj");           // B-4: pan propio (el de Maya sigue en Models/pan/)
     Model papelPicado((char*)"Models/papel_picado/papel_picado.obj");     // B-7: tira con alfa, cuelga de los soportes
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
+    Model arbolSelva((char*)"Models/arbol_selva/arbol_selva.obj");        // X-36: arbol de copa ancha (extra, no cuenta entre los 18 propios)
+    Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
+    Model racimoCemp((char*)"Models/racimo_cempasuchil/racimo_cempasuchil.obj"); // X-36: 7 flores juntas (1 llamada de dibujo)
+    Model senderoTierra((char*)"Models/sendero/sendero.obj");             // X-36: caminos de tierra sobre las colinas (en coordenadas del mundo)
     Atuendos atuendos;                                                    // X-35: telas y prendas (falda, rebozo, sombrero) de las personas
     const std::vector<VidaColinas::Fuente> fuentesLuz = VidaColinas::Fuentes();   // X-34: fogatas y faroles que pueden iluminar al visitante
 
@@ -354,6 +358,11 @@ int main()
             caja(VegetacionColinas::PALMAS[i].x, VegetacionColinas::PALMAS[i].y, VegetacionColinas::PALMAS[i].z, 0.3f * VegetacionColinas::PALMAS[i].escala, 0.3f * VegetacionColinas::PALMAS[i].escala, 3.0f);
         for (int i = 0; i < VD::N_PALMAS; i++)
             caja(VD::PALMAS[i].x, VD::PALMAS[i].y, VD::PALMAS[i].z, 0.3f * VD::PALMAS[i].esc, 0.3f * VD::PALMAS[i].esc, 3.0f);
+        for (int i = 0; i < VD::N_ARBOLES; i++)   // X-36: tronco del arbol (0.4 m de semiancho x escala)
+            caja(VD::ARBOLES[i].x, VD::ARBOLES[i].y, VD::ARBOLES[i].z, 0.4f * VD::ARBOLES[i].esc, 0.4f * VD::ARBOLES[i].esc, 4.0f);
+        for (int i = 0; i < VD::N_ROCAS; i++)     // X-36: solo las rocas de 0.9 m o mas bloquean el paso
+            if (VD::ROCAS[i].esc >= 0.9f) caja(VD::ROCAS[i].x, VD::ROCAS[i].y, VD::ROCAS[i].z, 0.8f * VD::ROCAS[i].esc, 0.7f * VD::ROCAS[i].esc, 1.2f * VD::ROCAS[i].esc);
+        for (int i = 0; i < VD::N_OFRENDAS; i++) caja(VD::OFRENDAS[i].x, VD::OFRENDAS[i].y, VD::OFRENDAS[i].z, 0.4f, 0.4f, 1.5f);   // cruz
         for (int i = 0; i < VD::N_FAROLES; i++) caja(VD::FAROLES[i].x, VD::FAROLES[i].y, VD::FAROLES[i].z, 0.1f, 0.1f, 1.7f);
         for (int i = 0; i < VD::N_FOGATAS; i++) caja(VD::FOGATAS[i].x, VD::FOGATAS[i].y, VD::FOGATAS[i].z, 0.6f, 0.6f, 0.4f);
         for (int i = 0; i < VD::N_PERSONAS; i++) caja(VD::PERSONAS[i].x, VD::PERSONAS[i].y, VD::PERSONAS[i].z, 0.3f * VD::PERSONAS[i].esc + 0.05f, 0.3f * VD::PERSONAS[i].esc + 0.05f, 1.7f * VD::PERSONAS[i].esc);
@@ -529,8 +538,8 @@ int main()
 
         // 1. Luz direccional (luna / ambiente)
         glUniform3f(glGetUniformLocation(shader.Program, "dirLight.direction"), -0.65f, -0.50f, -0.35f);  // X-5: luna
-        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.ambient"), 0.16f, 0.20f, 0.32f);
-        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), 0.42f, 0.50f, 0.68f);
+        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.ambient"), 0.20f, 0.25f, 0.39f);    // X-36: luna ~25 % mas fuerte (antes 0.16/0.20/0.32 y 0.42/0.50/0.68)
+        glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), 0.58f, 0.69f, 0.93f);
         glUniform3f(glGetUniformLocation(shader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
         // 2. Animacion ciclica de las puntuales: las traseras brillan con sen(2t) > 0 y las delanteras con sen(2t) < 0
@@ -892,7 +901,7 @@ int main()
                 float lx, ly, lz;
                 Extras::PosicionLuciernaga(i, tl, lx, ly, lz);
                 glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), Extras::BrilloLuciernaga(i, tl));
-                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(lx, ly, lz)), glm::vec3(1.8f));  // 5.4 cm: visibles a distancia
+                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(lx, ly, lz)), glm::vec3(4.0f));  // X-36: 6 cm (antes 2.7 cm: no se veian a distancia)
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
                 luciernaga.Draw(shader);
             }
@@ -1228,7 +1237,9 @@ int main()
             glUniform1f(specLoc, 0.02f);
             glm::mat4 mc(1.0f);
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+            glUniform1i(glGetUniformLocation(shader.Program, "colina"), 1);   // X-36: manchas de color a gran escala (lighting.frag)
             colinas.Draw(shader);
+            glUniform1i(glGetUniformLocation(shader.Program, "colina"), 0);
             auto conEscala = [&](Model& m, const VegetacionColinas::Instancia& v)
             {
                 glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(v.x, v.y, v.z));
@@ -1268,9 +1279,66 @@ int main()
             // palapas de la franja norte (las del mirador no: el suelo de la colina esta inclinado)
             if (fueraAlcance)   // las palapas estan fuera del alcance original (ESTADO, decision del 13/11)
                 for (int i = 0; i < VD::N_PALAPAS; i++) en(palapa, VD::PALAPAS[i].x, Colisiones::alturaTerreno(VD::PALAPAS[i].x, VD::PALAPAS[i].z), VD::PALAPAS[i].z, VD::PALAPAS[i].giro, 1.0f);
-            // camino de cempasuchil (la tradicion guia a las animas con petalos y flores; aqui, flores sueltas a lo largo del sendero)
-            for (int i = 0; i < VD::N_FLORES; i++)
-                if (!lejos(VD::FLORES[i].x, VD::FLORES[i].z, 45.0f)) en(cempasuchil, VD::FLORES[i].x, VD::FLORES[i].y, VD::FLORES[i].z, VD::FLORES[i].giro, 1.7f);
+            // X-36 · CAMINO DE LAS ANIMAS: sendero de tierra (una malla que sigue la ladera) con racimos de cempasuchil en las dos orillas (la tradicion
+            // guia a las animas con flores de cempasuchil), arcos de carrizo y flores, tendederos de papel picado, ofrenda con cruz en cada mirador,
+            // rocas y arboles. Todo son modelos ya definidos o extras de X-36; sin KeyFrames (el papel picado se mece con un seno).
+            {
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
+                glUniform1f(specLoc, 0.02f);
+                senderoTierra.Draw(shader);
+                for (int i = 0; i < VD::N_ARBOLES; i++)
+                    if (!lejos(VD::ARBOLES[i].x, VD::ARBOLES[i].z, 110.0f)) en(arbolSelva, VD::ARBOLES[i].x, VD::ARBOLES[i].y, VD::ARBOLES[i].z, VD::ARBOLES[i].giro, VD::ARBOLES[i].esc);
+                for (int i = 0; i < VD::N_ROCAS; i++)
+                    if (!lejos(VD::ROCAS[i].x, VD::ROCAS[i].z, 90.0f)) en(rocaMar, VD::ROCAS[i].x, VD::ROCAS[i].y, VD::ROCAS[i].z, VD::ROCAS[i].giro, VD::ROCAS[i].esc);
+                glUniform1f(specLoc, 0.05f);
+                for (int i = 0; i < VD::N_RACIMOS; i++)
+                    if (!lejos(VD::RACIMOS[i].x, VD::RACIMOS[i].z, 60.0f)) en(racimoCemp, VD::RACIMOS[i].x, VD::RACIMOS[i].y, VD::RACIMOS[i].z, VD::RACIMOS[i].giro, 1.0f);
+                for (int i = 0; i < VD::N_ARCOS; i++)
+                    if (!lejos(VD::ARCOS[i].x, VD::ARCOS[i].z, 90.0f)) en(arcoCemp, VD::ARCOS[i].x, VD::ARCOS[i].y, VD::ARCOS[i].z, VD::ARCOS[i].giro, 1.0f);
+                glUniform1f(specLoc, 0.1f);
+                for (int i = 0; i < VD::N_TENDEDEROS; i++)     // bastidor de 2 postes + tira de papel picado que se mece (6 grados, 3.6 s), como X-20
+                {
+                    const VD::Punto& t = VD::TENDEDEROS[i];
+                    if (lejos(t.x, t.z, 70.0f)) continue;
+                    en(soportes, t.x, t.y, t.z, t.giro, 1.0f);
+                    glm::mat4 mp = glm::translate(glm::mat4(1.0f), glm::vec3(t.x, t.y + Extras::ALTO_PAPEL, t.z));
+                    mp = glm::rotate(mp, glm::radians(t.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    mp = glm::rotate(mp, glm::radians(Extras::Balanceo(tv, 3.6f, 1.3f * i, 6.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                    papelPicado.Draw(shader);
+                }
+                // ofrenda con cruz en cada mirador: cruz, 5 velas, 3 racimos, pan, botella y copalero (cada pieza se apoya a su propia altura del terreno)
+                std::vector<glm::vec3> llamasOfrenda;
+                for (int i = 0; i < VD::N_OFRENDAS; i++)
+                {
+                    const VD::Punto& o = VD::OFRENDAS[i];
+                    if (lejos(o.x, o.z, 80.0f)) continue;
+                    const float cg = std::cos(glm::radians(o.giro)), sg = std::sin(glm::radians(o.giro));
+                    auto sobre = [&](Model& m, float lx, float lz, float esc, float subir, float giro)
+                    {
+                        const float wx = o.x + lx * cg + lz * sg, wz = o.z - lx * sg + lz * cg;
+                        const float wy = o.y + (Terreno::altura(wx, wz) - Terreno::altura(o.x, o.z)) + subir;
+                        en(m, wx, wy, wz, o.giro + giro, esc);
+                        return glm::vec3(wx, wy, wz);
+                    };
+                    sobre(cruz, 0.0f, 0.0f, 1.0f, -0.06f, 0.0f);
+                    const float vl[5][2] = { { -0.55f, 0.55f }, { 0.55f, 0.55f }, { -0.95f, 0.15f }, { 0.95f, 0.15f }, { 0.0f, 0.95f } };
+                    for (int k = 0; k < 5; k++) llamasOfrenda.push_back(sobre(vela, vl[k][0], vl[k][1], 1.0f, 0.0f, 0.0f) + glm::vec3(0.0f, 0.15f, 0.0f));
+                    sobre(racimoCemp, -0.30f, 0.65f, 1.3f, 0.0f, 20.0f); sobre(racimoCemp, 0.30f, 0.65f, 1.3f, 0.0f, 70.0f); sobre(racimoCemp, 0.0f, 0.40f, 1.1f, 0.0f, 140.0f);
+                    sobre(panMuerto, 0.20f, 0.80f, 1.0f, 0.0f, 0.0f); sobre(botella, -0.25f, 0.80f, 1.0f, 0.0f, 0.0f); sobre(copalero, 0.45f, 0.75f, 1.0f, 0.0f, 0.0f);
+                }
+                glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tv);
+                glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+                int nlo = 0;
+                for (const glm::vec3& v : llamasOfrenda)
+                {
+                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.77f * (nlo++) + 3.0f);
+                    glm::mat4 ml = glm::translate(glm::mat4(1.0f), v);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                    llamaModelo.Draw(shader);
+                }
+                glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            }
             // fogatas: base de piedras y troncos + llama del shader (sin humo); la base se hunde 8 cm porque el suelo de la colina esta inclinado
             for (int i = 0; i < VD::N_FOGATAS; i++)
                 if (!lejos(VD::FOGATAS[i].x, VD::FOGATAS[i].z, 110.0f)) en(fogata, VD::FOGATAS[i].x, VD::FOGATAS[i].y - 0.08f, VD::FOGATAS[i].z, 37.0f * i, 1.0f);
@@ -1314,6 +1382,7 @@ int main()
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             // gente: poses fijas con balanceo senoidal y atuendo propio (semilla 500 + indice)
             glUniform1f(specLoc, 0.05f);
+            std::vector<glm::vec3> velasMano;
             Model* tiposV[4] = { &personaPieA, &personaPieB, &personaAgachadaA, &personaAgachadaB };
             for (int i = 0; i < VD::N_PERSONAS; i++)
             {
@@ -1326,7 +1395,24 @@ int main()
                 else          mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tv, 4.5f, p.fase, 1.2f)), glm::vec3(0.0f, 0.0f, 1.0f));
                 mm = glm::scale(mm, glm::vec3(p.esc));
                 atuendos.dibujar(shader, *tiposV[p.tipo], agachada, 500 + i, mm);
+                if (p.vela && !agachada && !lejos(p.x, p.z, 45.0f))      // X-36: vela en la mano derecha (procesion de las animas)
+                {
+                    const glm::mat4 mh = glm::translate(mm, glm::vec3(0.23f, 0.60f, -0.12f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                    vela.Draw(shader);
+                    velasMano.push_back(glm::vec3(mh * glm::vec4(0.0f, 0.15f, 0.0f, 1.0f)));
+                }
             }
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tv);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);     // llamas de las velas en las manos
+            for (size_t k = 0; k < velasMano.size(); k++)
+            {
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.93f * (float)k + 9.0f);
+                glm::mat4 ml = glm::translate(glm::mat4(1.0f), velasMano[k]);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
         colocar(roca,     glm::vec3( 1.5f, 0.0f, 12.5f), 0.0f);  // B-10: roca junto a la entrada norte
 
@@ -1391,6 +1477,32 @@ int main()
             glm::mat4 mFlor = glm::translate(glm::mat4(1.0f), pFlor);
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mFlor));
             cempasuchil.Draw(shader);
+        }
+
+        // X-36: halos calidos de fogatas y faroles (resplandor radial en 3 planos ortogonales, mezcla aditiva, sin escribir profundidad).
+        // Va al FINAL de la escena para que lo opaco ya este dibujado. Solo lo cercano; llamaFase = intensidad con el mismo parpadeo que la luz.
+        if (!std::getenv("NIERIKA_SIN_VIDA"))
+        {
+            const float th = (float)Reloj();
+            const glm::vec3 camh = camera.GetPosition();
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+            glDepthMask(GL_FALSE);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 4);
+            for (const VidaColinas::Fuente& f : fuentesLuz)
+            {
+                const glm::vec3 d = f.pos - camh;
+                const float lim = f.fogata ? 70.0f : 35.0f;
+                if (d.x * d.x + d.z * d.z > lim * lim) continue;
+                const float br = f.fogata ? VidaColinas::BrilloFogata(f.indice, th) : VidaColinas::BrilloFarol(f.indice, th);
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), f.fogata ? 0.55f * br : 0.40f * br);
+                glm::mat4 mh = glm::scale(glm::translate(glm::mat4(1.0f), f.pos), glm::vec3(f.fogata ? 36.0f : 14.0f));   // cempasuchil.obj mide 0.07 m: 2.5 m / 1.0 m
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                cempasuchil.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
         }
 
         // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
@@ -1465,6 +1577,7 @@ int main()
     palma.cleanup();    // X-9
     colinas.cleanup();  // X-18
     atuendos.cleanup();  // X-35
+    arbolSelva.cleanup(); arcoCemp.cleanup(); racimoCemp.cleanup(); senderoTierra.cleanup();  // X-36
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
