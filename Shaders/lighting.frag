@@ -223,6 +223,8 @@ void main()
     {
         float manchas = ruidoFbm(FragPos.xz * 0.35);                         // ~[-0.4, 0.4], periodo de ~3 m
         albedo *= 0.85 + 0.45 * manchas;
+        // X-36 (pulido): con la luna azul la arena parecia concreto. Tinte calido (menos azul) y grano fino a ~25 cm
+        albedo *= vec3(1.30, 1.02, 0.72) * (0.88 + 0.30 * ruidoFbm(FragPos.xz * 4.0));
         float mojada = smoothstep(0.0, -0.25, FragPos.y);                    // 0 en seco, 1 a 25 cm bajo y = 0
         albedo *= mix(1.0, 0.45, mojada);
     }

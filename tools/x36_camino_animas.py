@@ -194,23 +194,35 @@ def arco():
 
 # ------------------------------------------------------------------ racimo de cempasuchil (7 flores de 3 planos)
 def racimo():
-    p = Parte("cempasuchil", "cempasuchil.png")
-    for i in range(7):
-        a = rnd.uniform(0, 2 * math.pi); d = rnd.uniform(0.0, 0.42) if i else 0.0
-        cx, cz, cy = d * math.cos(a), d * math.sin(a), rnd.uniform(0.045, 0.10)
-        s = rnd.uniform(0.055, 0.075)                                      # semiancho de cada flor (las del sendero de X-24 miden 0.06)
-        giro = rnd.uniform(0, math.pi)
-        for (ex, ey, ez) in ((1, 0, 0), (0, 0, 1)):                        # 2 planos verticales cruzados + 1 horizontal
-            cs, sn = math.cos(giro), math.sin(giro)
-            dx, dz = ex * cs - ez * sn, ex * sn + ez * cs
-            n = unit((-dz, 0.3, dx))
-            ids = [p.vert((cx + sgx * s * dx, cy + sgy * s, cz + sgx * s * dz), uv, n) for (sgx, sgy, uv) in ((-1, -1, (0, 0)), (1, -1, (1, 0)), (1, 1, (1, 1)), (-1, 1, (0, 1)))]
-            p.cara(*ids)
-        ids = [p.vert((cx + sx * s * math.cos(giro) - sz * s * math.sin(giro), cy, cz + sx * s * math.sin(giro) + sz * s * math.cos(giro)), uv, (0, 1, 0))
-               for (sx, sz, uv) in ((-1, -1, (0, 0)), (1, -1, (1, 0)), (1, 1, (1, 1)), (-1, 1, (0, 1)))]
+    # X-36 (pulido): antes 7 flores de 3 planos cruzados (se veian como esferas con cruz). Ahora 11 flores planas con su propia textura
+    # (petalos + centro, alfa fuera de la flor): casi todas acostadas con una leve inclinacion y unas pocas levantadas 40 grados
+    p = Parte("petalos", "petalos_racimo.png")
+    for i in range(11):
+        a = rnd.uniform(0, 2 * math.pi); d = rnd.uniform(0.0, 0.40) if i else 0.0
+        cx, cz = d * math.cos(a), d * math.sin(a)
+        s = rnd.uniform(0.075, 0.105)                                      # semiancho de cada flor
+        giro = rnd.uniform(0, 2 * math.pi)
+        inc = math.radians(40) if i % 4 == 3 else math.radians(rnd.uniform(0, 12))   # inclinacion del plano
+        cy = 0.02 + 0.012 * i / 3 + s * math.sin(inc)
+        ids = []
+        for (sx, sz, uv) in ((-1, -1, (0, 0)), (1, -1, (1, 0)), (1, 1, (1, 1)), (-1, 1, (0, 1))):
+            lx, lz = sx * s, sz * s
+            y = sz * s * math.sin(inc); lz2 = sz * s * math.cos(inc)
+            ids.append(p.vert((cx + lx * math.cos(giro) - lz2 * math.sin(giro), cy + y, cz + lx * math.sin(giro) + lz2 * math.cos(giro)), uv, (0, 1, 0)))
         p.cara(*ids)
     escribe("racimo_cempasuchil", "racimo_cempasuchil", [p])
-    shutil.copyfile(os.path.join(RAIZ, "Models", "cempasuchil", "cempasuchil.png"), os.path.join(RAIZ, "Models", "racimo_cempasuchil", "cempasuchil.png"))
+    yy, xx = np.mgrid[0:N, 0:N]; u = (xx + 0.5) / N * 2 - 1; v = (yy + 0.5) / N * 2 - 1
+    rad = np.hypot(u, v); ang = np.arctan2(v, u)
+    borde = 0.80 + 0.14 * np.cos(12 * ang)                                 # 12 petalos
+    alfa = (rad < borde).astype(float)
+    col = np.zeros((N, N, 3))
+    t = 0.5 + 0.5 * np.cos(12 * ang)
+    col[...] = np.array((0.98, 0.62, 0.05)) * (0.75 + 0.30 * t[..., None]) * (0.65 + 0.45 * rad[..., None])   # petalos: mas oscuros hacia el centro
+    col = np.where(rad[..., None] < 0.24, np.array((0.42, 0.18, 0.03)), col)                              # centro
+    col = col * (0.92 + 0.08 * r.random((N, N, 1)))
+    guarda("racimo_cempasuchil", "petalos_racimo.png", np.clip(np.concatenate([col, alfa[..., None]], axis=2), 0, 1), "RGBA")
+    f = os.path.join(RAIZ, "Models", "racimo_cempasuchil", "cempasuchil.png")
+    if os.path.exists(f): os.remove(f)                                     # la copia ya no se usa
 
 
 # ------------------------------------------------------------------ textura del sendero de tierra (RGBA: el shader descarta alfa < 0.1)
