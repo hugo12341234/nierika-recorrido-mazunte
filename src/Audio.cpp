@@ -21,10 +21,9 @@ namespace
     const Pista PISTAS[] = {
         { "oleaje", 0.03f }, // mar: volumen inicial = el de lejos de la orilla; ActualizarZona lo ajusta
         { "musica", 0.05f }, // musica de fondo; ActualizarZona la ajusta
-        { "voces",  0.00f }, // X-24: murmullo de voces lejanas (sintetizado); su volumen depende de la zona
-        { "banda",  0.00f }  // X-29: musica en vivo sintetizada de los musicos de la playa (guitarra, tambor y trompeta)
-    };
-    const int NUM_PISTAS = 4;
+        { "voces",  0.00f }  // X-24: murmullo de voces lejanas (sintetizado); su volumen depende de la zona
+    };   // D-6c (14/11): se quito la pista "banda" (musica sintetizada de los musicos): se encimaba con el oleaje y la musica nueva
+    const int NUM_PISTAS = 3;
 
     // Formatos que decodifica miniaudio sin librerias extra (se prueban en este orden)
     const char* EXTENSIONES[] = { ".wav", ".mp3", ".flac" };
@@ -34,7 +33,7 @@ struct AudioImpl
 {
     ma_engine engine;
     ma_sound  sonidos[NUM_PISTAS];
-    bool      activo[NUM_PISTAS] = { false, false, false, false };
+    bool      activo[NUM_PISTAS] = { false, false, false };
 };
 
 bool Audio::init()
@@ -91,7 +90,7 @@ bool Audio::init()
     return true;
 }
 
-void Audio::ActualizarZona(float x, float z, bool banda)
+void Audio::ActualizarZona(float x, float z)
 {
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
@@ -106,8 +105,6 @@ void Audio::ActualizarZona(float x, float z, bool banda)
     const float dCer = std::sqrt((x - 11.0f) * (x - 11.0f) + (z - 19.5f) * (z - 19.5f));
     const float dPan = std::sqrt(x * x + (z - 7.0f) * (z - 7.0f));
     fija(2, 0.55f * lim(1.0f - (std::min)(dCer, dPan) / 14.0f));
-    const float dBanda = std::sqrt((x + 10.0f) * (x + 10.0f) + (z - 19.5f) * (z - 19.5f));
-    fija(3, banda ? 0.80f * lim(1.0f - dBanda / 24.0f) : 0.0f);
 }
 
 void Audio::cleanup()

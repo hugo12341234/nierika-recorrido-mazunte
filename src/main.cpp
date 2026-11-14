@@ -1549,7 +1549,7 @@ int main()
             cuadroVideo++;
             if (relojVideo >= rutaVideo.back().t) glfwSetWindowShouldClose(window, GL_TRUE);
         }
-        audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z, fueraAlcance);  // X-24: volumen por zona
+        audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z);  // X-24: volumen por zona
         // Swap the buffers
         glfwSwapBuffers(window);
     }

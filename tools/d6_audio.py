@@ -39,18 +39,48 @@ def ruido_periodico(n, rng, f_bajo, f_alto, pendiente):
     return x / np.max(np.abs(x))
 
 
-def oleaje(segundos=40):
-    """Mar: retumbo grave (ruido café) + espuma (ruido agudo) con la misma envolvente periódica de olas."""
-    rng = np.random.default_rng(15)
+def banda_ruido(n, rng, f_bajo, f_alto, pendiente=0.0):
+    """Ruido periodico en una banda (alias corto de ruido_periodico, ya normalizado)."""
+    return ruido_periodico(n, rng, f_bajo, f_alto, pendiente)
+
+
+def oleaje(segundos=48):
+    """Mar (D-6c, 14/11, reemplaza la version de ruido modulado que sonaba 'a motor'): OLAS INDIVIDUALES e irregulares.
+    Cada ola = (1) marejada grave que sube lento, (2) rompiente de medios que sube rapido y cae, (3) espuma aguda que
+    sigue a la rompiente y se apaga despacio (la lengua de agua que sube y baja por la arena). Entre olas queda un
+    susurro de fondo. Los eventos se envuelven en circulo (modulo n), asi el bucle no tiene corte. Parametros propuestos
+    por Claude, a juicio del oido de D2 (no medidos contra una grabacion real)."""
+    rng = np.random.default_rng(21)
     n = FS * segundos
     t = np.arange(n) / FS
-    # Envolvente: suma de senos cuyos periodos dividen a `segundos` (8 s, 10 s y 20 s) -> periódica
-    e = 0.50 + 0.30 * np.sin(2 * np.pi * t / 8.0) + 0.15 * np.sin(2 * np.pi * t / 10.0 + 1.0) + 0.05 * np.sin(2 * np.pi * t / 20.0 + 2.0)
-    e = np.clip(e, 0.05, 1.0)
-    grave = ruido_periodico(n, rng, 30, 900, 1.0)        # ~ ruido rosa/café: el rumor del agua
-    espuma = ruido_periodico(n, rng, 1500, 7000, 0.3)    # casi blanco, solo agudos: la rompiente
-    x = 0.55 * grave * e + 0.30 * espuma * (e ** 3)
-    return 0.8 * x / np.max(np.abs(x))
+    # Instantes de las crestas (s): irregulares, 7 olas en 48 s (6-8 s entre una y otra)
+    crestas = [3.0, 10.5, 16.0, 24.5, 30.0, 37.5, 43.0]
+    amps = [1.0, 0.75, 0.9, 0.7, 1.0, 0.8, 0.65]
+
+    def dist_circ(tc):
+        d = t - tc
+        return (d + segundos / 2) % segundos - segundos / 2     # distancia con signo, en circulo
+
+    marejada = np.zeros(n); rompe = np.zeros(n); espuma_e = np.zeros(n)
+    for tc, a in zip(crestas, amps):
+        d = dist_circ(tc)
+        marejada += a * np.exp(-0.5 * (d / 2.2) ** 2)                                   # campana ancha, simetrica
+        subida = np.where(d < 0, np.exp(-0.5 * (d / 0.9) ** 2), np.exp(-d / 1.6))       # sube en ~1 s, cae en ~2 s
+        rompe += a * subida
+        espuma_e += a * np.where(d < 0, np.exp(-0.5 * (d / 1.3) ** 2), np.exp(-d / 3.5))  # cola larga de 3-4 s
+    marejada /= marejada.max(); rompe /= rompe.max(); espuma_e /= espuma_e.max()
+
+    grave = banda_ruido(n, rng, 40, 250, 1.0)          # retumbo de la masa de agua
+    medio = banda_ruido(n, rng, 250, 1800, 0.6)        # el golpe de la rompiente
+    agudo = banda_ruido(n, rng, 2000, 8000, 0.0)       # la espuma: siseo
+    susurro = banda_ruido(n, rng, 150, 4000, 0.9)      # fondo continuo muy bajo
+    # El siseo tiene un burbujeo (modulacion rapida e irregular) para que no suene a ruido blanco plano
+    burbujeo = 0.75 + 0.25 * banda_ruido(n, rng, 3, 25, 0.0)
+    x = (0.45 * grave * (0.15 + 0.85 * marejada)
+         + 0.55 * medio * rompe ** 1.3
+         + 0.45 * agudo * burbujeo * espuma_e ** 1.5
+         + 0.08 * susurro)
+    return 0.95 * x / np.max(np.abs(x))   # rms ~0.106, parecido al 0.114 de la version anterior: la curva de volumen no cambia
 
 
 def musica(segundos=48):
@@ -100,7 +130,7 @@ def musica(segundos=48):
 if __name__ == "__main__":
     os.makedirs(SALIDA, exist_ok=True)
     guardar("oleaje.wav", oleaje())
-    guardar("musica.wav", musica())
-    for nom in ("oleaje.wav", "musica.wav"):
+    # D-6c: musica() ya no se escribe (la musica es Audio/musica.mp3, externa); la funcion se conserva como referencia
+    for nom in ("oleaje.wav",):
         ruta = os.path.join(SALIDA, nom)
         print(f"{nom}: {os.path.getsize(ruta) / 1e6:.2f} MB")
