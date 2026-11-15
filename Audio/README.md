@@ -78,3 +78,9 @@ Referencia APA 7 (incompleta hasta tener el canal y el año): *Canal desconocido
 ## D-6e (14/11): único sonido de mar
 
 En `develop` ya no queda ningún otro audio de mar: solo `Audio/oleaje.mp3`. Si en una PC se sigue oyendo el oleaje sintético, es un `Audio/oleaje.wav` viejo que quedó en esa carpeta (no está en el repo): borrarlo. El código ahora prefiere el `.mp3` de todos modos. La consola imprime `[Audio] Suena en bucle: Audio/oleaje.mp3` al arrancar.
+
+## D-6f (14/11): oleaje.mp3 recodificado con más calidad (D2: «se oye muy saturada el agua»)
+
+- **Medido en el `oleaje.mp3` anterior (128 kb/s):** sin clipping (pico −1.8 dBFS, ninguna muestra ≥ 0.85, cresta 22.1 dB igual que la del original: sin compresión). Pero al compararlo con el original alineado, el error de codificación es de solo **19–20 dB bajo la señal** (SNR): en un ruido de olas eso puede oírse granulado o «saturado».
+- **Cambio:** mismo tramo (empieza en 123 s del original, 120 s en bucle con fundido cruzado de 3 s de potencia constante) y misma ganancia (+5.1 dB, sin limitador; pico −1.6 dBFS), pero codificado con LAME **VBR -q:a 0** (antes 128 kb/s). SNR contra la señal sin codificar: **28.4 dB** (antes 20.6). Peso: **2.76 MB** (antes 1.92 MB; un poco por debajo de los 3 MB sugeridos).
+- **La curva de volumen y el nivel (−21 LUFS) no cambian.** **No escuchado por Claude**: si sigue sonando mal, la causa puede estar en la grabación original de YouTube (ya viene comprimida) y no en este archivo.
