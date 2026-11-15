@@ -4,13 +4,13 @@ Esta carpeta contiene **solo dos pistas con nombre fijo**, ambas `.mp3`, ambas e
 
 | Archivo | Qué suena | Volumen en el código (`src/Audio.cpp`, `ActualizarZona`, cada cuadro) |
 |---|---|---|
-| `oleaje.mp3` | Mar | 0.015 + 0.075·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1): 0.015 lejos, 0.09 en la orilla (z = 24) |
+| `oleaje.mp3` | Mar | 0.02·7^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6j): 0.020 en z ≤ 0, 0.033 en z = 6, 0.053 en z = 12, 0.086 en z = 18, 0.14 en la orilla (z = 24) |
 | `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), d = distancia al altar (1.35, 0): 0.048 lejos, 0.24 junto al altar |
 
 El código busca únicamente `Audio/oleaje.mp3` y `Audio/musica.mp3` (rutas relativas a la raíz del repo; **no carga `.wav` ni `.flac`**, así un archivo viejo olvidado no tapa a los mp3).
 Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa sigue sin ella. No hace falta recompilar para cambiar un mp3. `.ogg` no está soportado.
 
-**Comprobar el volumen:** con la variable de entorno `NIERIKA_DEBUG_AUDIO=1` la consola imprime cada segundo `[Audio] x=… z=… | oleaje vol=… | musica vol=…` (el valor que tiene el motor, leído con `ma_sound_get_volume`). Al caminar hacia el mar `oleaje vol` debe subir de 0.015 a 0.09. Sin la variable no imprime nada.
+**Comprobar el volumen:** con la variable de entorno `NIERIKA_DEBUG_AUDIO=1` la consola imprime cada segundo `[Audio] x=… z=… | oleaje vol=… | musica vol=…` (el valor que tiene el motor, leído con `ma_sound_get_volume`). Al caminar hacia el mar `oleaje vol` debe subir de 0.02 a 0.14. Sin la variable no imprime nada.
 
 ## Medidas (ffmpeg, 14/11) — no escuchadas por Claude
 
@@ -19,7 +19,7 @@ Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa s
 | `oleaje.mp3` | 2 min 00 s | 2.85 MB | mp3 VBR `-q:a 0` (≈190 kb/s), estéreo 48 kHz | −23.0 LUFS | −3.6 dBFS |
 | `musica.mp3` | 4 min 20 s | 2.34 MB | mp3 original sin recodificar (71 kb/s), estéreo 48 kHz | −10.0 LUFS | +0.2 dBFS (así viene de origen; con volumen ≤ 0.24 en el juego no satura) |
 
-**Importante sobre el balance:** con la curva actual el oleaje queda unos 20 dB por debajo de la música (oleaje −23.0 LUFS × 0.015…0.09 ≈ −59…−44 LUFS; música −10.0 × 0.048…0.24 ≈ −36…−22 LUFS). La música tapa al mar, por eso el cambio de volumen del mar casi no se nota. Subirlo es una decisión de D2 (valor a registrar en el ESTADO §5).
+**Importante sobre el balance:** con la curva actual el oleaje queda unos 20 dB por debajo de la música (oleaje −23.0 LUFS × 0.02…0.14 ≈ −57…−40 LUFS; música −10.0 × 0.048…0.24 ≈ −36…−22 LUFS). La música tapa al mar, por eso el cambio de volumen del mar casi no se nota. Subirlo es una decisión de D2 (valor a registrar en el ESTADO §5).
 
 ## Origen y créditos (externos: uso educativo no comercial, sin licencia libre confirmada, decisión de D2)
 

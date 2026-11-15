@@ -19,7 +19,7 @@ public:
     void cleanup();
 
     // X-24: volumen por zona segun donde esta el visitante (x, z en metros). Cada cuadro desde main:
-    //   oleaje = 0.03 + 0.15 * s^2.5, s = clamp(1 - max(0, 24 - z) / 24, 0, 1)  (D-6b/C-1b: maximo 0.18 en la orilla z = 24)
+    //   oleaje = 0.02 * 7^s, s = clamp(1 - max(0, 24 - z) / 24, 0, 1)  (D-6j: 0.02 en z <= 0 a 0.14 en la orilla z = 24; ~0.7 dB por metro)
     //   musica = 0.48 * (0.10 + 0.40 * clamp(1 - d_altar / 10, 0, 1))      (D-6b: 0.48 iguala la sonoridad del mp3; cerca del altar, en (1.35, 0))
     void ActualizarZona(float x, float z);
 
