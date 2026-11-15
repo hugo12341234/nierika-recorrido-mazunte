@@ -18,10 +18,12 @@ public:
     // Detiene y libera todo. Seguro de llamar aunque init() haya fallado, o varias veces.
     void cleanup();
 
-    // X-24: volumen por zona segun donde esta el visitante (x, z en metros). Cada cuadro desde main:
+    // X-24/X-40: volumen por zona segun donde esta el visitante (x, z en metros) y hacia donde mira (fx, fz: vector frente en el plano XZ). Cada cuadro desde main:
     //   oleaje = 0.03 + 0.15 * s^2.5, s = clamp(1 - max(0, 24 - z) / 24, 0, 1)  (D-6b/C-1b: maximo 0.18 en la orilla z = 24)
-    //   musica = 0.48 * (0.10 + 0.40 * clamp(1 - d_altar / 10, 0, 1))      (D-6b: 0.48 iguala la sonoridad del mp3; cerca del altar, en (1.35, 0))
-    void ActualizarZona(float x, float z);
+    //   musica (X-40, la banda es la fuente): d = distancia al centro de la banda (Extras::BANDA_X, BANDA_Z);
+    //     v = 0.24 * d0 / max(d, d0) * (1 - clamp((d - 30) / 30, 0, 1)),  d0 = 3 m  (ley del inverso de la distancia: -6 dB al duplicar d; silencio a 60 m)
+    //     paneo = 0.7 * (derecha . direccion a la banda): suena por el lado donde esta la banda (se oye mas en el oido de ese lado)
+    void ActualizarZona(float x, float z, float fx = 0.0f, float fz = -1.0f);
 
 private:
     AudioImpl* impl = nullptr;

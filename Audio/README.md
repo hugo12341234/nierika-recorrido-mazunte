@@ -5,7 +5,7 @@ Esta carpeta contiene **solo dos pistas con nombre fijo**, ambas `.mp3`, ambas e
 | Archivo | Qué suena | Volumen en el código (`src/Audio.cpp`, `ActualizarZona`, cada cuadro) |
 |---|---|---|
 | `oleaje.mp3` | Mar | 0.015 + 0.075·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1): 0.015 lejos, 0.09 en la orilla (z = 24) |
-| `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), d = distancia al altar (1.35, 0): 0.048 lejos, 0.24 junto al altar |
+| `musica.mp3` | Música de la banda (X-40) | 0.24·3/max(d, 3)·(1 − clamp((d − 30)/30, 0, 1)), d = distancia al centro de la banda (−12.0, 18.0): 0.24 a ≤ 3 m, 0.12 a 6 m, 0.06 a 12 m, 0 a 60 m. Además paneo estéreo hacia el lado donde está la banda |
 
 El código busca únicamente `Audio/oleaje.mp3` y `Audio/musica.mp3` (rutas relativas a la raíz del repo; **no carga `.wav` ni `.flac`**, así un archivo viejo olvidado no tapa a los mp3).
 Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa sigue sin ella. No hace falta recompilar para cambiar un mp3. `.ogg` no está soportado.
