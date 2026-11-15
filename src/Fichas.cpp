@@ -48,12 +48,12 @@ namespace
           "(Secretaría de Educación Pública [SEP], 2026). Los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.). "
           "Aquí la ofrenda se presenta sobre un altar de tres niveles, con una forma que es adaptación del estudio.",
           "Tradición general (SEP, 2026); altar de tres niveles y cuarto: adaptación del estudio",
-          glm::vec3(1.35f, 0.0f, 1.0f) },   // X-45: costado del altar3 x1.3 (en (1.35, 0, 0); antes z 0.6); B-13: desde la puerta (d ~ 1.5 m) gana a la del pan
+          glm::vec3(1.35f, 0.0f, 0.6f) },   // B-13 (X-46: valor original tras revertir X-45): desde la puerta (d ~ 1.5 m) gana a la del pan
         { "Pan de muerto",
           "El pan de muerto representa el afecto y la fraternidad hacia los difuntos (Secretaría de Educación Pública [SEP], 2026). "
           "Se coloca en el altar junto con las demás ofrendas para recibir a las ánimas.",
           "Tradición general (SEP, 2026)",
-          glm::vec3(1.415f, 1.04f, 0.0f) },  // X-45: pan_muerto en el nivel medio del altar3 x1.3 (mundo (1.415, 1.04, 0.00); antes (1.40, 0.80, 0.00)); B-13: a < 0.9 m de la repisa gana a la del altar
+          glm::vec3(1.40f, 0.80f, 0.0f) },  // B-13 (X-46: valor original tras revertir X-45): pan_muerto en el nivel medio del altar3 (mundo (1.40, 0.80, 0.00)); a < 0.9 m de la repisa gana a la del altar
     };
     // Referencias de cada ficha (mismo orden que la tabla)
     const char* RefsDe(int i)

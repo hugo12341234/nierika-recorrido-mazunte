@@ -124,7 +124,7 @@ namespace Extras
         { -3.2f, 22.3f }, { -26.0f, 6.0f }, { 26.0f, 5.0f }, { 18.8f, 21.4f },                      // E1, E2
         { -2.2f, 19.4f }, { 2.2f, 17.2f }, { -2.2f, 14.6f }, { 2.2f, 13.0f },                        // E3 sendero
         { -6.2f, 11.2f }, { 6.2f, 11.2f }, { -6.2f, 4.3f }, { 6.2f, 4.3f },                          // E4 esquinas del panteon
-        { -2.7f, 2.5f }, { 2.7f, 2.5f }, { -18.0f, 13.0f }, { 18.0f, 9.0f }                           // E5 puerta, y dos en la playa
+        { -1.8f, 2.0f }, { 1.8f, 2.0f }, { -18.0f, 13.0f }, { 18.0f, 9.0f }                           // E5 puerta, y dos en la playa
     };
     // Camino de cempasuchil de la orilla a la puerta: el eje serpentea x(z) = 0.9*sen(0.35*z) y cada paso de 0.28 m deja una flor
     // con dispersion deterministica de +-0.45 m. Las flores no se dibujan sobre los muros de la barda.

@@ -217,9 +217,9 @@ int main()
     Model tumba4((char*)"Models/tumba4/tumba4.obj");
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
-    Model barda((char*)"Models/barda/barda.obj");          // X-44: tumbas-capilla de Maya contra el muro izquierdo (1.3 x 0.9 m, 1.9 m de alto, giradas 90 grados)
-    colisiones.agregar({ glm::vec3(-2.53f, 0.0f, -1.67f), glm::vec3(-1.62f, 1.9f, -0.33f) });
-    colisiones.agregar({ glm::vec3(-2.53f, 0.0f,  0.33f), glm::vec3(-1.62f, 1.9f,  1.67f) });
+    Model barda((char*)"Models/barda/barda.obj");          // X-46: tumbas-capilla de Maya x0.75 contra el muro izquierdo (0.98 x 0.68 m de huella, 1.43 m de alto, giradas 90 grados)
+    colisiones.agregar({ glm::vec3(-1.82f, 0.0f, -1.11f), glm::vec3(-1.13f, 1.43f, -0.13f) });
+    colisiones.agregar({ glm::vec3(-1.82f, 0.0f,  0.13f), glm::vec3(-1.13f, 1.43f,  1.11f) });
 
     // B-10: barda perimetral del panteón
     Model personaPieA((char*)"Models/persona_pie_a/persona_pie_a.obj");               // X-19: figuras estaticas de la ceremonia
@@ -303,20 +303,21 @@ int main()
     // se agranda x2.3 (0.16 m, el tamano que tenia la flor de Maya) y gira sobre su centro (0, 0, 0)
     const glm::vec3 centroFlor(0.0f, 0.0f, 0.0f);
     const float ESCALA_FLOR_FLOTANTE = 2.3f;
-    const float ESCALA_ALTAR = 1.3f;   // X-45: altar3 y su ofrenda x1.3 alrededor de (1.35, 0, 0): 2.08 x 1.17 x 1.56 m
-    const float ESCALA_PAPEL = 1.4f, ESCALA_MACETA = 1.5f;   // X-45: papeles y macetas de X-43 (el cuarto es x1.4 desde X-44)
+    const float ESCALA_ALTAR = 1.0f;   // X-46: altar3 a su tamano original (1.6 x 0.9 x 1.2 m); X-45 lo habia llevado a x1.3
+    const float ESCALA_PAPEL = 1.0f, ESCALA_MACETA = 1.0f;   // X-46: papeles y macetas a su tamano original (X-43)
+    const float ESCALA_CAPILLA = 0.75f;   // X-46: tumbas-capilla de Maya x0.75 (0.98 x 0.68 x 1.43 m) para que quepan en el cuarto de A-2
 
     // ==========================================
     // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
     // la apertura queda en z = +1.31). Muros ~0.1 m de espesor; piso = playa.obj (suelo y = 0, no es caja).
     // ==========================================
-    colisiones.agregar({ glm::vec3(-2.751f, 0.0f, -1.834f), glm::vec3( 2.751f, 3.67f, -1.704f) });  // muro del fondo (X-44: cuarto x1.4)
-    colisiones.agregar({ glm::vec3(-2.751f, 0.0f, -1.834f), glm::vec3(-2.556f, 3.67f,  1.834f) });  // muro izquierdo
-    colisiones.agregar({ glm::vec3( 2.556f, 0.0f, -1.834f), glm::vec3( 2.751f, 3.67f,  1.834f) });  // muro derecho
-    colisiones.agregar({ glm::vec3(-2.751f, 0.0f,  1.704f), glm::vec3(-0.869f, 3.67f,  1.834f) });  // muro del frente, a la izquierda de la puerta
-    colisiones.agregar({ glm::vec3( 0.787f, 0.0f,  1.704f), glm::vec3( 2.751f, 3.67f,  1.834f) });  // muro del frente, a la derecha de la puerta
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f, -1.217f) });  // muro del fondo (X-46: dimensiones originales de A-2)
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3(-1.826f, 2.62f,  1.310f) });  // muro izquierdo
+    colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
+    colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
+    colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
     // B-13: altar3 en (1.35, 0, 0) girado -90 grados: su huella (1.6 x 0.9 m) ocupa x 0.90..1.80, z -0.80..+0.80, y 0..1.20
-    colisiones.agregar({ glm::vec3( 0.765f, 0.0f, -1.040f), glm::vec3( 1.935f, 1.56f,  1.040f) });   // X-45: altar3 x1.3 (antes x 0.90..1.80, z +-0.80, y 1.20)
+    colisiones.agregar({ glm::vec3( 0.900f, 0.0f, -0.800f), glm::vec3( 1.800f, 1.20f,  0.800f) });
 
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
     // Entradas de 2 m en el norte (z = 12) y, desde E-2 (12/11), tambien en el sur (z = 3), las dos centradas en x = 0 (abertura x -1..+1):
@@ -431,7 +432,7 @@ int main()
     // (altar3 en (1.35, 0, 0) girado -90 grados: repisa en x 0.90..1.15, tope a y = 0.40; la flor mide 0.07 m, su centro queda 0.035 mas arriba).
     // PROVISIONAL: se ajusta en B-13 junto con la posicion final de la silueta y del altar.
     const glm::vec3 manoSuelta = silueta.ManoAlSoltar();
-    const glm::vec3 destinoFlor(0.95f, 0.555f, manoSuelta.z);   // X-45: repisa inferior del altar x1.3 (x 0.77..1.09, tope a y 0.52; la flor mide 0.07 m)
+    const glm::vec3 destinoFlor(1.05f, 0.435f, manoSuelta.z);   // repisa inferior del altar3 (x 0.90..1.15, tope a y 0.40; la flor mide 0.07 m); X-46: valor original de D-4
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
@@ -595,13 +596,13 @@ int main()
             float t = (float)Reloj();
             float parpadeo = 0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f);   // 0.70 .. 1.00
             glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * parpadeo;
-            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.65f, 0.0f);   // X-45: altar x1.3 (antes y 1.25)
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.25f, 0.0f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.ambient"), col.x * 0.10f, col.y * 0.10f, col.z * 0.10f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.diffuse"), col.x * 1.1f, col.y * 1.1f, col.z * 1.1f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.specular"), col.x * 0.4f, col.y * 0.4f, col.z * 0.4f);
             glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.constant"), 1.0f);
-            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.linear"), 0.22f);
-            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.20f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.linear"), 0.35f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.44f);
         }
 
         // X-34: luz calida de la fogata o el farol mas cercano (2 luces puntuales). Se envia SIEMPRE con constantes validas aunque el color sea 0
@@ -776,45 +777,36 @@ int main()
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
             m.Draw(shader);
         };
-        // X-45: papeles x1.4 (el pivote es el borde superior: no se mueve), borde superior a y = 3.05
-        colocarEsc(papelFucsia, glm::vec3(-2.541f, 3.05f,  0.00f),  90.0f, ESCALA_PAPEL);  // muro izquierdo
-        colocarEsc(papelMorado, glm::vec3( 2.541f, 3.05f,  0.00f), -90.0f, ESCALA_PAPEL);  // muro derecho, sobre el altar (la ofrenda llega a y = 2.0)
+        // X-46: papeles y macetas a su tamano original (X-43), en el cuarto de A-2 (interior x +-1.826, z +-1.217, muros de 2.62 m)
+        colocarEsc(papelFucsia, glm::vec3(-1.811f, 2.40f,  0.00f),  90.0f, ESCALA_PAPEL);  // muro izquierdo
+        colocarEsc(papelMorado, glm::vec3( 1.811f, 2.40f,  0.00f), -90.0f, ESCALA_PAPEL);  // muro derecho, sobre el altar (que llega a y = 1.45)
         for (int i = 0; i < 3; i++)
-            colocarEsc(papelNaranja, glm::vec3(-1.80f + 1.80f * i, 3.05f, -1.690f), 0.0f, ESCALA_PAPEL);  // muro del fondo
-        // X-45: macetas x1.5 (0.59 m de alto): 2 flanquean el altar (que ahora llega a z +-1.04) y 2 en las esquinas del fondo
-        colocarEsc(mazeta, glm::vec3( 1.35f, 0.02f,  1.30f), 0.0f,   ESCALA_MACETA);
-        colocarEsc(mazeta, glm::vec3( 1.35f, 0.02f, -1.30f), 90.0f,  ESCALA_MACETA);
-        colocarEsc(mazeta, glm::vec3(-2.30f, 0.02f, -1.50f), 40.0f,  ESCALA_MACETA);
-        colocarEsc(mazeta, glm::vec3( 2.30f, 0.02f, -1.50f), 130.0f, ESCALA_MACETA);
-        // X-44: dos tumbas-capilla (la capilla con domo y cruz de Maya, extra de D1) contra el muro izquierdo, de frente al cuarto, como en el video
-        colocar(capillaMaya, glm::vec3(-2.07f, 0.02f, -1.00f), 90.0f);
-        colocar(capillaMaya, glm::vec3(-2.07f, 0.02f,  1.00f), 90.0f);
-        // X-44: ofrenda en el nicho de cada capilla (suelo del nicho a y = 0.52 sobre la capilla): retrato (marco propio B-6), 2 velas y cempasuchil;
-        // la primera lleva ademas la calavera de D1. Posicion del mundo = (-2.07 + z local, 0.02 + y local, zc - x local).
-        for (int c = -1; c <= 1; c += 2)
+            colocarEsc(papelNaranja, glm::vec3(-1.15f + 1.15f * i, 2.40f, -1.202f), 0.0f, ESCALA_PAPEL);  // muro del fondo
+        colocarEsc(mazeta, glm::vec3( 1.55f, 0.02f,  1.02f), 0.0f,   ESCALA_MACETA);   // flanquean el altar
+        colocarEsc(mazeta, glm::vec3( 1.55f, 0.02f, -1.02f), 90.0f,  ESCALA_MACETA);
+        colocarEsc(mazeta, glm::vec3(-1.60f, 0.02f, -1.05f), 40.0f,  ESCALA_MACETA);   // esquinas del fondo (la izquierda queda junto a la capilla)
+        // X-44/X-46: dos tumbas-capilla (la capilla con domo y cruz de Maya, extra de D1) x0.75 contra el muro izquierdo, de frente al cuarto.
+        // Posicion del mundo de un punto local (lx, ly, lz) de la capilla en zc: (xc + lz*S, 0.02 + ly*S, zc - lx*S)  (giro 90 grados en Y)
         {
-            const float zc = 1.00f * c;
-            colocar(marco, glm::vec3(-2.07f, 0.54f, zc), 90.0f);
-            colocar(vela,  glm::vec3(-1.95f, 0.54f, zc + 0.26f), 0.0f);
-            colocar(vela,  glm::vec3(-1.95f, 0.54f, zc - 0.26f), 0.0f);
-            for (int f = -1; f <= 1; f += 2)
+            const float S = ESCALA_CAPILLA, xc = -1.47f;
+            for (int c = -1; c <= 1; c += 2)
             {
-                glm::mat4 mf = glm::translate(glm::mat4(1.0f), glm::vec3(-1.93f, 0.585f, zc + 0.13f * f));
-                mf = glm::scale(mf, glm::vec3(1.7f));
-                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
-                cempasuchil.Draw(shader);
+                const float zc = 0.62f * c;
+                colocarEsc(capillaMaya, glm::vec3(xc, 0.02f, zc), 90.0f, S);
+                // ofrenda en el nicho (suelo del nicho a y = 0.52 local): retrato (marco propio B-6), 2 velas y cempasuchil; la de z < 0 lleva la calavera de D1
+                const float yn = 0.02f + 0.52f * S + 0.02f;
+                colocar(marco, glm::vec3(xc + 0.0f, yn, zc), 90.0f);
+                colocar(vela,  glm::vec3(xc + 0.10f, yn, zc + 0.19f), 0.0f);
+                colocar(vela,  glm::vec3(xc + 0.10f, yn, zc - 0.19f), 0.0f);
+                for (int f = -1; f <= 1; f += 2)
+                    colocarEsc(cempasuchil, glm::vec3(xc + 0.11f, yn + 0.045f, zc + 0.10f * f), 0.0f, 1.7f);
             }
+            colocar(calavera, glm::vec3(xc + 0.10f, 0.02f + 0.52f * S + 0.02f, -0.62f - 0.0f), 90.0f);
         }
-        colocar(calavera, glm::vec3(-1.92f, 0.54f, -0.88f), 90.0f);
-        // X-44: un copalero a cada lado de la entrada (el modelo mide 0.18 m: x2.5 para que se vea como los braseros del video)
+        // X-44/X-46: un copalero a cada lado de la entrada (el modelo mide 0.18 m: x2.5 para que se vea como los braseros del video)
         glUniform1f(specLoc, 0.1f);
         for (int s = -1; s <= 1; s += 2)
-        {
-            glm::mat4 mc = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f * s, 0.0f, 2.15f));
-            mc = glm::scale(mc, glm::vec3(2.5f));
-            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
-            copalero.Draw(shader);
-        }
+            colocarEsc(copalero, glm::vec3(1.05f * s, 0.0f, 1.75f), 0.0f, 2.5f);
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);  // X-23: relieve de piedra en cruz, tumbas y barda
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
