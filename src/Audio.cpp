@@ -9,6 +9,8 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <chrono>
+#include <cstdlib>
 
 namespace
 {
@@ -102,6 +104,21 @@ void Audio::ActualizarZona(float x, float z)
     // Musica (D-6b): el mp3 de Xochipitzahuatl mide -10 LUFS contra -16.4 de la pista sintetizada anterior;
     // 0.48 = 10^(-6.4/20) iguala la sonoridad, asi la curva 0.10..0.50 conserva su balance con el oleaje
     fija(1, 0.48f * (0.10f + 0.40f * lim(1.0f - dAltar / 10.0f)));
+
+    // D-6i: diagnostico opcional (apagado por defecto). Con la variable de entorno NIERIKA_DEBUG_AUDIO=1 imprime una vez por
+    // segundo la posicion y el volumen que el MOTOR tiene de verdad en cada pista (ma_sound_get_volume), para comprobar que cambia con la zona.
+    static const bool depurar = (std::getenv("NIERIKA_DEBUG_AUDIO") != nullptr);
+    if (depurar)
+    {
+        static auto ultimo = std::chrono::steady_clock::now();
+        auto ahora = std::chrono::steady_clock::now();
+        if (std::chrono::duration<float>(ahora - ultimo).count() >= 1.0f)
+        {
+            ultimo = ahora;
+            std::cout << "[Audio] x=" << x << " z=" << z << " | oleaje vol=" << (impl->activo[0] ? ma_sound_get_volume(&impl->sonidos[0]) : -1.0f)
+                      << " | musica vol=" << (impl->activo[1] ? ma_sound_get_volume(&impl->sonidos[1]) : -1.0f) << std::endl;
+        }
+    }
 }
 
 void Audio::cleanup()
