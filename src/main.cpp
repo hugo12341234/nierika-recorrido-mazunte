@@ -303,6 +303,8 @@ int main()
     // se agranda x2.3 (0.16 m, el tamano que tenia la flor de Maya) y gira sobre su centro (0, 0, 0)
     const glm::vec3 centroFlor(0.0f, 0.0f, 0.0f);
     const float ESCALA_FLOR_FLOTANTE = 2.3f;
+    const float ESCALA_ALTAR = 1.3f;   // X-45: altar3 y su ofrenda x1.3 alrededor de (1.35, 0, 0): 2.08 x 1.17 x 1.56 m
+    const float ESCALA_PAPEL = 1.4f, ESCALA_MACETA = 1.5f;   // X-45: papeles y macetas de X-43 (el cuarto es x1.4 desde X-44)
 
     // ==========================================
     // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
@@ -314,7 +316,7 @@ int main()
     colisiones.agregar({ glm::vec3(-2.751f, 0.0f,  1.704f), glm::vec3(-0.869f, 3.67f,  1.834f) });  // muro del frente, a la izquierda de la puerta
     colisiones.agregar({ glm::vec3( 0.787f, 0.0f,  1.704f), glm::vec3( 2.751f, 3.67f,  1.834f) });  // muro del frente, a la derecha de la puerta
     // B-13: altar3 en (1.35, 0, 0) girado -90 grados: su huella (1.6 x 0.9 m) ocupa x 0.90..1.80, z -0.80..+0.80, y 0..1.20
-    colisiones.agregar({ glm::vec3( 0.900f, 0.0f, -0.800f), glm::vec3( 1.800f, 1.20f,  0.800f) });
+    colisiones.agregar({ glm::vec3( 0.765f, 0.0f, -1.040f), glm::vec3( 1.935f, 1.56f,  1.040f) });   // X-45: altar3 x1.3 (antes x 0.90..1.80, z +-0.80, y 1.20)
 
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
     // Entradas de 2 m en el norte (z = 12) y, desde E-2 (12/11), tambien en el sur (z = 3), las dos centradas en x = 0 (abertura x -1..+1):
@@ -429,7 +431,7 @@ int main()
     // (altar3 en (1.35, 0, 0) girado -90 grados: repisa en x 0.90..1.15, tope a y = 0.40; la flor mide 0.07 m, su centro queda 0.035 mas arriba).
     // PROVISIONAL: se ajusta en B-13 junto con la posicion final de la silueta y del altar.
     const glm::vec3 manoSuelta = silueta.ManoAlSoltar();
-    const glm::vec3 destinoFlor(1.05f, 0.435f, manoSuelta.z);
+    const glm::vec3 destinoFlor(0.95f, 0.555f, manoSuelta.z);   // X-45: repisa inferior del altar x1.3 (x 0.77..1.09, tope a y 0.52; la flor mide 0.07 m)
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 300.0f);  // far plane a 300 m (A-4)
 
@@ -593,7 +595,7 @@ int main()
             float t = (float)Reloj();
             float parpadeo = 0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f);   // 0.70 .. 1.00
             glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * parpadeo;
-            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.25f, 0.0f);
+            glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), 1.15f, 1.65f, 0.0f);   // X-45: altar x1.3 (antes y 1.25)
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.ambient"), col.x * 0.10f, col.y * 0.10f, col.z * 0.10f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.diffuse"), col.x * 1.1f, col.y * 1.1f, col.z * 1.1f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.specular"), col.x * 0.4f, col.y * 0.4f, col.z * 0.4f);
@@ -719,12 +721,19 @@ int main()
             {
                 glm::mat4 mm = glm::translate(glm::mat4(1.0f), altarPos);
                 mm = glm::rotate(mm, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::scale(mm, glm::vec3(ESCALA_ALTAR));  // X-45: el altar y su ofrenda crecen juntos (el cuarto es x1.4 desde X-44)
                 mm = glm::translate(mm, loc);
                 mm = glm::scale(mm, glm::vec3(esc));  // X-10: escala opcional (las flores extra del altar van x1.7)
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 m.Draw(shader);
             };
-            colocar(altar3, altarPos, -90.0f);
+            {
+                glm::mat4 ma = glm::translate(glm::mat4(1.0f), altarPos);
+                ma = glm::rotate(ma, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+                ma = glm::scale(ma, glm::vec3(ESCALA_ALTAR));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ma));
+                altar3.Draw(shader);
+            }
             sobreAltar(cuadro,   glm::vec3( 0.00f, 1.20f, -0.25f));  // X-43: retrato tallado (Maya, de D1) en el nivel superior, como en el video de referencia
             sobreAltar(marco,    glm::vec3(-0.12f, 0.40f,  0.36f));  // X-43: el marco propio (B-6) baja al nivel inferior (el nivel medio queda tapado por el superior en z < -0.05)
             sobreAltar(vela,     glm::vec3(-0.35f, 1.20f, -0.25f));
@@ -759,14 +768,24 @@ int main()
         // X-43: papel picado en los muros del cuarto (alto del borde superior y = 2.40; 1.5 cm dentro del muro) y 4 macetas con cempasuchil
         // (2 flanquean el altar, 2 en el muro izquierdo). Giro Y: +90 mira a +x, -90 mira a -x, 0 mira a +z.
         glUniform1f(specLoc, 0.1f);
-        colocar(papelFucsia, glm::vec3(-2.541f, 2.75f,  0.00f),  90.0f);  // muro izquierdo
-        colocar(papelMorado, glm::vec3( 2.541f, 2.75f,  0.00f), -90.0f);  // muro derecho, sobre el altar (que llega a y = 1.45)
+        auto colocarEsc = [&](Model& m, glm::vec3 pos, float giroY, float esc)
+        {
+            glm::mat4 mm = glm::translate(glm::mat4(1.0f), pos);
+            mm = glm::rotate(mm, glm::radians(giroY), glm::vec3(0.0f, 1.0f, 0.0f));
+            mm = glm::scale(mm, glm::vec3(esc));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+            m.Draw(shader);
+        };
+        // X-45: papeles x1.4 (el pivote es el borde superior: no se mueve), borde superior a y = 3.05
+        colocarEsc(papelFucsia, glm::vec3(-2.541f, 3.05f,  0.00f),  90.0f, ESCALA_PAPEL);  // muro izquierdo
+        colocarEsc(papelMorado, glm::vec3( 2.541f, 3.05f,  0.00f), -90.0f, ESCALA_PAPEL);  // muro derecho, sobre el altar (la ofrenda llega a y = 2.0)
         for (int i = 0; i < 3; i++)
-            colocar(papelNaranja, glm::vec3(-1.70f + 1.70f * i, 2.75f, -1.690f), 0.0f);  // muro del fondo
-        colocar(mazeta, glm::vec3( 1.55f, 0.02f,  0.98f), 0.0f);
-        colocar(mazeta, glm::vec3( 1.55f, 0.02f, -0.98f), 90.0f);
-        colocar(mazeta, glm::vec3(-2.30f, 0.02f, -1.50f), 40.0f);
-        colocar(mazeta, glm::vec3( 2.30f, 0.02f, -1.50f), 130.0f);
+            colocarEsc(papelNaranja, glm::vec3(-1.80f + 1.80f * i, 3.05f, -1.690f), 0.0f, ESCALA_PAPEL);  // muro del fondo
+        // X-45: macetas x1.5 (0.59 m de alto): 2 flanquean el altar (que ahora llega a z +-1.04) y 2 en las esquinas del fondo
+        colocarEsc(mazeta, glm::vec3( 1.35f, 0.02f,  1.30f), 0.0f,   ESCALA_MACETA);
+        colocarEsc(mazeta, glm::vec3( 1.35f, 0.02f, -1.30f), 90.0f,  ESCALA_MACETA);
+        colocarEsc(mazeta, glm::vec3(-2.30f, 0.02f, -1.50f), 40.0f,  ESCALA_MACETA);
+        colocarEsc(mazeta, glm::vec3( 2.30f, 0.02f, -1.50f), 130.0f, ESCALA_MACETA);
         // X-44: dos tumbas-capilla (la capilla con domo y cruz de Maya, extra de D1) contra el muro izquierdo, de frente al cuarto, como en el video
         colocar(capillaMaya, glm::vec3(-2.07f, 0.02f, -1.00f), 90.0f);
         colocar(capillaMaya, glm::vec3(-2.07f, 0.02f,  1.00f), 90.0f);
