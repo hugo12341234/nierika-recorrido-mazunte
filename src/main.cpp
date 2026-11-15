@@ -757,7 +757,7 @@ int main()
                                           { -16.5f, 0.0f, 15.0f }, { 21.0f, 0.0f, 6.0f }, { -9.0f, 0.0f, -6.0f }, { 8.0f, 0.0f, -7.0f } };   // X-42: palmas repartidas hacia el centro   // X-41: la palma de (-5.5, 21.5) estaba dentro del grupo de personas E1
             for (int i = 0; i < 8; i++) colocar(palma, palmas[i], 47.0f * i);
             const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -18.0f, 0.0f, 9.0f }, { -15.0f, 0.0f, 0.0f },
-                                            { -27.0f, 0.0f, 3.0f }, { 16.0f, 0.0f, 8.0f }, { 12.0f, 0.0f, 0.0f }, { -6.0f, 0.0f, -4.0f } };
+                                            { -27.0f, 0.0f, 3.0f }, { 19.0f, 0.0f, 12.0f }, { 12.0f, 0.0f, 0.0f }, { -6.0f, 0.0f, -4.0f } };
             glUniform1f(specLoc, 0.05f);
             for (int i = 0; i < 8; i++) colocar(arbusto, arbustos[i], 31.0f * i);
         }

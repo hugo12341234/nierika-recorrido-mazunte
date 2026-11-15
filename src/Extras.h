@@ -241,16 +241,18 @@ namespace Extras
     // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. Sin musica propia (D-6c, 14/11: se quito Audio/banda.wav); no hay musicos ni grabaciones reales.
     // X-40 (15/11): BANDA DE VIENTO OAXAQUENA de 9 musicos (reemplaza a los 5 mudos de X-29). Cada uno es un modelo propio de Blender
     // (musico_* con los brazos en la pose del instrumento + banda_* modelado en las mismas coordenadas locales, tools/x40_banda.py).
-    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos. Miran al sendero (+x, giro 270) en abanico de 5 grados por metro.
+    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos.
+    // X-42 (15/11): la banda se mudo de la orilla (-12, 18) al ala este de la playa, en (14, 8): a 16 m de la orilla (z = 24), detras del tendedero y de cara al nucleo
+    // ceremonial y a la orilla (+z, giro 180), con espacio libre alrededor. Dos filas de 5 y 4 musicos; cada uno va a (dx, dz) del centro y gira 5 grados por metro
+    // hacia el centro del grupo (abanico). Solo hay que cambiar BANDA_X y BANDA_Z para mover todo (musicos, colisiones y sonido).
     struct Musico { float x, z, giro; int inst; float fase; };
     constexpr int N_BANDA = 9, N_INST_BANDA = 8;
-    constexpr float BANDA_X = -12.0f, BANDA_Z = 18.0f;      // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    constexpr float BANDA_X = 14.0f, BANDA_Z = 8.0f;        // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    // dx: posicion a lo ancho de la fila; dz: +1.0 fila de adelante (maderas y metales), -0.9 fila de atras (tuba y percusion)
+    inline Musico MusicoBanda(float dx, float dz, int inst, float fase) { return { BANDA_X + dx, BANDA_Z + dz, 180.0f - 5.0f * dx, inst, fase }; }
     inline const Musico BANDA[N_BANDA] = {
-        { -11.0f, 15.8f, 270.0f + 5.0f * (15.8f - 18.0f), 1, 0.0f }, { -11.0f, 16.9f, 270.0f + 5.0f * (16.9f - 18.0f), 2, 1.1f },     // fila de adelante: maderas y metales
-        { -11.0f, 18.0f, 270.0f, 0, 2.2f },                          { -11.0f, 19.1f, 270.0f + 5.0f * (19.1f - 18.0f), 0, 3.3f },
-        { -11.0f, 20.2f, 270.0f + 5.0f * (20.2f - 18.0f), 3, 4.4f },
-        { -12.9f, 16.4f, 270.0f + 5.0f * (16.4f - 18.0f), 4, 5.5f }, { -12.9f, 17.5f, 270.0f + 5.0f * (17.5f - 18.0f), 5, 0.6f },     // fila de atras: tuba y percusion
-        { -12.9f, 18.7f, 270.0f + 5.0f * (18.7f - 18.0f), 6, 1.7f }, { -12.9f, 19.9f, 270.0f + 5.0f * (19.9f - 18.0f), 7, 2.8f } };
+        MusicoBanda(-2.2f,  1.0f, 1, 0.0f), MusicoBanda(-1.1f,  1.0f, 2, 1.1f), MusicoBanda(0.0f,  1.0f, 0, 2.2f), MusicoBanda(1.1f,  1.0f, 0, 3.3f), MusicoBanda(2.2f,  1.0f, 3, 4.4f),
+        MusicoBanda(-1.6f, -0.9f, 4, 5.5f), MusicoBanda(-0.5f, -0.9f, 5, 0.6f), MusicoBanda(0.7f, -0.9f, 6, 1.7f), MusicoBanda(1.9f, -0.9f, 7, 2.8f) };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
     // Comparsa: 12 figuras (2 columnas) que marchan por la orilla; x(t) = -48 + ((v t + s_i) mod 96); paso: y = 0.05 |sen(2 pi f t)|, balanceo +-3 grados
     constexpr int N_COMPARSA = 12;
