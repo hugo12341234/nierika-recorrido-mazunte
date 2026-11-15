@@ -87,7 +87,7 @@ La normal se perturba con el método de Mikkelsen (2010), que usa las derivadas 
 
 **Murciélagos.** Vuelan en círculos de radio R (10 a 26 m) a rapidez lineal v = 4.5 m/s, así que ω = v/R y (x, z) = (cₓ + R·cos(ωt + φ), c_z + R·sen(ωt + φ)); la altura oscila 0.8·sen(0.7t + 2φ) alrededor de 6.5–14 m. Las alas baten θ = 40°·sen(2π·3.2·t + 1.7 i) alrededor del eje del cuerpo (el ala izquierda es el espejo de la derecha). Un murciélago real bate a 10–20 Hz; se usa 3.2 Hz para que el movimiento se perciba a 60 cuadros por segundo.
 
-**Sonido por zona** (`Audio::ActualizarZona`, `src/Audio.cpp`): oleaje = 0.02·7^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (más fuerte hacia la orilla, z = 24); música = 0.48·(0.10 + 0.40·clamp(1 − d_altar/10, 0, 1)). Sin espacialización 3D. (D-6h, 14/11: se quitó la pista de voces.)
+**Sonido por zona** (`Audio::ActualizarZona`, `src/Audio.cpp`): oleaje = 0.02·15^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (más fuerte hacia la orilla, z = 24); música = 0.48·(0.10 + 0.40·clamp(1 − d_altar/10, 0, 1)). Sin espacialización 3D. (D-6h, 14/11: se quitó la pista de voces.)
 
 **Comprobación:** `tools/x19_pruebas_extras.cpp` (sendero, murciélagos y las anteriores): ver el resultado en el ESTADO.
 

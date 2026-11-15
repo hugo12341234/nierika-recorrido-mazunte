@@ -97,9 +97,9 @@ void Audio::ActualizarZona(float x, float z)
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
-    // Oleaje (D-6j): el volumen crece como 0.02 * 7^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~0.7 dB, parejo en todo el recorrido
+    // Oleaje (D-6j): el volumen crece como 0.02 * 15^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~1 dB, parejo en todo el recorrido
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
-    fija(0, 0.02f * std::pow(7.0f, sMar));   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.14 (z = 24), +16.9 dB en total
+    fija(0, 0.02f * std::pow(15.0f, sMar));   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
     const float dAltar = std::sqrt((x - 1.35f) * (x - 1.35f) + z * z);
     // Musica (D-6b): el mp3 de Xochipitzahuatl mide -10 LUFS contra -16.4 de la pista sintetizada anterior;
     // 0.48 = 10^(-6.4/20) iguala la sonoridad, asi la curva 0.10..0.50 conserva su balance con el oleaje
