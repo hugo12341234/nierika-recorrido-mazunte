@@ -29,6 +29,6 @@ QUÉ VERÁS
 SI ALGO FALLA
  - Ventana negra o se cierra al abrir: actualiza los controladores de video.
  - Los controles no responden: haz clic dentro de la ventana.
- - No suena nada: revisa que existan Audio\oleaje.wav y Audio\musica.wav.
+ - No suena nada: revisa que existan Audio\oleaje.mp3 y Audio\musica.mp3.
 
 Código fuente y manuales: https://github.com/hugo12341234/nierika-recorrido-mazunte

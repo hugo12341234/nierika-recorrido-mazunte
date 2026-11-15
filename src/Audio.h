@@ -21,7 +21,6 @@ public:
     // X-24: volumen por zona segun donde esta el visitante (x, z en metros). Cada cuadro desde main:
     //   oleaje = 0.03 + 0.15 * s^2.5, s = clamp(1 - max(0, 24 - z) / 24, 0, 1)  (D-6b/C-1b: maximo 0.18 en la orilla z = 24)
     //   musica = 0.48 * (0.10 + 0.40 * clamp(1 - d_altar / 10, 0, 1))      (D-6b: 0.48 iguala la sonoridad del mp3; cerca del altar, en (1.35, 0))
-    //   voces  = 0.55 * clamp(1 - d / 14, 0, 1), d = distancia a la ceremonia (11, 19.5) o al panteon (0, 7), la menor
     void ActualizarZona(float x, float z);
 
 private:
