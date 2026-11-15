@@ -36,7 +36,7 @@ Peso: `oleaje.wav` 1.76 MB y `musica.wav` 2.12 MB (WAV mono, 22 050 Hz, 16 bits)
 
 | Archivo | Qué suena | Volumen (según la posición del visitante) |
 |---|---|---|
-| `oleaje.mp3` | Oleaje | 0.03 + 0.15·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (C-1b, 14/11): casi inaudible lejos, 0.18 en la orilla (z = 24) |
+| `oleaje.mp3` | Oleaje | 0.015 + 0.075·s^2.5, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6g, 14/11; antes 0.03 + 0.15·s^2.5): 0.015 lejos, 0.09 en la orilla (z = 24) |
 | `musica.mp3` | Música de fondo | 0.48·(0.10 + 0.40·clamp(1 − d/10, 0, 1)), con d la distancia al altar (1.35, 0): más fuerte cerca del altar |
 | `voces.wav` | Murmullo de voces lejanas | 0.55·clamp(1 − d/14, 0, 1), con d la distancia a la ceremonia (11, 19.5) o al panteón (0, 7): suena cerca de la gente |
 
@@ -84,3 +84,7 @@ En `develop` ya no queda ningún otro audio de mar: solo `Audio/oleaje.mp3`. Si 
 - **Medido en el `oleaje.mp3` anterior (128 kb/s):** sin clipping (pico −1.8 dBFS, ninguna muestra ≥ 0.85, cresta 22.1 dB igual que la del original: sin compresión). Pero al compararlo con el original alineado, el error de codificación es de solo **19–20 dB bajo la señal** (SNR): en un ruido de olas eso puede oírse granulado o «saturado».
 - **Cambio:** mismo tramo (empieza en 123 s del original, 120 s en bucle con fundido cruzado de 3 s de potencia constante) y misma ganancia (+5.1 dB, sin limitador; pico −1.6 dBFS), pero codificado con LAME **VBR -q:a 0** (antes 128 kb/s). SNR contra la señal sin codificar: **28.4 dB** (antes 20.6). Peso: **2.76 MB** (antes 1.92 MB; un poco por debajo de los 3 MB sugeridos).
 - **La curva de volumen y el nivel (−21 LUFS) no cambian.** **No escuchado por Claude**: si sigue sonando mal, la causa puede estar en la grabación original de YouTube (ya viene comprimida) y no en este archivo.
+
+## D-6g (14/11): oleaje 6 dB más bajo
+
+D2: «bájale aún más al oleaje, se oye demasiado». Se multiplicó toda la curva del mar por 0.5 (−6 dB): de 0.03 + 0.15·s^2.5 a **0.015 + 0.075·s^2.5** (0.015 lejos, 0.09 en la orilla). El archivo `oleaje.mp3` no cambia. Valor propuesto por Claude a partir de «más bajo»; **no escuchado**: D2 lo ajusta al oído (cambiar los dos números de `Audio::ActualizarZona` en `src/Audio.cpp`).
