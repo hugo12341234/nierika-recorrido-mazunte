@@ -270,6 +270,7 @@ int main()
     Model papelNaranja((char*)"Models/papel_naranja/papel_naranja.obj"); // una tira de 0.78 m
     Model mazeta((char*)"Models/mazeta/mazeta.obj");                     // maceta con cempasuchil, 0.39 m, pivote: centro de la base
     Model capillaMaya((char*)"Models/altar/altar.obj");                  // X-44: capilla con domo y cruz (Maya, de D1), vuelve como tumba-capilla del cuarto
+    Model humo((char*)"Models/humo/humo.obj");                           // X-47: columna de humo de D1 (0.33 x 3.47 m, pivote: centro de la base)
     Model cuadro((char*)"Models/cuadro/cuadro.obj");                     // retrato con marco tallado, 0.35 m, pivote: centro de la base
     Model refresco((char*)"Models/refresco/refresco.obj");               // botella verde de refresco, 0.25 m
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
@@ -1537,6 +1538,27 @@ int main()
             cempasuchil.Draw(shader);
         }
 
+        // X-47: humo del copal (modelo `humo` de D1, sin particulas): una columna sobre cada copalero, semitransparente y sin escribir profundidad.
+        // Va al final, despues de lo opaco. La textura es opaca: la transparencia es el uniforme humoAlfa (NIERIKA_HUMO_ALFA la cambia para pruebas).
+        {
+            const char* ea = std::getenv("NIERIKA_HUMO_ALFA");
+            const float alfaHumo = ea ? (float)std::atof(ea) : 0.35f;
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDepthMask(GL_FALSE);
+            glUniform1i(glGetUniformLocation(shader.Program, "humo"), 1);
+            glUniform1f(glGetUniformLocation(shader.Program, "humoAlfa"), alfaHumo);
+            for (int s = -1; s <= 1; s += 2)
+            {
+                glm::mat4 mh = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(1.05f * s, 0.30f, 1.75f)), glm::vec3(0.62f));   // 0.62 -> 2.15 m, bajo el techo (2.62 m)
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                humo.Draw(shader);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "humo"), 0);
+            glDepthMask(GL_TRUE);
+            glDisable(GL_BLEND);
+        }
+
         // X-36: halos calidos de fogatas y faroles (resplandor radial en 3 planos ortogonales, mezcla aditiva, sin escribir profundidad).
         // Va al FINAL de la escena para que lo opaco ya este dibujado. Solo lo cercano; llamaFase = intensidad con el mismo parpadeo que la luz.
         if (!std::getenv("NIERIKA_SIN_VIDA"))
@@ -1646,7 +1668,7 @@ int main()
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7
-    papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); capillaMaya.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup();  // X-43
+    papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); capillaMaya.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup(); humo.cleanup();  // X-43, X-47
     llamaModelo.cleanup();  // C-2
     arco.cleanup();         // faltaban en E-1a (A-10, A-11)
     techo.cleanup();

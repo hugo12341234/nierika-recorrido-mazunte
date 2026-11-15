@@ -88,6 +88,8 @@ uniform int   colina;               // X-36: 1 solo al dibujar las colinas (manc
 uniform int   arena;                // X-13: 1 solo al dibujar la playa (ver main.cpp)
 uniform int   llama;
 uniform float tiempo;               // segundos (el mismo uniform del vertex shader)
+uniform int   humo;                 // X-47: 1 solo al dibujar el humo del copal (modelo de D1): su textura es opaca, la transparencia sale de humoAlfa
+uniform float humoAlfa;
 uniform float llamaFase;            // desfase de cada llama (s), para que no parpadeen al unisono
 
 // Gradiente pseudoaleatorio unitario de un vertice de la rejilla (hash clasico de seno)
@@ -253,7 +255,9 @@ void main()
     }
     else
         result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
-    color = vec4(result, texColor.a);
+    float alfaFinal = texColor.a;
+    if (humo == 1) alfaFinal *= humoAlfa;   // X-47
+    color = vec4(result, alfaFinal);
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 albedo)
