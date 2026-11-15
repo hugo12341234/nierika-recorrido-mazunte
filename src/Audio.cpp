@@ -22,7 +22,7 @@ namespace
         float       volumen;
     };
     const Pista PISTAS[] = {
-        { "oleaje", 0.015f }, // mar: volumen inicial = el de lejos de la orilla; ActualizarZona lo ajusta
+        { "oleaje", 0.02f },  // mar: volumen inicial = el de lejos de la orilla (D-6j); ActualizarZona lo ajusta
         { "musica", 0.05f }  // musica de fondo; ActualizarZona la ajusta
     };   // D-6h (14/11): solo dos pistas (mar y musica). Se quitaron "banda" (D-6c) y "voces" (sintetica, X-24)
     const int NUM_PISTAS = 2;
@@ -98,9 +98,9 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
-    // Oleaje (D-6b): sube con s^2.5 (mas lento cerca que s^2) segun la cercania a la orilla (z = 24); lejos casi no se oye
+    // Oleaje (D-6j): el volumen crece como 0.02 * 15^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~1 dB, parejo en todo el recorrido
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
-    fija(0, 0.015f + 0.075f * std::pow(sMar, 2.5f));   // D-6g (14/11): 0.015 + 0.075*s^2.5 (-6 dB); antes 0.03 + 0.15*s^2.5
+    fija(0, 0.02f * std::pow(15.0f, sMar));   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
     // Musica (X-40): la FUENTE es la banda. Modelo: ley del inverso de la distancia (cada vez que d se duplica, -6 dB), con tope V0 = 0.24 a d0 = 3 m
     // (V0 = 0.48 * 0.50, el maximo que tenia la curva del altar en D-6b; 0.48 iguala la sonoridad del mp3 de -10 LUFS) y ventana lineal que la apaga a 60 m.
     const float dx = Extras::BANDA_X - x, dz = Extras::BANDA_Z - z;
