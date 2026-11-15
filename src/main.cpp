@@ -747,7 +747,7 @@ int main()
         // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
         {
             const glm::vec3 palmas[8] = { { -25.0f, 0.0f, 13.0f }, { -8.5f, 0.0f, 17.0f }, { -11.0f, 0.0f, 19.0f }, { 20.0f, 0.0f, 17.0f },
-                                          { -16.5f, 0.0f, 15.0f }, { 23.0f, 0.0f, 20.0f }, { -5.5f, 0.0f, 21.5f }, { -3.8f, 0.0f, 21.0f } };
+                                          { -16.5f, 0.0f, 15.0f }, { 23.0f, 0.0f, 20.0f }, { -6.0f, 0.0f, 19.0f }, { -3.8f, 0.0f, 21.0f } };   // X-41: la palma de (-5.5, 21.5) estaba dentro del grupo de personas E1
             for (int i = 0; i < 8; i++) colocar(palma, palmas[i], 47.0f * i);
             const glm::vec3 arbustos[8] = { { -2.8f, 0.0f, 13.7f }, { 3.4f, 0.0f, 13.8f }, { -8.0f, 0.0f, 17.2f }, { -9.5f, 0.0f, 15.0f },
                                             { -13.5f, 0.0f, 17.0f }, { 24.0f, 0.0f, 16.0f }, { -5.0f, 0.0f, 19.5f }, { -8.0f, 0.0f, 19.5f } };

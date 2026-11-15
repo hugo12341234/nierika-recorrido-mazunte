@@ -49,6 +49,49 @@ def texturas():
     print("textura OK")
 
 
+def puntos_de_vida():
+    """X-41: lee (x, z) de todo lo que NO debe quedar dentro de una casa: en src/VidaColinasDatos.h (generado por x33) faroles, arcos,
+    tendederos, ofrendas, fogatas, personas, palmas y arboles, y en src/VegetacionColinas.h (generado por x18) palmas. No se cuentan
+    arbustos ni rocas (chicos o semienterrados: no se notan). Un archivo que aun no existe se ignora."""
+    import re
+    fuentes = (("VidaColinasDatos.h", ("FAROLES", "ARCOS", "TENDEDEROS", "OFRENDAS", "FOGATAS", "PERSONAS", "PALMAS", "ARBOLES")),
+               ("VegetacionColinas.h", ("PALMAS",)))
+    pts = []
+    for archivo, nombres in fuentes:
+        ruta = os.path.join(RAIZ, "src", archivo)
+        if not os.path.exists(ruta):
+            continue
+        txt = open(ruta, encoding="utf-8").read()
+        for nombre in nombres:
+            m = re.search(r"%s\[\d+\] = \{(.*?)\n    \};" % nombre, txt, re.S)
+            if not m:
+                continue
+            for fila in re.findall(r"\{ (-?[\d.]+)f, (-?[\d.]+)f, (-?[\d.]+)f", m.group(1)):
+                pts.append((float(fila[0]), float(fila[2])))      # (x, y, z, ...): se usan x y z
+    return pts
+
+
+MARGEN_CASA = 0.8          # m alrededor de la huella de la casa (x -3..3, z -3.5..2.5 en casa_a/casa_b.obj)
+_VIDA = None
+
+
+def choca_con_vida(casa):
+    """True si algun punto de VidaColinasDatos.h cae dentro de la huella (girada) de la casa, con MARGEN_CASA de holgura.
+    La rotacion es la de glm::rotate(model, giro, Y): mundo = c + R(giro) * local, asi que local = R(-giro) * (mundo - c)."""
+    global _VIDA
+    if _VIDA is None:
+        _VIDA = puntos_de_vida()
+    cx, _, cz, giro, _ = casa
+    th = math.radians(giro)
+    c, s = math.cos(th), math.sin(th)
+    for (px, pz) in _VIDA:
+        dx, dz = px - cx, pz - cz
+        lx, lz = c * dx - s * dz, s * dx + c * dz
+        if -3.0 - MARGEN_CASA < lx < 3.0 + MARGEN_CASA and -3.5 - MARGEN_CASA < lz < 2.5 + MARGEN_CASA:
+            return True
+    return False
+
+
 def cabecera():
     casas, rocas, = [], []
     paso_casa = 9.0
@@ -77,6 +120,7 @@ def cabecera():
                 ddx, ddz = -nx * lado, -nz * lado             # hacia el camino
                 giro = math.degrees(math.atan2(-ddx, -ddz))
                 casas.append((round(cx, 2), round(base - 0.05, 2), round(cz, 2), round(giro, 1), (i + lado) % 2))
+    casas = [c for c in casas if not choca_con_vida(c)]            # X-41: ninguna casa encima de ofrendas, gente, faroles ni arboles de VidaColinasDatos.h
     casas = casas[:46]
     # promontorio rocoso tipo Punta Cometa (formacion generica): rocas grandes en el extremo oeste, con un mirador pequeno
     cluster = [(-84.0, 30.0, 22.0, 20.0), (-92.0, 36.0, 30.0, 85.0), (-78.0, 38.0, 14.0, 150.0), (-98.0, 26.0, 26.0, 230.0), (-88.0, 24.0, 12.0, 300.0), (-72.0, 28.0, 9.0, 40.0)]
