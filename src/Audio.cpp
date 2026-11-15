@@ -20,20 +20,20 @@ namespace
     };
     const Pista PISTAS[] = {
         { "oleaje", 0.015f }, // mar: volumen inicial = el de lejos de la orilla; ActualizarZona lo ajusta
-        { "musica", 0.05f }, // musica de fondo; ActualizarZona la ajusta
-        { "voces",  0.00f }  // X-24: murmullo de voces lejanas (sintetizado); su volumen depende de la zona
-    };   // D-6c (14/11): se quito la pista "banda" (musica sintetizada de los musicos): se encimaba con el oleaje y la musica nueva
-    const int NUM_PISTAS = 3;
+        { "musica", 0.05f }  // musica de fondo; ActualizarZona la ajusta
+    };   // D-6h (14/11): solo dos pistas (mar y musica). Se quitaron "banda" (D-6c) y "voces" (sintetica, X-24)
+    const int NUM_PISTAS = 2;
 
-    // Formatos que decodifica miniaudio sin librerias extra (se prueban en este orden; D-6e: .mp3 antes que .wav)
-    const char* EXTENSIONES[] = { ".mp3", ".wav", ".flac" };   // D-6e: .mp3 primero, asi un oleaje.wav viejo que quede en la carpeta no tapa al mp3
+    // D-6h: SOLO .mp3 (nombres fijos Audio/oleaje.mp3 y Audio/musica.mp3). Antes se probaban tambien .wav y .flac,
+    // y un .wav viejo olvidado en la carpeta podia tapar al mp3 sin avisar.
+    const char* EXTENSIONES[] = { ".mp3" };
 }
 
 struct AudioImpl
 {
     ma_engine engine;
     ma_sound  sonidos[NUM_PISTAS];
-    bool      activo[NUM_PISTAS] = { false, false, false };
+    bool      activo[NUM_PISTAS] = { false, false };
 };
 
 bool Audio::init()
@@ -78,7 +78,7 @@ bool Audio::init()
             }
         }
         if (!cargada)
-            std::cout << "[Audio] Falta Audio/" << PISTAS[i].nombre << ".wav|.mp3|.flac: se omite esa pista (ver Audio/README.md)." << std::endl;
+            std::cout << "[Audio] Falta Audio/" << PISTAS[i].nombre << ".mp3: se omite esa pista (ver Audio/README.md)." << std::endl;
     }
 
     if (sonando == 0)
@@ -102,9 +102,6 @@ void Audio::ActualizarZona(float x, float z)
     // Musica (D-6b): el mp3 de Xochipitzahuatl mide -10 LUFS contra -16.4 de la pista sintetizada anterior;
     // 0.48 = 10^(-6.4/20) iguala la sonoridad, asi la curva 0.10..0.50 conserva su balance con el oleaje
     fija(1, 0.48f * (0.10f + 0.40f * lim(1.0f - dAltar / 10.0f)));
-    const float dCer = std::sqrt((x - 11.0f) * (x - 11.0f) + (z - 19.5f) * (z - 19.5f));
-    const float dPan = std::sqrt(x * x + (z - 7.0f) * (z - 7.0f));
-    fija(2, 0.55f * lim(1.0f - (std::min)(dCer, dPan) / 14.0f));
 }
 
 void Audio::cleanup()

@@ -11,7 +11,7 @@ Aplicación del recorrido (C++17, Visual Studio 2022)
  ├─ Shaders e iluminación    (GLSL 330)                ✅ lighting.vs/.frag: Blinn-Phong (A-8), olas (C-1), llama (C-2)
  ├─ Animación                (KeyFrames · slerp)       ✅ Animacion.cpp · Silueta.cpp · DejarFlor.h; simples: Olas.h, AnimVelas.h, AnimFlores.h
  ├─ Fichas culturales        (Dear ImGui)              🔄 Fichas.cpp (ImGui ya en `vendor/`; falta compilar en VS y probar)
- └─ Audio                    (miniaudio)               ✅ Audio.cpp; pistas propias `Audio/oleaje.wav` y `musica.wav` (D-6)
+ └─ Audio                    (miniaudio)               ✅ Audio.cpp; pistas `Audio/oleaje.mp3` y `Audio/musica.mp3` (externas, con crédito; D-6)
 OpenGL 3.3 Core Profile (GLEW)
 GPU / Recursos (.obj, texturas, audio, keyframes)
 ```
