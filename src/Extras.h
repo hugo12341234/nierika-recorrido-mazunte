@@ -239,12 +239,18 @@ namespace Extras
 
     // ======== X-29: COMPARSA, MUSICA EN VIVO Y ALFOMBRAS DE FLORES (FUERA DEL ALCANCE ORIGINAL; detras de MOSTRAR_FUERA_DE_ALCANCE) ========
     // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. Sin musica propia (D-6c, 14/11: se quito Audio/banda.wav); no hay musicos ni grabaciones reales.
-    // inst: 1 guitarra, 2 tambor, 3 trompeta
-    struct Musico { float x, z, giro; int tipo; float fase; int inst; };
-    constexpr int N_BANDA = 5;
-    constexpr float BANDA_X = -10.0f, BANDA_Z = 19.5f;      // centro del grupo
-    inline const Musico BANDA[N_BANDA] = { { -11.4f, 19.0f, 200.0f, 0, 0.0f, 1 }, { -10.2f, 18.5f, 195.0f, 1, 1.4f, 1 }, { -9.0f, 18.9f, 190.0f, 0, 2.6f, 2 },
-                                          { -10.8f, 20.4f, 210.0f, 1, 3.7f, 3 }, { -8.8f, 20.3f, 185.0f, 0, 4.9f, 3 } };
+    // X-40 (15/11): BANDA DE VIENTO OAXAQUENA de 9 musicos (reemplaza a los 5 mudos de X-29). Cada uno es un modelo propio de Blender
+    // (musico_* con los brazos en la pose del instrumento + banda_* modelado en las mismas coordenadas locales, tools/x40_banda.py).
+    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos. Miran al sendero (+x, giro 270) en abanico de 5 grados por metro.
+    struct Musico { float x, z, giro; int inst; float fase; };
+    constexpr int N_BANDA = 9, N_INST_BANDA = 8;
+    constexpr float BANDA_X = -12.0f, BANDA_Z = 18.0f;      // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    inline const Musico BANDA[N_BANDA] = {
+        { -11.0f, 15.8f, 270.0f + 5.0f * (15.8f - 18.0f), 1, 0.0f }, { -11.0f, 16.9f, 270.0f + 5.0f * (16.9f - 18.0f), 2, 1.1f },     // fila de adelante: maderas y metales
+        { -11.0f, 18.0f, 270.0f, 0, 2.2f },                          { -11.0f, 19.1f, 270.0f + 5.0f * (19.1f - 18.0f), 0, 3.3f },
+        { -11.0f, 20.2f, 270.0f + 5.0f * (20.2f - 18.0f), 3, 4.4f },
+        { -12.9f, 16.4f, 270.0f + 5.0f * (16.4f - 18.0f), 4, 5.5f }, { -12.9f, 17.5f, 270.0f + 5.0f * (17.5f - 18.0f), 5, 0.6f },     // fila de atras: tuba y percusion
+        { -12.9f, 18.7f, 270.0f + 5.0f * (18.7f - 18.0f), 6, 1.7f }, { -12.9f, 19.9f, 270.0f + 5.0f * (19.9f - 18.0f), 7, 2.8f } };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
     // Comparsa: 12 figuras (2 columnas) que marchan por la orilla; x(t) = -48 + ((v t + s_i) mod 96); paso: y = 0.05 |sen(2 pi f t)|, balanceo +-3 grados
     constexpr int N_COMPARSA = 12;

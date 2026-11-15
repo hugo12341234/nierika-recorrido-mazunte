@@ -17,7 +17,7 @@
 class Atuendos
 {
 public:
-    static constexpr int N_ROPAS = 14, N_PIELES = 4, N_PELOS = 4, N_FALDAS = 5, N_REBOZOS = 3, N_SOMBREROS = 2;
+    static constexpr int N_ROPAS = 15, N_PIELES = 4, N_PELOS = 4, N_FALDAS = 5, N_REBOZOS = 3, N_SOMBREROS = 2;
 
     // Eleccion para una persona (-1 = sin esa prenda)
     struct Seleccion { int ropa, piel, pelo, falda, rebozo, sombrero; };
@@ -32,7 +32,8 @@ public:
     // 14 estilos (X-36; antes 7): ropa 0..13 de Models/atuendos (huipiles bordados, blusas, guayaberas, camisas a cuadros, camisetas, manta).
     // Llevan falda de olanes los estilos 0, 1, 2, 6, 7, 8 y 13; rebozo el 1, 6 y 13; sombrero de palma el 3, 4, 9, 10 y 12.
     // De rodillas (agachada) no se dibujan falda ni rebozo (la pose no coincide con la prenda de pie); si el estilo lleva sombrero, si.
-    static Seleccion elegir(int semilla, bool agachada)
+    // X-40: estiloForzado >= 0 pone esa ropa (14 = uniforme de la banda: sin falda ni rebozo; pelo, piel y sombrero siguen saliendo de la semilla).
+    static Seleccion elegir(int semilla, bool agachada, int estiloForzado = -1)
     {
         const uint32_t h = mezcla((uint32_t)semilla * 2654435761u + 35u);
         const int estilo = (int)((h >> 4) % 14u);
@@ -46,6 +47,7 @@ public:
         s.falda = (FALDA[estilo] && !agachada) ? (int)((h >> 14) % (uint32_t)N_FALDAS) : -1;
         s.rebozo = (REBOZO[estilo] && !agachada) ? (int)((h >> 18) % (uint32_t)N_REBOZOS) : -1;
         s.sombrero = SOMBR[estilo] ? (int)((h >> 21) % (uint32_t)N_SOMBREROS) : -1;
+        if (estiloForzado >= 0) { s.ropa = estiloForzado; s.falda = -1; s.rebozo = -1; }
         return s;
     }
 
@@ -74,11 +76,12 @@ public:
 
     // Dibuja la persona 'm' en la matriz 'mm' (la misma que usaria Model::Draw) con el atuendo de 'semilla'.
     // agachada: true para persona_agachada_*; la cabeza queda 0.61 m mas abajo y 0.29 m al frente (-Z) que de pie.
-    void dibujar(Shader& shader, Model& m, bool agachada, int semilla, const glm::mat4& mm)
+    // X-40: conTalla=false dibuja a escala 1 (los musicos de la banda: sus instrumentos estan modelados a esa altura); estilo = ropa forzada (-1 = por semilla).
+    void dibujar(Shader& shader, Model& m, bool agachada, int semilla, const glm::mat4& mm, bool conTalla = true, int estilo = -1)
     {
-        const Seleccion s = elegir(semilla, agachada);
+        const Seleccion s = elegir(semilla, agachada, estilo);
         const GLint loc = glGetUniformLocation(shader.Program, "model");
-        const glm::mat4 mt = glm::scale(mm, talla(semilla));   // X-36: talla propia (las prendas la heredan)
+        const glm::mat4 mt = conTalla ? glm::scale(mm, talla(semilla)) : mm;   // X-36: talla propia (las prendas la heredan)
         glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mt));
         m.DrawAtuendo(shader, ropa[s.ropa], piel[s.piel], pelo[s.pelo]);
         if (s.falda >= 0)  faldaM.DrawConTextura(shader, falda[s.falda]);
