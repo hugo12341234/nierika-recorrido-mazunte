@@ -217,7 +217,11 @@ int main()
     Model tumba4((char*)"Models/tumba4/tumba4.obj");
     Model cruz((char*)"Models/cruz/cruz.obj");             // B-11
     Model copalero((char*)"Models/copalero/copalero.obj"); // B-14
-    Model barda((char*)"Models/barda/barda.obj");          // B-10: barda perimetral del panteón
+    Model barda((char*)"Models/barda/barda.obj");          // X-44: tumbas-capilla de Maya contra el muro izquierdo (1.3 x 0.9 m, 1.9 m de alto, giradas 90 grados)
+    colisiones.agregar({ glm::vec3(-2.53f, 0.0f, -1.67f), glm::vec3(-1.62f, 1.9f, -0.33f) });
+    colisiones.agregar({ glm::vec3(-2.53f, 0.0f,  0.33f), glm::vec3(-1.62f, 1.9f,  1.67f) });
+
+    // B-10: barda perimetral del panteón
     Model personaPieA((char*)"Models/persona_pie_a/persona_pie_a.obj");               // X-19: figuras estaticas de la ceremonia
     Model personaPieB((char*)"Models/persona_pie_b/persona_pie_b.obj");
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
@@ -265,6 +269,7 @@ int main()
     Model papelMorado((char*)"Models/papel_morado/papel_morado.obj");    // par de tiras 2.15 m
     Model papelNaranja((char*)"Models/papel_naranja/papel_naranja.obj"); // una tira de 0.78 m
     Model mazeta((char*)"Models/mazeta/mazeta.obj");                     // maceta con cempasuchil, 0.39 m, pivote: centro de la base
+    Model capillaMaya((char*)"Models/altar/altar.obj");                  // X-44: capilla con domo y cruz (Maya, de D1), vuelve como tumba-capilla del cuarto
     Model cuadro((char*)"Models/cuadro/cuadro.obj");                     // retrato con marco tallado, 0.35 m, pivote: centro de la base
     Model refresco((char*)"Models/refresco/refresco.obj");               // botella verde de refresco, 0.25 m
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
@@ -303,11 +308,11 @@ int main()
     // COLISIONES AABB (A-9). Cajas en coordenadas del mundo, medidas de los .obj (fachada girada 180 grados en Y:
     // la apertura queda en z = +1.31). Muros ~0.1 m de espesor; piso = playa.obj (suelo y = 0, no es caja).
     // ==========================================
-    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f, -1.217f) });  // muro del fondo
-    colisiones.agregar({ glm::vec3(-1.965f, 0.0f, -1.310f), glm::vec3(-1.826f, 2.62f,  1.310f) });  // muro izquierdo
-    colisiones.agregar({ glm::vec3( 1.826f, 0.0f, -1.310f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro derecho
-    colisiones.agregar({ glm::vec3(-1.965f, 0.0f,  1.217f), glm::vec3(-0.621f, 2.62f,  1.310f) });  // muro del frente, a la izquierda de la puerta
-    colisiones.agregar({ glm::vec3( 0.562f, 0.0f,  1.217f), glm::vec3( 1.965f, 2.62f,  1.310f) });  // muro del frente, a la derecha de la puerta
+    colisiones.agregar({ glm::vec3(-2.751f, 0.0f, -1.834f), glm::vec3( 2.751f, 3.67f, -1.704f) });  // muro del fondo (X-44: cuarto x1.4)
+    colisiones.agregar({ glm::vec3(-2.751f, 0.0f, -1.834f), glm::vec3(-2.556f, 3.67f,  1.834f) });  // muro izquierdo
+    colisiones.agregar({ glm::vec3( 2.556f, 0.0f, -1.834f), glm::vec3( 2.751f, 3.67f,  1.834f) });  // muro derecho
+    colisiones.agregar({ glm::vec3(-2.751f, 0.0f,  1.704f), glm::vec3(-0.869f, 3.67f,  1.834f) });  // muro del frente, a la izquierda de la puerta
+    colisiones.agregar({ glm::vec3( 0.787f, 0.0f,  1.704f), glm::vec3( 2.751f, 3.67f,  1.834f) });  // muro del frente, a la derecha de la puerta
     // B-13: altar3 en (1.35, 0, 0) girado -90 grados: su huella (1.6 x 0.9 m) ocupa x 0.90..1.80, z -0.80..+0.80, y 0..1.20
     colisiones.agregar({ glm::vec3( 0.900f, 0.0f, -0.800f), glm::vec3( 1.800f, 1.20f,  0.800f) });
 
@@ -593,8 +598,8 @@ int main()
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.diffuse"), col.x * 1.1f, col.y * 1.1f, col.z * 1.1f);
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.specular"), col.x * 0.4f, col.y * 0.4f, col.z * 0.4f);
             glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.constant"), 1.0f);
-            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.linear"), 0.35f);
-            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.44f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.linear"), 0.22f);
+            glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.20f);
         }
 
         // X-34: luz calida de la fogata o el farol mas cercano (2 luces puntuales). Se envia SIEMPRE con constantes validas aunque el color sea 0
@@ -682,15 +687,19 @@ int main()
         modelFachada = glm::scale(modelFachada, glm::vec3(escalaFachada, escalaFachada, escalaFachada));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelFachada));
         glUniform1f(specLoc, 0.1f);
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);  // X-44: relieve de roca rugosa (como el video de referencia) en muros, arco y piso
         fachada.Draw(shader);
         arco.Draw(shader);   // A-10: misma matriz que la fachada
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
         techo.Draw(shader);  // A-11: misma matriz que la fachada (mismo sistema de coord. Blender)
 
         // 1b. PISO INTERIOR (A-11): plano a y = +0.02 con transformacion identidad
         glm::mat4 modelPiso(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPiso));
         glUniform1f(specLoc, 0.05f);  // piso: poco especular (igual que la arena)
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);
         piso.Draw(shader);
+        glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
 
         // 3b. MODELOS PROPIOS DE BLENDER (B-1, B-2, B-5, B-6, B-8, B-9, B-11, B-14). Posiciones PROVISIONALES: B-13 las ajusta.
         // Altar de 3 niveles contra el muro derecho del cuarto (interior x +-1.826), girado -90 grados para que su frente (+z local) mire a -x.
@@ -750,14 +759,43 @@ int main()
         // X-43: papel picado en los muros del cuarto (alto del borde superior y = 2.40; 1.5 cm dentro del muro) y 4 macetas con cempasuchil
         // (2 flanquean el altar, 2 en el muro izquierdo). Giro Y: +90 mira a +x, -90 mira a -x, 0 mira a +z.
         glUniform1f(specLoc, 0.1f);
-        colocar(papelFucsia, glm::vec3(-1.811f, 2.40f,  0.00f),  90.0f);  // muro izquierdo
-        colocar(papelMorado, glm::vec3( 1.811f, 2.40f,  0.00f), -90.0f);  // muro derecho, sobre el altar (que llega a y = 1.45)
+        colocar(papelFucsia, glm::vec3(-2.541f, 2.75f,  0.00f),  90.0f);  // muro izquierdo
+        colocar(papelMorado, glm::vec3( 2.541f, 2.75f,  0.00f), -90.0f);  // muro derecho, sobre el altar (que llega a y = 1.45)
         for (int i = 0; i < 3; i++)
-            colocar(papelNaranja, glm::vec3(-1.15f + 1.15f * i, 2.40f, -1.202f), 0.0f);  // muro del fondo
+            colocar(papelNaranja, glm::vec3(-1.70f + 1.70f * i, 2.75f, -1.690f), 0.0f);  // muro del fondo
         colocar(mazeta, glm::vec3( 1.55f, 0.02f,  0.98f), 0.0f);
         colocar(mazeta, glm::vec3( 1.55f, 0.02f, -0.98f), 90.0f);
-        colocar(mazeta, glm::vec3(-1.62f, 0.02f,  0.92f), 40.0f);
-        colocar(mazeta, glm::vec3(-1.62f, 0.02f, -0.92f), 130.0f);
+        colocar(mazeta, glm::vec3(-2.30f, 0.02f, -1.50f), 40.0f);
+        colocar(mazeta, glm::vec3( 2.30f, 0.02f, -1.50f), 130.0f);
+        // X-44: dos tumbas-capilla (la capilla con domo y cruz de Maya, extra de D1) contra el muro izquierdo, de frente al cuarto, como en el video
+        colocar(capillaMaya, glm::vec3(-2.07f, 0.02f, -1.00f), 90.0f);
+        colocar(capillaMaya, glm::vec3(-2.07f, 0.02f,  1.00f), 90.0f);
+        // X-44: ofrenda en el nicho de cada capilla (suelo del nicho a y = 0.52 sobre la capilla): retrato (marco propio B-6), 2 velas y cempasuchil;
+        // la primera lleva ademas la calavera de D1. Posicion del mundo = (-2.07 + z local, 0.02 + y local, zc - x local).
+        for (int c = -1; c <= 1; c += 2)
+        {
+            const float zc = 1.00f * c;
+            colocar(marco, glm::vec3(-2.07f, 0.54f, zc), 90.0f);
+            colocar(vela,  glm::vec3(-1.95f, 0.54f, zc + 0.26f), 0.0f);
+            colocar(vela,  glm::vec3(-1.95f, 0.54f, zc - 0.26f), 0.0f);
+            for (int f = -1; f <= 1; f += 2)
+            {
+                glm::mat4 mf = glm::translate(glm::mat4(1.0f), glm::vec3(-1.93f, 0.585f, zc + 0.13f * f));
+                mf = glm::scale(mf, glm::vec3(1.7f));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                cempasuchil.Draw(shader);
+            }
+        }
+        colocar(calavera, glm::vec3(-1.92f, 0.54f, -0.88f), 90.0f);
+        // X-44: un copalero a cada lado de la entrada (el modelo mide 0.18 m: x2.5 para que se vea como los braseros del video)
+        glUniform1f(specLoc, 0.1f);
+        for (int s = -1; s <= 1; s += 2)
+        {
+            glm::mat4 mc = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f * s, 0.0f, 2.15f));
+            mc = glm::scale(mc, glm::vec3(2.5f));
+            glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+            copalero.Draw(shader);
+        }
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);  // X-23: relieve de piedra en cruz, tumbas y barda
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
@@ -1597,7 +1635,7 @@ int main()
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7
-    papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup();  // X-43
+    papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); capillaMaya.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup();  // X-43
     llamaModelo.cleanup();  // C-2
     arco.cleanup();         // faltaban en E-1a (A-10, A-11)
     techo.cleanup();
