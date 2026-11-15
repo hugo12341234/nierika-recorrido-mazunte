@@ -260,6 +260,13 @@ int main()
     Model cempasuchil((char*)"Models/cempasuchil/cempasuchil.obj");       // B-3: flor de planos cruzados (alfa)
     Model panMuerto((char*)"Models/pan_muerto/pan_muerto.obj");           // B-4: pan propio (el de Maya sigue en Models/pan/)
     Model papelPicado((char*)"Models/papel_picado/papel_picado.obj");     // B-7: tira con alfa, cuelga de los soportes
+    // X-43: modelos de Maya (de D1, extras: no cuentan entre los 18 propios), reducidos y con pivote propio (tools/x43_piezas.py)
+    Model papelFucsia((char*)"Models/papel_fucsia/papel_fucsia.obj");    // par de tiras 1.94 m de ancho, pivote: centro del borde superior
+    Model papelMorado((char*)"Models/papel_morado/papel_morado.obj");    // par de tiras 2.15 m
+    Model papelNaranja((char*)"Models/papel_naranja/papel_naranja.obj"); // una tira de 0.78 m
+    Model mazeta((char*)"Models/mazeta/mazeta.obj");                     // maceta con cempasuchil, 0.39 m, pivote: centro de la base
+    Model cuadro((char*)"Models/cuadro/cuadro.obj");                     // retrato con marco tallado, 0.35 m, pivote: centro de la base
+    Model refresco((char*)"Models/refresco/refresco.obj");               // botella verde de refresco, 0.25 m
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
     Model arbolSelva((char*)"Models/arbol_selva/arbol_selva.obj");        // X-36: arbol de copa ancha (extra, no cuenta entre los 18 propios)
     Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
@@ -709,10 +716,11 @@ int main()
                 m.Draw(shader);
             };
             colocar(altar3, altarPos, -90.0f);
-            sobreAltar(marco,    glm::vec3( 0.00f, 1.20f, -0.30f));  // nivel superior (y = 1.20), al fondo
+            sobreAltar(cuadro,   glm::vec3( 0.00f, 1.20f, -0.25f));  // X-43: retrato tallado (Maya, de D1) en el nivel superior, como en el video de referencia
+            sobreAltar(marco,    glm::vec3(-0.12f, 0.40f,  0.36f));  // X-43: el marco propio (B-6) baja al nivel inferior (el nivel medio queda tapado por el superior en z < -0.05)
             sobreAltar(vela,     glm::vec3(-0.35f, 1.20f, -0.25f));
             sobreAltar(vela,     glm::vec3( 0.35f, 1.20f, -0.25f));
-            sobreAltar(botella,  glm::vec3(-0.40f, 0.80f,  0.05f));  // nivel medio (y = 0.80)
+            sobreAltar(refresco, glm::vec3(-0.40f, 0.80f,  0.05f));  // X-43: botella de refresco (Maya, de D1) en el nivel medio (y = 0.80); la botella propia (B-5) sigue en los miradores
             sobreAltar(copalero, glm::vec3( 0.40f, 0.80f,  0.05f));
             // C-2: llamas de las 2 velas del altar (la vela mide 0.15 m; la llama nace en su punta). Sin luz, forma por ruido de Perlin
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
@@ -739,6 +747,17 @@ int main()
             sobreAltar(flor,     glm::vec3( 0.27f, 0.461f, 0.34f));
             sobreAltar(flor,     glm::vec3( 0.63f, 0.461f, 0.34f));
         }
+        // X-43: papel picado en los muros del cuarto (alto del borde superior y = 2.40; 1.5 cm dentro del muro) y 4 macetas con cempasuchil
+        // (2 flanquean el altar, 2 en el muro izquierdo). Giro Y: +90 mira a +x, -90 mira a -x, 0 mira a +z.
+        glUniform1f(specLoc, 0.1f);
+        colocar(papelFucsia, glm::vec3(-1.811f, 2.40f,  0.00f),  90.0f);  // muro izquierdo
+        colocar(papelMorado, glm::vec3( 1.811f, 2.40f,  0.00f), -90.0f);  // muro derecho, sobre el altar (que llega a y = 1.45)
+        for (int i = 0; i < 3; i++)
+            colocar(papelNaranja, glm::vec3(-1.15f + 1.15f * i, 2.40f, -1.202f), 0.0f);  // muro del fondo
+        colocar(mazeta, glm::vec3( 1.55f, 0.02f,  0.98f), 0.0f);
+        colocar(mazeta, glm::vec3( 1.55f, 0.02f, -0.98f), 90.0f);
+        colocar(mazeta, glm::vec3(-1.62f, 0.02f,  0.92f), 40.0f);
+        colocar(mazeta, glm::vec3(-1.62f, 0.02f, -0.92f), 130.0f);
         // Panteon provisional afuera, entre la fachada y la orilla (z = +24); la ruta central x ~ 0 queda libre
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);  // X-23: relieve de piedra en cruz, tumbas y barda
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
@@ -1578,6 +1597,7 @@ int main()
     cempasuchil.cleanup();  // B-3
     panMuerto.cleanup();    // B-4
     papelPicado.cleanup();  // B-7
+    papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup();  // X-43
     llamaModelo.cleanup();  // C-2
     arco.cleanup();         // faltaban en E-1a (A-10, A-11)
     techo.cleanup();
