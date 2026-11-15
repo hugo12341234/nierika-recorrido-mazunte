@@ -25,8 +25,8 @@ namespace Extras
         {  8.0f, 19.5f, 180.0f, 2, 0.0f }, {  8.7f, 19.5f, 180.0f, 3, 1.1f },     // junto al petate 1
         { 11.0f, 18.7f, 180.0f, 3, 2.0f }, { 11.8f, 18.8f, 175.0f, 2, 0.4f },     // junto al petate 2
         { 14.0f, 19.7f, 180.0f, 2, 3.1f }, { 14.7f, 19.6f, 185.0f, 3, 4.2f },     // junto al petate 3
-        {  7.2f, 17.6f, 180.0f, 0, 0.7f }, { 10.0f, 17.0f, 175.0f, 1, 1.9f },     // de pie, detras de los que rezan
-        { 12.8f, 17.4f, 185.0f, 0, 2.6f }, { 15.5f, 18.0f, 180.0f, 1, 3.8f },
+        { 32.9f,  7.0f,  90.0f, 0, 0.7f }, { 30.7f,  8.9f,  -9.0f, 1, 1.9f },     // X-42: de pie, alrededor de la fogata este (31, 7)
+        { 29.2f,  6.4f, -108.0f, 0, 2.6f }, { 31.9f,  5.4f, 151.0f, 1, 3.8f },
         {  5.0f, 20.8f, 150.0f, 1, 5.0f }, { 17.2f, 20.9f, 210.0f, 0, 0.3f }      // mirando el mar
     };
     // Petates con ofrenda (centro x, z y giro)
@@ -97,8 +97,8 @@ namespace Extras
     constexpr int N_FIGURAS_N = 24;
     inline const FiguraN FIGURAS_N[N_FIGURAS_N] = {
         // E1 llegada: una familia que mira el mar y una abuela que deja velas en la orilla
-        { -7.0f, 21.6f, 175.0f, 0, 0.2f, 1.00f, 0 }, { -6.2f, 21.7f, 185.0f, 1, 1.4f, 1.00f, 0 }, { -6.6f, 21.2f, 180.0f, 0, 2.6f, 0.62f, 0 },
-        { -5.6f, 21.4f, 178.0f, 1, 3.3f, 0.58f, 0 }, { -9.4f, 21.8f, 180.0f, 3, 0.9f, 0.95f, 0 },
+        { -7.0f, 21.6f, 175.0f, 0, 0.2f, 1.00f, 0 }, { -6.2f, 21.7f, 185.0f, 1, 1.4f, 1.00f, 0 }, { -29.2f, 8.6f, 72.0f, 0, 2.6f, 0.62f, 0 },
+        { -32.6f, 8.9f, -61.0f, 1, 3.3f, 0.58f, 0 }, { -31.0f, 6.1f, 180.0f, 3, 0.9f, 0.95f, 0 },   // X-42: estos 3 pasan al campamento oeste (fogata en (-31, 8))
         // E2: musico con guitarra y un nino junto a la ceremonia
         {  2.7f, 19.0f, 270.0f, 0, 1.0f, 1.00f, 1 }, {  3.7f, 19.8f, 265.0f, 1, 2.2f, 0.60f, 0 },
         // E3 sendero: una familia que camina hacia el panteon (a >= 1.3 m del eje x = 0 de la caminata)
@@ -121,10 +121,10 @@ namespace Extras
     // Faroles (poste con linterna; la luz es una esfera emisiva que parpadea): x, z
     constexpr int N_FAROLES = 16;
     inline const Cesta FAROLES[N_FAROLES] = {
-        { -3.2f, 22.3f }, { -11.0f, 21.8f }, { 4.4f, 21.8f }, { 18.8f, 21.4f },                      // E1, E2
+        { -3.2f, 22.3f }, { -26.0f, 6.0f }, { 26.0f, 5.0f }, { 18.8f, 21.4f },                      // E1, E2
         { -2.2f, 19.4f }, { 2.2f, 17.2f }, { -2.2f, 14.6f }, { 2.2f, 13.0f },                        // E3 sendero
         { -6.2f, 11.2f }, { 6.2f, 11.2f }, { -6.2f, 4.3f }, { 6.2f, 4.3f },                          // E4 esquinas del panteon
-        { -1.8f, 2.0f }, { 1.8f, 2.0f }, { -9.0f, 18.0f }, { 9.0f, 14.0f }                           // E5 puerta, y dos en la playa
+        { -1.8f, 2.0f }, { 1.8f, 2.0f }, { -18.0f, 13.0f }, { 18.0f, 9.0f }                           // E5 puerta, y dos en la playa
     };
     // Camino de cempasuchil de la orilla a la puerta: el eje serpentea x(z) = 0.9*sen(0.35*z) y cada paso de 0.28 m deja una flor
     // con dispersion deterministica de +-0.45 m. Las flores no se dibujan sobre los muros de la barda.
@@ -181,22 +181,22 @@ namespace Extras
     inline const Obj REDES[N_REDES] = { { -33.5f, 18.5f, 0.0f, 1.3f }, { -27.0f, 17.0f, 0.0f, 1.3f }, { 32.0f, 18.0f, 0.0f, 1.3f } };
     // FUERA DEL ALCANCE ORIGINAL: palapas (techo de palma, abiertas) y casas costeras (tipo 0 = pared turquesa, 1 = pared ocre)
     constexpr int N_PALAPAS = 5;
-    inline const Obj PALAPAS[N_PALAPAS] = { { -30.0f, 13.5f, 0.0f, 1.0f }, { -38.0f, 9.0f, 20.0f, 1.0f }, { 29.0f, 13.0f, 0.0f, 1.0f }, { 37.0f, 17.5f, 340.0f, 1.0f }, { -27.0f, 3.0f, 0.0f, 1.0f } };
+    inline const Obj PALAPAS[N_PALAPAS] = { { -31.0f, 14.5f, 0.0f, 1.0f }, { -39.0f, 1.5f, 20.0f, 1.0f }, { 31.0f, 13.0f, 0.0f, 1.0f }, { 38.0f, 0.5f, 340.0f, 1.0f }, { -23.0f, -3.5f, 0.0f, 1.0f } };
     struct Casa { float x, z, giro; int tipo; };
     constexpr int N_CASAS = 6;
     inline const Casa CASAS[N_CASAS] = { { -45.0f, 8.0f, 270.0f, 0 }, { -45.0f, -2.0f, 270.0f, 1 }, { -45.0f, -12.0f, 270.0f, 0 },
                                          {  45.0f, 6.0f, 90.0f, 1 }, {  45.0f, -4.0f, 90.0f, 0 }, {  45.0f, -14.0f, 90.0f, 1 } };
     // Fogatas sin humo (la llama es el shader de las velas), hamacas entre postes, palmas extra en los lados
     constexpr int N_FOGATAS = 2;
-    inline const Obj FOGATAS[N_FOGATAS] = { { -27.0f, 19.5f, 0.0f, 1.0f }, { 27.0f, 19.5f, 0.0f, 1.0f } };
+    inline const Obj FOGATAS[N_FOGATAS] = { { -31.0f, 8.0f, 0.0f, 1.0f }, { 31.0f, 7.0f, 0.0f, 1.0f } };
     constexpr int N_HAMACAS = 2;
-    inline const Obj HAMACAS[N_HAMACAS] = { { -24.5f, 10.5f, 0.0f, 1.0f }, { 23.5f, 9.5f, 0.0f, 1.0f } };
+    inline const Obj HAMACAS[N_HAMACAS] = { { -36.0f, 12.0f, 0.0f, 1.0f }, { 38.0f, 13.5f, 0.0f, 1.0f } };
     constexpr int N_PALMAS_LADOS = 16;
     inline const Obj PALMAS_LADOS[N_PALMAS_LADOS] = {
         { -22.0f, 8.0f, 30.0f, 1.0f }, { -24.0f, 16.0f, 100.0f, 1.2f }, { -28.0f, 6.0f, 200.0f, 0.9f }, { -35.0f, 15.0f, 280.0f, 1.1f }, { -41.0f, 18.0f, 60.0f, 1.0f },
         { -43.0f, 12.0f, 140.0f, 1.3f }, { -33.0f, 3.0f, 10.0f, 1.0f }, { -47.0f, 16.0f, 220.0f, 1.1f },
-        {  22.0f, 10.0f, 300.0f, 1.0f }, {  25.0f, 17.0f, 120.0f, 1.2f }, {  31.0f, 7.0f, 20.0f, 0.9f }, {  34.0f, 19.0f, 180.0f, 1.1f }, {  41.0f, 14.0f, 260.0f, 1.0f },
-        {  43.0f, 9.0f, 90.0f, 1.3f }, {  38.0f, 3.0f, 340.0f, 1.0f }, {  46.0f, 18.0f, 50.0f, 1.1f }
+        {  22.0f, 10.0f, 300.0f, 1.0f }, {  25.0f, 17.0f, 120.0f, 1.2f }, {  27.0f, 11.5f, 20.0f, 0.9f }, {  34.0f, 19.0f, 180.0f, 1.1f }, {  41.0f, 14.0f, 260.0f, 1.0f },
+        {  43.0f, 9.0f, 90.0f, 1.3f }, {  34.0f, -3.0f, 340.0f, 1.0f }, {  46.0f, 18.0f, 50.0f, 1.1f }
     };
 
     // Aves (pelicanos y fragatas, simplificadas): vuelan en circulos y baten las alas: theta = 25 grados * sen(2*pi*0.9*t + fase)
@@ -241,16 +241,18 @@ namespace Extras
     // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. Sin musica propia (D-6c, 14/11: se quito Audio/banda.wav); no hay musicos ni grabaciones reales.
     // X-40 (15/11): BANDA DE VIENTO OAXAQUENA de 9 musicos (reemplaza a los 5 mudos de X-29). Cada uno es un modelo propio de Blender
     // (musico_* con los brazos en la pose del instrumento + banda_* modelado en las mismas coordenadas locales, tools/x40_banda.py).
-    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos. Miran al sendero (+x, giro 270) en abanico de 5 grados por metro.
+    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos.
+    // X-42 (15/11): la banda se mudo de la orilla (-12, 18) al ala este de la playa, en (14, 8): a 16 m de la orilla (z = 24), detras del tendedero y de cara al nucleo
+    // ceremonial y a la orilla (+z, giro 180), con espacio libre alrededor. Dos filas de 5 y 4 musicos; cada uno va a (dx, dz) del centro y gira 5 grados por metro
+    // hacia el centro del grupo (abanico). Solo hay que cambiar BANDA_X y BANDA_Z para mover todo (musicos, colisiones y sonido).
     struct Musico { float x, z, giro; int inst; float fase; };
     constexpr int N_BANDA = 9, N_INST_BANDA = 8;
-    constexpr float BANDA_X = -12.0f, BANDA_Z = 18.0f;      // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    constexpr float BANDA_X = 14.0f, BANDA_Z = 8.0f;        // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    // dx: posicion a lo ancho de la fila; dz: +1.0 fila de adelante (maderas y metales), -0.9 fila de atras (tuba y percusion)
+    inline Musico MusicoBanda(float dx, float dz, int inst, float fase) { return { BANDA_X + dx, BANDA_Z + dz, 180.0f - 5.0f * dx, inst, fase }; }
     inline const Musico BANDA[N_BANDA] = {
-        { -11.0f, 15.8f, 270.0f + 5.0f * (15.8f - 18.0f), 1, 0.0f }, { -11.0f, 16.9f, 270.0f + 5.0f * (16.9f - 18.0f), 2, 1.1f },     // fila de adelante: maderas y metales
-        { -11.0f, 18.0f, 270.0f, 0, 2.2f },                          { -11.0f, 19.1f, 270.0f + 5.0f * (19.1f - 18.0f), 0, 3.3f },
-        { -11.0f, 20.2f, 270.0f + 5.0f * (20.2f - 18.0f), 3, 4.4f },
-        { -12.9f, 16.4f, 270.0f + 5.0f * (16.4f - 18.0f), 4, 5.5f }, { -12.9f, 17.5f, 270.0f + 5.0f * (17.5f - 18.0f), 5, 0.6f },     // fila de atras: tuba y percusion
-        { -12.9f, 18.7f, 270.0f + 5.0f * (18.7f - 18.0f), 6, 1.7f }, { -12.9f, 19.9f, 270.0f + 5.0f * (19.9f - 18.0f), 7, 2.8f } };
+        MusicoBanda(-2.2f,  1.0f, 1, 0.0f), MusicoBanda(-1.1f,  1.0f, 2, 1.1f), MusicoBanda(0.0f,  1.0f, 0, 2.2f), MusicoBanda(1.1f,  1.0f, 0, 3.3f), MusicoBanda(2.2f,  1.0f, 3, 4.4f),
+        MusicoBanda(-1.6f, -0.9f, 4, 5.5f), MusicoBanda(-0.5f, -0.9f, 5, 0.6f), MusicoBanda(0.7f, -0.9f, 6, 1.7f), MusicoBanda(1.9f, -0.9f, 7, 2.8f) };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
     // Comparsa: 12 figuras (2 columnas) que marchan por la orilla; x(t) = -48 + ((v t + s_i) mod 96); paso: y = 0.05 |sen(2 pi f t)|, balanceo +-3 grados
     constexpr int N_COMPARSA = 12;
@@ -265,7 +267,7 @@ namespace Extras
     // Alfombras de PETALOS DE CEMPASUCHIL (relieve de flores de color y hojas; NO son arena de colores): centro x, z; ancho, largo; tipo 0 rect, 1 cruz
     struct Alfombra { float x, z, ancho, largo; int tipo; };
     constexpr int N_ALFOMBRAS = 3;
-    inline const Alfombra ALFOMBRAS[N_ALFOMBRAS] = { { 0.0f, 7.6f, 4.0f, 4.0f, 1 }, { -10.0f, 22.0f, 7.0f, 1.6f, 0 }, { 0.0f, 22.2f, 5.0f, 1.8f, 0 } };
+    inline const Alfombra ALFOMBRAS[N_ALFOMBRAS] = { { 0.0f, 7.6f, 4.0f, 4.0f, 1 }, { -21.0f, 6.0f, 7.0f, 1.6f, 0 }, { 0.0f, 22.2f, 5.0f, 1.8f, 0 } };
 }
 
 #endif
