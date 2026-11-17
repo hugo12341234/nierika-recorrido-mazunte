@@ -13,6 +13,10 @@ REQUISITOS
    "Microsoft Visual C++ Redistributable" x64 (gratis, de Microsoft) y vuelve a abrir.
  - El sonido es opcional: sin tarjeta de sonido el programa sigue sin audio.
 
+AL ABRIR
+ Aparece el menú de inicio (Iniciar recorrido, Controles, Créditos, Salir) sobre la escena. Haz clic o usa
+ flechas/Enter. El recorrido, la silueta y el sonido empiezan al elegir «Iniciar recorrido». Esc sale del menú de inicio.
+
 CONTROLES
  W A S D o flechas ... caminar
  Ratón ................ mirar alrededor
@@ -20,7 +24,7 @@ CONTROLES
  M .................... sonido: mar y música / solo mar / solo música / silencio
  F1 ................... muestra u oculta la ayuda de controles
  R .................... reinicia a la silueta (caminata y flor)
- Esc .................. salir
+ Esc .................. pausa (menú: continuar, controles, créditos, salir)
 
 QUÉ VERÁS
  La playa con olas, velas y flores flotando; el panteón con sus tumbas, cruz,

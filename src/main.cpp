@@ -20,6 +20,7 @@
 #include "Audio.h"
 #include "Fichas.h"
 #include "Hud.h"       // X-60: aviso y ayuda de controles
+#include "Menu.h"      // X-63: menu de inicio y pausa
 #include "AnimFlores.h"  // C-4
 #include "AnimVelas.h"    // C-3: velas flotando (Bezier + vaiven senoidal)
 #include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
@@ -57,6 +58,8 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 // Function prototypes
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);   // X-63: solo reenvia el clic al menu
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);          // X-63: rueda para Creditos
 void DoMovement();
 
 // Camera
@@ -94,6 +97,18 @@ const float ALTAR_VELAS_RADIO = 3.0f;
 int mezclaSonido = 0;                             // M: 0 = mar y musica, 1 = solo mar, 2 = solo musica, 3 = silencio
 HudEstado hud;                                    // aviso breve (arriba) y ayuda de controles (F1)
 Audio* audioPtr = nullptr;                        // para que KeyCallback cambie la mezcla
+
+// X-63: menu de inicio (Iniciar, Controles, Creditos, Salir) y pausa (Esc en el recorrido). Mientras esta abierto: la camara no se mueve con teclas ni
+// raton, la silueta no avanza y no se dibujan fichas. Al iniciar la primera vez arrancan la silueta, el audio y la camara, igual que antes del menu.
+MenuEstado menu;
+bool iniciarPendiente = false;                    // el clic o la tecla piden "Iniciar"; main lo atiende al principio del siguiente cuadro
+// Fondo del menu de inicio: la camara da vueltas a un circulo (formula, sin KeyFrames): pos = C + R (cos a, 0, sen a), a = A0 + W t, y mira a OBJ
+const glm::vec3 ORBITA_CENTRO(0.0f, 3.2f, 12.0f);   // x, altura de los ojos, z del centro del circulo
+const glm::vec3 ORBITA_OBJETIVO(0.0f, 1.2f, 4.0f);  // punto al que mira
+const float ORBITA_RADIO = 9.0f;                    // metros
+const float ORBITA_W = 0.07f;                       // rad/s: una vuelta cada 2*pi/0.07 = 90 s
+const float ORBITA_A0 = 1.2f;                       // angulo inicial (rad)
+double tMenuInicio = 0.0;                           // Reloj() cuando se abrio el menu
 
 // Reflector de la cruz (T/G, Y/H, U/J mueven su posicion; 1-6 su direccion)
 glm::vec3 spotLightPos = DeCapillaVieja(glm::vec3(0.0f, 3.0f, 2.0f));
@@ -180,6 +195,8 @@ int main()
     // Set the required callback functions
     glfwSetKeyCallback(window, KeyCallback);
     glfwSetCursorPosCallback(window, MouseCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);   // X-63: clics del menu
+    glfwSetScrollCallback(window, ScrollCallback);
 
     // Camara en primera persona: oculta el cursor y lo mantiene dentro de la ventana (ESC cierra el programa)
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -508,8 +525,20 @@ int main()
     // Game loop
     // D-6: audio ambiental en bucle (si faltan los archivos de Audio/, avisa y sigue sin sonido)
     Audio audio;
-    audio.init();
-    audioPtr = &audio;   // X-60: M cambia la mezcla desde KeyCallback
+    // X-63: el audio arranca al elegir "Iniciar recorrido" (antes sonaba desde que abria la ventana). Las variables de desarrollo
+    // (capturas, video, UI de manual y NIERIKA_SIN_MENU) se saltan el menu y arrancan todo como antes.
+    const bool saltarMenu = std::getenv("NIERIKA_CAPTURAS") || std::getenv("NIERIKA_VIDEO") || std::getenv("NIERIKA_SIN_MENU") ||
+                            (std::getenv("NIERIKA_UI") && (std::string(std::getenv("NIERIKA_UI")).find("ayuda") != std::string::npos ||
+                                                           std::string(std::getenv("NIERIKA_UI")).find("velas_apagadas") != std::string::npos));
+    const glm::vec3 posInicial = camera.GetPosition();   // la camara vuelve aqui al iniciar (el fondo del menu la mueve)
+    const glm::vec3 frenteInicial = camera.GetFront();
+    const float yawInicial = glm::degrees(std::atan2(frenteInicial.z, frenteInicial.x));
+    const float pitchInicial = glm::degrees(std::asin(glm::clamp(frenteInicial.y, -1.0f, 1.0f)));
+    if (saltarMenu)
+    {
+        audio.init();
+        audioPtr = &audio;   // X-60: M cambia la mezcla desde KeyCallback
+    }
 
     // D-5: la carga de modelos y texturas tarda segundos antes de este punto. Sin esto, el primer deltaTime los incluye
     // (lastFrame arranca en 0) y la silueta empezaria su caminata ya avanzada o terminada.
@@ -521,6 +550,20 @@ int main()
     {
         if (std::string(ui).find("ayuda") != std::string::npos) hud.ayuda = true;
         if (std::string(ui).find("velas_apagadas") != std::string::npos) { velasEncendidas = false; velasNivel = 0.0f; }
+    }
+    // X-63: abre el menu de inicio. Solo desarrollo: NIERIKA_UI="menu_controles" | "menu_creditos" | "menu_creditos_fin" | "menu_pausa" abre esa pagina,
+    // y NIERIKA_MENU_PNG="ruta.png" guarda una captura del menu a los 8 cuadros y cierra el programa (capturas del manual y del PR)
+    const char* menuPng = std::getenv("NIERIKA_MENU_PNG");
+    int cuadrosMenu = 0;
+    if (!saltarMenu)
+    {
+        const std::string ui = std::getenv("NIERIKA_UI") ? std::getenv("NIERIKA_UI") : "";
+        MenuPagina pag = MenuPagina::Principal;
+        if (ui.find("menu_controles") != std::string::npos) pag = MenuPagina::Controles;
+        if (ui.find("menu_creditos") != std::string::npos) pag = MenuPagina::Creditos;
+        if (ui.find("menu_creditos_fin") != std::string::npos) menu.irAlFinal = 1.0f;
+        MenuAbrir(window, menu, ui.find("menu_pausa") != std::string::npos, pag);
+        tMenuInicio = Reloj();
     }
     if (const char* cap = std::getenv("NIERIKA_CAPTURAS"))
     {
@@ -597,7 +640,32 @@ int main()
 
         // Check and call events
         glfwPollEvents();
-        DoMovement();
+        // X-63: "Iniciar recorrido": arranca todo como antes del menu (camara en su sitio de siempre, silueta desde t = 0, audio)
+        if (iniciarPendiente)
+        {
+            iniciarPendiente = false;
+            MenuCerrar(window, menu);
+            camera.SetPosition(posInicial);
+            camera.SetOrientacion(yawInicial, pitchInicial);
+            firstMouse = true;
+            audio.init();
+            audioPtr = &audio;
+            tSilueta = 0.0f;
+            for (int k = 0; k < 1024; k++) keys[k] = false;
+        }
+        if (menu.abierto)
+        {
+            // Fondo del menu de inicio: orbita circular simple. En la pausa la camara se queda donde estaba.
+            if (!menu.pausa)
+            {
+                const float a = ORBITA_A0 + ORBITA_W * (float)(Reloj() - tMenuInicio);
+                const glm::vec3 pos = ORBITA_CENTRO + glm::vec3(ORBITA_RADIO * std::cos(a), 0.0f, ORBITA_RADIO * std::sin(a));
+                const glm::vec3 dir = glm::normalize(ORBITA_OBJETIVO - pos);
+                camera.SetPosition(pos);
+                camera.SetOrientacion(glm::degrees(std::atan2(dir.z, dir.x)), glm::degrees(std::asin(dir.y)));
+            }
+        }
+        else DoMovement();
 
         // Clear the colorbuffer
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -1861,7 +1929,7 @@ int main()
         glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
-        tSilueta += deltaTime;
+        if (!menu.abierto) tSilueta += deltaTime;   // X-63: con el menu abierto la silueta espera (en el inicio, en la orilla; en la pausa, donde iba)
         silueta.Actualizar(tSilueta);
         glUniform1f(specLoc, 0.1f);
         for (size_t i = 0; i < modelosSilueta.size(); i++)
@@ -2040,7 +2108,23 @@ int main()
             hud.velasEncendidas = velasEncendidas;
             if (hud.avisoSeg > 0.0f) hud.avisoSeg -= deltaTime;
         }
-        FichasDibuja(camera.GetPosition(), hud);
+        if (menu.abierto)
+        {
+            // X-63: el menu usa el mismo contexto de ImGui; en su lugar no se dibujan fichas ni avisos
+            switch (MenuDibuja(menu, Reloj()))
+            {
+            case MenuAccion::Iniciar: iniciarPendiente = true; break;
+            case MenuAccion::Continuar: MenuCerrar(window, menu); firstMouse = true; break;
+            case MenuAccion::Salir: glfwSetWindowShouldClose(window, GL_TRUE); break;
+            default: break;
+            }
+            if (menuPng && ++cuadrosMenu == 8)
+            {
+                SOIL_save_screenshot(menuPng, SOIL_SAVE_TYPE_PNG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                glfwSetWindowShouldClose(window, GL_TRUE);
+            }
+        }
+        else FichasDibuja(camera.GetPosition(), hud);
 
         // Modo captura: espera 3 cuadros con la pose fija y guarda el cuadro actual (antes del swap)
         if (indiceCaptura < posesCaptura.size())
@@ -2163,9 +2247,26 @@ void DoMovement()
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+    // X-63: con el menu abierto, el teclado es del menu (Esc: volver, continuar o salir segun la pagina)
+    if (menu.abierto)
+    {
+        if (GLFW_PRESS == action || GLFW_REPEAT == action)
+        {
+            const MenuAccion a = MenuTecla(menu, key);
+            if (a == MenuAccion::Iniciar) iniciarPendiente = true;
+            else if (a == MenuAccion::Continuar) { MenuCerrar(window, menu); firstMouse = true; }
+            else if (a == MenuAccion::Salir) glfwSetWindowShouldClose(window, GL_TRUE);
+        }
+        if (key >= 0 && key < 1024 && action == GLFW_RELEASE) keys[key] = false;
+        return;
+    }
+
+    // X-63: Esc en el recorrido ya no cierra el programa: abre la pausa (el menu); alli Esc continua y "Salir" cierra
     if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
     {
-        glfwSetWindowShouldClose(window, GL_TRUE);
+        MenuAbrir(window, menu, true);
+        for (int k = 0; k < 1024; k++) keys[k] = false;   // que ninguna tecla de caminar quede pegada
+        return;
     }
 
     if (key >= 0 && key < 1024)
@@ -2212,8 +2313,25 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         tSilueta = 0.0f;
 }
 
+// X-63: clic y rueda solo cuentan con el menu abierto (la camara no los usa)
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (menu.abierto) MenuRatonBoton(window, button, action, mods);
+}
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    if (menu.abierto) MenuRueda(window, xoffset, yoffset);
+}
+
 void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 {
+    if (menu.abierto)   // X-63: el raton es del menu; al volver, el primer movimiento no da salto de camara
+    {
+        MenuRatonPos(window, xPos, yPos);
+        firstMouse = true;
+        return;
+    }
     if (firstMouse)
     {
         lastX = xPos;
