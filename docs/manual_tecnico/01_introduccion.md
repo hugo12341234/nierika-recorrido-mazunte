@@ -29,13 +29,13 @@ Construir un recorrido virtual 3D interactivo, en primera persona y en tiempo re
 | Modelos propios | ≥ 18 (definición: ESTADO §4, 19/10) | 🔄 los **23** `.obj` del inventario existen, cada uno con su `.blend` (calculado de los archivos, [§6](06_modelos_y_recursos.md)); 11 tienen ✅ en el ESTADO y 12 siguen 🔄 | `/verificar` o verlos compilados; **que cada `.blend` sea del equipo** no lo prueba el repo (el de la fachada se reconstruyó del `.obj`) |
 | Texturas | 1K (1024 px) | 🔄 casi todas 1024×1024; **excepción: `laminado1.jpg` (fachada y techo) mide 512×512**; 8 modelos siguen con textura provisional (tumbas 1–4, cruz, soportes, silueta y mar) de un solo color | Reemplazarlas o registrar la excepción en el ESTADO |
 | Iluminación | Interior distinguible sin perder el ambiente nocturno | ✅ A-8 (04/11), con las luces de D1 | — |
-| Animación | 5 (2 KeyFrames + 3 simples), ninguna copiada de las prácticas, con justificación matemática | 🔄 las 5 están en el código (olas, velas, flores, caminata y dejar flor) y las 5 tienen justificación ([§7](07_justificacion_matematica.md)) | Que D2 las compile y las vea; la comparación con las prácticas del curso (que no están en el repo) la revisa D2 |
+| Animación | 5 comprometidas (2 KeyFrames + 3 simples) y **5 más desde el 17/11** (3 KeyFrames + 2 simples; [§7](07_justificacion_matematica.md)), ninguna copiada de las prácticas, con justificación matemática | 🔄 las 5 están en el código (olas, velas, flores, caminata y dejar flor) y las 5 tienen justificación ([§7](07_justificacion_matematica.md)) | Que D2 las compile y las vea; la comparación con las prácticas del curso (que no están en el repo) la revisa D2 |
 | Interacción | 5 fichas a < 2 m con su fuente en APA 7 | 🔄 código listo (`Fichas.cpp`) y textos de C-7a «por verificar contra la fuente» | Compilar con ImGui en VS y verificar textos y referencias |
 | Recorrido | Cámara 1.ª persona con colisiones | ✅ A-9 (04/11); E-2 corrigió la barda (12/11) | Prueba de atascos en la PC de D2 |
 | Audio | Un ciclo: mar y música lejana | 🔄 dos pistas propias en `Audio/` (D-6) | **Nadie ha oído cómo suenan** |
 | Rendimiento | ≥ 30 FPS a 1280×720 en gráficos integrados | ❓ **no medido** (el contador de FPS existe en el título de la ventana desde E-1a) | D2 mide con el protocolo de [§8.2.1](08_pruebas_y_rendimiento.md) |
 
-**KeyFrames solo** en la caminata de la silueta y en «dejar flores»: velas, fuego, papel picado y humo no cuentan. ✅ **[repo]**
+KeyFrames: caminata de la silueta, «dejar flores» y, **desde el 17/11** (decisión de D2, ESTADO §4 X-55), el baile familiar, el juego con el perro y el sahumerio. Velas, fuego, papel picado y humo no cuentan. ✅ **[repo]**
 
 ## 1.5 Organización del trabajo
 

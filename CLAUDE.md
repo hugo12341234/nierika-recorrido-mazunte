@@ -73,7 +73,7 @@ Prohibido: OpenGL legacy (`glBegin`, `glMatrixMode`…), nuevas librerías sin r
 
 ## 6. Restricciones del cliente (profesor)
 - Fuera de alcance: pueblo, Punta Cometa, tapete de arena, VR/web/móvil, multijugador, IA, **partículas de humo**.
-- KeyFrames **solo** en caminata de silueta y "dejar flores". Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
+- KeyFrames: caminata de silueta, "dejar flores" y, desde el 17/11 (decisión de D2, ESTADO §4 X-55), el baile familiar, el juego con el perro y el sahumerio. Velas, fuego, papel picado y humo **no** cuentan como KeyFrames. Hoy hay 10 animaciones (5 KeyFrames + 5 simples).
 - Ninguna animación copiada de las prácticas del curso; cada una con justificación matemática.
 - ≥ 18 modelos **propios**; los externos solo como secundarios y con crédito.
 - Fichas (Dear ImGui) a < 2 m, citando fuente APA 7. Rendimiento ≥ 30 FPS a 1280×720 en gráficos integrados.

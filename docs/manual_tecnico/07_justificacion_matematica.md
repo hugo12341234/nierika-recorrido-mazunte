@@ -1,8 +1,9 @@
-# 7. Justificación matemática de las 5 animaciones
+# 7. Justificación matemática de las animaciones (5 comprometidas + 5 agregadas el 17/11)
 
 > **Estado (12/11/2026):** las 5 animaciones tienen código y justificación con **los valores del código** y su `archivo:línea`. La deducción completa vive en dos documentos que forman parte de este manual:
 > - [`justificacion_simples.md`](justificacion_simples.md) — olas, velas, llama y flores (C-8, 11/11).
 > - [`justificacion_complejas.md`](justificacion_complejas.md) — slerp, smoothstep, jerarquía y Bézier (D-3, D-7, 12/11; 23 comprobaciones numéricas con `tools/d7_pruebas_matematicas.cpp`).
+> - [`justificacion_personas.md`](justificacion_personas.md) — **las 5 animaciones nuevas (17/11, X-55)**: baile familiar, juego con el perro y sahumerio (KeyFrames), banda al compás y anfitriona (simples); 23 comprobaciones con `tools/x55_pruebas.cpp`.
 >
 > **Lo que NO está comprobado:** que ninguna animación se vea bien con MSVC y el modelo real (nadie lo ha compilado desde el cambio) y la comparación «no es del curso», porque **las prácticas no están en el repositorio**: la revisa D2. El documento de simples conserva el encabezado de borrador del 11/11 (dice «sin compilar»); sigue siendo cierto.
 
@@ -15,6 +16,8 @@
 | 3 | Olas | Simple | *Vertex shader*: y = −0.2 + Σ A·sen(k·(d·x) − ωt + φ), ω = √(9.81·k); normal analítica | 3 ondas: A 0.040 / 0.025 / 0.015 m · λ 12 / 7 / 4.5 m · θ 0° / 25° / −30° · φ 0 / 1.7 / 4.1 rad; altura entre −0.28 y −0.12 m | C-1 |
 | 4 | Velas flotando | Simple | **Bézier cuadrática** mar adentro + oscilación senoidal vertical con desfase por vela; llama: ruido de Perlin 2D en el *fragment shader* | 4 velas: P0 (x0, 25), P1 (x0 ± 8, 40), P2 (x0 ± 3, 60), x0 = −2.5, 0.5, 2.5, 5.0; T 100–130 s; vaivén 0.012 m con periodo 2.4 s; llama: 3 octavas, ruido sube a 2 unidades/s | C-3, C-2 |
 | 5 | Flores de cempasúchil flotando | Simple | Movimiento circular de radio pequeño + rotación continua; velocidad variable con pausas | radio 0.45–0.75 m, ciclo de movimiento 4–5.5 s + pausa 1.5–3 s, giro 0.6–1.0 rad/s, altura = ola de C-1 + 0.02 m | C-4 |
+
+**Animaciones 6 a 10 (X-55, 17/11):** baile familiar, juego con el perro y sahumerio por KeyFrames (`Pista` + `Slerp` de la silueta, personas articuladas); banda al compás y anfitriona con senos. Detalle, valores y pruebas: [`justificacion_personas.md`](justificacion_personas.md). Reloj: `Reloj()` (no acumulan `deltaTime`).
 
 Las animaciones simples dependen del tiempo absoluto (`glfwGetTime()`), no acumulan `deltaTime`; las dos de KeyFrames comparten un solo reloj `tSilueta` (D-5). ✅ **[repo, justificaciones §0 y §4]**
 

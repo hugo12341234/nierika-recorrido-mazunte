@@ -35,6 +35,7 @@
 #include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
 #include "PlazaTrasera.h"  // X-52: plaza detras de la capilla
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
+#include "PersonasAnim.h"  // X-55: 5 animaciones nuevas de personas y perro (3 KeyFrames + 2 simples)
 
 // GLM Mathematics
 #include <glm/glm.hpp>
@@ -230,6 +231,11 @@ int main()
     Model personaPieB((char*)"Models/persona_pie_b/persona_pie_b.obj");
     Model personaAgachadaA((char*)"Models/persona_agachada_a/persona_agachada_a.obj");
     Model personaAgachadaB((char*)"Models/persona_agachada_b/persona_agachada_b.obj");
+    // X-55: persona articulada (una pieza por articulacion), perro y pelota; todos modelos propios (tools/x55_personas_articuladas.py)
+    Model personaArt[5] = { Model((char*)"Models/persona_art/torso.obj"), Model((char*)"Models/persona_art/brazo.obj"), Model((char*)"Models/persona_art/antebrazo.obj"),
+                            Model((char*)"Models/persona_art/muslo.obj"), Model((char*)"Models/persona_art/pierna.obj") };   // 0 torso, 1 brazo, 2 antebrazo, 3 muslo, 4 pierna
+    Model perroM[4] = { Model((char*)"Models/perro/cuerpo.obj"), Model((char*)"Models/perro/cabeza.obj"), Model((char*)"Models/perro/cola.obj"), Model((char*)"Models/perro/pata.obj") };
+    Model pelotaM((char*)"Models/pelota/pelota.obj");
     Model petate((char*)"Models/petate/petate.obj");
     Model rocaMar((char*)"Models/roca_mar/roca_mar.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model lancha((char*)"Models/lancha/lancha.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
@@ -289,6 +295,11 @@ int main()
     Model altarPiramide((char*)"Models/altar_piramide/altar_piramide.obj"); // X-52: altar de 5 niveles con dosel, centro de la plaza trasera
     Model racimoCemp((char*)"Models/racimo_cempasuchil/racimo_cempasuchil.obj"); // X-36: 7 flores juntas (1 llamada de dibujo)
     Model senderoTierra((char*)"Models/sendero/sendero.obj");             // X-36: caminos de tierra sobre las colinas (en coordenadas del mundo)
+    // X-55: las 5 animaciones nuevas de personas (3 KeyFrames + 2 simples); posiciones en pers::SITIOS (src/PersonasAnim.h)
+    pers::BaileFamiliar baileFamiliar;
+    pers::JuegoPerro juegoPerro;
+    pers::Sahumerio sahumerio;
+    pers::Anfitriona anfitriona(pers::SITIOS[pers::SITIO_ANFITRIONA].giro);
     Atuendos atuendos;                                                    // X-35: telas y prendas (falda, rebozo, sombrero) de las personas
     const std::vector<VidaColinas::Fuente> fuentesLuz = VidaColinas::Fuentes();   // X-34: fogatas y faroles que pueden iluminar al visitante
 
@@ -354,6 +365,12 @@ int main()
             const float px = Extras::TENDEDEROS[t].x0 + Extras::ANCHO_BASTIDOR * k, pz = Extras::TENDEDEROS[t].z;
             colisiones.agregar({ glm::vec3(px - 0.05f, 0.0f, pz - 0.05f), glm::vec3(px + 0.05f, 2.0f, pz + 0.05f) });
         }
+    // X-55: cajas de colision de las personas animadas (el baile ocupa un circulo de radio 1.5 m; el perro corre por el borde: no estorba)
+    for (int i = 0; i < pers::N_SITIOS; i++)
+    {
+        const pers::Sitio& st = pers::SITIOS[i];
+        colisiones.agregar({ glm::vec3(st.x - st.radio, 0.0f, st.z - st.radio), glm::vec3(st.x + st.radio, 1.8f, st.z + st.radio) });
+    }
     // X-25..X-28: bandera de lo que esta FUERA DEL ALCANCE ORIGINAL (casas y palapas). Constante Extras::MOSTRAR_FUERA_DE_ALCANCE o NIERIKA_SIN_FUERA_ALCANCE=1
     const bool fueraAlcance = Extras::MOSTRAR_FUERA_DE_ALCANCE && !std::getenv("NIERIKA_SIN_FUERA_ALCANCE");
     if (fueraAlcance)
@@ -1358,7 +1375,11 @@ int main()
                     const Extras::Musico& mu = Extras::BANDA[i];
                     glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(mu.x, Colisiones::alturaSuelo(mu.z), mu.z));
                     mm = glm::rotate(mm, glm::radians(mu.giro), glm::vec3(0.0f, 1.0f, 0.0f));
-                    mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 60.0f / Extras::BPM_BANDA * 2.0f, mu.fase, 2.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
+                    // X-55 (animacion simple 4): rebote, giro lateral e inclinacion al compas, por seccion (PersonasAnim.h, BandaAlCompas)
+                    const pers::MovBanda mb = pers::BandaAlCompas(mu.inst, tl, mu.fase, Extras::BPM_BANDA);
+                    mm = glm::translate(mm, glm::vec3(0.0f, mb.dy, 0.0f));
+                    mm = glm::rotate(mm, glm::radians(mb.rollGrados), glm::vec3(0.0f, 0.0f, 1.0f));
+                    mm = glm::rotate(mm, glm::radians(mb.pitchGrados), glm::vec3(1.0f, 0.0f, 0.0f));
                     atuendos.dibujar(shader, *poseMusico[mu.inst], false, 600 + i, mm, false, 14);   // X-35 + X-40: uniforme, sin talla
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                     glUniform1f(specLoc, 0.40f);   // metales y parches: brillo mayor que el de la ropa
@@ -1759,6 +1780,67 @@ int main()
             cempasuchil.Draw(shader);
         }
 
+        // ===== X-55 (17/11): 5 ANIMACIONES NUEVAS DE PERSONAS =====
+        //  1 BaileFamiliar, 2 JuegoPerro (nino + perro + pelota), 3 Sahumerio: KeyFrames (Pista + slerp, PersonasAnim.cpp).  4 banda al compas (arriba) y 5 Anfitriona: senos.
+        //  Cada persona es una jerarquia de piezas (Models/persona_art), vestida por Atuendos::dibujarPartes. NIERIKA_T_PERS=<s> fija el reloj (solo capturas).
+        {
+            float tP = (float)Reloj();
+            if (const char* e = std::getenv("NIERIKA_T_PERS")) tP = (float)std::atof(e);
+            const glm::vec3 camP = camera.GetPosition();
+            auto sitioM = [&](int i, bool conGiro)
+            {
+                const pers::Sitio& st = pers::SITIOS[i];
+                glm::mat4 m = glm::translate(glm::mat4(1.0f), glm::vec3(st.x, Colisiones::alturaTerreno(st.x, st.z), st.z));
+                return conGiro ? glm::rotate(m, glm::radians(st.giro), glm::vec3(0.0f, 1.0f, 0.0f)) : m;
+            };
+            auto cercaP = [&](int i) { const pers::Sitio& st = pers::SITIOS[i]; const float dx = st.x - camP.x, dz = st.z - camP.z; return dx * dx + dz * dz < 55.0f * 55.0f; };
+            Model* partes[pers::N_ART] = { nullptr, &personaArt[0], &personaArt[1], &personaArt[2], &personaArt[1], &personaArt[2], &personaArt[3], &personaArt[4], &personaArt[3], &personaArt[4] };
+            auto dibujarArt = [&](const pers::Persona& p, const glm::mat4& grupo, int semilla, int estilo)
+            {
+                glm::mat4 mundos[pers::N_ART];
+                for (int i = 0; i < pers::N_ART; i++) mundos[i] = grupo * p.mundo[i];
+                atuendos.dibujarPartes(shader, partes, mundos, pers::N_ART, pers::TORSO, semilla, estilo);
+            };
+            auto ponerM = [&](Model& m, const glm::mat4& mm) { glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm)); m.Draw(shader); };
+            glUniform1f(specLoc, 0.05f);
+            if (cercaP(pers::SITIO_BAILE))
+            {
+                baileFamiliar.Actualizar(tP);
+                const glm::mat4 g = sitioM(pers::SITIO_BAILE, true);
+                dibujarArt(baileFamiliar.persona[0], g, 701, 9);    // papa: camisa y sombrero de palma
+                dibujarArt(baileFamiliar.persona[1], g, 702, 1);    // mama: huipil, falda de olanes y rebozo
+                dibujarArt(baileFamiliar.persona[2], g, 703, 0);    // nina: huipil y falda
+            }
+            if (cercaP(pers::SITIO_PERRO))
+            {
+                juegoPerro.Actualizar(tP);
+                const glm::mat4 g = sitioM(pers::SITIO_PERRO, true);
+                dibujarArt(juegoPerro.nino, g, 711, 11);
+                const pers::Perro& d = juegoPerro.perro;
+                glUniform1f(specLoc, 0.08f);
+                ponerM(perroM[0], g * d.mCuerpo);  ponerM(perroM[1], g * d.mCabeza);  ponerM(perroM[2], g * d.mCola);
+                for (int i = 0; i < 4; i++) ponerM(perroM[3], g * d.mPata[i]);
+                glUniform1f(specLoc, 0.35f);
+                ponerM(pelotaM, g * glm::translate(glm::mat4(1.0f), juegoPerro.pelota));
+                glUniform1f(specLoc, 0.05f);
+            }
+            if (cercaP(pers::SITIO_SAHUMERIO))
+            {
+                sahumerio.Actualizar(tP);
+                const glm::mat4 g = sitioM(pers::SITIO_SAHUMERIO, true);
+                dibujarArt(sahumerio.persona, g, 721, 1);
+                glUniform1f(specLoc, 0.4f);
+                ponerM(copalero, g * sahumerio.copalero);
+                glUniform1f(specLoc, 0.05f);
+            }
+            if (cercaP(pers::SITIO_ANFITRIONA))
+            {
+                const pers::Sitio& st = pers::SITIOS[pers::SITIO_ANFITRIONA];
+                anfitriona.Actualizar(tP, deltaTime, camP.x - st.x, camP.z - st.z);
+                dibujarArt(anfitriona.persona, sitioM(pers::SITIO_ANFITRIONA, false), 731, 6);
+            }
+        }
+
         // X-47: humo del copal (modelo `humo` de D1, sin particulas): una columna sobre cada copalero, semitransparente y sin escribir profundidad.
         // Va al final, despues de lo opaco. La textura es opaca: la transparencia es el uniforme humoAlfa (NIERIKA_HUMO_ALFA la cambia para pruebas).
         {
@@ -1905,6 +1987,9 @@ int main()
 
     musicoViento.cleanup(); musicoTrombon.cleanup(); musicoTuba.cleanup(); musicoPercusion.cleanup(); musicoPlatillos.cleanup();  // X-40
     for (int i = 0; i < Extras::N_INST_BANDA; i++) bandaInst[i].cleanup();
+    for (int i = 0; i < 5; i++) personaArt[i].cleanup();    // X-55
+    for (int i = 0; i < 4; i++) perroM[i].cleanup();
+    pelotaM.cleanup();
     audio.cleanup(); // D-6
     FichasCleanup();  // C-7b
 

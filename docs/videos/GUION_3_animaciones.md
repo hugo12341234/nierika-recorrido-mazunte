@@ -14,6 +14,7 @@
 | 5 | Dejar la flor | KeyFrames | **Bézier cuadrática** que coincide con una caída libre (0.38 m en 0.429 s) |
 
 > **Nota de conteo (inferido, confirmar):** el ESTADO (C-5/C-8) nombra la llama aparte (C-2), pero el CONTEXTO cuenta solo 3 simples (olas, velas y flores).
+> **Pendiente (17/11, X-55):** este guion **no** incluye las 5 animaciones nuevas (baile familiar, juego con el perro, sahumerio, banda al compás, anfitriona; ver `docs/manual_tecnico/justificacion_personas.md`). Hay que agregarlas y volver a grabar el video 3.
 > Este guion trata la llama como parte de las velas para que el video diga «5 animaciones». Si D2 prefiere otro conteo, se registra en el ESTADO y se ajusta el video.
 
 ## Tomas a grabar

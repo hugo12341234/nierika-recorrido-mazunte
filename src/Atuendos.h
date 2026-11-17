@@ -9,6 +9,7 @@
 #include <string>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
@@ -89,6 +90,34 @@ public:
         if (s.sombrero >= 0)
         {
             const glm::mat4 mh = agachada ? glm::translate(mt, glm::vec3(0.0f, -0.61f, -0.29f)) : mt;
+            glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mh));
+            sombreroM.DrawConTextura(shader, sombrero[s.sombrero]);
+        }
+    }
+
+
+    // X-55: dibuja una persona ARTICULADA (Models/persona_art: una pieza por articulacion). modelos[i] se dibuja con la matriz mundos[i] (nullptr = no se dibuja,
+    // p. ej. la raiz sin malla); las prendas (falda, rebozo, sombrero) siguen al torso. Los mundos ya incluyen la talla. No cambia ningun metodo anterior.
+    void dibujarPartes(Shader& shader, Model* const* modelos, const glm::mat4* mundos, int n, int idxTorso, int semilla, int estilo = -1)
+    {
+        // estilo >= 0: se busca la primera semilla vecina cuyo estilo de ropa sea ese, para conservar su falda, rebozo y sombrero (elegir() con
+        // estiloForzado los quita: es el uniforme de la banda). Salen en promedio ~14 pruebas: no pesa.
+        Seleccion s = elegir(semilla, false, -1);
+        for (int k = 1; estilo >= 0 && s.ropa != estilo && k < 4000; k++) s = elegir(semilla + 977 * k, false, -1);
+        const GLint loc = glGetUniformLocation(shader.Program, "model");
+        for (int i = 0; i < n; i++)
+        {
+            if (!modelos[i]) continue;
+            glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mundos[i]));
+            modelos[i]->DrawAtuendo(shader, ropa[s.ropa], piel[s.piel], pelo[s.pelo]);
+        }
+        const glm::mat4 mp = glm::translate(mundos[idxTorso], glm::vec3(0.0f, -0.90f, 0.0f));   // las prendas se modelaron con el origen en el piso (cadera a 0.90 m)
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mp));
+        if (s.falda >= 0)  faldaM.DrawConTextura(shader, falda[s.falda]);
+        if (s.rebozo >= 0) rebozoM.DrawConTextura(shader, rebozo[s.rebozo]);
+        if (s.sombrero >= 0)
+        {
+            const glm::mat4 mh = glm::translate(mp, glm::vec3(0.0f, 0.05f, 0.0f));               // la cabeza de persona_art es 0.07 m mas alta que la de persona_pie
             glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mh));
             sombreroM.DrawConTextura(shader, sombrero[s.sombrero]);
         }

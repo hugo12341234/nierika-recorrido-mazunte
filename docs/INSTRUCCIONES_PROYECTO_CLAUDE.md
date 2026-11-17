@@ -40,8 +40,8 @@ Lee siempre la versión del repo en `develop` (haz `git pull` antes de empezar).
 
 ## 4. Reglas del cliente (profesor) que nunca se rompen
 - Fuera de alcance: calles y edificios del pueblo, Punta Cometa, tapete de arena, versiones VR/web/móvil, multijugador, personajes con IA, **humo de copal con partículas** (el copalero se modela, pero sin humo).
-- **KeyFrames solo** en la caminata de la silueta y en "dejar flores". Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
-- 5 animaciones (2 por KeyFrames + 3 simples), **ninguna copiada de las prácticas del curso** y cada una con justificación matemática.
+- KeyFrames: caminata de la silueta, "dejar flores" y, desde el 17/11 (decisión de D2 en el ESTADO §4, X-55), el baile familiar, el juego con el perro y el sahumerio. Velas, fuego, papel picado y humo **no** cuentan como KeyFrames.
+- Animaciones: las 5 comprometidas (2 por KeyFrames + 3 simples) y 5 más desde el 17/11 (3 por KeyFrames + 2 simples; 10 en total), **ninguna copiada de las prácticas del curso** y cada una con justificación matemática.
 - **≥ 18 modelos propios**; los externos solo como secundarios y con crédito. **Modelo propio** = un objeto distinto modelado por el equipo **en Blender** y exportado a su propio `.obj` (las copias cuentan una vez; se guarda el `.blend` como evidencia). El conteo vive en el inventario del ESTADO (sección 2); la 4.ª tumba, la roca de la barda y el copalero son **obligatorios**, y ningún recorte puede dejar el conteo por debajo de 18.
 - 5 fichas culturales (Dear ImGui) que aparecen a < 2 m y **citan su fuente en APA 7**; lo que sea adaptación del estudio debe decirlo.
 - ≥ 30 FPS a 1280×720 en una laptop con gráficos integrados.

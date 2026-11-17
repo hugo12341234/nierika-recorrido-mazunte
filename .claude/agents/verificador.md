@@ -17,7 +17,7 @@ Al recibir una tarea (código como `A-10`) o una actividad (número N):
    - ¿Cumple **exactamente** el criterio de terminado y el criterio de aceptación original?
    - ¿Existe el entregable indicado (archivo `.obj` + `.mtl` + texturas en `Models/<objeto>/`, shader en `Shaders/`, documento)?
    - Convenciones: escala 1 u = 1 m, rutas relativas, texturas 1K, GLSL 330 core, sin OpenGL legacy, stack sin cambios.
-   - Restricciones del profesor: nada fuera de alcance; KeyFrames solo en la silueta; nada copiado de prácticas; modelos propios.
+   - Restricciones del profesor: nada fuera de alcance; KeyFrames solo donde lo permite el ESTADO §4 (silueta, flor y, desde el 17/11, baile familiar, perro y sahumerio); nada copiado de prácticas; modelos propios.
    - Recursos de GPU liberados (VAO/VBO/EBO/texturas/programas); nada que amenace 30 FPS a 1280×720.
    - **Coherencia documental:** el ESTADO de la rama marca la tarea y sus actividades; todo valor nuevo está en la sección 5;
      toda decisión nueva está en la sección 4; ningún otro documento quedó contradiciendo el cambio.

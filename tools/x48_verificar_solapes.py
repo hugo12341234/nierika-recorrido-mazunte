@@ -5,6 +5,8 @@ arbustos de la playa en src/main.cpp) y las huellas de los modelos (Models/*/*.o
   R2 casa contra roca                                        R6 palma contra farol (< 1.5 m entre centros)
   R3 palma / arbusto / farol / fogata / cruz / persona       R7 persona contra farol (< semiancho + 0.25 m)
      dentro de una casa                                      R8 fogata contra cruz u ofrenda (< 1.2 m)
+  R16 (X-55, 17/11) animaciones de personas (src/PersonasAnim.h, SITIOS): su zona (circulo del baile; franja del nino y el perro) contra casas, rocas,
+     palmas, arbustos, faroles, fogatas, cruces, tendederos y el resto de las personas
   R4 palma / arbusto dentro de una roca (huella real)
 Es SOLO LECTURA. Sale con codigo 1 si hay violaciones (para correrlo antes de cada PR que mueva objetos).
 Uso (raiz del repo):   python tools/x48_verificar_solapes.py [--detalle]
@@ -165,7 +167,13 @@ def cargar():
     # personas: (origen, i, x, z, semiancho)
     per = [("figuras", i, f[0], f[1], 0.26 * f[5]) for i, f in enumerate(leer_h("Extras.h", "FIGURAS_N"))]
     per += [("vida", i, p[0], p[2], 0.26 * p[5]) for i, p in enumerate(leer_h("VidaColinasDatos.h", "PERSONAS"))]
+    # X-55: los 9 musicos de la banda (X-40) tambien cuentan como personas (centro BANDA_X, BANDA_Z + el desplazamiento de cada MusicoBanda)
+    ex = open(os.path.join(RAIZ, "src", "Extras.h"), encoding="utf-8").read()
+    bx = float(re.search(r"BANDA_X = (-?[\d.]+)f", ex).group(1)); bz = float(re.search(r"BANDA_Z = (-?[\d.]+)f", ex).group(1))
+    for i, (dx, dz) in enumerate(re.findall(r"MusicoBanda\((-?[\d.]+)f,\s*(-?[\d.]+)f,\s*\d", ex)):
+        per.append(("banda", i, bx + float(dx), bz + float(dz), 0.3))
     E["personas"] = per
+    E["anim"] = [(i, f[0], f[1], f[2], f[3]) for i, f in enumerate(leer_h("PersonasAnim.h", "SITIOS"))]   # X-55: (i, x, z, giro, radio)
     # tendederos de la playa (segmento z fijo) y los de las colinas se ignoran aqui (van sobre el sendero, sin palmas cerca)
     tend = []
     for t in leer_h("Extras.h", "TENDEDEROS"):
@@ -239,13 +247,39 @@ def verificar():
         for c in E["cruces"]:
             if math.hypot(g[2] - c[2], g[3] - c[3]) < 1.2:
                 anota("R8", "fogata %s#%d (%.2f, %.2f) a %.2f m de la cruz %s#%d" % (g[0], g[1], g[2], g[3], math.hypot(g[2] - c[2], g[3] - c[3]), c[0], c[1]))
+    # R16 zonas de las animaciones de personas (X-55). Puntos de muestreo (x, z, radio libre) en mundo: el baile es un circulo de 1.5 m; el nino y el
+    # perro ocupan la franja de 6 m hacia -z local (donde cae la pelota) con 0.8 m a cada lado; sahumerio y anfitriona, un punto de 0.5 m.
+    for i, x, z, giro, radio in E["anim"]:
+        g = math.radians(giro); c, sn = math.cos(g), math.sin(g)
+        loc = [(0.0, 0.0, radio)]
+        if i == 1:
+            loc = [(lx, -lz, 0.8) for lx in (-0.8, 0.0, 0.8, 1.4) for lz in [0.5 * k for k in range(0, 13)]]
+        elif i != 0:
+            loc = [(0.0, 0.0, 0.5)]
+        for lx, lz, r in loc:
+            p = (x + c * lx + sn * lz, z - sn * lx + c * lz)
+            nom = "animacion %d (%.1f, %.1f)" % (i, p[0], p[1])
+            for c2 in casas:
+                if dist_poly(p, c2[2]) < r: anota("R16", "%s dentro de casa %s#%d" % (nom, c2[0], c2[1]))
+            for ro in E["rocas"]:
+                if ro[3] >= 1.0 and dist_poly(p, ro[2]) < r: anota("R16", "%s sobre roca %s#%d" % (nom, ro[0], ro[1]))
+            for k in ("palmas", "arbustos"):
+                for it in E[k]:
+                    if math.hypot(p[0] - it[2], p[1] - it[3]) < r + it[4]: anota("R16", "%s contra %s %s#%d" % (nom, k[:-1], it[0], it[1]))
+            for k, m in (("faroles", 0.4), ("fogatas", 1.0), ("cruces", 0.5)):
+                for it in E[k]:
+                    if math.hypot(p[0] - it[2], p[1] - it[3]) < r + m: anota("R16", "%s contra %s %s#%d" % (nom, k[:-1], it[0], it[1]))
+            for it in E["personas"]:
+                if math.hypot(p[0] - it[2], p[1] - it[3]) < r + it[4] + 0.2: anota("R16", "%s contra persona %s#%d (%.1f, %.1f)" % (nom, it[0], it[1], it[2], it[3]))
+            for a, b in E["tendederos"]:
+                if dist_seg(p, a, b) < r + 0.3: anota("R16", "%s cruza el tendedero z=%.1f" % (nom, a[1]))
     return E, V
 
 
 if __name__ == "__main__":
     E, V = verificar()
-    print("Revisados: %d casas, %d rocas, %d palmas, %d arbustos, %d faroles, %d fogatas, %d cruces, %d personas" % tuple(len(E[k]) for k in
-          ("casas", "rocas", "palmas", "arbustos", "faroles", "fogatas", "cruces", "personas")))
+    print("Revisados: %d casas, %d rocas, %d palmas, %d arbustos, %d faroles, %d fogatas, %d cruces, %d personas, %d sitios de animacion" % tuple(len(E[k]) for k in
+          ("casas", "rocas", "palmas", "arbustos", "faroles", "fogatas", "cruces", "personas", "anim")))
     cuenta = {}
     for r, t in V: cuenta[r] = cuenta.get(r, 0) + 1
     for r in sorted(cuenta): print("  %s: %d" % (r, cuenta[r]))
