@@ -18,7 +18,7 @@ namespace Terreno
     // --- Zona caminable (X-33) ---
     constexpr float LIM_X = 140.0f;       // la malla de colinas llega a |x| = 150; se deja 10 m de margen
     constexpr float LIM_Z_NORTE = -160.0f;  // la malla llega a z = -170
-    constexpr float LIM_Z_SUR_COLINA = 40.0f;  // junto a la bahia (|x| > 50) la malla llega a z = +45
+    constexpr float LIM_Z_SUR_COLINA = 40.0f;  // junto a la bahia (|x| > 50) la malla llega a z = +42 (la rejilla de 4 m termina ahi; X-53)
     constexpr float LIM_Z_ORILLA = 24.0f;      // frente a la playa (|x| <= 50): la orilla del mar (A-9)
     constexpr float PENDIENTE_MAX = 0.70f;     // m de subida por m recorrido (35 grados); el 97 % de las colinas es mas suave que 0.6
 
@@ -65,11 +65,57 @@ namespace Terreno
     // Perfil de la playa (A-5): y = 0 hasta z = +20 y baja 0.05 m por metro hacia el mar
     inline float alturaPlaya(float z) { return (z <= 20.0f) ? 0.0f : -0.05f * (z - 20.0f); }
 
-    // Altura del suelo en (x, z): playa dentro de |x| <= 50 y z >= -20; colinas en el resto
+    // X-53: la malla de Models/colinas/colinas.obj solo tiene un vertice cada 4 m y entre vertices es PLANA por triangulos, asi que la formula lisa
+    // alturaColinas difiere de lo que se ve hasta +-0.5 m. Todo lo que pisa o se apoya en el suelo (pies, objetos) debe usar la superficie VISIBLE:
+    // esta funcion la replica (misma rejilla y misma diagonal que tools/x53_terreno.py y tools/x53_colinas_obj.py). Rejilla: x -150..150 y
+    // z -170..42 (la ultima fila de vertices cae en 42, no en 45). Cada celda (i,j) se triangula (i,j)-(i,j+1)-(i+1,j+1) y (i,j)-(i+1,j+1)-(i+1,j).
+    // La celda de z -22..-20 dentro de la playa (X-40) llega solo hasta z = -20, donde h = 0 (la playa).
+    constexpr double REJ_X0 = -150.0, REJ_Z0 = -170.0, REJ_PASO = 4.0;
+    constexpr int REJ_CELDAS_X = 75, REJ_CELDAS_Z = 53;
+
+    // Altura de un VERTICE de la malla: la formula lisa, salvo en el borde de la playa (|x| = 50, z > 20), donde baja con la playa (tope -0.5 en z = 30)
+    inline double alturaVertice(double x, double z)
+    {
+        if (std::fabs(std::fabs(x) - PLAYA_X) < 1e-9 && z > 20.0) return std::max(-0.05 * (z - 20.0), -0.5);
+        return alturaColinas(x, z);
+    }
+
+    inline float alturaMalla(float x, float z)
+    {
+        if (x < (float)REJ_X0 || x > (float)(REJ_X0 + REJ_CELDAS_X * REJ_PASO) || z < (float)REJ_Z0 || z > (float)(REJ_Z0 + REJ_CELDAS_Z * REJ_PASO))
+            return (float)alturaColinas((double)x, (double)z);              // fuera de la malla no hay suelo dibujado; se conserva la formula
+        const int i = std::min((int)((x - REJ_X0) / REJ_PASO), REJ_CELDAS_X - 1);
+        const int j = std::min((int)((z - REJ_Z0) / REJ_PASO), REJ_CELDAS_Z - 1);
+        const double x0 = REJ_X0 + i * REJ_PASO, z0 = REJ_Z0 + j * REJ_PASO;
+        double fx = (x - x0) / REJ_PASO, fz = (z - z0) / REJ_PASO;
+        const double y00 = alturaVertice(x0, z0), y10 = alturaVertice(x0 + REJ_PASO, z0);
+        double y01 = alturaVertice(x0, z0 + REJ_PASO), y11 = alturaVertice(x0 + REJ_PASO, z0 + REJ_PASO);
+        if (x0 >= -PLAYA_X - 1e-9 && x0 + REJ_PASO <= PLAYA_X + 1e-9 && z0 < PLAYA_Z0 && PLAYA_Z0 < z0 + REJ_PASO)
+        {
+            fz = std::min(std::max((z - z0) / (PLAYA_Z0 - z0), 0.0), 1.0);   // celda recortada (X-40)
+            y01 = y11 = 0.0;
+        }
+        const double y = (fz >= fx) ? y00 + fx * (y11 - y01) + fz * (y01 - y00)
+                                    : y00 + fx * (y10 - y00) + fz * (y11 - y10);
+        return (float)y;
+    }
+
+    // Altura del suelo VISIBLE en (x, z): playa dentro de |x| <= 50 y z >= -20; malla de colinas en el resto
     inline float altura(float x, float z)
     {
         if (std::fabs(x) <= (float)PLAYA_X && z >= (float)PLAYA_Z0) return alturaPlaya(z);
-        return (float)alturaColinas((double)x, (double)z);
+        return alturaMalla(x, z);
+    }
+
+    // X-53: inclinacion del suelo para apoyar rocas sobre una ladera. Pendiente (gx = dh/dx, gz = dh/dz) medida con diferencias centrales a +-w,
+    // w = max(1, 0.8 * esc) (la huella de la roca), y limitada a 0.5 m/m (26.6 grados). La misma formula esta en tools/x53_terreno.py.
+    inline void inclinacion(float x, float z, float esc, float& gx, float& gz)
+    {
+        const float w = std::max(1.0f, 0.8f * esc);
+        gx = (altura(x + w, z) - altura(x - w, z)) / (2.0f * w);
+        gz = (altura(x, z + w) - altura(x, z - w)) / (2.0f * w);
+        const float m = std::sqrt(gx * gx + gz * gz);
+        if (m > 0.5f) { gx *= 0.5f / m; gz *= 0.5f / m; }
     }
 
     // Mayor pendiente (m/m) alrededor de (x, z), con diferencias centrales a +-0.5 m

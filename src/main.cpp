@@ -243,6 +243,7 @@ int main()
     Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model calles((char*)"Models/calles/calles.obj");                  // X-30: caminos de tierra del pueblo de fondo (fuera del alcance original)
+    Model cimientos((char*)"Models/cimientos/cimientos.obj");         // X-53: bloques de piedra bajo las casas del pueblo de fondo (una malla en coordenadas del mundo; generada por tools/x53_ajustar_alturas.py)
     Model tambor((char*)"Models/tambor/tambor.obj");                  // X-29 (fuera del alcance original)
     // X-40: banda de viento oaxaquena. Musicos con los brazos en la pose de su instrumento + instrumentos (todos propios, hechos en Blender)
     Model musicoViento((char*)"Models/musico_viento/musico_viento.obj"), musicoTrombon((char*)"Models/musico_trombon/musico_trombon.obj"),
@@ -1386,6 +1387,7 @@ int main()
                 glm::mat4 mcal(1.0f);
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mcal));
                 calles.Draw(shader);
+                cimientos.Draw(shader);   // X-53: las casas de las laderas se apoyan en su punto mas alto; el cimiento llena el hueco hasta el suelo
                 for (int i = 0; i < PuebloFondo::N_CASAS; i++)
                     poner(PuebloFondo::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
                 for (int i = 0; i < PuebloFondo::N_ROCAS; i++)
@@ -1519,7 +1521,20 @@ int main()
                 for (int i = 0; i < VD::N_ARBOLES; i++)
                     if (!lejos(VD::ARBOLES[i].x, VD::ARBOLES[i].z, 110.0f)) en(arbolSelva, VD::ARBOLES[i].x, VD::ARBOLES[i].y, VD::ARBOLES[i].z, VD::ARBOLES[i].giro, VD::ARBOLES[i].esc);
                 for (int i = 0; i < VD::N_ROCAS; i++)
-                    if (!lejos(VD::ROCAS[i].x, VD::ROCAS[i].z, 90.0f)) en(rocaMar, VD::ROCAS[i].x, VD::ROCAS[i].y, VD::ROCAS[i].z, VD::ROCAS[i].giro, VD::ROCAS[i].esc);
+                    if (!lejos(VD::ROCAS[i].x, VD::ROCAS[i].z, 90.0f))
+                    {
+                        // X-53: la roca se apoya en el plano de la ladera (su base plana se inclina con el suelo), asi no cuelga de un lado ni queda enterrada del otro
+                        const VD::Planta& r = VD::ROCAS[i];
+                        float gx, gz;  Terreno::inclinacion(r.x, r.z, r.esc, gx, gz);
+                        glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(r.x, r.y, r.z));
+                        const glm::vec3 nr = glm::normalize(glm::vec3(-gx, 1.0f, -gz));
+                        const float ang = std::acos(glm::clamp(nr.y, -1.0f, 1.0f));
+                        if (ang > 1e-4f) mm = glm::rotate(mm, ang, glm::normalize(glm::vec3(nr.z, 0.0f, -nr.x)));
+                        mm = glm::rotate(mm, glm::radians(r.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                        mm = glm::scale(mm, glm::vec3(r.esc));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                        rocaMar.Draw(shader);
+                    }
                 glUniform1f(specLoc, 0.05f);
                 for (int i = 0; i < VD::N_RACIMOS; i++)
                     if (!lejos(VD::RACIMOS[i].x, VD::RACIMOS[i].z, 60.0f)) en(racimoCemp, VD::RACIMOS[i].x, VD::RACIMOS[i].y, VD::RACIMOS[i].z, VD::RACIMOS[i].giro, 1.0f);
@@ -1856,7 +1871,7 @@ int main()
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
     rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
-    calles.cleanup();  // X-30
+    calles.cleanup();  cimientos.cleanup();  // X-30, X-53
     tambor.cleanup(); alfombraFlores.cleanup(); alfombraCruz.cleanup();  // X-29
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24
     cempasuchil.cleanup();  // B-3

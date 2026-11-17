@@ -130,6 +130,11 @@ def modelos():
     piramide(bm, (3.1, 3.1), 1.9, 0, z0=2.55)
     caja(bm, (0, 0, 0.45), (1.6, 0.9, 0.06), 1)            # mesa
     caja(bm, (0, -0.85, 0.28), (1.6, 0.35, 0.05), 1)      # banca
+    # X-50: patas (sin ellas los tablones flotaban); mismas medidas que tools/x53_patas_palapa.py
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            caja(bm, (sx * 0.70, sy * 0.35, 0.21), (0.08, 0.08, 0.42), 1)                  # mesa: alto 0.42 m (bajo el tablon, que va de 0.42 a 0.48)
+            caja(bm, (sx * 0.70, -0.85 + sy * 0.085, 0.1275), (0.06, 0.06, 0.255), 1)       # banca: alto 0.255 m (bajo el tablon, de 0.255 a 0.305)
     exporta("palapa", bm, ["paja.png", "madera.png"], lambda c, n, mi: (c.x * 0.3 + c.y * 0.17, c.z * 0.4 + c.y * 0.12))
     # --- casa costera de 5 x 4 m: paredes de 2.6 m, techo de teja a dos aguas (cumbrera a 3.8 m), puerta y dos ventanas
     for tag in ("a", "b"):
