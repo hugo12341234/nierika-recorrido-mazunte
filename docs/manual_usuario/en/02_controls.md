@@ -9,7 +9,9 @@
 | Move forward / back | **W** / **S**, or arrows **↑** / **↓** | Moves the camera where you look / the opposite way |
 | Move sideways | **A** / **D**, or arrows **←** / **→** | Moves the camera left / right |
 | Look around | **Mouse** | Rotates the camera. The cursor is hidden and trapped in the window |
-| Colored lights | **Space bar** | Turns the 4 colored lights (green, blue, red and pink) on or off |
+| Altar candles | **V** (within 3 m of the altar) | Turns the altar candles on or off: the warm light and the flames fade in or out in a quarter of a second. Away from the altar it only shows a notice |
+| Sound | **M** | Cycles through "sea and music", "sea only", "music only" and "silence" (a notice appears at the top of the screen) |
+| Controls help | **F1** | Shows or hides the list of controls |
 | See where the lights are | **L** | Shows or hides the white cubes that mark the lights |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
 | Quit | **Esc** | Closes the program |
@@ -18,12 +20,12 @@ Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Walking speed is **2.0 m/s** (`SPEED` in `Camera.h`); mouse sensitivity is **0.25**.
 - You walk **only on the horizontal plane**: looking up or down does not make you fly; your eyes are always **1.6 m** above the ground (which slopes down at the shore).
 - There are **collisions** (A-9): you cannot pass through walls, the cemetery wall or the altar; if you hit one head-on you slide along it. The walkable area reaches the shore (z = 24).
-- At start the colored lights are **off**; the space bar turns them on.
+- At start the altar candles are **on**. Near the altar a reminder for **V** appears at the top.
+- Since X-60 (Nov 17) the **space bar does nothing**: the colored lights were removed (ESTADO sec. 4, Nov 17).
 - Esc closes the program directly, with no confirmation.
 
 > **Questions to review with D2 before publishing** (not confirmed in the code):
 > 1. Key **L** is described in the code as a "debug aid". Does it stay for the visitor or go before delivery?
-> 2. If the space bar stays as a final control, it needs a cultural or functional name ("party lights", etc.).
 
 ## 2.2 Keys that do NOT go in the manual
 

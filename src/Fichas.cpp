@@ -156,7 +156,7 @@ void FichasInit(GLFWwindow* window)
     ImGui_ImplOpenGL3_Init("#version 330 core");
 }
 
-void FichasDibuja(const glm::vec3& posCamara)
+void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
 {
     // Ficha mas cercana dentro del radio (si dos coinciden, gana la mas cercana)
     int elegida = -1;
@@ -186,15 +186,44 @@ void FichasDibuja(const glm::vec3& posCamara)
                 if (d < mejor) { mejor = d; elegida = i; }
             }
     }
-    if (elegida < 0) return;   // lejos de todo: no se dibuja nada (ni se pide trabajo a ImGui)
-
-    const Ficha& f = fichas[elegida];
+    const bool hayHud = hud.avisoSeg > 0.0f || hud.ayuda || hud.cercaAltar;
+    if (elegida < 0 && !hayHud) return;   // lejos de todo: no se dibuja nada (ni se pide trabajo a ImGui)
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
     ImGuiIO& io = ImGui::GetIO();
+    const ImGuiWindowFlags flagsHud = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoInputs |
+                                      ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoNav;
+    // X-60: aviso arriba (V, M) o, si no hay, el recordatorio de V cerca del altar
+    if (hud.avisoSeg > 0.0f || hud.cercaAltar)
+    {
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, 20.0f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+        ImGui::SetNextWindowBgAlpha(0.75f);
+        ImGui::Begin("Aviso", nullptr, flagsHud);
+        if (hud.avisoSeg > 0.0f) ImGui::TextUnformatted(hud.aviso.c_str());
+        else ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "V: %s las velas del altar", hud.velasEncendidas ? "apagar" : "encender");
+        ImGui::End();
+    }
+    // X-60: ayuda de controles (F1)
+    if (hud.ayuda)
+    {
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+        ImGui::SetNextWindowBgAlpha(0.88f);
+        ImGui::Begin("Controles", nullptr, flagsHud);
+        ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "Controles");
+        ImGui::Separator();
+        ImGui::TextUnformatted("W A S D / flechas   caminar\nRaton              mirar\nV                  encender o apagar las velas (cerca del altar)\n"
+                               "M                  sonido: mar y musica / solo mar / solo musica / silencio\nR                  reiniciar la caminata de la silueta\n"
+                               "L                  mostrar u ocultar los cubos de las luces\nF1                 mostrar u ocultar esta ayuda\nEsc                salir");
+        ImGui::Spacing();
+        ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Acercate a menos de 2 m de un objeto para leer su ficha cultural.");
+        ImGui::End();
+    }
+    if (elegida >= 0)
+    {
+    const Ficha& f = fichas[elegida];
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y - 20.0f), ImGuiCond_Always, ImVec2(0.5f, 1.0f));
     ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.6f, 0.0f), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(0.85f);
@@ -211,6 +240,7 @@ void FichasDibuja(const glm::vec3& posCamara)
     ImGui::TextColored(ImVec4(0.55f, 0.55f, 0.55f, 1.0f), "Referencias:\n%s", f.refs);
     ImGui::PopTextWrapPos();
     ImGui::End();
+    }
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

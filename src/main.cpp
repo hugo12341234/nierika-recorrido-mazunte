@@ -19,6 +19,7 @@
 #include "Model.h"
 #include "Audio.h"
 #include "Fichas.h"
+#include "Hud.h"       // X-60: aviso y ayuda de controles
 #include "AnimFlores.h"  // C-4
 #include "AnimVelas.h"    // C-3: velas flotando (Bezier + vaiven senoidal)
 #include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
@@ -85,7 +86,14 @@ glm::vec3 DeCapillaVieja(glm::vec3 p)
     return (p - glm::vec3(0.0f, 0.0f, 2.0f)) / ESCALA_CAPILLA_VIEJA + glm::vec3(0.0f, 0.0f, -0.6f);
 }
 
-bool active = false;       // espacio: enciende/apaga la animacion de las 4 luces puntuales
+// X-60 (17/11): interacciones del visitante. La barra espaciadora ya no anima luces de colores (ESTADO sec. 4, 17/11).
+bool velasEncendidas = true;                      // V (cerca del altar): enciende/apaga las velas del altar (llamas + luz calida)
+float velasNivel = 1.0f;                          // 0..1: la luz y las llamas suben/bajan suave hacia velasEncendidas (4 por segundo)
+const glm::vec3 ALTAR_VELAS(0.0f, 0.0f, -0.70f);  // centro del altar (igual a ALTAR_POS de main); V solo actua a < ALTAR_VELAS_RADIO m (en planta)
+const float ALTAR_VELAS_RADIO = 3.0f;
+int mezclaSonido = 0;                             // M: 0 = mar y musica, 1 = solo mar, 2 = solo musica, 3 = silencio
+HudEstado hud;                                    // aviso breve (arriba) y ayuda de controles (F1)
+Audio* audioPtr = nullptr;                        // para que KeyCallback cambie la mezcla
 bool mostrarLuces = false; // L: cubos blancos que marcan donde estan las luces (ayuda de depuracion)
 
 // Reflector de la cruz (T/G, Y/H, U/J mueven su posicion; 1-6 su direccion)
@@ -100,12 +108,11 @@ glm::vec3 escalonSpotPos[6] = {
 };
 glm::vec3 escalonSpotDir(0.0f, -1.0f, 0.0f);
 
-// 4 luces puntuales fijas (las animadas con la barra espaciadora)
+// 4 luces puntuales fijas de D1: desde X-60 quedan apagadas (color 0); se conservan sus posiciones/uniformes para no cambiar la iluminacion nocturna base
 glm::vec3 pointLightPositions[4] = {
     DeCapillaVieja(glm::vec3(-3.0f, 1.0f, 0.0f)), DeCapillaVieja(glm::vec3(3.0f, 1.0f, 0.0f)),
     DeCapillaVieja(glm::vec3(-3.0f, 1.0f, 4.0f)), DeCapillaVieja(glm::vec3(3.0f, 1.0f, 4.0f))
 };
-glm::vec3 Light1(0.0f), Light2(0.0f), Light3(0.0f), Light4(0.0f);
 
 // Silueta de cubos (D-1/D-2): el tiempo de su caminata corre con deltaTime; R la reinicia
 float tSilueta = 0.0f;
@@ -503,19 +510,18 @@ int main()
     // D-6: audio ambiental en bucle (si faltan los archivos de Audio/, avisa y sigue sin sonido)
     Audio audio;
     audio.init();
+    audioPtr = &audio;   // X-60: M cambia la mezcla desde KeyCallback
 
     // D-5: la carga de modelos y texturas tarda segundos antes de este punto. Sin esto, el primer deltaTime los incluye
     // (lastFrame arranca en 0) y la silueta empezaria su caminata ya avanzada o terminada.
     lastFrame = (GLfloat)Reloj();
     tSilueta = 0.0f;
 
-    // Solo para las capturas del manual: NIERIKA_LUCES=1 enciende las luces de colores (como la barra espaciadora), =2 ademas muestra los cubos (L)
-    if (const char* luces = std::getenv("NIERIKA_LUCES"))
+    // X-60: NIERIKA_UI="ayuda" o "velas_apagadas" (solo capturas del manual): abre la ayuda F1 o apaga las velas del altar al iniciar
+    if (const char* ui = std::getenv("NIERIKA_UI"))
     {
-        active = true;
-        Light1 = glm::vec3(0.0f, 1.0f, 0.0f); Light2 = glm::vec3(0.0f, 0.2f, 1.0f);
-        Light3 = glm::vec3(1.0f, 0.0f, 0.0f); Light4 = glm::vec3(1.0f, 0.1f, 0.8f);
-        if (luces[0] == '2') mostrarLuces = true;
+        if (std::string(ui).find("ayuda") != std::string::npos) hud.ayuda = true;
+        if (std::string(ui).find("velas_apagadas") != std::string::npos) { velasEncendidas = false; velasNivel = 0.0f; }
     }
     if (const char* cap = std::getenv("NIERIKA_CAPTURAS"))
     {
@@ -628,18 +634,8 @@ int main()
         glUniform3f(glGetUniformLocation(shader.Program, "dirLight.diffuse"), 0.58f, 0.69f, 0.93f);
         glUniform3f(glGetUniformLocation(shader.Program, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
-        // 2. Animacion ciclica de las puntuales: las traseras brillan con sen(2t) > 0 y las delanteras con sen(2t) < 0
-        glm::vec3 colors[4] = { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) };
-        if (active)
-        {
-            float ciclo = sin(Reloj() * 2.0f);
-            float traseras = glm::max(0.0f, ciclo);
-            float delanteras = glm::max(0.0f, -ciclo);
-            colors[0] = Light1 * traseras;
-            colors[1] = Light2 * traseras;
-            colors[2] = Light3 * delanteras;
-            colors[3] = Light4 * delanteras;
-        }
+        // 2. Las 4 puntuales de D1 ya no se animan (X-60): color 0. Se siguen enviando igual para no cambiar la iluminacion nocturna base
+        const glm::vec3 colors[4] = { glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f) };
         // Atenuacion de D1 (1, 0.14, 0.07) para la escena vieja: las distancias se redujeron 3.5 veces,
         // asi que linear x3.5 y cuadratica x3.5^2 dejan el mismo alcance relativo
         const float kLin = ESCALA_CAPILLA_VIEJA, kCuad = ESCALA_CAPILLA_VIEJA * ESCALA_CAPILLA_VIEJA;
@@ -658,7 +654,8 @@ int main()
         // X-8: luz calida de las velas del altar. Parpadeo = suma de dos senos de periodos distintos (sin ruido ni particulas)
         {
             float t = (float)Reloj();
-            float parpadeo = 0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f);   // 0.70 .. 1.00
+            velasNivel = glm::clamp(velasNivel + (velasEncendidas ? 1.0f : -1.0f) * 4.0f * deltaTime, 0.0f, 1.0f);   // X-60: sube/baja en 0.25 s
+            float parpadeo = velasNivel * (0.85f + 0.10f * sin(t * 7.3f) + 0.05f * sin(t * 13.1f + 1.3f));   // 0.70 .. 1.00 (x velasNivel)
             glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * parpadeo;
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.position"), ALTAR_POS.x, 1.25f, ALTAR_POS.z + 0.20f);   // X-58: 0.20 m delante del eje del altar (antes (1.15, 1.25, 0))
             glUniform3f(glGetUniformLocation(shader.Program, "velasAltar.ambient"), col.x * 0.10f, col.y * 0.10f, col.z * 0.10f);
@@ -842,10 +839,13 @@ int main()
             // C-2: llamas de las 2 velas del altar (la vela mide 0.15 m; la llama nace en su punta). Sin luz, forma por ruido de Perlin
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
-            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.0f);
-            sobreAltar(llamaModelo, glm::vec3(-0.35f, 1.35f, -0.25f));
-            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.3f);
-            sobreAltar(llamaModelo, glm::vec3( 0.35f, 1.35f, -0.25f));
+            if (velasNivel > 0.5f)   // X-60: con V las llamas del altar se apagan (las velas siguen en su sitio)
+            {
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.0f);
+                sobreAltar(llamaModelo, glm::vec3(-0.35f, 1.35f, -0.25f));
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.3f);
+                sobreAltar(llamaModelo, glm::vec3( 0.35f, 1.35f, -0.25f));
+            }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             // B-13 (11/11, provisional, sin ver en pantalla): pan propio y cempasuchil en el nivel medio (y = 0.80; la flor
             // tiene su pivote en el centro y mide 0.07 m, por eso va a 0.80 + 0.035)
@@ -2047,14 +2047,20 @@ int main()
                 glUniformMatrix4fv(lampModelLoc, 1, GL_FALSE, glm::value_ptr(m));
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             };
-            for (int i = 0; i < 4; i++) cubo(pointLightPositions[i], 0.04f);
             cubo(spotLightPos, 0.03f);
             for (int i = 0; i < 6; i++) cubo(escalonSpotPos[i], 0.02f);
             glBindVertexArray(0);
         }
 
         // C-7b: ficha cultural si la camara esta a < 2 m de uno de los 5 objetos (se dibuja al final, sobre la escena)
-        FichasDibuja(camera.GetPosition());
+        // X-60: avisos (arriba) y ayuda; el aviso fijo "V" aparece solo cerca del altar
+        {
+            const glm::vec3 c = camera.GetPosition();
+            hud.cercaAltar = glm::length(glm::vec2(c.x - ALTAR_VELAS.x, c.z - ALTAR_VELAS.z)) < ALTAR_VELAS_RADIO;
+            hud.velasEncendidas = velasEncendidas;
+            if (hud.avisoSeg > 0.0f) hud.avisoSeg -= deltaTime;
+        }
+        FichasDibuja(camera.GetPosition(), hud);
 
         // Modo captura: espera 3 cuadros con la pose fija y guarda el cuadro actual (antes del swap)
         if (indiceCaptura < posesCaptura.size())
@@ -2208,22 +2214,32 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         }
     }
 
-    // Barra espaciadora: enciende/apaga la animacion de las 4 luces puntuales (colores de D1)
-    if (GLFW_KEY_SPACE == key && GLFW_PRESS == action)
+    // V: enciende/apaga las velas del altar, solo si el visitante esta cerca (X-60)
+    if (GLFW_KEY_V == key && GLFW_PRESS == action)
     {
-        active = !active;
-        if (active)
+        const glm::vec3 c = camera.GetPosition();
+        if (glm::length(glm::vec2(c.x - ALTAR_VELAS.x, c.z - ALTAR_VELAS.z)) < ALTAR_VELAS_RADIO)
         {
-            Light1 = glm::vec3(0.0f, 1.0f, 0.0f); // verde
-            Light2 = glm::vec3(0.0f, 0.2f, 1.0f); // azul
-            Light3 = glm::vec3(1.0f, 0.0f, 0.0f); // rojo
-            Light4 = glm::vec3(1.0f, 0.1f, 0.8f); // rosa
+            velasEncendidas = !velasEncendidas;
+            hud.aviso = velasEncendidas ? "Velas del altar encendidas: su luz guia a las animas" : "Velas del altar apagadas";
         }
-        else
-        {
-            Light1 = Light2 = Light3 = Light4 = glm::vec3(0.0f);
-        }
+        else hud.aviso = "Acercate al altar (a menos de 3 m) para encender o apagar las velas";
+        hud.avisoSeg = 2.5f;
     }
+
+    // M: mezcla de sonido (mar y musica -> solo mar -> solo musica -> silencio) (X-60)
+    if (GLFW_KEY_M == key && GLFW_PRESS == action)
+    {
+        mezclaSonido = (mezclaSonido + 1) % 4;
+        static const char* nombres[4] = { "Sonido: mar y musica", "Sonido: solo el mar", "Sonido: solo la musica", "Sonido: silencio" };
+        if (audioPtr) audioPtr->SetMezcla(mezclaSonido == 0 || mezclaSonido == 1, mezclaSonido == 0 || mezclaSonido == 2);
+        hud.aviso = nombres[mezclaSonido];
+        hud.avisoSeg = 2.0f;
+    }
+
+    // F1: muestra u oculta la ayuda de controles (X-60)
+    if (GLFW_KEY_F1 == key && GLFW_PRESS == action)
+        hud.ayuda = !hud.ayuda;
 
     // R: reinicia la caminata de la silueta (D-2)
     if (GLFW_KEY_R == key && GLFW_PRESS == action)

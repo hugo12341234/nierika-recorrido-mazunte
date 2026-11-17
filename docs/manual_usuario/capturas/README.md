@@ -13,8 +13,8 @@ Todas las capturas son del programa propio; **la capilla provisional no sale en 
 | `03_parada5_cuarto_altar.jpg` | Altar con su ficha | 3, 4.1 | **Repetida 12/11 en la PC de D2** (X-4) |
 | `03_parada5_silueta_con_flor.jpg` | La silueta con la flor frente al altar | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
 | `02_teclado_controles.png` | Esquema del teclado con W A S D, flechas, espacio, R, L y Esc | 2.1 | **Hecho 12/11** (`tools/x15_esquema_teclado.py`, Pillow) |
-| `02_luces_espacio.jpg` | Escena con las luces de colores encendidas | 2.1 | **Tomada 12/11** (`NIERIKA_LUCES=1`) |
-| `02_luces_L.jpg` | Escena con los cubos de las luces visibles | 2.1 | **Tomada 12/11** (`NIERIKA_LUCES=2`) |
+| `02_luces_espacio.jpg` | **Obsoleta (17/11, X-60):** escena con las luces de colores que ya no existen; se reemplaza por velas encendidas/apagadas (`NIERIKA_UI=velas_apagadas`) y la ayuda F1 (`NIERIKA_UI=ayuda`) | 2.1 | Tomada 12/11; retomar |
+| `02_luces_L.jpg` | Escena con los cubos de las luces visibles (tecla L; `NIERIKA_LUCES` ya no existe) | 2.1 | Tomada 12/11 |
 
 Las capturas de 12/11 se hicieron en Linux con un renderizador por software y una cámara colocada por código; **conviene repetirlas en la PC de D2** con el aspecto final (texturas, hora del día) antes de entregar.
 
