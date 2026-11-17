@@ -29,6 +29,13 @@
 - El arco que cruzaba el centro del patio (z 10.3): pasa a ser el umbral de la puerta norte (z 12.45). El arco del sur de la plaza trasera se queda como umbral de la ofrenda comunitaria.
 - El círculo de 16 velas y los 8 racimos del piso de la pirámide: ahora son 12 velas, sin racimos.
 
+## 3 bis. Referencias visuales de D2 (17/11) y qué se tomó de ellas
+D2 mostró cuatro fotos (no se copian, solo la idea): panteón de noche con un mar de velas y una iglesia como ancla; familias sentadas junto a las tumbas entre cempasúchil y velas altas; panteón de día con tumbas cubiertas de flor y pétalos en el suelo; panteón en terrazas con muretes de piedra, flores y luz. **Adaptación del estudio** (no es documentación): 
+- Detrás de la capilla, el camino de ánimas queda flanqueado por **filas simétricas de tumbas** (columnas x = ±4.8 y ±7.4; filas z = −5.2, −8.2, −11.2, −14.2), cada una con racimos de cempasúchil y tres velas altas, y la ofrenda comunitaria (pirámide) al centro.
+- **Personas arrodilladas junto a las tumbas** de la columna interior (velación), mirando a la tumba.
+- La capilla queda como ancla visual al sur de las filas. No se hizo ladera en terrazas (el terreno detrás de la capilla es plano hasta z = −20).
+- Densidad: 12 a 16 tumbas con vela y flor cada una, en vez de objetos sueltos; lo que choca con farol, roca, palma, arbusto o árbol se omite.
+
 ## 4. Composición (ejes, jerarquía, aire)
 - **Eje principal:** x = 0 de la playa a la puerta de la capilla, libre de obstáculos.
 - **Foco:** las dos ofrendas mayores del patio, simétricas en x = ±3.9 (z = 8.4), con 3.6 m de paso entre ellas; la capilla queda enmarcada entre las dos.

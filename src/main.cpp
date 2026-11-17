@@ -948,12 +948,58 @@ int main()
                     papelPicado.Draw(shader);
                 }
             }
+            // X-54: panteon velado detras de la capilla (filas de tumbas con racimos y velas altas) y personas arrodilladas junto a ellas
+            static const std::vector<PlazaTrasera::Tumba> panteon = PlazaTrasera::Panteon();   // se calcula una vez
+            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);
+            for (const PlazaTrasera::Tumba& t : panteon)
+                colocar(t.modelo == 1 ? tumba1 : t.modelo == 2 ? tumba2 : t.modelo == 3 ? tumba3 : tumba4, glm::vec3(t.x, 0.0f, t.z), 0.0f);
+            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
+            for (const PlazaTrasera::Tumba& t : panteon)
+            {
+                const float zp = t.z + (t.modelo == 1 ? 0.75f : 1.25f);   // al pie (lado +z, hacia la capilla)
+                for (int k = -1; k <= 1; k += 2)   // 2 racimos al pie (x1.2) y 2 a los costados de la tumba (x1.0): el cempasuchil abundante de las fotos de referencia
+                {
+                    glm::mat4 mr2 = glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.78f * k, 0.0f, t.z));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mr2));
+                    racimoCemp.Draw(shader);
+                    glm::mat4 mr = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.45f * k, 0.0f, zp)), glm::vec3(1.2f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mr));
+                    racimoCemp.Draw(shader);
+                }
+                for (int k = -1; k <= 1; k++)
+                    colocarEsc(vela, glm::vec3(t.x + 0.30f * k, 0.0f, zp + 0.35f), 0.0f, 2.0f);   // velas altas de 30 cm
+            }
+            {
+                const std::vector<PlazaTrasera::Vigilia> vig = PlazaTrasera::Vigilias(panteon);
+                const float tv = (float)Reloj();
+                Model* tiposV[2] = { &personaAgachadaA, &personaAgachadaB };
+                for (size_t i = 0; i < vig.size(); i++)
+                {
+                    glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(vig[i].x, 0.0f, vig[i].z));
+                    mm = glm::rotate(mm, glm::radians(vig[i].giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tv, 5.0f, 0.7f * (float)i, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                    atuendos.dibujar(shader, *tiposV[i % 2], true, 300 + (int)i, mm);
+                }
+            }
             for (int i = 0; i < PlazaTrasera::N_ARCOS; i++)
                 colocar(arcoCemp, glm::vec3(PlazaTrasera::ARCOS[i].x, 0.0f, PlazaTrasera::ARCOS[i].y), 0.0f);
             // llamas de todas las velas de las ofrendas
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
             for (const MayorColocado& m : mayores) llamasLista(objs, m.P, m.giro);
+            for (const PlazaTrasera::Tumba& t : panteon)
+            {
+                const float zp = t.z + (t.modelo == 1 ? 0.75f : 1.25f);
+                for (int k = -1; k <= 1; k++)
+                {
+                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nfGlobal++));
+                    glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.30f * k, 0.30f, zp + 0.35f)), glm::vec3(2.0f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                    llamaModelo.Draw(shader);
+                }
+            }
+
             llamasLista(objsPir, glm::vec3(0.0f, 0.0f, PlazaTrasera::CZ), 0.0f);
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
