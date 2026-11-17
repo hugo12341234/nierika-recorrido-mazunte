@@ -136,6 +136,10 @@ def cabecera():
            "    constexpr int N_CASAS = %d;\n    constexpr int N_ROCAS = %d;\n    constexpr float MIRADOR_X = %.2ff, MIRADOR_Y = %.2ff, MIRADOR_Z = %.2ff;\n}\n#endif\n" % (len(casas), len(rocas), mirador[0], mirador[1], mirador[2]))
     open(os.path.join(RAIZ, "src", "PuebloFondo.h"), "w", encoding="utf-8", newline="\n").write(txt)
     print("PuebloFondo.h:", len(casas), "casas,", len(rocas), "rocas; mirador en", mirador)
+    # X-48 (auditoria del 17/11): reglas de exclusion (casa contra casa, planta enterrada en roca o dentro de casa); ver tools/x48_corregir_solapes.py
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import x48_corregir_solapes
+    x48_corregir_solapes.aplicar()
 
 
 def modelos():

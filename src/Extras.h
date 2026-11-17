@@ -107,7 +107,7 @@ namespace Extras
         { -4.3f,  6.6f,   0.0f, 2, 0.5f, 1.00f, 0 }, { -3.3f,  6.7f,   0.0f, 0, 1.7f, 0.60f, 0 },                     // tumba 2: abuela y nino
         {  3.5f,  7.3f,   0.0f, 0, 2.4f, 1.00f, 0 }, {  4.5f,  7.2f,   0.0f, 1, 3.6f, 1.00f, 0 }, {  4.0f,  7.0f,   0.0f, 0, 4.4f, 0.60f, 0 },  // tumba 3: familia
         { -5.0f, 10.9f,   0.0f, 2, 0.8f, 1.00f, 0 }, { -4.0f, 10.9f,   0.0f, 3, 2.0f, 0.95f, 0 },                     // tumba 4: dos personas de rodillas
-        {  5.9f, 11.0f, 200.0f, 1, 1.1f, 1.00f, 1 }, {  3.3f, 11.0f, 170.0f, 0, 2.7f, 1.00f, 0 },                     // tumba 1: musico y acompanante
+        {  5.4f, 11.1f, 200.0f, 1, 1.1f, 1.00f, 1 }, {  3.3f, 11.0f, 170.0f, 0, 2.7f, 1.00f, 0 },                     // tumba 1: musico y acompanante
         { -2.5f,  5.1f,   0.0f, 3, 3.9f, 0.95f, 0 },                                                                   // la cruz de la entrada
         // E5 puerta del cuarto: una abuela con su vela y un nino esperan afuera
         {  1.9f,  2.7f,   0.0f, 2, 1.3f, 0.95f, 0 }, { -1.9f,  2.8f,   0.0f, 1, 4.0f, 0.60f, 0 },
@@ -184,8 +184,8 @@ namespace Extras
     inline const Obj PALAPAS[N_PALAPAS] = { { -31.0f, 14.5f, 0.0f, 1.0f }, { -39.0f, 1.5f, 20.0f, 1.0f }, { 31.0f, 13.0f, 0.0f, 1.0f }, { 38.0f, 0.5f, 340.0f, 1.0f }, { -23.0f, -3.5f, 0.0f, 1.0f } };
     struct Casa { float x, z, giro; int tipo; };
     constexpr int N_CASAS = 6;
-    inline const Casa CASAS[N_CASAS] = { { -45.0f, 8.0f, 270.0f, 0 }, { -45.0f, -2.0f, 270.0f, 1 }, { -45.0f, -12.0f, 270.0f, 0 },
-                                         {  45.0f, 6.0f, 90.0f, 1 }, {  45.0f, -4.0f, 90.0f, 0 }, {  45.0f, -14.0f, 90.0f, 1 } };
+    inline const Casa CASAS[N_CASAS] = { { -43.0f, 10.0f, 270.0f, 0 }, { -43.0f, -5.0f, 270.0f, 1 }, { -45.0f, -12.0f, 270.0f, 0 },
+                                         {  41.0f, 8.0f, 90.0f, 1 }, {  42.5f, -7.0f, 90.0f, 0 }, {  45.0f, -14.0f, 90.0f, 1 } };
     // Fogatas sin humo (la llama es el shader de las velas), hamacas entre postes, palmas extra en los lados
     constexpr int N_FOGATAS = 2;
     inline const Obj FOGATAS[N_FOGATAS] = { { -31.0f, 8.0f, 0.0f, 1.0f }, { 31.0f, 7.0f, 0.0f, 1.0f } };
@@ -194,9 +194,9 @@ namespace Extras
     constexpr int N_PALMAS_LADOS = 16;
     inline const Obj PALMAS_LADOS[N_PALMAS_LADOS] = {
         { -22.0f, 8.0f, 30.0f, 1.0f }, { -24.0f, 16.0f, 100.0f, 1.2f }, { -28.0f, 6.0f, 200.0f, 0.9f }, { -35.0f, 15.0f, 280.0f, 1.1f }, { -41.0f, 18.0f, 60.0f, 1.0f },
-        { -43.0f, 12.0f, 140.0f, 1.3f }, { -33.0f, 3.0f, 10.0f, 1.0f }, { -47.0f, 16.0f, 220.0f, 1.1f },
+        { -40.0f, 15.5f, 140.0f, 1.3f }, { -33.0f, 3.0f, 10.0f, 1.0f }, { -45.5f, 14.0f, 220.0f, 1.1f },
         {  22.0f, 10.0f, 300.0f, 1.0f }, {  25.0f, 17.0f, 120.0f, 1.2f }, {  27.0f, 11.5f, 20.0f, 0.9f }, {  34.0f, 19.0f, 180.0f, 1.1f }, {  41.0f, 14.0f, 260.0f, 1.0f },
-        {  43.0f, 9.0f, 90.0f, 1.3f }, {  34.0f, -3.0f, 340.0f, 1.0f }, {  46.0f, 18.0f, 50.0f, 1.1f }
+        {  35.0f, 9.0f, 90.0f, 1.3f }, {  34.0f, -3.0f, 340.0f, 1.0f }, {  45.0f, 15.0f, 50.0f, 1.1f }
     };
 
     // Aves (pelicanos y fragatas, simplificadas): vuelan en circulos y baten las alas: theta = 25 grados * sen(2*pi*0.9*t + fase)
