@@ -12,7 +12,6 @@
 | Velas del altar | **V** (a menos de 3 m del altar) | Enciende o apaga las velas del altar: la luz cálida y las llamas suben o bajan en un cuarto de segundo. Lejos del altar solo muestra un aviso |
 | Sonido | **M** | Cambia entre «mar y música», «solo el mar», «solo la música» y «silencio» (se avisa arriba en pantalla) |
 | Ayuda de controles | **F1** | Muestra u oculta la lista de controles |
-| Ver dónde están las luces | **L** | Muestra u oculta los cubos blancos que marcan las luces |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
 | Salir | **Esc** | Cierra el programa |
 
@@ -24,17 +23,9 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
 - Con Esc se cierra el programa directamente, sin pedir confirmación.
 
-> **Dudas para revisar con D2 antes de publicar** (no confirmadas en el código):
-> 1. La tecla **L** está descrita en el código como "ayuda de depuración". ¿Se queda para el visitante o sale antes de la entrega?
+## 2.2 Teclas sin función
 
-## 2.2 Teclas que NO entran al manual
-
-En el código existen estas teclas, pero son de **depuración** (mueven y orientan el reflector de la cruz) y
-deberían salir antes de la entrega; por eso **no se documentan para el visitante**. **E-2 no las retiró**: siguen en `main.cpp` (líneas 643–654 al 12/11) y la decisión de quitarlas queda **pendiente de D2**:
-
-`T G Y H U J` (posición del reflector) · `1 2 3 4 5 6` (dirección del reflector)
-
-Si no salen, hay que agregarlas aquí.
+Desde X-61 (17/11) se quitaron del código la tecla **L** (cubos de las luces) y las teclas de depuración del reflector de la cruz (`T G Y H U J` y `1`–`6`). La barra espaciadora tampoco hace nada. Solo funcionan las teclas de la tabla de arriba.
 
 ## 2.3 Controles futuros (PENDIENTES, no existen todavía)
 

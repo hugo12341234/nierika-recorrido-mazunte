@@ -12,7 +12,6 @@
 | Altar candles | **V** (within 3 m of the altar) | Turns the altar candles on or off: the warm light and the flames fade in or out in a quarter of a second. Away from the altar it only shows a notice |
 | Sound | **M** | Cycles through "sea and music", "sea only", "music only" and "silence" (a notice appears at the top of the screen) |
 | Controls help | **F1** | Shows or hides the list of controls |
-| See where the lights are | **L** | Shows or hides the white cubes that mark the lights |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
 | Quit | **Esc** | Closes the program |
 
@@ -24,16 +23,9 @@ Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Since X-60 (Nov 17) the **space bar does nothing**: the colored lights were removed (ESTADO sec. 4, Nov 17).
 - Esc closes the program directly, with no confirmation.
 
-> **Questions to review with D2 before publishing** (not confirmed in the code):
-> 1. Key **L** is described in the code as a "debug aid". Does it stay for the visitor or go before delivery?
+## 2.2 Keys without a function
 
-## 2.2 Keys that do NOT go in the manual
-
-These keys exist in the code but are for **debugging** (they move and aim the cross spotlight) and should leave before delivery, so they are **not documented for the visitor**. **E-2 did not remove them**: they are still in `main.cpp` (lines 643–654 on Nov 12) and the decision to remove them is **pending with D2**:
-
-`T G Y H U J` (spotlight position) · `1 2 3 4 5 6` (spotlight direction)
-
-If they do not leave, they must be added here.
+Since X-61 (Nov 17) the code no longer has key **L** (light cubes) or the debug keys for the cross spotlight (`T G Y H U J` and `1`–`6`). The space bar does nothing either. Only the keys in the table above work.
 
 ## 2.3 Other behavior
 
