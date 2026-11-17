@@ -31,6 +31,7 @@
 #include "VidaColinas.h"    // X-33/X-34: senderos, faroles, fogatas, gente y luciernagas en las colinas
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"
+#include "DecoracionCasas.h"  // X-58: papel picado, macetas, cempasuchil y arco en cada casa (generado)
 #include "LucesCasas.h"        // X-56: ventanas encendidas de las casas (estado, color y parpadeo por casa)
 #include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
@@ -1354,6 +1355,34 @@ int main()
                 glUniform3f(glGetUniformLocation(shader.Program, "ventanaColor"), v.color.x, v.color.y, v.color.z);
                 glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), v.izq, v.der);
             };
+            // X-58: decoracion de la casa g (DecoracionCasas.h, coordenadas locales de la casa). Solo a < 110 m de la camara y no detras de ella
+            // (a mas distancia una pieza de 0.4 m mide < 4 px). Piezas "suelo": se apoyan en Terreno::altura; el resto, en la losa del porche o bajo el alero.
+            auto decorarCasa = [&](int g, glm::vec3 pos, float giro)
+            {
+                const glm::vec3 cam = camera.GetPosition(), d = pos - cam;
+                if (glm::length(d) > 110.0f || glm::dot(d, camera.GetFront()) < -6.0f) return;
+                const glm::mat4 base = glm::rotate(glm::translate(glm::mat4(1.0f), pos), glm::radians(giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                Model* modelos[] = { &papelPicado, &papelNaranja, &papelFucsia, &papelMorado, &mazeta, &racimoCemp, &arcoCemp, &calabaza, &cesta, &naranjas };
+                for (int k = DecoracionCasas::INICIO[g]; k < DecoracionCasas::INICIO[g + 1]; k++)
+                {
+                    const DecoracionCasas::Pieza& pz = DecoracionCasas::PIEZAS[k];
+                    glm::mat4 mm;
+                    if (pz.suelo)
+                    {
+                        const glm::vec3 w = glm::vec3(base * glm::vec4(pz.x, 0.0f, pz.z, 1.0f));
+                        mm = glm::translate(glm::mat4(1.0f), glm::vec3(w.x, Terreno::altura(w.x, w.z) + pz.y, w.z));
+                        mm = glm::rotate(mm, glm::radians(giro + pz.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    }
+                    else
+                    {
+                        mm = glm::translate(base, glm::vec3(pz.x, pz.y, pz.z));
+                        mm = glm::rotate(mm, glm::radians(pz.giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    }
+                    mm = glm::scale(mm, glm::vec3(pz.esc));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                    modelos[pz.modelo]->Draw(shader);
+                }
+            };
             // sobre la ola: posicion (x, z), altura = Olas::Altura, vertical = normal de la ola; yaw = giro de proa
             auto sobreOla = [&](float x, float z, float yawGrados, float subir) -> glm::mat4
             {
@@ -1409,6 +1438,10 @@ int main()
                     poner(Extras::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
                     poner(ventanaTrasera, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
                 }
+                glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), 0.0f, 0.0f);   // X-58: la decoracion no lleva ventanas
+                glUniform1f(specLoc, 0.05f);
+                for (int i = 0; i < Extras::N_CASAS; i++)
+                    decorarCasa(DecoracionCasas::N_PUEBLO + i, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro);
             }
             if (fueraAlcance)   // X-29 (FUERA DEL ALCANCE ORIGINAL): alfombras de petalos, banda de musicos y comparsa
             {
@@ -1483,6 +1516,9 @@ int main()
                     poner(ventanaTrasera, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
                 }
                 glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), 0.0f, 0.0f);   // X-56: lo que siga no trae ventanas
+                glUniform1f(specLoc, 0.05f);   // X-58: decoracion de las casas del pueblo
+                for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                    decorarCasa(i, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro);
                 for (int i = 0; i < PuebloFondo::N_ROCAS; i++)
                     poner(rocaMar, glm::vec3(PuebloFondo::ROCAS[i].x, PuebloFondo::ROCAS[i].y, PuebloFondo::ROCAS[i].z), PuebloFondo::ROCAS[i].giro, PuebloFondo::ROCAS[i].esc);
                 poner(palapa, glm::vec3(PuebloFondo::MIRADOR_X, PuebloFondo::MIRADOR_Y, PuebloFondo::MIRADOR_Z), 30.0f, 0.8f);   // mirador pequeno sobre la roca mayor
