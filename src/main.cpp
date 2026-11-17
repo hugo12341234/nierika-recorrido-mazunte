@@ -26,6 +26,8 @@
 #include "Colisiones.h"
 #include "Terreno.h"        // X-33: altura del terreno (playa + colinas) y zona caminable
 #include "Atuendos.h"       // X-35: ropa, piel, pelo y prendas tipicas distintas por persona
+#include "Fuego.h"          // X-49: llama de las fogatas con el modelo fuego (D1) + parpadeo con senos
+#include "Mariposas.h"      // X-49: mariposas de las colinas (modelos de D1), vuelo y aleteo con senos
 #include "VidaColinas.h"    // X-33/X-34: senderos, faroles, fogatas, gente y luciernagas en las colinas
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"
@@ -273,6 +275,10 @@ int main()
     Model humo((char*)"Models/humo/humo.obj");                           // X-47: columna de humo de D1 (0.33 x 3.47 m, pivote: centro de la base)
     Model cuadro((char*)"Models/cuadro/cuadro.obj");                     // retrato con marco tallado, 0.35 m, pivote: centro de la base
     Model refresco((char*)"Models/refresco/refresco.obj");               // botella verde de refresco, 0.25 m
+    Model fuegoLlama((char*)"Models/fuego/fuego.obj");                      // X-49: llama de fogata (D1), 0.30 m, pivote en la base (tools/x49_normalizar.py)
+    Model mariCuerpo((char*)"Models/mariposa_cuerpo/mariposa_cuerpo.obj");  // X-49: mariposa (D1) en 3 piezas, x0.075 (envergadura 14.5 cm)
+    Model mariAlaDer((char*)"Models/mariposa_ala_der/mariposa_ala_der.obj");
+    Model mariAlaIzq((char*)"Models/mariposa_ala_izq/mariposa_ala_izq.obj");
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
     Model arbolSelva((char*)"Models/arbol_selva/arbol_selva.obj");        // X-36: arbol de copa ancha (extra, no cuenta entre los 18 propios)
     Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
@@ -1267,16 +1273,17 @@ int main()
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mw2));
                 aveAla.Draw(shader);
             }
-            // emisivos: llamas de las fogatas (sin humo) y linternas de papel flotando (orbe calido que sube y baja con la ola)
+            // emisivos: llamas de las fogatas (X-49: modelo fuego de D1, 3 lenguas con parpadeo por senos; sin humo) y linternas de papel flotando (orbe calido que sube y baja con la ola)
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tl);
-            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 5);
             for (int i = 0; i < Extras::N_FOGATAS; i++)
-            {
-                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.9f * i + 3.0f);
-                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(Extras::FOGATAS[i].x, enSuelo(Extras::FOGATAS[i].z) + 0.3f, Extras::FOGATAS[i].z)), glm::vec3(3.2f));
-                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
-                llamaModelo.Draw(shader);
-            }
+                for (int l = 0; l < LlamasFogata::N_LENGUAS; l++)
+                {
+                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), LlamasFogata::Brillo(i, l, tl));
+                    glm::mat4 ml = LlamasFogata::Modelo(glm::vec3(Extras::FOGATAS[i].x, enSuelo(Extras::FOGATAS[i].z) + 0.16f, Extras::FOGATAS[i].z), i, l, tl);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                    fuegoLlama.Draw(shader);
+                }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 3);
             for (int i = 0; i < Extras::N_LINTERNAS; i++)
             {
@@ -1402,14 +1409,37 @@ int main()
             for (int i = 0; i < VD::N_FOGATAS; i++)
                 if (!lejos(VD::FOGATAS[i].x, VD::FOGATAS[i].z, 110.0f)) en(fogata, VD::FOGATAS[i].x, VD::FOGATAS[i].y - 0.08f, VD::FOGATAS[i].z, 37.0f * i, 1.0f);
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), tv);
-            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 5);   // X-49: modelo fuego de D1 (3 lenguas por fogata)
             for (int i = 0; i < VD::N_FOGATAS; i++)
             {
                 if (lejos(VD::FOGATAS[i].x, VD::FOGATAS[i].z, 110.0f)) continue;
-                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 1.3f * i + 5.0f);
-                glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(VD::FOGATAS[i].x, VD::FOGATAS[i].y + 0.30f, VD::FOGATAS[i].z)), glm::vec3(3.2f));
-                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
-                llamaModelo.Draw(shader);
+                for (int l = 0; l < LlamasFogata::N_LENGUAS; l++)
+                {
+                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), LlamasFogata::Brillo(10 + i, l, tv));
+                    glm::mat4 ml = LlamasFogata::Modelo(glm::vec3(VD::FOGATAS[i].x, VD::FOGATAS[i].y + 0.16f, VD::FOGATAS[i].z), 10 + i, l, tv);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                    fuegoLlama.Draw(shader);
+                }
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+            // X-49: mariposas de las colinas (modelos de D1; vuelo y aleteo en Mariposas.h). Emisivas tenues (llama = 5, factor 0.75) para que se vean de noche;
+            // se dibujan solo las que estan a menos de 70 m. Sin colision: no tocan nada ni cuentan para las AABB del visitante.
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 5);
+            glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.75f);
+            for (int i = 0; i < MariposasDatos::N_MARIPOSAS; i++)
+            {
+                if (lejos(MariposasDatos::MARIPOSAS[i].cx, MariposasDatos::MARIPOSAS[i].cz, 70.0f)) continue;
+                const Mariposas::Pose pm = Mariposas::PoseEn(i, tv);
+                const glm::mat4 mc = Mariposas::Cuerpo(pm);
+                const float d = Mariposas::Aleteo(i, tv);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
+                mariCuerpo.Draw(shader);
+                glm::mat4 mi = Mariposas::Ala(mc, d, +1);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mi));
+                mariAlaIzq.Draw(shader);
+                glm::mat4 md = Mariposas::Ala(mc, d, -1);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(md));
+                mariAlaDer.Draw(shader);
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             // faroles: poste + orbe emisivo que parpadea (igual que X-24)
@@ -1670,6 +1700,7 @@ int main()
     papelPicado.cleanup();  // B-7
     papelFucsia.cleanup(); papelMorado.cleanup(); papelNaranja.cleanup(); capillaMaya.cleanup(); mazeta.cleanup(); cuadro.cleanup(); refresco.cleanup(); humo.cleanup();  // X-43, X-47
     llamaModelo.cleanup();  // C-2
+    fuegoLlama.cleanup(); mariCuerpo.cleanup(); mariAlaDer.cleanup(); mariAlaIzq.cleanup();  // X-49
     arco.cleanup();         // faltaban en E-1a (A-10, A-11)
     techo.cleanup();
     piso.cleanup();

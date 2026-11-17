@@ -118,3 +118,23 @@ Todas son fórmulas simples, **sin KeyFrames**; las posiciones y parámetros est
 | Alfombras de flores | Plano texturizado con miles de **pétalos de cempasúchil** (naranja, amarillo y magenta) y hojas verdes con canal alfa; **no es arena de colores** (no es el tapete de arena que sigue fuera de alcance) | 3 alfombras: cruz de 4 × 4 m en el panteón y 2 rectángulos en la orilla |
 
 **Comprobación:** `tools/x19_pruebas_extras.cpp` (rangos y rapidez de la comparsa).
+
+## 10. Llama de fogata y mariposas de las colinas (X-49, extras)
+
+**Qué es:** dos extras ambientales con modelos de D1 (`Models/fuego`, `Models/mariposa_*`). **No son KeyFrames** y **no cuentan** entre las 5 animaciones del plan; todo se calcula en forma cerrada con senos, como las luciérnagas (§4) y los murciélagos (§7). No hay partículas ni humo.
+
+**Llama de fogata (`src/Fuego.h`).** Cada fogata dibuja 3 veces la misma llama (0.30 m) con el parpadeo desfasado por la fase φ de cada lengua y por el número de fogata. Para el tiempo t (s):
+- Alto: s_y(t) = 1 + 0.12·sen(2π·7.3·t + φ) + 0.06·sen(2π·12.1·t + 1.7φ). Dos senos de frecuencias casi inconmensurables (7.3 : 12.1) dan un titileo que no se repite de forma visible; el rango es 0.82–1.18.
+- Ancho: s_xz = 1/√s_y. Así el volumen s_x·s_y·s_z = 1 se conserva: si la llama se alarga, se adelgaza (se ve como llama y no como un globo que se infla).
+- Balanceo: cizalla x' = x + a_x·y, z' = z + a_z·y con a_x = 0.10·sen(2π·1.9·t + φ) y a_z = 0.10·sen(2π·2.3·t + 2φ): la punta se desplaza hasta el 10 % de la altura y la base no se mueve (el desplazamiento es proporcional a y).
+- Brillo: b(t) = 1.55 + 0.20·sen(2π·5.3·t + φ) + 0.10·sen(2π·11.7·t + 2φ) ∈ [1.25, 1.85], que multiplica el color de la textura (`llama = 5` en `lighting.frag`: sin luz ni sombra).
+- Matriz: M = T(base + (dx, 0, dz)) · R_y(giro) · Cizalla(a_x, a_z) · Escala(s_xz·e, s_y·e, s_xz·e), con e = 1.00, 0.75 y 0.65.
+
+**Mariposas (`src/Mariposas.h`).** Para la mariposa i (k = 1 + 0.08·(i mod 5), fase φ y centro (c_x, c_z) de `MariposasDatos.h`):
+- Trayectoria: x = c_x + A·sen(0.36k·t + φ), z = c_z + B·sen(0.53k·t + 2φ), y = h(x, z) + 1.8 + 0.5·sen(0.71k·t + 3φ) + 0.03·cos(2π·f·t + φ), con h = `Terreno::altura` (el vuelo sigue el terreno y nunca baja de 1.27 m sobre él) y A = 2.0–3.6 m, B = 1.6–3.0 m. Los cocientes 0.36 : 0.53 : 0.71 son casi irracionales: curva de Lissajous suave que no se cierra. Rapidez máxima medida en la prueba: 3.42 m/s. El último término es el vaivén vertical que acompaña a cada aleteo.
+- Rumbo: guiñada = atan2(vₓ, v_z) y cabeceo = −atan2(v_y, √(vₓ² + v_z²)) con v = dp/dt (derivada analítica): la cabeza (+z del modelo) siempre apunta hacia donde vuela.
+- Aleteo: d(t) = −6° + 50°·sen(2π·f·t + φ), f = 4.0 + 0.3·(i mod 4) Hz. Es el ángulo respecto a la pose de reposo del modelo (alas levantadas ≈ 26° sobre la horizontal), alrededor del eje del cuerpo (z) por la bisagra (0, 0.0195, 0) m; el ala izquierda gira +d y la derecha −d (espejo). Las alas oscilan entre ≈ −30° y +70° sobre la horizontal. Una sinusoide es la aproximación más simple a un movimiento periódico suave con extremos amortiguados (velocidad angular cero en los extremos); el aleteo real es más brusco hacia abajo, lo que aquí **no** se modela.
+
+**Valores y límites honestos:** la envergadura de 14.5 cm (×0.075 sobre el modelo de 1.93 m) es una elección de visibilidad, no una medida; las frecuencias de 4.0–4.9 Hz y los ángulos son valores de diseño para que el aleteo se vea a 30–60 FPS, no mediciones de una especie. Las mariposas se interpretan como monarcas de la tradición del Día de Muertos (interpretación del estudio, sin fuente APA).
+
+**Comprobación:** `g++ -std=c++17 -Isrc tools/x49_pruebas.cpp -o x49_pruebas && ./x49_pruebas` (la trayectoria queda dentro de su elipse A × B, altura ≥ 1.2 m, aleteo entre −56° y +44°, rapidez < 3.5 m/s, alto de llama 0.82–1.19 y brillo 1.25–1.85). `python tools/x49_mariposas.py` comprueba que la trayectoria completa no pasa a menos de 0.8 m de casas, palapas ni rocas.
