@@ -45,53 +45,32 @@ namespace
           "Mira cómo la luz se va con el agua.",
           8.7f, 32.0f, 0, {}, { -1.0f, 23.3f }, { -1.0f, 23.3f }, { 9.0f, 0.5f, 21.0f }, { 9.0f, 0.5f, 21.0f }, 0.0f, 0.0f, false },
         { "Comparsa en la orilla",
-          "Y mientras el mar se lleva las velas, por la orilla llega la música. "
-          "En la Gran Comparsa del Día de Muertos de la ciudad de Oaxaca desfilan más de cincuenta contingentes, entre catrinas, esqueletos y disfraces de papel, con música y color, según La Razón. "
-          "La que ves aquí es una representación nuestra, no una comparsa real de Mazunte... pero el ánimo es ese: la muerte, vestida de fiesta.",
-          6.3f, 30.0f, 0, {}, { -9.5f, 18.4f }, { -9.5f, 18.4f }, { -16.0f, 1.0f, 22.6f }, { -16.0f, 1.0f, 22.6f }, 0.0f, 0.0f, true },
+          "Y mientras el mar se lleva las velas, por la orilla llega la música. En la Gran Comparsa del Día de Muertos de la ciudad de Oaxaca desfilan más de cincuenta contingentes, entre catrinas, esqueletos y disfraces de papel, con música y color, según La Razón. La muerte, vestida de fiesta.",
+          6.3f, 23.0f, 0, {}, { -9.5f, 18.4f }, { -9.5f, 18.4f }, { -16.0f, 1.0f, 22.6f }, { -16.0f, 1.0f, 22.6f }, 0.0f, 0.0f, true },
         { "Camino de flores al arco",
-          "Ahora sigue el camino de flores hasta la puerta. "
-          "Ese papel picado que se mece sobre el sendero le da color a la ofrenda y representa el aire, dice la Secretaría de Educación Pública. "
-          "Fíjate en la figura que va caminando por el camino, rumbo al altar: lleva una flor para dejarla ahí. Es una escena que armamos nosotros.",
-          6.5f, 26.0f, 0, {}, { -0.8f, 20.5f }, { -1.6f, 7.5f }, { 0.0f, 1.6f, 1.3f }, { 0.0f, 1.6f, 1.3f }, 0.0f, 0.0f, false },
+          "Ahora sigue el camino de flores hasta la puerta. Ese papel picado que se mece sobre el sendero le da color a la ofrenda y representa el aire, dice la Secretaría de Educación Pública. Fíjate en la figura que va caminando rumbo al altar: lleva una flor para dejarla ahí.",
+          6.5f, 23.0f, 0, {}, { -0.8f, 20.5f }, { -1.6f, 7.5f }, { 0.0f, 1.6f, 1.3f }, { 0.0f, 1.6f, 1.3f }, 0.0f, 0.0f, false },
         { "Banda de viento",
-          "¿Los oyes? Son metales. "
-          "Las bandas de viento son una tradición oaxaqueña: dan identidad y hermanan a los pueblos indígenas del estado, y acompañan sus fiestas comunales, según México Desconocido. "
-          "Estos músicos son una representación nuestra. Y una aclaración honesta: la música que suena en el recorrido es Xochipitzahuatl, un canto en náhuatl; no es música oaxaqueña.",
-          7.0f, 24.0f, 2, { { 1.0f, 12.8f }, { 7.5f, 12.5f } }, { 13.0f, 12.2f }, { 13.0f, 12.2f }, { 14.0f, 1.3f, 8.0f }, { 14.0f, 1.3f, 8.0f }, 0.0f, 0.0f, false },
+          "¿Los oyes? Son metales. Las bandas de viento son una tradición oaxaqueña: dan identidad y hermanan a los pueblos indígenas del estado, y acompañan sus fiestas comunales, según México Desconocido. Su música llena la noche.",
+          7.0f, 17.0f, 2, { { 1.0f, 12.8f }, { 7.5f, 12.5f } }, { 13.0f, 12.2f }, { 13.0f, 12.2f }, { 14.0f, 1.3f, 8.0f }, { 14.0f, 1.3f, 8.0f }, 0.0f, 0.0f, false },
         { "Panteón",
-          "En las alumbradas de Oaxaca, las familias pasan la noche del treinta y uno de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan, de forma simbólica, el camino de regreso, según México Desconocido. "
-          "Los platillos del difunto se colocan alrededor del altar familiar y de la tumba, dice la UNESCO. "
-          "Este panteón de cuatro tumbas es una adaptación de nuestro estudio.",
-          6.0f, 29.0f, 1, { { 6.5f, 4.2f } }, { 2.6f, 7.0f }, { -2.6f, 7.0f }, { 4.0f, 0.7f, 6.2f }, { -4.0f, 0.7f, 5.75f }, 0.0f, 0.0f, false },
+          "En las alumbradas de Oaxaca, las familias pasan la noche del treinta y uno de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan, de forma simbólica, el camino de regreso, según México Desconocido. Los platillos del difunto se colocan alrededor del altar familiar y de la tumba, dice la UNESCO.",
+          6.0f, 26.0f, 1, { { 6.5f, 4.2f } }, { 2.6f, 7.0f }, { -2.6f, 7.0f }, { 4.0f, 0.7f, 6.2f }, { -4.0f, 0.7f, 5.75f }, 0.0f, 0.0f, false },
         { "Copal",
-          "Antes de entrar, un aroma: el copal. "
-          "Forma parte de la ofrenda, junto con las velas, las flores y el pan, según la Secretaría de Educación Pública. "
-          "En el panteón tepehua de Pisaflores, en Veracruz, las tumbas se adornan en medio del humo del copal, informó el INAH. "
-          "Aquí los copaleros son una adaptación nuestra, y su humo es solo un modelo fijo.",
-          4.5f, 28.0f, 0, {}, { 0.0f, 3.3f }, { 0.0f, 3.3f }, { 0.0f, 1.0f, 1.2f }, { 0.0f, 1.0f, 1.2f }, 0.0f, 0.0f, false },
+          "Antes de entrar, un aroma: el copal. Forma parte de la ofrenda, junto con las velas, las flores y el pan, según la Secretaría de Educación Pública. En el panteón tepehua de Pisaflores, en Veracruz, las tumbas se adornan en medio del humo del copal, informó el INAH.",
+          4.5f, 22.0f, 0, {}, { 0.0f, 3.3f }, { 0.0f, 3.3f }, { 0.0f, 1.0f, 1.2f }, { 0.0f, 1.0f, 1.2f }, 0.0f, 0.0f, false },
         { "El altar",
-          "Y llegamos al altar. "
-          "Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros, según la Secretaría de Educación Pública. "
-          "El pan de muerto representa el afecto y la fraternidad hacia los difuntos. "
-          "Mira... llega la figura del camino, y deja su flor. "
-          "Este altar de tres niveles, con esta forma, es una adaptación de nuestro estudio.",
-          6.0f, 27.0f, 2, { { 0.0f, 2.2f }, { 0.0f, 1.2f } }, { 0.85f, 0.55f }, { 0.85f, 0.55f }, { 0.0f, 0.9f, -0.7f }, { 0.0f, 0.9f, -0.7f }, 0.0f, 0.0f, false },
+          "Y llegamos al altar. Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros, según la Secretaría de Educación Pública. El pan de muerto representa el afecto y la fraternidad hacia los difuntos. Mira... llega la figura del camino, y deja su flor.",
+          6.0f, 24.0f, 2, { { 0.0f, 2.2f }, { 0.0f, 1.2f } }, { 0.85f, 0.55f }, { 0.85f, 0.55f }, { 0.0f, 0.9f, -0.7f }, { 0.0f, 0.9f, -0.7f }, 0.0f, 0.0f, false },
         { "Ofrendas de las familias",
-          "Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. "
-          "Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso, según la UNESCO y la Secretaría de Educación Pública. "
-          "Estas catorce familias, con sus lanchas, sus guitarras y sus hamacas, las inventamos nosotros: no son familias reales ni una costumbre documentada de Mazunte.",
-          11.0f, 30.0f, 4, { { 0.0f, 1.9f }, { 0.0f, 3.0f }, { -3.2f, 3.6f }, { -3.2f, -3.0f } }, { -3.2f, -8.5f }, { -3.2f, -8.5f }, { -6.1f, 1.0f, -13.2f }, { -6.1f, 1.0f, -13.2f }, 0.0f, 0.0f, false },
+          "Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso, según la UNESCO y la Secretaría de Educación Pública. Fíjate en los objetos que cada familia deja para su difunto.",
+          11.0f, 29.0f, 4, { { 0.0f, 1.9f }, { 0.0f, 3.0f }, { -3.2f, 3.6f }, { -3.2f, -3.0f } }, { -3.2f, -8.5f }, { -3.2f, -8.5f }, { -6.1f, 1.0f, -13.2f }, { -6.1f, 1.0f, -13.2f }, 0.0f, 0.0f, false },
         { "Camino de las ánimas",
-          "Sube conmigo por el camino de las ánimas. "
-          "En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile, según México Desconocido. "
-          "Los faroles, el cempasúchil y las personas que suben la colina con sus velas son una procesión que inventamos nosotros; no es una peregrinación documentada de Mazunte.",
-          11.0f, 22.0f, 2, { { -3.0f, -16.0f }, { 0.0f, -21.0f } }, { 0.5f, -26.6f }, { 0.8f, -30.5f }, { 0.5f, 1.2f, -32.0f }, { 0.8f, 1.2f, -36.0f }, 0.0f, 0.0f, false },
+          "Sube conmigo por el camino de las ánimas. En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile, según México Desconocido. Los faroles, el cempasúchil y las velas marcan el camino.",
+          11.0f, 17.0f, 2, { { -3.0f, -16.0f }, { 0.0f, -21.0f } }, { 0.5f, -26.6f }, { 0.8f, -30.5f }, { 0.5f, 1.2f, -32.0f }, { 0.8f, 1.2f, -36.0f }, 0.0f, 0.0f, false },
         { "Mariposas monarca",
-          "Y entre las luces, mariposas. "
-          "Según una creencia asociada al pueblo purépecha de Michoacán, las mariposas monarca que llegan a finales de octubre y principios de noviembre son las almas de los difuntos que regresan, según Expansión Digital. "
-          "Es una interpretación simbólica, no una tradición de Mazunte: estas mariposas son una adaptación nuestra.",
-          6.0f, 23.0f, 1, { { -0.3f, -33.0f } }, { -0.8f, -35.0f }, { -0.8f, -35.0f }, { -3.8f, 1.6f, -36.1f }, { -3.8f, 1.6f, -36.1f }, 0.0f, 0.0f, false },
+          "Y entre las luces, mariposas. Según una creencia asociada al pueblo purépecha de Michoacán, las mariposas monarca que llegan a finales de octubre y principios de noviembre son las almas de los difuntos que regresan, según Expansión Digital. Es una interpretación simbólica.",
+          6.0f, 20.0f, 1, { { -0.3f, -33.0f } }, { -0.8f, -35.0f }, { -0.8f, -35.0f }, { -3.8f, 1.6f, -36.1f }, { -3.8f, 1.6f, -36.1f }, 0.0f, 0.0f, false },
         { "Mirador y cierre",
           "Desde aquí arriba se ve todo: la capilla, la playa, el mar. "
           "Así es esta fiesta: una noche en que la flama y el aroma guían a quienes se fueron de regreso a casa, y quienes se quedan los reciben con luz, con flores, con pan... y con música. "

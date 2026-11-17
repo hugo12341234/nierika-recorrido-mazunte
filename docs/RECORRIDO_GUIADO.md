@@ -19,18 +19,18 @@ Velocidad de diseño: tramo = máx(4 s, distancia / 1.8 m/s promedio) con arranq
 |---|---|---|---|---|---|
 | 0 | **Apertura: Mazunte y el mar** (Tortugas de Mazunte, punto (21, 22.4)) | (17.5, 22.2) → crías y mar (22, 23.5) | ≤ 6 s desde donde estés | 34 s | `Audio/narracion/narracion_00.mp3` |
 | 1 | **Velas y flores al mar** (Flor de cempasúchil, (3, 23)) | (1.8, 22.8) → petates y veladoras (9, 21) | 8.7 s | 32 s | `…_01` |
-| 2 | **Comparsa en la orilla** (Comparsa, (−12, 22)) | (−9.5, 22.2) → la comparsa (ver riesgo 4) | 6.3 s | 30 s | `…_02` |
-| 3 | **Camino de flores al arco** (Papel picado, (0, 1.95, 6)) | de (−0.8, 20.5) a (−1.6, 7.5) mirando al arco (0, 1.6, 1.3) | 6.5 s + 12 s de paseo | 26 s | `…_03` |
-| 4 | **Banda de viento** (Banda, (12.6 y 15.4, 10.4)) | (11.0, 9.6) → la banda (14, 8) | 7 s | 24 s | `…_04` |
-| 5 | **Panteón** (Panteón y tumbas, 4 puntos) | travelling lateral de (2.6, 7.0) a (−2.6, 7.0), mirando a las tumbas y a los diseños de velas (±3.9, 8.6) | 5 s | 29 s | `…_05` |
-| 6 | **Copal** (Copal y copalero, (±1.05, 1.75)) | (0, 3.3) → los copaleros y el arco | 4 s | 28 s | `…_06` |
-| 7 | **El altar** (Altar de ofrenda; la del pan **no** sale, ver riesgo 6) | entra por el arco (ancho 1.18 m, sin tocarlo) hasta (0, 0.95) → altar (0, 0.9, −0.7) | 5 s | 27 s | `…_07` |
-| 8 | **Ofrendas de las familias** (Ofrendas familiares, frente de cada una) | por el pasillo oeste, de (0, 3) a (−3.2, 3.6), (−3.2, −8.5) → «pescador» (−6.1, −13.2) | 12 s | 30 s | `…_08` |
-| 9 | **Camino de las ánimas** (Camino de las ánimas, (0.5, −28)) | sube desde (0.5, −26.6) siguiendo el eje del sendero | 11 s | 22 s | `…_09` |
-| 10 | **Mariposas** (Mariposas monarca, (0, −37.5)) | (0.3, −35.8) → mariposas (±4.5, −37) | 6 s | 23 s | `…_10` |
+| 2 | **Comparsa en la orilla** (Comparsa, (−12, 22)) | (−9.5, 22.2) → la comparsa (ver riesgo 4) | 6.3 s | 23 s | `…_02` |
+| 3 | **Camino de flores al arco** (Papel picado, (0, 1.95, 6)) | de (−0.8, 20.5) a (−1.6, 7.5) mirando al arco (0, 1.6, 1.3) | 6.5 s + 12 s de paseo | 23 s | `…_03` |
+| 4 | **Banda de viento** (Banda, (12.6 y 15.4, 10.4)) | (11.0, 9.6) → la banda (14, 8) | 7 s | 17 s | `…_04` |
+| 5 | **Panteón** (Panteón y tumbas, 4 puntos) | travelling lateral de (2.6, 7.0) a (−2.6, 7.0), mirando a las tumbas y a los diseños de velas (±3.9, 8.6) | 5 s | 26 s | `…_05` |
+| 6 | **Copal** (Copal y copalero, (±1.05, 1.75)) | (0, 3.3) → los copaleros y el arco | 4 s | 22 s | `…_06` |
+| 7 | **El altar** (Altar de ofrenda; la del pan **no** sale, ver riesgo 6) | entra por el arco (ancho 1.18 m, sin tocarlo) hasta (0, 0.95) → altar (0, 0.9, −0.7) | 5 s | 24 s | `…_07` |
+| 8 | **Ofrendas de las familias** (Ofrendas familiares, frente de cada una) | por el pasillo oeste, de (0, 3) a (−3.2, 3.6), (−3.2, −8.5) → «pescador» (−6.1, −13.2) | 12 s | 29 s | `…_08` |
+| 9 | **Camino de las ánimas** (Camino de las ánimas, (0.5, −28)) | sube desde (0.5, −26.6) siguiendo el eje del sendero | 11 s | 17 s | `…_09` |
+| 10 | **Mariposas** (Mariposas monarca, (0, −37.5)) | (0.3, −35.8) → mariposas (±4.5, −37) | 6 s | 20 s | `…_10` |
 | 11 | **Mirador y cierre** (misma ficha) | en el mismo punto, giro de 180° (8 s) hacia el sur: capilla, playa y mar | 0 s | 31 s | `…_11` |
 
-**Duración total de diseño: ≈ 7 min** (≈ 5 min 36 s de retenes + ≈ 1 min 30 s de tramos; la narración suma 757 palabras ≈ 5 min 15 s a ~145 palabras/min). Si es mucho para la defensa, lo que **menos** daña recortar: 2 (comparsa), 4 (banda) y 10 (mariposas): con eso baja a ≈ 5 min 30 s.
+**Duración total de diseño: ≈ 6 min 30 s tras el cambio de guion del 17/11 (antes ≈ 7 min)** (≈ 5 min 36 s de retenes + ≈ 1 min 30 s de tramos; la narración suma 757 palabras ≈ 5 min 15 s a ~145 palabras/min). Si es mucho para la defensa, lo que **menos** daña recortar: 2 (comparsa), 4 (banda) y 10 (mariposas): con eso baja a ≈ 5 min 30 s.
 
 **Silueta sincronizada (idea):** durante el tour la caminata de la silueta se programa para **llegar al altar justo cuando la cámara está ahí** (estación 7): `tSilueta = tTour − t0`, con t0 = (llegada al altar) − `Duracion()` − 1 s. Antes de t0 la silueta espera en la orilla (`Actualizar` ya recorta t < 0 a 0). Así se ve pasar por el patio durante el panteón y deja su flor mientras suena la narración del altar. Son 2 líneas en `main.cpp`. Al cancelar, la silueta sigue desde donde iba.
 
@@ -69,52 +69,31 @@ La flama de cada vela guía a los difuntos de regreso a casa, y el aroma de las 
 Mira cómo la luz se va con el agua. [A]
 
 ### 02 · Comparsa en la orilla (~28 s)
-Y mientras el mar se lleva las velas, por la orilla llega la música.
-En la Gran Comparsa del Día de Muertos de la ciudad de Oaxaca desfilan más de cincuenta contingentes, entre catrinas, esqueletos y disfraces de papel, con música y color. [F: La Razón Online, 2025]
-La que ves aquí es una representación nuestra, no una comparsa real de Mazunte… pero el ánimo es ese: la muerte, vestida de fiesta. [A]
+Y mientras el mar se lleva las velas, por la orilla llega la música. En la Gran Comparsa del Día de Muertos de la ciudad de Oaxaca desfilan más de cincuenta contingentes, entre catrinas, esqueletos y disfraces de papel, con música y color, según La Razón. La muerte, vestida de fiesta.
 
 ### 03 · Camino de flores al arco (~24 s)
-Ahora sigue el camino de flores hasta la puerta. [A]
-Ese papel picado que se mece sobre el sendero le da color a la ofrenda y representa el aire, dice la Secretaría de Educación Pública. [F: SEP, 2026]
-Fíjate en la figura que va caminando por el camino, rumbo al altar: lleva una flor para dejarla ahí. Es una escena que armamos nosotros. [A]
+Ahora sigue el camino de flores hasta la puerta. Ese papel picado que se mece sobre el sendero le da color a la ofrenda y representa el aire, dice la Secretaría de Educación Pública. Fíjate en la figura que va caminando rumbo al altar: lleva una flor para dejarla ahí.
 
 ### 04 · Banda de viento (~22 s)
-¿Los oyes? Son metales. [A]
-Las bandas de viento son una tradición oaxaqueña: dan identidad y hermanan a los pueblos indígenas del estado, y acompañan sus fiestas comunales. [F: México Desconocido, 2023]
-Estos músicos son una representación nuestra. Y una aclaración honesta: la música que suena en el recorrido es Xochipitzahuatl, un canto en náhuatl; no es música oaxaqueña. [F+A: texto de la ficha de la banda]
+¿Los oyes? Son metales. Las bandas de viento son una tradición oaxaqueña: dan identidad y hermanan a los pueblos indígenas del estado, y acompañan sus fiestas comunales, según México Desconocido. Su música llena la noche.
 
 ### 05 · Panteón (~27 s)
-En las alumbradas de Oaxaca, las familias pasan la noche del treinta y uno de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan, de forma simbólica, el camino de regreso. [F: México Desconocido, 2026]
-Los platillos del difunto se colocan alrededor del altar familiar y de la tumba, dice la UNESCO. [F: UNESCO, s. f.]
-Este panteón de cuatro tumbas es una adaptación de nuestro estudio. [A]
+En las alumbradas de Oaxaca, las familias pasan la noche del treinta y uno de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan, de forma simbólica, el camino de regreso, según México Desconocido. Los platillos del difunto se colocan alrededor del altar familiar y de la tumba, dice la UNESCO.
 
 ### 06 · Copal (~26 s)
-Antes de entrar, un aroma: el copal. [A]
-Forma parte de la ofrenda, junto con las velas, las flores y el pan, según la Secretaría de Educación Pública. [F: SEP, 2026]
-En el panteón tepehua de Pisaflores, en Veracruz, las tumbas se adornan en medio del humo del copal, informó el INAH. [F: INAH, 2025; Veracruz, no Oaxaca]
-Aquí los copaleros son una adaptación nuestra, y su humo es solo un modelo fijo. [A]
+Antes de entrar, un aroma: el copal. Forma parte de la ofrenda, junto con las velas, las flores y el pan, según la Secretaría de Educación Pública. En el panteón tepehua de Pisaflores, en Veracruz, las tumbas se adornan en medio del humo del copal, informó el INAH.
 
 ### 07 · El altar (~25 s)
-Y llegamos al altar. [A]
-Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros. [F: SEP, 2026]
-El pan de muerto representa el afecto y la fraternidad hacia los difuntos. [F: SEP, 2026]
-Mira… llega la figura del camino, y deja su flor. [A]
-Este altar de tres niveles, con esta forma, es una adaptación de nuestro estudio. [A; texto de la ficha]
+Y llegamos al altar. Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros, según la Secretaría de Educación Pública. El pan de muerto representa el afecto y la fraternidad hacia los difuntos. Mira... llega la figura del camino, y deja su flor.
 
 ### 08 · Ofrendas de las familias (~28 s)
-Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. [A]
-Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso. [F: UNESCO, s. f.; SEP, 2026]
-Estas catorce familias, con sus lanchas, sus guitarras y sus hamacas, las inventamos nosotros: no son familias reales ni una costumbre documentada de Mazunte. [A; texto de la ficha]
+Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso, según la UNESCO y la Secretaría de Educación Pública. Fíjate en los objetos que cada familia deja para su difunto.
 
 ### 09 · Camino de las ánimas (~20 s)
-Sube conmigo por el camino de las ánimas. [A]
-En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile. [F: México Desconocido, 2026]
-Los faroles, el cempasúchil y las personas que suben la colina con sus velas son una procesión que inventamos nosotros; no es una peregrinación documentada de Mazunte. [A; texto de la ficha]
+Sube conmigo por el camino de las ánimas. En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile, según México Desconocido. Los faroles, el cempasúchil y las velas marcan el camino.
 
 ### 10 · Mariposas (~21 s)
-Y entre las luces, mariposas. [A]
-Según una creencia asociada al pueblo purépecha de Michoacán, las mariposas monarca que llegan a finales de octubre y principios de noviembre son las almas de los difuntos que regresan. [F: Expansión Digital, 2025]
-Es una interpretación simbólica, no una tradición de Mazunte: estas mariposas son una adaptación nuestra. [F+A]
+Y entre las luces, mariposas. Según una creencia asociada al pueblo purépecha de Michoacán, las mariposas monarca que llegan a finales de octubre y principios de noviembre son las almas de los difuntos que regresan, según Expansión Digital. Es una interpretación simbólica.
 
 ### 11 · Mirador y cierre (~29 s)
 Desde aquí arriba se ve todo: la capilla, la playa, el mar. [A]
@@ -133,3 +112,6 @@ Las posiciones de la tabla de la sección 3 eran inferidas; con capturas de Linu
 - **Silueta:** arranca su caminata para **llegar al altar 14 s después de que la cámara se detiene en la estación 7** (cuando la voz dice «llega la figura y deja su flor»), no en el copal como decía la sección 3. Con voz real esos 14 s son aproximados.
 - Modo de desarrollo: `NIERIKA_RECORRIDO_CAPTURAS=carpeta` corre el recorrido a 30 pasos de 0.1 s por cuadro y guarda un PNG por cuadro (cada 3 s de recorrido); es lo que se usó en Linux.
 - Duración medida en Linux, sin voz: **≈ 7 min** (139 cuadros × 3 s).
+
+## 10. Cambio de guion (17/11, D2)
+D2: «el chiste es mostrar la tradición, no que inventamos o cómo lo hicimos». Se quitaron de la voz las aclaraciones de adaptación (panteón, copaleros, altar, familias, procesión, mariposas, comparsa, banda y la nota sobre la música). **Siguen en las fichas culturales** (en pantalla), que es donde el ESTADO exige decir lo que es adaptación del estudio. La voz ya no afirma nada de lo inventado como si fuera real: solo dice lo que dicen las fuentes y señala lo que se ve. La canción de fondo cambiará a «Dios nunca muere» con la Banda Mixe de Oaxaca (otro hilo): la voz ya no menciona la música.
