@@ -43,3 +43,15 @@ If they do not leave, they must be added here.
 | D-2 / D-4 (silhouette) | Starts by itself when the program opens; **R** restarts it | Implemented (D-5, merged Nov 12); D2 still has to accept it when seeing it |
 
 > 📷 Screenshot pending: keyboard diagram with the keys highlighted (made in GIMP; no outside image is used without credit).
+
+## 2.4 What V and F1 look like
+
+Altar candles turned off with **V** (at the top, the notice to turn them back on):
+
+![Altar candles off](../capturas/02_velas_apagadas_V.jpg)
+
+The controls list shown by **F1**:
+
+![Controls help with F1](../capturas/02_ayuda_F1.jpg)
+
+*Screenshots of Nov 17, 2026 on D2's PC (using the capture mode variables `NIERIKA_UI=velas_apagadas` and `NIERIKA_UI=ayuda`; the game shows the same when you press the keys). The F1 help also lists **L** and does not list the debug keys.*

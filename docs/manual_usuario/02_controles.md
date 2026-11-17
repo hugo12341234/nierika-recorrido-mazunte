@@ -46,3 +46,15 @@ Si no salen, hay que agregarlas aquí.
 ![Esquema del teclado y el ratón](capturas/02_teclado_controles.png)
 
 *Esquema dibujado por el equipo con `tools/x15_esquema_teclado.py`; no usa imágenes ajenas.*
+
+## 2.4 Cómo se ven V y F1
+
+Velas del altar apagadas con **V** (arriba, el aviso para volver a encenderlas):
+
+![Velas del altar apagadas](capturas/02_velas_apagadas_V.jpg)
+
+Lista de controles que muestra **F1**:
+
+![Ayuda de controles con F1](capturas/02_ayuda_F1.jpg)
+
+*Capturas del 17/11/2026 en la PC de D2 (con las variables `NIERIKA_UI=velas_apagadas` y `NIERIKA_UI=ayuda` del modo de captura; el juego muestra lo mismo al pulsar las teclas). La ayuda F1 lista también **L**, y no lista las teclas de depuración.*
