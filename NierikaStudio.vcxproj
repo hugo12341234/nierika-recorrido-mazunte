@@ -100,6 +100,7 @@
     <ClCompile Include="vendor\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Animacion.cpp" />
     <ClCompile Include="src\Silueta.cpp" />
+    <ClCompile Include="src\PersonasAnim.cpp" />
     <!-- SOIL2 se compila desde codigo fuente (vendor\SOIL2) para x64 -->
     <ClCompile Include="vendor\SOIL2\SOIL2.c" />
     <ClCompile Include="vendor\SOIL2\image_helper.c" />
@@ -120,6 +121,7 @@
     <ClInclude Include="src\Olas.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Silueta.h" />
+    <ClInclude Include="src\PersonasAnim.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\modelLoading.vs" />

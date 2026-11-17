@@ -7,7 +7,7 @@
 Ver la tabla de [§1.4](01_introduccion.md). En resumen, a la fecha:
 
 - **Escenario completo en código:** playa y mar con olas, panteón con 4 tumbas, cruz, roca, barda y papel picado, y el cuarto con altar de 3 niveles y ofrenda ✅ **[repo]**.
-- **5 animaciones** implementadas (2 por KeyFrames, 3 simples) con su justificación matemática y valores del código ([§7](07_justificacion_matematica.md)).
+- **10 animaciones** implementadas (5 por KeyFrames y 5 simples; las 5 últimas agregadas el 17/11) con su justificación matemática y valores del código ([§7](07_justificacion_matematica.md)). Sin compilar en VS 2022 ni FPS medidos con las 5 nuevas.
 - **23 modelos con `.obj` y `.blend`** en el repositorio; la meta es ≥ 18 con la definición de «propio» del 19/10 ([§6](06_modelos_y_recursos.md)).
 - **Colisiones, fichas (5), audio propio, iluminación Blinn-Phong, `cleanup()` y contador de FPS** en el código.
 
