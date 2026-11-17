@@ -1,4 +1,4 @@
-// X-50: ofrenda mayor del patio del panteon. Solo datos y matematica (sin GPU): posiciones de los objetos en coordenadas LOCALES del altar_mayor
+// X-51: ofrenda mayor del patio del panteon. Solo datos y matematica (sin GPU): posiciones de los objetos en coordenadas LOCALES del altar_mayor
 // (origen en el centro del piso, frente = +z, 1 u = 1 m). main.cpp los dibuja con la matriz del altar y las colisiones salen de la huella.
 #ifndef OFRENDA_MAYOR_H
 #define OFRENDA_MAYOR_H
@@ -18,7 +18,7 @@ namespace OfrendaMayor
     enum Tipo { VELA, FLOR, RACIMO, PAN, CALAVERA, COPALERO, REFRESCO, MARCO };
     struct Objeto { Tipo tipo; glm::vec3 pos; float esc; };
 
-    // Alturas de tope de los 4 niveles (iguales a las de tools/x50_altar_mayor.py)
+    // Alturas de tope de los 4 niveles (iguales a las de tools/x51_altar_mayor.py)
     constexpr float Y_A = 0.40f, Y_B = 0.80f, Y_C = 1.20f, Y_D = 1.55f;
 
     inline float Azar(int i)   // numero repetible en [0,1): sin(i*12.9898)*43758.5453 (hash corto de uso comun en shaders)

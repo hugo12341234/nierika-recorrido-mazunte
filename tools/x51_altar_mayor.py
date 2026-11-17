@@ -1,5 +1,5 @@
-r"""X-50: modelo propio `altar_mayor` (ofrenda mayor del patio del panteon). Blender 5.x con el modulo bpy.
-Uso (raiz del repo):   python tools/x50_altar_mayor.py
+r"""X-51: modelo propio `altar_mayor` (ofrenda mayor del patio del panteon). Blender 5.x con el modulo bpy.
+Uso (raiz del repo):   python tools/x51_altar_mayor.py
 Genera Models/altar_mayor/{altar_mayor.obj,.mtl,.blend} y 4 texturas PNG de 1024x1024 (hechas aqui, sin fuentes externas).
 Medidas reales (1 u = 1 m). Se define en coordenadas del JUEGO (x derecha, y arriba, z hacia el frente +z) y se pasa a Blender con
 (x, y, z) -> (x, -z, y); el exportador usa Forward -Z / Up Y, asi que el .obj queda de nuevo en coordenadas del juego.

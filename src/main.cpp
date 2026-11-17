@@ -32,7 +32,7 @@
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"
 #include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
-#include "OfrendaMayor.h"  // X-50: datos de la ofrenda mayor del patio
+#include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
@@ -283,7 +283,7 @@ int main()
     Model llamaModelo((char*)"Models/llama/llama.obj");                   // C-2: 2 planos cruzados; la forma la pinta lighting.frag
     Model arbolSelva((char*)"Models/arbol_selva/arbol_selva.obj");        // X-36: arbol de copa ancha (extra, no cuenta entre los 18 propios)
     Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
-    Model altarMayor((char*)"Models/altar_mayor/altar_mayor.obj");     // X-50: ofrenda mayor del patio (tela, faldones, retablo, columnas)
+    Model altarMayor((char*)"Models/altar_mayor/altar_mayor.obj");     // X-51: ofrenda mayor del patio (tela, faldones, retablo, columnas)
     Model racimoCemp((char*)"Models/racimo_cempasuchil/racimo_cempasuchil.obj"); // X-36: 7 flores juntas (1 llamada de dibujo)
     Model senderoTierra((char*)"Models/sendero/sendero.obj");             // X-36: caminos de tierra sobre las colinas (en coordenadas del mundo)
     Atuendos atuendos;                                                    // X-35: telas y prendas (falda, rebozo, sombrero) de las personas
@@ -338,7 +338,7 @@ int main()
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
     colisiones.agregar({ glm::vec3( 6.75f,0.0f,  3.25f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro este
     colisiones.agregar({ glm::vec3( 1.275f, 0.0f, 12.325f), glm::vec3( 1.725f, 0.30f, 12.675f) });  // B-10: roca decorativa
-    // X-50: ofrendas mayores del patio (huella del peldano incluida, sin giro): x +-(2.0..5.8), z 7.38..9.70
+    // X-51: ofrendas mayores del patio (huella del peldano incluida, sin giro): x +-(2.0..5.8), z 7.38..9.70
     for (int lado = -1; lado <= 1; lado += 2)
         colisiones.agregar({ glm::vec3(OfrendaMayor::X_CENTRO * lado - OfrendaMayor::SEMI_X, 0.0f, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_ATRAS),
                              glm::vec3(OfrendaMayor::X_CENTRO * lado + OfrendaMayor::SEMI_X, OfrendaMayor::ALTO, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_FRENTE) });
@@ -618,7 +618,7 @@ int main()
             glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.44f);
         }
 
-        // X-50: luz calida de cada ofrenda mayor (2 puntuales, una por altar). Parpadeo = 2 senos de periodos distintos, fases distintas
+        // X-51: luz calida de cada ofrenda mayor (2 puntuales, una por altar). Parpadeo = 2 senos de periodos distintos, fases distintas
         {
             const float t = (float)Reloj();
             for (int i = 0; i < 2; i++)
@@ -844,14 +844,14 @@ int main()
         colocar(cruz,     glm::vec3(-2.5f, 0.0f,  3.7f), 0.0f);  // E-2: antes z = 3.0, dentro del muro sur (z 3.00..3.25)
         colocar(tumba2,   glm::vec3(-4.0f, 0.0f,  4.5f), 0.0f);
         colocar(tumba3,   glm::vec3( 4.0f, 0.0f,  5.0f), 0.0f);
-        colocar(tumba4,   glm::vec3(-5.8f, 0.0f,  6.0f), 0.0f);  // X-50: antes (-4.5, 9.0); cede el sitio a la ofrenda mayor
-        colocar(tumba1,   glm::vec3( 5.8f, 0.0f,  6.5f), 0.0f);  // X-50: antes (4.5, 10.0)
+        colocar(tumba4,   glm::vec3(-5.8f, 0.0f,  6.0f), 0.0f);  // X-51: antes (-4.5, 9.0); cede el sitio a la ofrenda mayor
+        colocar(tumba1,   glm::vec3( 5.8f, 0.0f,  6.5f), 0.0f);  // X-51: antes (4.5, 10.0)
         colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado
         // B-13: papel picado colgado del travesano (y = 1.95; su pivote es el borde superior). Provisional, sin ver en pantalla.
         colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
-        // X-50: ofrendas mayores del patio (altar_mayor de 4 niveles + velas con llama, racimos, pan, calaveras, copaleros, refrescos, marcos y cempasuchil),
+        // X-51: ofrendas mayores del patio (altar_mayor de 4 niveles + velas con llama, racimos, pan, calaveras, copaleros, refrescos, marcos y cempasuchil),
         // a ambos lados del camino, y un arco de cempasuchil sobre el camino. Papel picado colgado del travesano de cada una.
         {
             glUniform1f(specLoc, 0.08f);
