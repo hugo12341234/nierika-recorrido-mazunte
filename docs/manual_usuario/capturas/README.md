@@ -9,7 +9,7 @@ Todas las capturas son del programa propio; **la capilla provisional no sale en 
 | `01_ventana_inicio.jpg` | Cámara al abrir el programa (con la ficha del papel picado) | 1.4 | **Repetida 17/11 en la PC de D2** |
 | `02_teclado_controles.png` | Esquema del teclado: W A S D, flechas, ratón, V, M, F1, R y Esc | 2.1 | **Regenerado 17/11, sin L** (`tools/x15_esquema_teclado.py`, Pillow) |
 | `02_velas_apagadas_V.jpg` | Altar con las velas apagadas y el aviso de V | 2.4 | **Nueva 17/11** (`NIERIKA_UI=velas_apagadas`) |
-| `02_ayuda_F1.jpg` | Lista de controles de F1 | 2.4 | **Nueva 17/11** (`NIERIKA_UI=ayuda`) |
+| `02_ayuda_F1.jpg` | Lista de controles de F1 | 2.4 | **Nueva 17/11, recapturada con X-61 (sin L)** (`NIERIKA_UI=ayuda`) |
 | `03_parada1_orilla.jpg` | Orilla con velas, flores, lanchas y la silueta | 3 | **Repetida 17/11 en la PC de D2** |
 | `03_parada4_panteon_desde_la_orilla.jpg` | Panteón con barda, tumbas, arco de cempasúchil y papel picado | 3 | **Repetida 17/11 en la PC de D2** |
 | `03_parada4_panteon_papel_picado.jpg` | Papel picado entre los postes y una persona de rodillas junto a una tumba | 3 | **Repetida 17/11 en la PC de D2** |
@@ -19,7 +19,6 @@ Todas las capturas son del programa propio; **la capilla provisional no sale en 
 
 Las `02_luces_espacio.jpg` (luces con la barra espaciadora) y `02_luces_L.jpg` (cubos de luces, tecla L) se **eliminaron** el 17/11: esas funciones ya no existen.
 
-**Pendiente (necesita la PC de D2):** `02_ayuda_F1.jpg` es de antes de X-61 y todavía muestra la línea «L mostrar u ocultar los cubos de las luces»; hay que recapturarla con la versión que compile X-61 (`NIERIKA_UI=ayuda`).
 
 **Cómo se hicieron (17/11):** en la PC de D2, con el *Release x64* de `develop` y el modo de captura de `src/main.cpp`:
 `NIERIKA_CAPTURAS="x,y,z,yaw,pitch,t,archivo.png;..."` (yaw −90 = mirar hacia −z; `t` = segundo de la caminata de la silueta) y, para V y F1, `NIERIKA_UI=velas_apagadas` o `NIERIKA_UI=ayuda`. Se guardan con `glReadPixels` (1280×720) y se convirtieron a JPG (calidad 88). Son tomas reales del programa, pero con la cámara colocada por código; **no** se vio a una persona pulsar las teclas.
