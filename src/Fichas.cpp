@@ -72,7 +72,7 @@ namespace
           REF_SEP,
           1, { glm::vec3(0.0f, 0.80f, -0.75f) } },  // X-58: pan_muerto en el nivel medio del altar3 al centro (antes (1.40, 0.80, 0)); a < 0.9 m de la repisa gana a la del altar
 
-        // ---- X-52 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 12 fichas (ESTADO sec. 4) ----
+        // ---- X-52 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 13 fichas (ESTADO sec. 4) ----
         { "Banda de viento",
           "Las bandas de viento son una tradición oaxaqueña que da identidad y hermana a los pueblos indígenas del estado, y acompañan sus fiestas comunales (México Desconocido, 2023). "
           "Los músicos y los instrumentos de esta banda son una representación del estudio. La música que suena en el recorrido es Xochipitzahuatl, "
@@ -216,7 +216,7 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
         ImGui::Separator();
         ImGui::TextUnformatted("W A S D / flechas   caminar\nRaton              mirar\nV                  encender o apagar las velas (cerca del altar)\n"
                                "M                  sonido: mar y musica / solo mar / solo musica / silencio\nR                  reiniciar la caminata de la silueta\n"
-                               "L                  mostrar u ocultar los cubos de las luces\nF1                 mostrar u ocultar esta ayuda\nEsc                salir");
+                               "F1                 mostrar u ocultar esta ayuda\nEsc                salir");
         ImGui::Spacing();
         ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Acercate a menos de 2 m de un objeto para leer su ficha cultural.");
         ImGui::End();
