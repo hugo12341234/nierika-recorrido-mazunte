@@ -6,16 +6,32 @@ Todas las capturas son del programa propio; **la capilla provisional no sale en 
 
 | Archivo | Qué muestra | Sección | Estado |
 |---|---|---|---|
-| `01_ventana_inicio.jpg` | Cámara al abrir el programa (con la ficha del papel picado) | 1.4 | **Repetida 12/11 en la PC de D2** (X-4, aspecto nocturno final) |
-| `03_parada1_orilla.jpg` | Orilla con velas, flores y la silueta | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `03_parada4_panteon_desde_la_orilla.jpg` | Panteón con barda, tumbas y papel picado | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `03_parada4_panteon_papel_picado.jpg` | Papel picado entre los postes | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `03_parada5_cuarto_altar.jpg` | Altar con su ficha | 3, 4.1 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `03_parada5_silueta_con_flor.jpg` | La silueta con la flor frente al altar | 3 | **Repetida 12/11 en la PC de D2** (X-4) |
-| `02_teclado_controles.png` | Esquema del teclado con W A S D, flechas, espacio, R, L y Esc | 2.1 | **Hecho 12/11** (`tools/x15_esquema_teclado.py`, Pillow) |
-| `02_luces_espacio.jpg` | **Obsoleta (17/11, X-60):** escena con las luces de colores que ya no existen; se reemplaza por velas encendidas/apagadas (`NIERIKA_UI=velas_apagadas`) y la ayuda F1 (`NIERIKA_UI=ayuda`) | 2.1 | Tomada 12/11; retomar |
-| `02_luces_L.jpg` | Escena con los cubos de las luces visibles (tecla L; `NIERIKA_LUCES` ya no existe) | 2.1 | Tomada 12/11 |
+| `01_ventana_inicio.jpg` | Cámara al abrir el programa (con la ficha del papel picado) | 1.4 | **Repetida 17/11 en la PC de D2** |
+| `02_teclado_controles.png` | Esquema del teclado: W A S D, flechas, ratón, V, M, F1, R y Esc | 2.1 | **Regenerado 17/11, sin L** (`tools/x15_esquema_teclado.py`, Pillow) |
+| `02_velas_apagadas_V.jpg` | Altar con las velas apagadas y el aviso de V | 2.4 | **Nueva 17/11** (`NIERIKA_UI=velas_apagadas`) |
+| `02_ayuda_F1.jpg` | Lista de controles de F1 | 2.4 | **Nueva 17/11** (`NIERIKA_UI=ayuda`) |
+| `03_parada1_orilla.jpg` | Orilla con velas, flores, lanchas y la silueta | 3 | **Repetida 17/11 en la PC de D2** |
+| `03_parada4_panteon_desde_la_orilla.jpg` | Panteón con barda, tumbas, arco de cempasúchil y papel picado | 3 | **Repetida 17/11 en la PC de D2** |
+| `03_parada4_panteon_papel_picado.jpg` | Papel picado entre los postes y una persona de rodillas junto a una tumba | 3 | **Repetida 17/11 en la PC de D2** |
+| `03_parada5_cuarto_altar.jpg` | Altar con la ficha del copal | 3, 4.1 | **Repetida 17/11 en la PC de D2** |
+| `03_parada5_altar_sin_ficha.jpg` | Altar visto desde la puerta del cuarto | 3 | **Nueva 17/11** |
+| `03_parada5_silueta_con_flor.jpg` | La silueta frente al altar (t = 22 s) | 3 | **Repetida 17/11 en la PC de D2** |
 
-Las capturas de 12/11 se hicieron en Linux con un renderizador por software y una cámara colocada por código; **conviene repetirlas en la PC de D2** con el aspecto final (texturas, hora del día) antes de entregar.
+Las `02_luces_espacio.jpg` (luces con la barra espaciadora) y `02_luces_L.jpg` (cubos de luces, tecla L) se **eliminaron** el 17/11: esas funciones ya no existen.
 
-**Cómo se hicieron (12/11):** con el modo de captura de `src/main.cpp` (variable `NIERIKA_CAPTURAS="x,y,z,yaw,pitch,t,archivo.png;..."`; `NIERIKA_LUCES=1|2` para las luces). Las seis capturas del 12/11 hechas en Linux se sustituyeron por estas, tomadas en la PC de D2 con glReadPixels.
+**Pendiente (necesita la PC de D2):** `02_ayuda_F1.jpg` es de antes de X-61 y todavía muestra la línea «L mostrar u ocultar los cubos de las luces»; hay que recapturarla con la versión que compile X-61 (`NIERIKA_UI=ayuda`).
+
+**Cómo se hicieron (17/11):** en la PC de D2, con el *Release x64* de `develop` y el modo de captura de `src/main.cpp`:
+`NIERIKA_CAPTURAS="x,y,z,yaw,pitch,t,archivo.png;..."` (yaw −90 = mirar hacia −z; `t` = segundo de la caminata de la silueta) y, para V y F1, `NIERIKA_UI=velas_apagadas` o `NIERIKA_UI=ayuda`. Se guardan con `glReadPixels` (1280×720) y se convirtieron a JPG (calidad 88). Son tomas reales del programa, pero con la cámara colocada por código; **no** se vio a una persona pulsar las teclas.
+
+| Toma | Pose `x,y,z,yaw,pitch,t` |
+|---|---|
+| inicio | `0,1.6,6,-90,0,0` |
+| orilla | `0,1.6,21,90,-8,0` |
+| panteón desde la orilla | `0,1.6,20,-90,0,0` |
+| papel picado | `0,1.6,10,-90,0,0` |
+| altar | `0,1.6,1.3,-90,-20,0` |
+| altar sin ficha | `0,1.6,3.5,-90,-3,0` |
+| silueta con flor | `0,1.6,1.3,-90,-20,22` |
+| V (velas apagadas) | `0,1.6,1.8,-90,-15,0` |
+| F1 | `0,1.6,6,-90,0,0` |

@@ -21,4 +21,4 @@ The window is titled *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazu
 
 ![Window just opened](../capturas/01_ventana_inicio.jpg)
 
-*Screenshot taken on Nov 12, 2026 with `develop` code (B-13, D-5 and E-2 merged) in a software renderer; on your machine it will look the same in shape but smoother. It will be retaken on D2's PC with the final look.*
+*Screenshot taken on Nov 17, 2026 on D2's PC with `develop` code up to PR #131 (the program's capture mode, Release x64, 1280×720). The papel picado card shows because the camera starts under the posts.*
