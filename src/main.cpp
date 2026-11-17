@@ -31,6 +31,7 @@
 #include "VidaColinas.h"    // X-33/X-34: senderos, faroles, fogatas, gente y luciernagas en las colinas
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"
+#include "LucesCasas.h"        // X-56: ventanas encendidas de las casas (estado, color y parpadeo por casa)
 #include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
 #include "PlazaTrasera.h"  // X-52: plaza detras de la capilla
@@ -241,6 +242,8 @@ int main()
     Model fogata((char*)"Models/fogata/fogata.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model palapa((char*)"Models/palapa/palapa.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model haloVentana((char*)"Models/halo_ventana/halo_ventana.obj");   // X-56: plano 1 x 1 m del halo de una ventana encendida
+    Model ventanaTrasera((char*)"Models/ventana_trasera/ventana_trasera.obj");  // X-56: vidrios de la pared trasera de las casas (las casas solo traen ventanas al frente)
     Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model calles((char*)"Models/calles/calles.obj");                  // X-30: caminos de tierra del pueblo de fondo (fuera del alcance original)
     Model cimientos((char*)"Models/cimientos/cimientos.obj");         // X-53: bloques de piedra bajo las casas del pueblo de fondo (una malla en coordenadas del mundo; generada por tools/x53_ajustar_alturas.py)
@@ -355,6 +358,7 @@ int main()
             colisiones.agregar({ glm::vec3(px - 0.05f, 0.0f, pz - 0.05f), glm::vec3(px + 0.05f, 2.0f, pz + 0.05f) });
         }
     // X-25..X-28: bandera de lo que esta FUERA DEL ALCANCE ORIGINAL (casas y palapas). Constante Extras::MOSTRAR_FUERA_DE_ALCANCE o NIERIKA_SIN_FUERA_ALCANCE=1
+    const bool sinVentanas = std::getenv("NIERIKA_SIN_VENTANAS") != nullptr;   // X-56: solo para las capturas "antes"
     const bool fueraAlcance = Extras::MOSTRAR_FUERA_DE_ALCANCE && !std::getenv("NIERIKA_SIN_FUERA_ALCANCE");
     if (fueraAlcance)
     {
@@ -1286,6 +1290,14 @@ int main()
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 m.Draw(shader);
             };
+            // X-56: manda al shader color y brillo de las 2 ventanas de la casa i (salt separa playa y pueblo; ver LucesCasas.h)
+            auto ventanasCasa = [&](int i, int salt)
+            {
+                LucesCasas::Ventanas v = LucesCasas::Estado(i, salt, (float)Reloj());
+                if (sinVentanas) v.izq = v.der = 0.0f;
+                glUniform3f(glGetUniformLocation(shader.Program, "ventanaColor"), v.color.x, v.color.y, v.color.z);
+                glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), v.izq, v.der);
+            };
             // sobre la ola: posicion (x, z), altura = Olas::Altura, vertical = normal de la ola; yaw = giro de proa
             auto sobreOla = [&](float x, float z, float yawGrados, float subir) -> glm::mat4
             {
@@ -1336,7 +1348,11 @@ int main()
                 for (int i = 0; i < Extras::N_PALAPAS; i++)
                     poner(palapa, glm::vec3(Extras::PALAPAS[i].x, Colisiones::alturaSuelo(Extras::PALAPAS[i].z), Extras::PALAPAS[i].z), Extras::PALAPAS[i].giro, 1.0f);
                 for (int i = 0; i < Extras::N_CASAS; i++)
+                {
+                    ventanasCasa(i, 100);   // X-56
                     poner(Extras::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
+                    poner(ventanaTrasera, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
+                }
             }
             if (fueraAlcance)   // X-29 (FUERA DEL ALCANCE ORIGINAL): alfombras de petalos, banda de musicos y comparsa
             {
@@ -1401,7 +1417,12 @@ int main()
                 calles.Draw(shader);
                 cimientos.Draw(shader);   // X-53: las casas de las laderas se apoyan en su punto mas alto; el cimiento llena el hueco hasta el suelo
                 for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                {
+                    ventanasCasa(i, 0);   // X-56
                     poner(PuebloFondo::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
+                    poner(ventanaTrasera, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
+                }
+                glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), 0.0f, 0.0f);   // X-56: lo que siga no trae ventanas
                 for (int i = 0; i < PuebloFondo::N_ROCAS; i++)
                     poner(rocaMar, glm::vec3(PuebloFondo::ROCAS[i].x, PuebloFondo::ROCAS[i].y, PuebloFondo::ROCAS[i].z), PuebloFondo::ROCAS[i].giro, PuebloFondo::ROCAS[i].esc);
                 poner(palapa, glm::vec3(PuebloFondo::MIRADOR_X, PuebloFondo::MIRADOR_Y, PuebloFondo::MIRADOR_Z), 30.0f, 0.8f);   // mirador pequeno sobre la roca mayor
@@ -1801,6 +1822,42 @@ int main()
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
                 cempasuchil.Draw(shader);
             }
+            // X-56: halo de cada ventana encendida (llama = 6, color de la casa). Un plano (halo_ventana.obj) por ventana y por pared (delantera y trasera),
+            // de 2.4 m; solo las casas a menos de 160 m y delante de la camara. Casas de la playa (salt 100) y del pueblo de fondo (salt 0).
+            if (fueraAlcance && !sinVentanas)
+            {
+                glUniform1i(glGetUniformLocation(shader.Program, "llama"), 6);
+                const glm::vec3 adelante = camera.GetFront();
+                auto halosCasa = [&](int i, int salt, glm::vec3 pos, float giro)
+                {
+                    const glm::vec3 d = pos - camh;
+                    const float dist = glm::length(d);
+                    if (dist > 160.0f || glm::dot(d, adelante) < -6.0f) return;
+                    // de cerca el plano taparia la pared con un velo: se desvanece entre 2 y 10 m; de lejos crece (hasta x2.5) para que el brillo se note
+                    const float cerca = glm::clamp((dist - 2.0f) / 8.0f, 0.0f, 1.0f);
+                    const float lejos = 1.0f + 1.5f * glm::clamp(dist / 120.0f, 0.0f, 1.0f);
+                    const LucesCasas::Ventanas v = LucesCasas::Estado(i, salt, th);
+                    glUniform3f(glGetUniformLocation(shader.Program, "ventanaColor"), v.color.x, v.color.y, v.color.z);
+                    const glm::mat4 base = glm::rotate(glm::translate(glm::mat4(1.0f), pos), glm::radians(giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    for (int w = 0; w < 2; w++)
+                    {
+                        const float b = (w == 0) ? v.izq : v.der;
+                        if (b < 0.05f) continue;
+                        const float x = (w == 0) ? -LucesCasas::VENTANA_X : LucesCasas::VENTANA_X;
+                        glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.70f * b * cerca);
+                        glm::mat4 mh = glm::scale(glm::translate(base, glm::vec3(x, LucesCasas::VENTANA_Y, LucesCasas::VENTANA_Z)), glm::vec3(2.4f * lejos));   // plano de 1 m x 2.4 = 2.4 m
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                        haloVentana.Draw(shader);
+                        mh = glm::scale(glm::translate(base, glm::vec3(x, LucesCasas::VENTANA_Y, -LucesCasas::VENTANA_Z)), glm::vec3(2.4f * lejos)); mh = glm::rotate(mh, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));   // pared trasera: mismo plano girado 180 grados
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                        haloVentana.Draw(shader);
+                    }
+                };
+                for (int i = 0; i < Extras::N_CASAS; i++)
+                    halosCasa(i, 100, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro);
+                for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                    halosCasa(i, 0, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro);
+            }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             glDepthMask(GL_TRUE);
             glDisable(GL_BLEND);
@@ -1882,7 +1939,7 @@ int main()
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
-    rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
+    rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup(); ventanaTrasera.cleanup(); haloVentana.cleanup();  // X-25..X-28
     calles.cleanup();  cimientos.cleanup();  // X-30, X-53
     tambor.cleanup(); alfombraFlores.cleanup(); alfombraCruz.cleanup();  // X-29
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24

@@ -96,6 +96,15 @@ public:
 
 		glUniform1i(glGetUniformLocation(shader.Program, "tieneRelieve"), tieneRelieve);   // se reinicia en cada malla (0 si no hay relieve)
 
+		// X-56: la malla es el vidrio de una ventana si su textura difusa se llama "vidrio*" (casa_a y casa_b). Se calcula una vez y se guarda.
+		if (this->esVidrio < 0)
+		{
+			this->esVidrio = 0;
+			for (size_t k = 0; k < this->textures.size(); k++)
+				if (this->textures[k].type == "texture_diffuse" && string(this->textures[k].path.C_Str()).find("vidrio") != string::npos) this->esVidrio = 1;
+		}
+		glUniform1i(glGetUniformLocation(shader.Program, "esVidrio"), this->esVidrio);
+
 		// Also set each mesh's shininess property to a default value (if you want you could extend this to another mesh property and possibly change this value)
 		glUniform1f(glGetUniformLocation(shader.Program, "material.shininess"), 16.0f);
 
@@ -125,6 +134,7 @@ public:
 private:
 	/*  Render data  */
 	GLuint VAO = 0, VBO = 0, EBO = 0;
+	int esVidrio = -1;   // X-56: -1 = sin calcular, 0 = no es vidrio, 1 = vidrio de ventana
 
 	/*  Functions    */
 	// Initializes all the buffer objects/arrays
