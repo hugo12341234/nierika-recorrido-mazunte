@@ -55,6 +55,7 @@ uniform PointLight pointLights[NUMBER_OF_POINT_LIGHTS];
 uniform SpotLight spotLight;
 uniform PointLight luzCalida[2]; // X-34: las 2 fogatas o faroles mas cercanos al visitante (luz calida que parpadea; color 0 = apagada)
 uniform PointLight velasAltar;   // X-8: luz calida y parpadeante de las velas del altar (una sola puntual, no cuenta entre las 4 de D1)
+uniform PointLight altarMayor[2]; // X-50: luz calida de cada ofrenda mayor del patio (parpadea; siempre con constantes validas)
 uniform SpotLight escalonSpots[NUMBER_OF_STEP_SPOTS];
 uniform Material material;          // shininess la envia Mesh::Draw
 uniform sampler2D texture_diffuse1; // nombre que envia Mesh::Draw
@@ -250,6 +251,8 @@ void main()
     for (int i = 0; i < NUMBER_OF_POINT_LIGHTS; i++)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir, albedo);
     result += CalcPointLight(velasAltar, norm, FragPos, viewDir, albedo);
+    for (int i = 0; i < 2; i++)                                                  // X-50
+        result += CalcPointLight(altarMayor[i], norm, FragPos, viewDir, albedo);
     for (int i = 0; i < 2; i++)                                                  // X-34
         result += CalcPointLight(luzCalida[i], norm, FragPos, viewDir, albedo);
     result += CalcSpotLight(spotLight, norm, FragPos, viewDir, albedo);
