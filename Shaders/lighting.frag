@@ -263,10 +263,11 @@ void main()
     vec3 colBruma = mix(vec3(0.08, 0.13, 0.21), vec3(0.24, 0.16, 0.16), 0.6 * smoothstep(-0.2, 0.9, haciaFondo.z));   // X-36: calida hacia el ocaso (+z)
     if (espuma == 1)
     {
-        // Mar (14/11): lejos se funde del todo con colBruma, el MISMO color que sky.frag pone debajo del horizonte,
-        // asi el borde de la malla (z = +122) no se distingue de la franja que sigue. Sin el tope de 0.85.
-        float fondoMar = max(bruma, smoothstep(70.0, 115.0, distCam));
-        result = mix(result, colBruma, clamp(fondoMar, 0.0, 1.0));
+        // Mar (17/11): lejos se funde del todo con colHorizonte = el color del cielo EN el horizonte (el mismo que sky.frag usa debajo de
+        // la linea del horizonte), asi no hay franja oscura ni borde de malla: el agua se pierde en la bruma del ocaso como un mar infinito.
+        vec3 colHorizonte = vec3(0.10, 0.17, 0.26) + vec3(0.55, 0.26, 0.10) * 0.55 * (0.35 + 0.65 * smoothstep(-0.2, 0.9, haciaFondo.z));
+        float fondoMar = max(bruma, smoothstep(55.0, 115.0, distCam));
+        result = mix(result, colHorizonte, clamp(fondoMar, 0.0, 1.0));
     }
     else
         result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
