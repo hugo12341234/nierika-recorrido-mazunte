@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <string>
 
+#include <vector>
+#include "OfrendasFamiliares.h"   // X-55: puntos de la ficha de las ofrendas familiares (frente de cada una)
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_glfw.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
@@ -19,6 +21,7 @@ namespace
         const char* refs;    // referencias completas (APA 7), separadas por salto de linea
         int nPos;            // cuantos puntos activan la ficha (X-52: las fichas nuevas cubren una zona con varios puntos)
         glm::vec3 pos[4];    // puntos que se miden contra la camara (solo X y Z)
+        bool deFamilias = false;   // X-55: true = los puntos son el frente de cada una de las 14 ofrendas familiares (se calculan de OfrendasFamiliares.h)
     };
 
     // Referencias APA 7. Son macros (y no const char*) para poder unirlas con literales contiguos.
@@ -91,6 +94,15 @@ namespace
           "Tradición regional de Oaxaca (fuente de contenido de marca) y general (UNESCO, s. f.); el panteón: adaptación del estudio",
           REF_ALUMBRADAS "\n" REF_UNESCO,
           4, { glm::vec3(-4.0f, 0.0f, 5.75f), glm::vec3(4.0f, 0.0f, 6.2f), glm::vec3(-4.5f, 0.0f, 9.95f), glm::vec3(4.5f, 0.0f, 10.6f) } },   // al pie de las 4 tumbas (Extras::OFRENDAS_TUMBA)
+        { "Ofrendas de las familias",
+          "Cada familia prepara su ofrenda a su manera: los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.), "
+          "y la flama de las velas y el aroma de las flores guían a las almas de regreso (Secretaría de Educación Pública [SEP], 2026). "
+          "Al atardecer también se lanzan velas y flores al mar (Baños, 2025). "
+          "Las 14 ofrendas de esta playa, sus familias, los objetos de cada difunto (una lancha, una guitarra, una hamaca, una tabla de remo), las frutas, los colores y las "
+          "personas de rodillas son una adaptación del estudio: no son familias reales ni una costumbre documentada de Mazunte.",
+          "Tradición general (SEP, 2026; UNESCO, s. f.) y local documentado (Baños, 2025); las familias, sus objetos y sus colores: adaptación del estudio",
+          REF_SEP "\n" REF_UNESCO "\n" REF_BANOS,
+          0, { glm::vec3(0.0f) }, true },   // X-55: nPos = 0 y deFamilias: sus puntos salen de OfrendasFamiliares::Colocadas()
         { "Comparsa en la orilla",
           "En la Gran Comparsa del Día de Muertos de la ciudad de Oaxaca desfilan más de 50 contingentes, entre catrinas, esqueletos y disfraces de papel, con música y color (La Razón Online, 2025). "
           "La comparsa que marcha por la orilla de este recorrido es una representación del estudio, no una comparsa documentada de Mazunte.",
@@ -149,6 +161,17 @@ void FichasDibuja(const glm::vec3& posCamara)
     // Ficha mas cercana dentro del radio (si dos coinciden, gana la mas cercana)
     int elegida = -1;
     float mejor = FICHAS_RADIO;
+    // X-55: punto de cada ofrenda familiar = 1.4 m delante de su frente (se calcula una vez; las posiciones son fijas)
+    static const std::vector<glm::vec3> puntosFamilias = []()
+    {
+        std::vector<glm::vec3> v;
+        for (const OfrendasFamiliares::Familia& f : OfrendasFamiliares::Colocadas())
+        {
+            const float g = f.giro * OfrendasFamiliares::PI / 180.0f;
+            v.push_back(glm::vec3(f.x + 1.4f * std::sin(g), 0.0f, f.z + 1.4f * std::cos(g)));
+        }
+        return v;
+    }();
     for (int i = 0; i < NUM_FICHAS; i++)
     {
         for (int k = 0; k < fichas[i].nPos; k++)
@@ -156,6 +179,12 @@ void FichasDibuja(const glm::vec3& posCamara)
             float d = DistanciaXZ(posCamara, fichas[i].pos[k]);
             if (d < mejor) { mejor = d; elegida = i; }
         }
+        if (fichas[i].deFamilias)
+            for (const glm::vec3& p : puntosFamilias)
+            {
+                float d = DistanciaXZ(posCamara, p);
+                if (d < mejor) { mejor = d; elegida = i; }
+            }
     }
     if (elegida < 0) return;   // lejos de todo: no se dibuja nada (ni se pide trabajo a ImGui)
 
