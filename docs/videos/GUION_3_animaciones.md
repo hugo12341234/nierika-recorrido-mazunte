@@ -26,7 +26,7 @@
 | D | Flores flotando en la orilla | 20 s |
 | E | **R** en la orilla; la silueta camina completa (≈ 18 s) vista de lado | 30 s |
 | F | La silueta llega al cuarto y suelta la flor (≈ 4 s); repetir con **R** y verla otra vez | 25 s |
-| G | Interactividad: caminar hacia un muro (colisión), **barra espaciadora** (luces de colores), acercarse y alejarse de una ficha | 40 s |
+| G | Interactividad: caminar hacia un muro (colisión), tecla **V** cerca del altar (velas), **M** (sonido) y **F1** (ayuda), acercarse y alejarse de una ficha | 40 s |
 
 ## Guion
 | Tiempo | Imagen | Narración |
@@ -39,7 +39,7 @@
 | 1:35 | Toma E | «Ahora las animaciones por KeyFrames. La silueta camina con una jerarquía de articulaciones; entre posturas interpolamos con *slerp* de cuaterniones y suavizamos con *smoothstep*.» |
 | 2:10 | Toma F | «Al llegar al altar extiende el brazo y suelta una flor. Su trayectoria es una Bézier cuadrática que reproduce una caída libre.» |
 | 2:40 | Toma G (colisión) | «La cámara en primera persona tiene colisiones: no atravesamos muros ni el altar.» |
-| 3:00 | Toma G (espacio) | «Con la barra espaciadora se encienden luces de colores.» |
+| 3:00 | Toma G (V, M, F1) | «Cerca del altar, la tecla V enciende o apaga las velas; con M elegimos entre el mar y la música, y F1 muestra los controles.» |
 | 3:15 | Toma G (ficha) | «Y al acercarnos a menos de dos metros aparece la ficha cultural; al alejarnos desaparece.» |
 | 3:35 | Cierre | «La justificación matemática de cada animación está en el manual técnico.» |
 

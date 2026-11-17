@@ -16,7 +16,7 @@ Interacción Humano-Computadora (FI UNAM, 2027-1), Equipo 15 (cuentas 319266894 
 ### Qué incluye
 - Escena continua: playa y orilla, panteón con barda y cuarto con ofrenda de tres niveles.
 - Cámara en primera persona con colisiones (W A S D / flechas + ratón).
-- Iluminación Blinn-Phong: luz ambiental cálida y 3 luces clave, más 4 luces de colores (barra espaciadora).
+- Iluminación Blinn-Phong: luz ambiental cálida y 3 luces clave, y velas del altar que el visitante enciende o apaga con **V** (X-60; las luces de colores de la barra espaciadora se quitaron el 17/11).
 - 5 animaciones: olas, velas flotando y flores flotando (simples); caminata de la silueta y dejar la flor (KeyFrames).
 - 5 fichas culturales (Dear ImGui) a menos de 2 m, con fuente en APA 7.
 - Audio ambiental en bucle (oleaje y música lejana, generados por el equipo).

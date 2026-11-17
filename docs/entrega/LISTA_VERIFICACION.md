@@ -7,7 +7,7 @@
 - [ ] `git checkout develop` y `git pull`; `git status` limpio.
 - [ ] Todo lo que quieras entregar ya está fusionado en `develop` (PR abiertos revisados; desde el PR #69 rige `/verificar` APROBAR).
 - [ ] Visual Studio 2022 → **Release | x64** → Build Solution: **0 errores** (anota los warnings si hay).
-- [ ] F5 en Release: recorrer playa → panteón → cuarto sin atascos; ver la silueta caminar y dejar la flor; fichas a < 2 m; barra espaciadora y **R** funcionan.
+- [ ] F5 en Release: recorrer playa → panteón → cuarto sin atascos; ver la silueta caminar y dejar la flor; fichas a < 2 m; **V** (cerca del altar), **M**, **F1** y **R** funcionan.
 - [ ] Mirar el título de la ventana: anotar los **FPS** (E-1a) en la escena de la orilla y en el cuarto.
 
 ## B. Empaquetar (E-3)

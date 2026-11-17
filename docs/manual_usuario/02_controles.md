@@ -9,7 +9,9 @@
 | Avanzar / retroceder | **W** / **S**, o flechas **↑** / **↓** | Mueve la cámara hacia donde miras / en sentido contrario |
 | Moverse a los lados | **A** / **D**, o flechas **←** / **→** | Mueve la cámara a la izquierda / derecha |
 | Mirar alrededor | **Ratón** | Gira la cámara. El cursor queda oculto y atrapado en la ventana |
-| Luces de colores | **Barra espaciadora** | Enciende o apaga las 4 luces de colores (verde, azul, rojo y rosa) |
+| Velas del altar | **V** (a menos de 3 m del altar) | Enciende o apaga las velas del altar: la luz cálida y las llamas suben o bajan en un cuarto de segundo. Lejos del altar solo muestra un aviso |
+| Sonido | **M** | Cambia entre «mar y música», «solo el mar», «solo la música» y «silencio» (se avisa arriba en pantalla) |
+| Ayuda de controles | **F1** | Muestra u oculta la lista de controles |
 | Ver dónde están las luces | **L** | Muestra u oculta los cubos blancos que marcan las luces |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
 | Salir | **Esc** | Cierra el programa |
@@ -18,12 +20,12 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - La velocidad al caminar es de **2.0 m/s** (`SPEED` en `Camera.h`) y la sensibilidad del ratón es **0.25**.
 - Se camina **solo en el plano horizontal**: mirar hacia arriba o abajo no te hace volar; los ojos van siempre a **1.6 m** sobre el suelo (que baja en la orilla).
 - Hay **colisiones** (A-9): no atraviesas muros, bardas ni el altar; si chocas de frente te deslizas por el lado. La zona caminable llega hasta la orilla (z = 24).
-- Al iniciar, las luces de colores están **apagadas**; la barra espaciadora las enciende.
+- Al iniciar, las velas del altar están **encendidas**. Cerca del altar aparece arriba el recordatorio de **V**.
+- Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
 - Con Esc se cierra el programa directamente, sin pedir confirmación.
 
 > **Dudas para revisar con D2 antes de publicar** (no confirmadas en el código):
 > 1. La tecla **L** está descrita en el código como "ayuda de depuración". ¿Se queda para el visitante o sale antes de la entrega?
-> 2. Si se decide mantener la barra espaciadora como control final, hay que darle un nombre cultural o funcional ("luces de fiesta", etc.).
 
 ## 2.2 Teclas que NO entran al manual
 

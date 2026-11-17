@@ -100,13 +100,13 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
     // Oleaje (D-6j): el volumen crece como 0.02 * 15^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~1 dB, parejo en todo el recorrido
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
-    fija(0, 0.02f * std::pow(15.0f, sMar));   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
+    fija(0, mezclaMar ? 0.02f * std::pow(15.0f, sMar) : 0.0f);   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
     // Musica (X-40): la FUENTE es la banda. Modelo: ley del inverso de la distancia (cada vez que d se duplica, -6 dB), con tope V0 = 0.24 a d0 = 3 m
     // (V0 = 0.48 * 0.50, el maximo que tenia la curva del altar en D-6b; 0.48 iguala la sonoridad del mp3 de -10 LUFS) y ventana lineal que la apaga a 60 m.
     const float dx = Extras::BANDA_X - x, dz = Extras::BANDA_Z - z;
     const float d = std::sqrt(dx * dx + dz * dz);
     const float D0 = 3.0f, V0 = 0.24f;
-    fija(1, V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)));
+    fija(1, mezclaMusica ? V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)) : 0.0f);   // X-60: M puede silenciar la pista
     // Paneo: derecha = (-fz, fx) en el plano XZ de OpenGL (frente x derecha con arriba +Y); cos del angulo con la direccion a la banda, reducido a 0.7
     if (impl->activo[1] && d > 0.01f)
     {
@@ -132,6 +132,12 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
                       << " | musica vol=" << (impl->activo[1] ? ma_sound_get_volume(&impl->sonidos[1]) : -1.0f) << std::endl;
         }
     }
+}
+
+void Audio::SetMezcla(bool mar, bool musica)
+{
+    mezclaMar = mar;
+    mezclaMusica = musica;
 }
 
 void Audio::cleanup()

@@ -25,6 +25,10 @@ public:
     //     paneo = 0.7 * (derecha . direccion a la banda): suena por el lado donde esta la banda (se oye mas en el oido de ese lado)
     void ActualizarZona(float x, float z, float fx = 0.0f, float fz = -1.0f);
 
+    // X-60: mezcla del visitante (tecla M). Multiplica el volumen de cada pista: false = esa pista en silencio.
+    void SetMezcla(bool mar, bool musica);
+
 private:
+    bool mezclaMar = true, mezclaMusica = true;
     AudioImpl* impl = nullptr;
 };

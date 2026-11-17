@@ -35,7 +35,9 @@ nota(900, 345, "Mover el ratón: mirar alrededor")
 nota(900, 372, "(el cursor queda oculto; vista ±89°)")
 # Otras teclas
 y2 = 470
-tecla(60, y2, 300, 70, "ESPACIO"); nota(60, y2 + 82, "Luces de colores: encender / apagar")
+tecla(60, y2, 90, 70, "V"); nota(30, y2 + 82, "Velas del altar (cerca)")
+tecla(200, y2, 90, 70, "M"); nota(170, y2 + 82, "Sonido: mar / musica")
+tecla(340, y2, 90, 70, "F1"); nota(320, y2 + 82, "Ayuda de controles")
 tecla(470, y2, 90, 70, "R"); nota(420, y2 + 82, "Reiniciar la caminata")
 tecla(790, y2, 90, 70, "L"); nota(740, y2 + 82, "Mostrar cubos de luces")
 tecla(1090, y2, 130, 70, "ESC"); nota(1060, y2 + 82, "Salir del programa")
