@@ -1,13 +1,13 @@
-r"""X-50: escribe Models/colinas/colinas.obj SIN Blender (python3 tools/x50_colinas_obj.py), con la misma malla de x18_colinas.py
+r"""X-53: escribe Models/colinas/colinas.obj SIN Blender (python3 tools/x53_colinas_obj.py), con la misma malla de x18_colinas.py
 (rejilla de 4 m, hueco sobre la playa, franja recortada z -22..-20 de X-40) pero con las UV planas correctas.
 Por que: el .obj exportado por Blender traia UV equivocadas en 51 caras (la franja z -22..-20 de 100 m y la columna x = 146..150: dos de sus
 vertices tomaban la UV de otro lado y la textura del pasto se estiraba en rayas, junto a la arena; se veia como "tramo de suelo levantado").
 UV = (x / 10, -z / 10), una por vertice (mapeo plano, sin costuras). Normales suaves (promedio de las caras vecinas).
 Formato = el del resto de los .obj del repo (v / vt / vn, caras v/vt/vn, `usemtl colinas_pasto`). x18_colinas.py (modo `modelos`) sigue
-siendo la fuente de la malla; este script es el camino sin Blender y las dos salidas deben ser la misma malla (ver tools/x50_verificar_alturas.py, R12)."""
+siendo la fuente de la malla; este script es el camino sin Blender y las dos salidas deben ser la misma malla (ver tools/x53_verificar_alturas.py, R12)."""
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import x50_terreno as T
+import x53_terreno as T
 
 TILE = 10.0
 
@@ -36,7 +36,7 @@ def construir():
                 return vert((ii, z), x, z, y)
             # (i,j) -> (i,j+1) -> (i+1,j+1) -> (i+1,j): antihorario visto desde arriba (normal +y); diagonal (i,j)-(i+1,j+1)
             caras.append((v(i, x0, z0), v(i, x0, z1), v(i + 1, x1, z1), v(i + 1, x1, z0)))
-    # Faldon bajo la playa (X-50): la playa (playa.obj) y la malla se tocan en x = +-50 y en z = -20 con vertices que no coinciden (la playa los tiene cada 2 m,
+    # Faldon bajo la playa (X-53): la playa (playa.obj) y la malla se tocan en x = +-50 y en z = -20 con vertices que no coinciden (la playa los tiene cada 2 m,
     # la malla cada 4 m): en las uniones en T se cuela un hilo de color del cielo (la "costura" azul junto a la arena). Una tira de 0.5 m de la malla, 3 cm
     # POR DEBAJO de la playa y metida bajo ella, tapa esa rendija con pasto. No se ve (la playa queda encima) y no cambia la altura del suelo.
     FALDON, BAJA = 0.5, 0.03
@@ -66,7 +66,7 @@ def construir():
 
 def escribir(ruta):
     verts, normales, caras = construir()
-    lin = ["# X-50: generado por tools/x50_colinas_obj.py (no editar a mano)", "mtllib colinas.mtl", "o colinas"]
+    lin = ["# X-53: generado por tools/x53_colinas_obj.py (no editar a mano)", "mtllib colinas.mtl", "o colinas"]
     lin += ["v %.6f %.6f %.6f" % v for v in verts]
     lin += ["vt %.6f %.6f" % (v[0] / TILE, -v[2] / TILE) for v in verts]
     lin += ["vn %.4f %.4f %.4f" % tuple(n) for n in normales]

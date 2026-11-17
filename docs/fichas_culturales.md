@@ -144,3 +144,32 @@
 
 **Correcciones hechas: 2** (ficha 2 y ficha 4), en `src/Fichas.cpp` y en este archivo. **La URL de Baños** quedó confirmada (era una de las dudas de la sección 5).
 **Sigue pendiente:** decidir el arco del papel picado (sección 5, punto 3) y el largo definitivo de las fichas (las 5 se ven completas a 1280×720 en las capturas de X-4).
+
+## 7. Fichas nuevas (X-52, 17/11/2026): de 5 a 12
+
+> **Cambio de alcance registrado en el ESTADO (sección 4, 17/11).** Las 5 fichas de arriba no cambian. Estas 7 cubren lo que se agregó después de la propuesta.
+> **Cómo se hizo y su límite:** cada página se leyó con la herramienta de web del asistente (resumen, no lectura humana) el 17/11/2026. Las frases del texto
+> están respaldadas por lo que esa lectura devolvió; D1 o D2 pueden abrir las URL para una comprobación visual. **Todo lo que es del estudio lo dice la propia ficha.**
+
+| # | Ficha | Dónde (x, z) | Fuente | Qué es adaptación | Debilidad de la fuente |
+|---|---|---|---|---|---|
+| 6 | Banda de viento | frente a la banda (12.6 y 15.4, 10.4) | México Desconocido (2023) | Los 9 músicos, sus instrumentos y la música elegida (Xochipitzahuatl, náhuatl, no oaxaqueña) | El artículo **no habla de Día de Muertos** ni de Mazunte: la ficha solo dice «tradición oaxaqueña» y «fiestas comunales» |
+| 7 | Copal y copalero | (±1.05, 1.75) | SEP (2026); INAH (2025, Boletín 562) | Los dos copaleros y el humo (modelo fijo) | El boletín del INAH describe a los tepehuas de Veracruz, no a Oaxaca; no define el copal ni su significado |
+| 8 | Panteón y tumbas | al pie de las 4 tumbas | México Desconocido (2026); UNESCO (s. f.) | El panteón de 4 tumbas | La nota de las alumbradas es contenido de marca («advertorial MD») y no cita fuentes |
+| 9 | Comparsa en la orilla | (-12, 22) | La Razón Online (2025) | La comparsa de 12 figuras | Crónica festiva de Oaxaca ciudad; no es de Mazunte |
+| 10 | Camino de las ánimas | (0.5, -28) | SEP (2026); México Desconocido (2026) | **Toda la procesión** con velas, faroles y cempasúchil | La frase de la comparsa viene de la misma nota de marca; no hay fuente de peregrinaciones en Mazunte |
+| 11 | Mariposas monarca | (0, -37.5) | Expansión Digital (2025) | Las 18 mariposas de las colinas | Periodismo sin fuente primaria; la creencia es purépecha (Michoacán), no de Oaxaca |
+| 12 | Tortugas de Mazunte | (21, 22.4) | México Desconocido (2010) | Tortugas y crías del modelo | Cifras del artículo de los años 1988 a 1997; la ficha solo usa la historia (veda de mayo de 1990) y la golfina. Es contexto local, no de Día de Muertos |
+
+**Referencias (APA 7).** Están completas en `src/Fichas.cpp` y se pintan en cada ficha. Nuevas:
+
+- México Desconocido. (2023, 19 de diciembre). *Bandas de viento de Oaxaca, música popular que engalana las fiestas comunales*. https://www.mexicodesconocido.com.mx/bandas-de-viento-de-oaxaca.html
+- Instituto Nacional de Antropología e Historia. (2025, 27 de octubre). *Tepehuas celebran a sus fieles difuntos en el Museo Nacional de Antropología* (Boletín No. 562). https://inah.gob.mx/images/boletines/2025/562/Boletin%20562.pdf
+- México Desconocido. (2026, 28 de octubre). *Alumbradas de Oaxaca: una noche para reencontrarse con los difuntos*. https://www.mexicodesconocido.com.mx/alumbradas-de-oaxaca.html
+- La Razón Online. (2025, 1 de noviembre). *Calles de Oaxaca se llenan de vida con la Gran Comparsa del Día de Muertos*. La Razón. https://www.razon.com.mx/estados/2025/10/31/calles-de-oaxaca-se-llenan-de-vida-con-la-gran-comparsa-del-dia-de-muertos/
+- Expansión Digital. (2025, 20 de octubre). *Mariposa monarca: por qué se cree que son las almas que regresan el Día de Muertos*. Expansión. https://expansion.mx/tendencias/2025/10/20/por-que-mariposas-monarca-son-almas-regresan-dia-de-muertos
+- México Desconocido. (2010, 10 de agosto). *El Centro Mexicano de la tortuga en Mazunte, Oaxaca*. https://www.mexicodesconocido.com.mx/el-centro-mexicano-de-la-tortuga-en-mazunte-oaxaca.html
+
+**Fechas:** salen de los metadatos de cada página (la de La Razón dice 31/10 en la URL y 01/11 en la firma; se usó 01/11). **No se citó** un artículo de la UNAM Aragón sobre la monarca porque el sitio bloquea la lectura automática.
+
+**Pendientes:** (1) que D2 compile y compruebe a 1280×720 que las 7 fichas caben completas (son más largas que las originales); (2) créditos de audio de las dos pistas (canal, año, fecha); (3) si D2 prefiere una fuente mejor para las fichas 8 y 11, cambiarla aquí y en `Fichas.cpp`.

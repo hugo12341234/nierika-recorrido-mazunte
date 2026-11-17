@@ -41,9 +41,10 @@ void main()
     cielo += vec3(0.95, 0.93, 0.80) * smoothstep(0.9990, 0.9995, c);
     cielo += vec3(0.25, 0.30, 0.45) * pow(max(c, 0.0), 80.0);
 
-    // Debajo del horizonte (14/11): el MISMO color que lighting.frag da a la bruma (colBruma, calido hacia +z). Antes era
-    // 'horizonte * 0.6', mas oscuro que el mar lejano, y se veia una franja azul plana entre el borde del mar (z = +122) y el horizonte
-    if (d.y < 0.0) cielo = mix(vec3(0.08, 0.13, 0.21), vec3(0.24, 0.16, 0.16), 0.6 * smoothstep(-0.2, 0.9, d.z));
+    // Debajo del horizonte (17/11): el MISMO color que tiene el cielo justo EN el horizonte (h = 0: azul verdoso + resplandor del ocaso).
+    // Asi no hay escalon en la linea del horizonte (antes arriba era calido y abajo un azul oscuro plano) y el mar parece infinito:
+    // lighting.frag funde el mar lejano con este mismo color (colHorizonte), por lo que el borde de la malla (z = +122) tampoco se nota.
+    if (d.y < 0.0) cielo = horizonte + vec3(0.55, 0.26, 0.10) * 0.55 * (0.35 + 0.65 * smoothstep(-0.2, 0.9, d.z));
 
     color = vec4(cielo, 1.0);
 }

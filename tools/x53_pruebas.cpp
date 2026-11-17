@@ -1,4 +1,4 @@
-// X-50: prueba de Terreno.h contra tools/x50_terreno.py (lo corre tools/x50_comparar_cpp.py).
+// X-53: prueba de Terreno.h contra tools/x53_terreno.py (lo corre tools/x53_comparar_cpp.py).
 // Lee lineas "x z" de la entrada estandar y escribe "x z altura inclinacion_x inclinacion_z(esc 1.5)" con Terreno::altura y Terreno::inclinacion.
 #include <cstdio>
 #include "../src/Terreno.h"

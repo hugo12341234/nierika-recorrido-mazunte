@@ -18,7 +18,7 @@ namespace Terreno
     // --- Zona caminable (X-33) ---
     constexpr float LIM_X = 140.0f;       // la malla de colinas llega a |x| = 150; se deja 10 m de margen
     constexpr float LIM_Z_NORTE = -160.0f;  // la malla llega a z = -170
-    constexpr float LIM_Z_SUR_COLINA = 40.0f;  // junto a la bahia (|x| > 50) la malla llega a z = +42 (la rejilla de 4 m termina ahi; X-50)
+    constexpr float LIM_Z_SUR_COLINA = 40.0f;  // junto a la bahia (|x| > 50) la malla llega a z = +42 (la rejilla de 4 m termina ahi; X-53)
     constexpr float LIM_Z_ORILLA = 24.0f;      // frente a la playa (|x| <= 50): la orilla del mar (A-9)
     constexpr float PENDIENTE_MAX = 0.70f;     // m de subida por m recorrido (35 grados); el 97 % de las colinas es mas suave que 0.6
 
@@ -65,9 +65,9 @@ namespace Terreno
     // Perfil de la playa (A-5): y = 0 hasta z = +20 y baja 0.05 m por metro hacia el mar
     inline float alturaPlaya(float z) { return (z <= 20.0f) ? 0.0f : -0.05f * (z - 20.0f); }
 
-    // X-50: la malla de Models/colinas/colinas.obj solo tiene un vertice cada 4 m y entre vertices es PLANA por triangulos, asi que la formula lisa
+    // X-53: la malla de Models/colinas/colinas.obj solo tiene un vertice cada 4 m y entre vertices es PLANA por triangulos, asi que la formula lisa
     // alturaColinas difiere de lo que se ve hasta +-0.5 m. Todo lo que pisa o se apoya en el suelo (pies, objetos) debe usar la superficie VISIBLE:
-    // esta funcion la replica (misma rejilla y misma diagonal que tools/x50_terreno.py y tools/x50_colinas_obj.py). Rejilla: x -150..150 y
+    // esta funcion la replica (misma rejilla y misma diagonal que tools/x53_terreno.py y tools/x53_colinas_obj.py). Rejilla: x -150..150 y
     // z -170..42 (la ultima fila de vertices cae en 42, no en 45). Cada celda (i,j) se triangula (i,j)-(i,j+1)-(i+1,j+1) y (i,j)-(i+1,j+1)-(i+1,j).
     // La celda de z -22..-20 dentro de la playa (X-40) llega solo hasta z = -20, donde h = 0 (la playa).
     constexpr double REJ_X0 = -150.0, REJ_Z0 = -170.0, REJ_PASO = 4.0;
@@ -107,8 +107,8 @@ namespace Terreno
         return alturaMalla(x, z);
     }
 
-    // X-50: inclinacion del suelo para apoyar rocas sobre una ladera. Pendiente (gx = dh/dx, gz = dh/dz) medida con diferencias centrales a +-w,
-    // w = max(1, 0.8 * esc) (la huella de la roca), y limitada a 0.5 m/m (26.6 grados). La misma formula esta en tools/x50_terreno.py.
+    // X-53: inclinacion del suelo para apoyar rocas sobre una ladera. Pendiente (gx = dh/dx, gz = dh/dz) medida con diferencias centrales a +-w,
+    // w = max(1, 0.8 * esc) (la huella de la roca), y limitada a 0.5 m/m (26.6 grados). La misma formula esta en tools/x53_terreno.py.
     inline void inclinacion(float x, float z, float esc, float& gx, float& gz)
     {
         const float w = std::max(1.0f, 0.8f * esc);

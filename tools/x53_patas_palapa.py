@@ -1,4 +1,4 @@
-r"""X-50: patas para la mesa y la banca de la palapa (Models/palapa/palapa.obj) SIN Blender. Idempotente (python3 tools/x50_patas_palapa.py).
+r"""X-53: patas para la mesa y la banca de la palapa (Models/palapa/palapa.obj) SIN Blender. Idempotente (python3 tools/x53_patas_palapa.py).
 Por que: tools/x26_construcciones.py modelo la mesa (1.6 x 0.9 m, tablon de 6 cm a 0.45 m) y la banca (1.6 x 0.35 m, tablon de 5 cm a 0.28 m) como tablones
 SUELTOS: sin patas se veian como dos planchas que flotan junto a la arena (auditoria del 17/11, "las bancas estan mal").
 Se agregan 4 patas de 8 x 8 cm a la mesa y 4 de 6 x 6 cm a la banca, inscritas 6 cm desde las esquinas y apoyadas en y = 0.
@@ -7,7 +7,7 @@ tools/x26_construcciones.py (funcion modelos) para quien regenere la palapa con 
 import os
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 RUTA = os.path.join(RAIZ, "Models", "palapa", "palapa.obj")
-MARCA = "# X-50: patas de la mesa y la banca"
+MARCA = "# X-53: patas de la mesa y la banca"
 
 
 def patas():

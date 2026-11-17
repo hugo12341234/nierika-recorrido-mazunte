@@ -130,7 +130,7 @@ def modelos():
     piramide(bm, (3.1, 3.1), 1.9, 0, z0=2.55)
     caja(bm, (0, 0, 0.45), (1.6, 0.9, 0.06), 1)            # mesa
     caja(bm, (0, -0.85, 0.28), (1.6, 0.35, 0.05), 1)      # banca
-    # X-50: patas (sin ellas los tablones flotaban); mismas medidas que tools/x50_patas_palapa.py
+    # X-50: patas (sin ellas los tablones flotaban); mismas medidas que tools/x53_patas_palapa.py
     for sx in (-1, 1):
         for sy in (-1, 1):
             caja(bm, (sx * 0.70, sy * 0.35, 0.21), (0.08, 0.08, 0.42), 1)                  # mesa: alto 0.42 m (bajo el tablon, que va de 0.42 a 0.48)

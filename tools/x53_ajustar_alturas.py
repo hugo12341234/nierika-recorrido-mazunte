@@ -1,11 +1,11 @@
-r"""X-50: apoya TODO sobre el suelo visible (auditoria del 17/11/2026, 2.a parte: "roca flotando, cosas hundidas, pasto raro, suelo levantado").
+r"""X-53: apoya TODO sobre el suelo visible (auditoria del 17/11/2026, 2.a parte: "roca flotando, cosas hundidas, pasto raro, suelo levantado").
 Es IDEMPOTENTE y no necesita Blender. Uso (raiz del repo), en este orden:
-    python tools/x50_colinas_obj.py          (colinas.obj con UV correctas)
-    python tools/x50_ajustar_alturas.py
-    python tools/x50_verificar_alturas.py    (debe decir TOTAL violaciones: 0)
+    python tools/x53_colinas_obj.py          (colinas.obj con UV correctas)
+    python tools/x53_ajustar_alturas.py
+    python tools/x53_verificar_alturas.py    (debe decir TOTAL violaciones: 0)
     python tools/x48_verificar_solapes.py    (debe seguir en 0)
 
-Que corrige (la "altura del suelo" es SIEMPRE la malla visible, tools/x50_terreno.py == Terreno::altura de src/Terreno.h):
+Que corrige (la "altura del suelo" es SIEMPRE la malla visible, tools/x53_terreno.py == Terreno::altura de src/Terreno.h):
   P1  Plantas, faroles, fogatas, gente, racimos, arcos, tendederos y ofrendas: y = suelo visible (antes algunas usaban la formula lisa, hasta 0.5 m de mas o de menos).
   P2  Rocas de las colinas (VidaColinasDatos.h): se DIBUJAN inclinadas con la ladera (main.cpp, Terreno::inclinacion) y y se elige para que su base plana toque el
       punto mas bajo de la huella respecto a ese plano. (Una roca de base plana sobre una pendiente de 0.4 queda colgando por un lado o enterrada por el otro.)
@@ -19,7 +19,7 @@ Que corrige (la "altura del suelo" es SIEMPRE la malla visible, tools/x50_terren
 Al final llama a x48_corregir_solapes.aplicar(): quita las plantas que hayan quedado dentro de una roca o una casa tras mover las rocas y las casas."""
 import math, os, re, shutil, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import x50_terreno as T
+import x53_terreno as T
 _argv = sys.argv
 sys.argv = [sys.argv[0]]
 import x48_corregir_solapes as C
@@ -267,7 +267,7 @@ def escribir_cimientos(specs):
     os.makedirs(carpeta, exist_ok=True)
     shutil.copyfile(os.path.join(RAIZ, "Models", "casa_a", "zocalo.png"), os.path.join(carpeta, "cimiento.png"))
     with open(os.path.join(carpeta, "cimientos.mtl"), "w", encoding="utf-8", newline="\n") as f:
-        f.write("# X-50\nnewmtl cimiento\nNs 250.000000\nKa 1.000000 1.000000 1.000000\nKs 0.100000 0.100000 0.100000\nKe 0.000000 0.000000 0.000000\n"
+        f.write("# X-53\nnewmtl cimiento\nNs 250.000000\nKa 1.000000 1.000000 1.000000\nKs 0.100000 0.100000 0.100000\nKe 0.000000 0.000000 0.000000\n"
                 "Ni 1.500000\nd 1.000000\nillum 2\nmap_Kd cimiento.png\n")
     v, vt, vn, caras = [], [], [], []
     TILE = 1.5
@@ -290,7 +290,7 @@ def escribir_cimientos(specs):
                  [(0.0, ybot / TILE), (0.0, ytop / TILE), (L / TILE, ytop / TILE), (L / TILE, ybot / TILE)], n)
         cara([(P[0][0], ytop, P[0][1]), (P[3][0], ytop, P[3][1]), (P[2][0], ytop, P[2][1]), (P[1][0], ytop, P[1][1])],
              [(0, 0), (0, 1), (1, 1), (1, 0)], (0.0, 1.0, 0.0))
-    lin = ["# X-50: generado por tools/x50_ajustar_alturas.py (no editar a mano). Cimientos de las casas del pueblo de fondo (coordenadas del mundo).",
+    lin = ["# X-53: generado por tools/x53_ajustar_alturas.py (no editar a mano). Cimientos de las casas del pueblo de fondo (coordenadas del mundo).",
            "mtllib cimientos.mtl", "o cimientos"]
     lin += ["v %.4f %.4f %.4f" % p for p in v] + ["vt %.4f %.4f" % p for p in vt] + ["vn %.4f %.4f %.4f" % p for p in vn]
     lin += ["s off", "usemtl cimiento"]
@@ -393,8 +393,8 @@ def p5_mallas():
 
 
 def aplicar():
-    import x50_colinas_obj
-    print("colinas.obj: %d vertices, %d caras" % x50_colinas_obj.escribir(os.path.join(RAIZ, "Models", "colinas", "colinas.obj")))
+    import x53_colinas_obj
+    print("colinas.obj: %d vertices, %d caras" % x53_colinas_obj.escribir(os.path.join(RAIZ, "Models", "colinas", "colinas.obj")))
     print("P1 filas con y corregida:", p1_puntuales())
     nota = p3_promontorio()
     for k, esc, s, dx, dz, ny in nota:

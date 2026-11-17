@@ -1,4 +1,4 @@
-r"""X-50: alturas del terreno VISIBLE (la malla de Models/colinas/colinas.obj) para los scripts de verificacion y ajuste.
+r"""X-53: alturas del terreno VISIBLE (la malla de Models/colinas/colinas.obj) para los scripts de verificacion y ajuste.
 La funcion lisa h(x, z) de x18_colinas.py (alturaColinas) solo se muestrea cada 4 m; entre vertices la malla es plana por triangulos,
 y esa diferencia llega a +-0.5 m. Todo lo que se coloca sobre el suelo debe apoyarse en la SUPERFICIE QUE SE VE, no en la formula.
 Esta funcion replica exactamente Terreno::altura de src/Terreno.h (misma rejilla, misma diagonal).

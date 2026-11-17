@@ -1,6 +1,6 @@
-r"""X-50: verificador de ALTURAS contra el suelo visible (2.a parte de la auditoria del 17/11/2026). Complementa a x48_verificar_solapes.py, que solo mide
+r"""X-53: verificador de ALTURAS contra el suelo visible (2.a parte de la auditoria del 17/11/2026). Complementa a x48_verificar_solapes.py, que solo mide
 huellas en planta y nunca comparaba una y contra el terreno (por eso dejo pasar rocas colgando, casas enterradas, calles levantadas y una franja de pasto con UV rotas).
-El suelo es el VISIBLE: playa (A-5) dentro de |x| <= 50, z >= -20; el mar a -0.2 m desde z = 26; la malla de colinas (tools/x50_terreno.py == Terreno::altura).
+El suelo es el VISIBLE: playa (A-5) dentro de |x| <= 50, z >= -20; el mar a -0.2 m desde z = 26; la malla de colinas (tools/x53_terreno.py == Terreno::altura).
 Reglas:
   R9   plantas, faroles, fogatas, gente, racimos, arcos, tendederos y ofrendas: la base debe quedar a +0.15 m o menos sobre el suelo (flotando) y a no mas de
        0.35 m (palmas, arboles, arbustos) o 0.15 m (lo demas) por debajo (hundido)
@@ -12,13 +12,13 @@ Reglas:
   R13  Models/calles y Models/sendero: cada vertice entre 0 y 0.12 m sobre el suelo (no levantados ni enterrados)
   R14  borde malla-playa: la malla pegada a la playa (x = +-50, z de -20 a 24) no se aparta mas de 0.06 m de la altura de la playa (sin escalon ni "suelo levantado")
   R15  palapa.obj: la mesa y la banca tienen patas (>= 8 vertices en y = 0 bajo los tablones)
-Es SOLO LECTURA. Sale con codigo 1 si hay violaciones. Uso (raiz del repo):   python tools/x50_verificar_alturas.py [--detalle]"""
+Es SOLO LECTURA. Sale con codigo 1 si hay violaciones. Uso (raiz del repo):   python tools/x53_verificar_alturas.py [--detalle]"""
 import math, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 DETALLE = "--detalle" in sys.argv
 _argv = sys.argv
 sys.argv = [sys.argv[0]]
-import x50_terreno as T
+import x53_terreno as T
 import x48_verificar_solapes as V
 sys.argv = _argv
 RAIZ = T.RAIZ
