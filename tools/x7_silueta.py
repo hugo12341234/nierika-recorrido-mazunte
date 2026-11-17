@@ -8,7 +8,27 @@ from bpy_comun import RAIZ, limpiar, material
 
 CARPETA = os.path.join(RAIZ, "Models", "silueta")
 limpiar()
-mat = material("silueta_tela", os.path.join(CARPETA, "silueta_tela.png"))
+# X-58 (17/11): la silueta se viste con 5 materiales (texturas de tools/x58_silueta_texturas.py) asignados por cara segun su altura
+# (centro de la cara en coordenadas del mundo de Blender, o sea con el pivote de la pieza en el origen: Z arriba, +Y = frente de la silueta). Antes: una sola tela casi blanca.
+MATS = {n: material("silueta_" + n, os.path.join(CARPETA, "silueta_%s.png" % n)) for n in ("huipil", "pantalon", "piel", "pelo", "huarache")}
+ORDEN = ["huipil", "pantalon", "piel", "pelo", "huarache"]
+
+
+def material_de(pieza_nombre, c):
+    """Nombre del material de una cara de la pieza segun el centro c = (x, y, z) de la cara."""
+    if pieza_nombre == "torso":
+        return "huipil" if c.z >= 0.235 else "pantalon"          # pecho: huipil; cintura y cadera: falda/pantalon
+    if pieza_nombre == "cabeza":
+        if c.z > 0.15 or (c.y < -0.02 and c.z > 0.08):
+            return "pelo"                                        # coronilla y nuca
+        return "piel"
+    if pieza_nombre.startswith("brazo"):
+        return "huipil" if c.z > -0.13 else "piel"               # manga corta del huipil; luego el brazo desnudo
+    if pieza_nombre.startswith("antebrazo"):
+        return "piel"
+    if pieza_nombre.startswith("muslo"):
+        return "pantalon"
+    return "huarache" if c.z < -0.385 else "pantalon"            # pierna: pantalon y, abajo, el huarache
 
 
 def objeto_de(op_resultado_nombre):
@@ -57,7 +77,10 @@ def pieza(nombre, partes):
         bpy.ops.object.modifier_apply(modifier=m.name)
     bpy.ops.object.shade_smooth()
     o.data.materials.clear()
-    o.data.materials.append(mat)
+    for n in ORDEN:
+        o.data.materials.append(MATS[n])
+    for poly in o.data.polygons:
+        poly.material_index = ORDEN.index(material_de(nombre, o.matrix_world @ poly.center))
     # UV: proyeccion por caja (la tela es continua, se repite cada 0.5 m)
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")

@@ -11,7 +11,7 @@ Cada ficha muestra: el título, un texto breve, el **nivel de evidencia** (tradi
 | Velas | orilla, (−3, 23) |
 | Flor de cempasúchil | orilla, (3, 23) |
 | Papel picado | panteón, bajo los postes, (0, 6) |
-| Altar de ofrenda | cuarto, costado del altar, (1.35, 0.6) |
+| Altar de ofrenda | cuarto, frente al altar, (0, −0.1) |
 | Pan de muerto | cuarto, sobre el altar, (1.40, 0) |
 
 *(Según `src/Fichas.cpp` de `develop` con B-13; los textos son los de `docs/fichas_culturales.md`, que siguen **por verificar contra la fuente**. Falta compilar con ImGui en Visual Studio y verlas en pantalla.)*

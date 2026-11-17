@@ -1,7 +1,7 @@
-# Blender 5.2.2 LTS MTL File: 'None'
+# Blender 5.2.4 LTS MTL File: 'None'
 # www.blender.org
 
-newmtl silueta_tela
+newmtl silueta_huarache
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
@@ -9,4 +9,44 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd silueta_tela.png
+map_Kd silueta_huarache.png
+
+newmtl silueta_huipil
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd silueta_huipil.png
+
+newmtl silueta_pantalon
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd silueta_pantalon.png
+
+newmtl silueta_pelo
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd silueta_pelo.png
+
+newmtl silueta_piel
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd silueta_piel.png
