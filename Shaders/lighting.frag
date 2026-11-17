@@ -93,6 +93,7 @@ uniform float tiempo;               // segundos (el mismo uniform del vertex sha
 uniform int   humo;                 // X-47: 1 solo al dibujar el humo del copal (modelo de D1): su textura es opaca, la transparencia sale de humoAlfa
 uniform float humoAlfa;
 uniform float llamaFase;            // desfase de cada llama (s), para que no parpadeen al unisono
+uniform vec3  tinteObjeto;           // X-55: color por el que se multiplica la textura de las piezas de las ofrendas familiares (1,1,1 = sin cambio; main.cpp lo pone en 1 al inicio de cada cuadro)
 
 // X-56: ventanas encendidas de las casas. Sin una luz por casa: el vidrio (malla con textura "vidrio", esVidrio = 1) suma una emision
 // de color ventanaColor y brillo ventanaBrillo.x (ventana izquierda, x local < 0) o .y (derecha). Brillo 0 = ventana apagada (vidrio oscuro).
@@ -235,7 +236,7 @@ void main()
         norm = perturbaNormal(norm, FragPos, hl * (arena == 1 ? 0.012 : 0.035));   // 1.2 cm en la arena, 3.5 cm en la piedra
     }
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 albedo = texColor.rgb;
+    vec3 albedo = texColor.rgb * tinteObjeto;
     if (espuma == 1)
     {
         // X-22: franja de espuma donde el mar toca la orilla (z ~ 24): ruido de Perlin que avanza hacia la playa; f en [0, 1]
