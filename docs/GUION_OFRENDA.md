@@ -6,7 +6,7 @@
 1. **Del mar vienen velas y flores.** Al atardecer se lanzan velas y flores al mar en la ceremonia local (Baños, 2025). *Escena:* velas y flores flotando, petates con ofrenda en la orilla.
 2. **Las flores y el aroma guían.** El cempasúchil guía a las almas hacia el altar (SEP, 2026). *Escena:* el camino de pétalos y flores que va de la orilla a la puerta del panteón.
 3. **Umbral.** *Adaptación del estudio (sin fuente):* un arco de cempasúchil marca la puerta norte del panteón, el paso del mundo de la playa al de los difuntos. No se afirma como símbolo tradicional.
-4. **El patio: las familias velan y reciben.** Los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.). *Escena:* tumbas con una vela y flores al pie, personas arrodilladas, y **dos ofrendas mayores simétricas** a los lados del camino, que dejan libre el eje hasta la capilla.
+4. **El patio: las familias velan y reciben.** Los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.). *Escena:* tumbas con una vela y flores al pie, personas arrodilladas, y **dos diseños bajos de velas** (mandala al oeste, estrella al este; X-57, sustituyen a las dos ofrendas mayores) a los lados del camino, que dejan libre el eje hasta la capilla. *Adaptación del estudio:* la forma de mandala y estrella no tiene fuente; las velas guían a las ánimas (SEP, 2026).
 5. **La capilla: destino de las ánimas.** *Escena:* el altar de tres niveles del cuarto, donde la silueta deja su flor (animación D-4).
 6. **Camino de ánimas y ofrenda comunitaria (detrás de la capilla).** *Adaptación del estudio:* el camino de cempasúchil que viene de las colinas (X-36) termina en una sola ofrenda al centro de una plaza abierta; las ánimas que no llegan por el mar llegan por aquí.
 
@@ -40,10 +40,10 @@ D2 mostró cuatro fotos (no se copian, solo la idea): panteón de noche con un m
 
 ## 4. Composición (ejes, jerarquía, aire)
 - **Eje principal:** x = 0 de la playa a la puerta de la capilla, libre de obstáculos.
-- **Foco:** las dos ofrendas mayores del patio, simétricas en x = ±3.9 (z = 8.4), con 3.6 m de paso entre ellas; la capilla queda enmarcada entre las dos.
+- **Foco:** los dos diseños de velas del patio (X-57), simétricos en x = ±3.9 (z = 8.6), de ≤ 0.45 m de alto y 4.7 m de paso entre ellos; la capilla se ve entre los dos sin estorbo.
 - **Secundarios:** tumbas del patio en pares simétricos (x ±4.0, z 4.5 y 5.0; x ±5.8, z 6.2) y el arco-umbral.
 - **Detrás de la capilla:** un solo foco (altar de pirámide en (0, −9.5)) con aire a su alrededor.
-- Nada se coloca a menos de 1.5 m de las ofrendas en su frente, salvo las velas del piso.
+- Nada se coloca a menos de 1.5 m de los diseños de velas del patio (los visitantes de la tumba 3 se movieron 0.6 m al sur por eso).
 
 ## 5. Las 14 ofrendas familiares de la playa (X-55, 17/11/2026) — sustituyen al panteón de tumbas en filas
 

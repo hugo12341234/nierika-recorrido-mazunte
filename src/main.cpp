@@ -361,10 +361,10 @@ int main()
     colisiones.agregar({ glm::vec3(-7.0f, 0.0f,  3.25f), glm::vec3(-6.75f,0.70f, 12.0f ) });  // muro oeste
     colisiones.agregar({ glm::vec3( 6.75f,0.0f,  3.25f), glm::vec3( 7.0f, 0.70f, 12.0f ) });  // muro este
     colisiones.agregar({ glm::vec3( 1.275f, 0.0f, 12.325f), glm::vec3( 1.725f, 0.30f, 12.675f) });  // B-10: roca decorativa
-    // X-51: ofrendas mayores del patio (huella del peldano incluida, sin giro): x +-(2.0..5.8), z 7.38..9.70
+    // X-57: diseños de velas del patio (mandala y estrella, bajos): cuadrado de semilado RADIO (1.55 m) alrededor de cada centro, x +-(2.35..5.45), z 7.05..10.15
     for (int lado = -1; lado <= 1; lado += 2)
-        colisiones.agregar({ glm::vec3(OfrendaMayor::X_CENTRO * lado - OfrendaMayor::SEMI_X, 0.0f, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_ATRAS),
-                             glm::vec3(OfrendaMayor::X_CENTRO * lado + OfrendaMayor::SEMI_X, OfrendaMayor::ALTO, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_FRENTE) });
+        colisiones.agregar({ glm::vec3(OfrendaMayor::X_CENTRO * lado - OfrendaMayor::RADIO, 0.0f, OfrendaMayor::Z_CENTRO - OfrendaMayor::RADIO),
+                             glm::vec3(OfrendaMayor::X_CENTRO * lado + OfrendaMayor::RADIO, OfrendaMayor::ALTO_DISENO, OfrendaMayor::Z_CENTRO + OfrendaMayor::RADIO) });
     // X-52/X-53: plaza trasera: solo el altar de piramide (ofrenda comunitaria al final del camino de animas)
     colisiones.agregar({ glm::vec3(-PlazaTrasera::SEMI_PIRAMIDE, 0.0f, PlazaTrasera::CZ - PlazaTrasera::SEMI_PIRAMIDE),
                          glm::vec3( PlazaTrasera::SEMI_PIRAMIDE, PlazaTrasera::ALTO_PIRAMIDE, PlazaTrasera::CZ + PlazaTrasera::SEMI_PIRAMIDE) });
@@ -661,7 +661,7 @@ int main()
         {
             const float t = (float)Reloj();
             const glm::vec3 fuentes[3] = {
-                glm::vec3(-OfrendaMayor::X_CENTRO, 2.0f, OfrendaMayor::Z_CENTRO + 1.0f), glm::vec3(OfrendaMayor::X_CENTRO, 2.0f, OfrendaMayor::Z_CENTRO + 1.0f),
+                glm::vec3(-OfrendaMayor::X_CENTRO, 0.9f, OfrendaMayor::Z_CENTRO), glm::vec3(OfrendaMayor::X_CENTRO, 0.9f, OfrendaMayor::Z_CENTRO),   // X-57: sobre el centro de cada diseño
                 glm::vec3(0.0f, 2.2f, PlazaTrasera::CZ) };
             int sel[2] = { 0, 1 };
             float dmin[2] = { 1e9f, 1e9f };
@@ -911,7 +911,7 @@ int main()
         // las velas llevan llama (sin luz; forma por ruido en lighting.frag) en su punta (0.15 m x escala).
         {
             glUniform1f(specLoc, 0.08f);
-            const std::vector<OfrendaMayor::Objeto> objs = OfrendaMayor::Lista();
+            const std::vector<OfrendaMayor::Objeto> objsMandala = OfrendaMayor::ListaMandala(), objsEstrella = OfrendaMayor::ListaEstrella();   // X-57
             const std::vector<OfrendaMayor::Objeto> objsPir = PlazaTrasera::ListaPiramide();
             auto modeloDe = [&](OfrendaMayor::Tipo t) -> Model*
             {
@@ -952,21 +952,12 @@ int main()
                     llamaModelo.Draw(shader);
                 }
             };
-            struct MayorColocado { glm::vec3 P; float giro; };
-            const MayorColocado mayores[2] = {
-                { glm::vec3(-OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO), 0.0f }, { glm::vec3(OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO), 0.0f } };
-            for (const MayorColocado& m : mayores)
+            // X-57: mandala al oeste y estrella al este (el eje x = 0 queda libre). Solo se dibujan a < 60 m (velas) y las llamas a < 35 m del centro
+            const glm::vec3 centrosVelas[2] = { glm::vec3(-OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO), glm::vec3(OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO) };
+            const std::vector<OfrendaMayor::Objeto>* disenosVelas[2] = { &objsMandala, &objsEstrella };
             {
-                glm::mat4 ma = matriz(m.P, m.giro, glm::vec3(0.0f), 1.0f, 0.0f);
-                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ma));
-                altarMayor.Draw(shader);
-                dibujarLista(objs, m.P, m.giro, false);
-                for (int k = 0; k < 2; k++)   // papel picado: 2 tiras de 1.7 m bajo el travesano (y = 2.68)
-                {
-                    glm::mat4 mp = matriz(m.P, m.giro, glm::vec3(-0.85f + 1.70f * k, 2.66f, -0.78f), 1.0f, 0.0f);
-                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
-                    papelPicado.Draw(shader);
-                }
+                for (int k = 0; k < 2; k++)
+                    if (glm::length(camera.GetPosition() - centrosVelas[k]) < 60.0f) dibujarLista(*disenosVelas[k], centrosVelas[k], 0.0f, true);
             }
             colocar(arcoCemp, glm::vec3(0.0f, 0.0f, OfrendaMayor::ARCO_Z), 0.0f);
             // X-52: altar de piramide al centro de la plaza trasera, con papel picado colgado de los 4 travesanos del dosel (y = 2.50)
@@ -1046,7 +1037,8 @@ int main()
             // llamas de todas las velas de las ofrendas
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
-            for (const MayorColocado& m : mayores) llamasLista(objs, m.P, m.giro);
+            for (int k = 0; k < 2; k++)   // X-57: llamas de los diseños de velas del patio (solo a < 35 m del centro)
+                if (glm::length(camera.GetPosition() - centrosVelas[k]) < 35.0f) llamasLista(*disenosVelas[k], centrosVelas[k], 0.0f);
             for (const OF::Familia& f : familias)   // X-55: llama de cada vela y veladora de las familias cercanas
             {
                 if (!cercaF(f, 32.0f)) continue;
