@@ -48,4 +48,4 @@ Lista de controles que muestra **F1**:
 
 ![Ayuda de controles con F1](capturas/02_ayuda_F1.jpg)
 
-*Capturas del 17/11/2026 en la PC de D2 (con las variables `NIERIKA_UI=velas_apagadas` y `NIERIKA_UI=ayuda` del modo de captura; el juego muestra lo mismo al pulsar las teclas). La ayuda F1 lista también **L**, y no lista las teclas de depuración.*
+*Capturas del 17/11/2026 en la PC de D2 (con las variables `NIERIKA_UI=velas_apagadas` y `NIERIKA_UI=ayuda` del modo de captura; el juego muestra lo mismo al pulsar las teclas).*

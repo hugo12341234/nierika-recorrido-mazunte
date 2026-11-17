@@ -46,4 +46,4 @@ The controls list shown by **F1**:
 
 ![Controls help with F1](../capturas/02_ayuda_F1.jpg)
 
-*Screenshots of Nov 17, 2026 on D2's PC (using the capture mode variables `NIERIKA_UI=velas_apagadas` and `NIERIKA_UI=ayuda`; the game shows the same when you press the keys). The F1 help also lists **L** and does not list the debug keys.*
+*Screenshots of Nov 17, 2026 on D2's PC (using the capture mode variables `NIERIKA_UI=velas_apagadas` and `NIERIKA_UI=ayuda`; the game shows the same when you press the keys).*
