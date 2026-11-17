@@ -46,6 +46,7 @@ struct SpotLight
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
+in vec3 LocalPos;
 
 out vec4 color;
 
@@ -92,6 +93,13 @@ uniform float tiempo;               // segundos (el mismo uniform del vertex sha
 uniform int   humo;                 // X-47: 1 solo al dibujar el humo del copal (modelo de D1): su textura es opaca, la transparencia sale de humoAlfa
 uniform float humoAlfa;
 uniform float llamaFase;            // desfase de cada llama (s), para que no parpadeen al unisono
+uniform vec3  tinteObjeto;           // X-55: color por el que se multiplica la textura de las piezas de las ofrendas familiares (1,1,1 = sin cambio; main.cpp lo pone en 1 al inicio de cada cuadro)
+
+// X-56: ventanas encendidas de las casas. Sin una luz por casa: el vidrio (malla con textura "vidrio", esVidrio = 1) suma una emision
+// de color ventanaColor y brillo ventanaBrillo.x (ventana izquierda, x local < 0) o .y (derecha). Brillo 0 = ventana apagada (vidrio oscuro).
+uniform int   esVidrio;
+uniform vec3  ventanaColor;
+uniform vec2  ventanaBrillo;
 
 // Gradiente pseudoaleatorio unitario de un vertice de la rejilla (hash clasico de seno)
 vec2 gradienteRejilla(vec2 v)
@@ -160,6 +168,16 @@ void main()
         return;
     }
 
+    // X-56: halo de ventana (llama = 6): igual que el halo 4 pero con el color de la casa (ventanaColor); llamaFase = intensidad
+    if (llama == 6)
+    {
+        float rr = length(TexCoords - vec2(0.5)) * 2.0;
+        float a = pow(clamp(1.0 - rr, 0.0, 1.0), 2.4) * llamaFase;
+        if (a < 0.004) discard;
+        color = vec4(ventanaColor, a);
+        return;
+    }
+
     if (llama == 5)
     {
         vec4 tc = texture(texture_diffuse1, TexCoords);
@@ -218,7 +236,7 @@ void main()
         norm = perturbaNormal(norm, FragPos, hl * (arena == 1 ? 0.012 : 0.035));   // 1.2 cm en la arena, 3.5 cm en la piedra
     }
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 albedo = texColor.rgb;
+    vec3 albedo = texColor.rgb * tinteObjeto;
     if (espuma == 1)
     {
         // X-22: franja de espuma donde el mar toca la orilla (z ~ 24): ruido de Perlin que avanza hacia la playa; f en [0, 1]
@@ -274,6 +292,18 @@ void main()
     }
     else
         result = mix(result, colBruma, clamp(bruma, 0.0, 0.85));
+    if (esVidrio == 1)
+    {
+        // X-56: emision de la ventana. Se suma DESPUES de la bruma (con la mitad de su efecto) para que las casas lejanas sigan brillando.
+        // El vidrio apagado queda oscuro (0.5 de lo que recibe de la noche).
+        float b = (LocalPos.x < 0.0) ? ventanaBrillo.x : ventanaBrillo.y;
+        // q = posicion dentro del vidrio (m) respecto al centro de su ventana (x = +-1.65, y = 1.55 en el modelo de la casa)
+        vec2 q = LocalPos.xy - vec2(LocalPos.x < 0.0 ? -1.65 : 1.65, 1.55);
+        float cruz = (abs(q.x) < 0.025 || abs(q.y) < 0.025) ? 0.30 : 1.0;                 // travesanos de madera en cruz (la luz no pasa)
+        float centro = 1.0 - 0.45 * smoothstep(0.18, 0.55, length(q * vec2(1.0, 0.9)));  // mas claro al centro, mas tenue en los bordes
+        result *= 0.5;
+        result += ventanaColor * b * 1.5 * cruz * centro * (1.0 - 0.5 * clamp(bruma, 0.0, 0.85));
+    }
     float alfaFinal = texColor.a;
     if (humo == 1) alfaFinal *= humoAlfa;   // X-47
     color = vec4(result, alfaFinal);

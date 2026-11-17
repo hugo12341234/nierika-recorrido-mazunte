@@ -31,9 +31,11 @@
 #include "VidaColinas.h"    // X-33/X-34: senderos, faroles, fogatas, gente y luciernagas en las colinas
 #include "Extras.h"  // X-19..X-22: figuras, petates y formulas de los extras
 #include "VegetacionColinas.h"
+#include "LucesCasas.h"        // X-56: ventanas encendidas de las casas (estado, color y parpadeo por casa)
 #include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
 #include "PlazaTrasera.h"  // X-52: plaza detras de la capilla
+#include "OfrendasFamiliares.h"  // X-55: 14 ofrendas familiares distintas en la playa de atras (sustituyen al panteon de 16 tumbas de X-54)
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 #include "PersonasAnim.h"  // X-55: 5 animaciones nuevas de personas y perro (3 KeyFrames + 2 simples)
 
@@ -247,6 +249,8 @@ int main()
     Model fogata((char*)"Models/fogata/fogata.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model palapa((char*)"Models/palapa/palapa.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model casaA((char*)"Models/casa_a/casa_a.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
+    Model haloVentana((char*)"Models/halo_ventana/halo_ventana.obj");   // X-56: plano 1 x 1 m del halo de una ventana encendida
+    Model ventanaTrasera((char*)"Models/ventana_trasera/ventana_trasera.obj");  // X-56: vidrios de la pared trasera de las casas (las casas solo traen ventanas al frente)
     Model casaB((char*)"Models/casa_b/casa_b.obj");  // X-25..X-28: lados de la escena (palapa, casa_a y casa_b: fuera del alcance original)
     Model calles((char*)"Models/calles/calles.obj");                  // X-30: caminos de tierra del pueblo de fondo (fuera del alcance original)
     Model cimientos((char*)"Models/cimientos/cimientos.obj");         // X-53: bloques de piedra bajo las casas del pueblo de fondo (una malla en coordenadas del mundo; generada por tools/x53_ajustar_alturas.py)
@@ -293,6 +297,11 @@ int main()
     Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
     Model altarMayor((char*)"Models/altar_mayor/altar_mayor.obj");     // X-51: ofrenda mayor del patio (tela, faldones, retablo, columnas)
     Model altarPiramide((char*)"Models/altar_piramide/altar_piramide.obj"); // X-52: altar de 5 niveles con dosel, centro de la plaza trasera
+    Model patioTierra((char*)"Models/patio_tierra/patio_tierra.obj");   // X-55: tierra apisonada bajo el patio de la capilla (las 4 tumbas dejan de estar sobre arena)
+    Model mesaOfrenda((char*)"Models/mesa_ofrenda/mesa_ofrenda.obj");    // X-55: mesa con mantel (modelo propio nuevo, tinte por familia)
+    Model veladora((char*)"Models/veladora/veladora.obj");               // X-55: vela en vaso de vidrio (propio nuevo)
+    Model calabaza((char*)"Models/calabaza/calabaza.obj");               // X-55: calabaza (propio nuevo)
+    Model naranjas((char*)"Models/naranjas/naranjas.obj");               // X-55: monton de 5 naranjas (propio nuevo)
     Model racimoCemp((char*)"Models/racimo_cempasuchil/racimo_cempasuchil.obj"); // X-36: 7 flores juntas (1 llamada de dibujo)
     Model senderoTierra((char*)"Models/sendero/sendero.obj");             // X-36: caminos de tierra sobre las colinas (en coordenadas del mundo)
     // X-55: las 5 animaciones nuevas de personas (3 KeyFrames + 2 simples); posiciones en pers::SITIOS (src/PersonasAnim.h)
@@ -359,6 +368,10 @@ int main()
     // X-52/X-53: plaza trasera: solo el altar de piramide (ofrenda comunitaria al final del camino de animas)
     colisiones.agregar({ glm::vec3(-PlazaTrasera::SEMI_PIRAMIDE, 0.0f, PlazaTrasera::CZ - PlazaTrasera::SEMI_PIRAMIDE),
                          glm::vec3( PlazaTrasera::SEMI_PIRAMIDE, PlazaTrasera::ALTO_PIRAMIDE, PlazaTrasera::CZ + PlazaTrasera::SEMI_PIRAMIDE) });
+    // X-55: estructuras solidas de las 14 ofrendas familiares (mesa, altares, lancha, cruz, soportes, hamaca, tabla; las piezas chicas no estorban)
+    for (const OfrendasFamiliares::Familia& f : OfrendasFamiliares::Colocadas())
+        for (const OfrendasFamiliares::Caja& c : OfrendasFamiliares::CajasColision(f))
+            colisiones.agregar({ glm::vec3(c.x0, 0.0f, c.z0), glm::vec3(c.x1, c.alto, c.z1) });
     for (int t = 0; t < Extras::N_TENDEDEROS; t++)  // X-20: postes de los tendederos (cajas de 0.1 m)
         for (int k = 0; k <= Extras::TENDEDEROS[t].n; k++)
         {
@@ -372,6 +385,7 @@ int main()
         colisiones.agregar({ glm::vec3(st.x - st.radio, 0.0f, st.z - st.radio), glm::vec3(st.x + st.radio, 1.8f, st.z + st.radio) });
     }
     // X-25..X-28: bandera de lo que esta FUERA DEL ALCANCE ORIGINAL (casas y palapas). Constante Extras::MOSTRAR_FUERA_DE_ALCANCE o NIERIKA_SIN_FUERA_ALCANCE=1
+    const bool sinVentanas = std::getenv("NIERIKA_SIN_VENTANAS") != nullptr;   // X-56: solo para las capturas "antes"
     const bool fueraAlcance = Extras::MOSTRAR_FUERA_DE_ALCANCE && !std::getenv("NIERIKA_SIN_FUERA_ALCANCE");
     if (fueraAlcance)
     {
@@ -588,6 +602,7 @@ int main()
         }
 
         shader.Use();
+        glUniform3f(glGetUniformLocation(shader.Program, "tinteObjeto"), 1.0f, 1.0f, 1.0f);   // X-55: sin tinte salvo en las ofrendas familiares
 
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -887,6 +902,9 @@ int main()
         colocar(soportes, glm::vec3( 0.0f, 0.0f,  6.0f), 0.0f);  // postes del papel picado
         // B-13: papel picado colgado del travesano (y = 1.95; su pivote es el borde superior). Provisional, sin ver en pantalla.
         colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
+        glUniform1f(specLoc, 0.02f);
+        colocar(patioTierra, glm::vec3(0.0f), 0.0f);   // X-55: suelo de tierra apisonada dentro de la barda (plano a y = 0.015, en coordenadas del mundo)
+        glUniform1f(specLoc, 0.1f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
         // X-51/X-52: ofrendas mayores (patio y plaza trasera). 'dibujarOfrenda' dibuja una lista de objetos locales con la matriz T(P) R(giro) T(pos) S(esc);
@@ -965,38 +983,62 @@ int main()
                     papelPicado.Draw(shader);
                 }
             }
-            // X-54: panteon velado detras de la capilla (filas de tumbas con racimos y velas altas) y personas arrodilladas junto a ellas
-            static const std::vector<PlazaTrasera::Tumba> panteon = PlazaTrasera::Panteon();   // se calcula una vez
-            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);
-            for (const PlazaTrasera::Tumba& t : panteon)
-                colocar(t.modelo == 1 ? tumba1 : t.modelo == 2 ? tumba2 : t.modelo == 3 ? tumba3 : tumba4, glm::vec3(t.x, 0.0f, t.z), 0.0f);
-            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
-            for (const PlazaTrasera::Tumba& t : panteon)
+            // X-55: ofrendas familiares de la playa de atras (14, todas distintas; ver src/OfrendasFamiliares.h). Cada pieza lleva su tinte (uniform tinteObjeto).
+            // Se dibujan solo las familias a menos de 55 m (las llamas, a menos de 32 m) para no cargar la GPU integrada con ~550 dibujos.
+            static const std::vector<OfrendasFamiliares::Familia> familias = OfrendasFamiliares::Colocadas();   // fijo: sin calculo en tiempo de ejecucion
+            namespace OF = OfrendasFamiliares;
+            const glm::vec3 camF = camera.GetPosition();
+            auto cercaF = [&](const OF::Familia& f, float d) { const float dx = f.x - camF.x, dz = f.z - camF.z; return dx * dx + dz * dz < d * d; };
             {
-                const float zp = t.z + (t.modelo == 1 ? 0.75f : 1.25f);   // al pie (lado +z, hacia la capilla)
-                for (int k = -1; k <= 1; k += 2)   // 2 racimos al pie (x1.2) y 2 a los costados de la tumba (x1.0): el cempasuchil abundante de las fotos de referencia
+                GLint tinteLoc = glGetUniformLocation(shader.Program, "tinteObjeto");
+                auto modeloFam = [&](OF::Pieza t) -> Model*
                 {
-                    glm::mat4 mr2 = glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.78f * k, 0.0f, t.z));
-                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mr2));
-                    racimoCemp.Draw(shader);
-                    glm::mat4 mr = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.45f * k, 0.0f, zp)), glm::vec3(1.2f));
-                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mr));
-                    racimoCemp.Draw(shader);
+                    switch (t)
+                    {
+                    case OF::VELA: return &vela;              case OF::VELADORA: return &veladora;      case OF::RACIMO: return &racimoCemp;
+                    case OF::FLOR: return &cempasuchil;       case OF::PAN: return &panMuerto;          case OF::COPALERO: return &copalero;
+                    case OF::BOTELLA: return &botella;        case OF::REFRESCO: return &refresco;      case OF::MARCO: return &marco;
+                    case OF::CUADRO: return &cuadro;          case OF::CESTA: return &cesta;            case OF::PETATE: return &petate;
+                    case OF::CRUZ: return &cruz;              case OF::MAZETA: return &mazeta;          case OF::ALF_FLORES: return &alfombraFlores;
+                    case OF::ALF_CRUZ: return &alfombraCruz;  case OF::MESA: return &mesaOfrenda;       case OF::ALTAR3: return &altar3;
+                    case OF::ALTAR_MAYOR: return &altarMayor; case OF::ARCO: return &arcoCemp;          case OF::SOPORTES: return &soportes;
+                    case OF::PAPEL: return &papelPicado;      case OF::CALABAZA: return &calabaza;      case OF::NARANJAS: return &naranjas;
+                    case OF::GUITARRA: return &guitarra;      case OF::HAMACA: return &hamaca;          case OF::LANCHA: return &lancha;
+                    case OF::RED: return &redPesca;           case OF::TABLA: return &tablaRemo;        case OF::TAMBOR: return &tambor;
+                    case OF::FAROL: return &farol;            case OF::ROCA: return &roca;              case OF::CALAVERA: return &calavera;
+                    default: return &vela;
+                    }
+                };
+                glm::vec3 tinteActual(1.0f);
+                for (const OF::Familia& f : familias)
+                {
+                    if (!cercaF(f, 55.0f)) continue;
+                    const glm::vec3 P(f.x, 0.0f, f.z);
+                    for (const OF::Item& it : f.items)
+                    {
+                        if (it.tinte != tinteActual) { glUniform3f(tinteLoc, it.tinte.x, it.tinte.y, it.tinte.z); tinteActual = it.tinte; }
+                        glm::mat4 mm = matriz(P, f.giro, it.pos, it.esc, it.giro);
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                        modeloFam(it.tipo)->Draw(shader);
+                    }
                 }
-                for (int k = -1; k <= 1; k++)
-                    colocarEsc(vela, glm::vec3(t.x + 0.30f * k, 0.0f, zp + 0.35f), 0.0f, 2.0f);   // velas altas de 30 cm
-            }
-            {
-                const std::vector<PlazaTrasera::Vigilia> vig = PlazaTrasera::Vigilias(panteon);
+                glUniform3f(tinteLoc, 1.0f, 1.0f, 1.0f);
+                // personas de rodillas que velan cada ofrenda (miran a la ofrenda); misma pose y atuendos que las de la orilla (X-19)
                 const float tv = (float)Reloj();
                 Model* tiposV[2] = { &personaAgachadaA, &personaAgachadaB };
-                for (size_t i = 0; i < vig.size(); i++)
+                int nv = 0;
+                for (const OF::Familia& f : familias)
                 {
-                    glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(vig[i].x, 0.0f, vig[i].z));
-                    mm = glm::rotate(mm, glm::radians(vig[i].giro), glm::vec3(0.0f, 1.0f, 0.0f));
-                    mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tv, 5.0f, 0.7f * (float)i, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
-                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
-                    atuendos.dibujar(shader, *tiposV[i % 2], true, 300 + (int)i, mm);
+                    const glm::vec3 P(f.x, 0.0f, f.z);
+                    for (const OF::Velador& pv : f.velan)
+                    {
+                        const int k = nv++;
+                        if (!cercaF(f, 55.0f)) continue;
+                        glm::mat4 mm = matriz(P, f.giro, glm::vec3(pv.x, 0.0f, pv.z), 1.0f, pv.mira);
+                        mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tv, 5.0f, 0.7f * (float)k, 2.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                        atuendos.dibujar(shader, *tiposV[pv.modelo % 2], true, 600 + k, mm);
+                    }
                 }
             }
             for (int i = 0; i < PlazaTrasera::N_ARCOS; i++)
@@ -1005,13 +1047,15 @@ int main()
             glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
             for (const MayorColocado& m : mayores) llamasLista(objs, m.P, m.giro);
-            for (const PlazaTrasera::Tumba& t : panteon)
+            for (const OF::Familia& f : familias)   // X-55: llama de cada vela y veladora de las familias cercanas
             {
-                const float zp = t.z + (t.modelo == 1 ? 0.75f : 1.25f);
-                for (int k = -1; k <= 1; k++)
+                if (!cercaF(f, 32.0f)) continue;
+                const glm::vec3 P(f.x, 0.0f, f.z);
+                for (const OF::Item& it : f.items)
                 {
+                    if (!OF::LlevaLlama(it.tipo)) continue;
                     glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nfGlobal++));
-                    glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(t.x + 0.30f * k, 0.30f, zp + 0.35f)), glm::vec3(2.0f));
+                    glm::mat4 ml = matriz(P, f.giro, it.pos + glm::vec3(0.0f, OF::AltoVela(it.tipo) * it.esc, 0.0f), it.esc, 0.0f);
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
                     llamaModelo.Draw(shader);
                 }
@@ -1303,6 +1347,14 @@ int main()
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                 m.Draw(shader);
             };
+            // X-56: manda al shader color y brillo de las 2 ventanas de la casa i (salt separa playa y pueblo; ver LucesCasas.h)
+            auto ventanasCasa = [&](int i, int salt)
+            {
+                LucesCasas::Ventanas v = LucesCasas::Estado(i, salt, (float)Reloj());
+                if (sinVentanas) v.izq = v.der = 0.0f;
+                glUniform3f(glGetUniformLocation(shader.Program, "ventanaColor"), v.color.x, v.color.y, v.color.z);
+                glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), v.izq, v.der);
+            };
             // sobre la ola: posicion (x, z), altura = Olas::Altura, vertical = normal de la ola; yaw = giro de proa
             auto sobreOla = [&](float x, float z, float yawGrados, float subir) -> glm::mat4
             {
@@ -1353,7 +1405,11 @@ int main()
                 for (int i = 0; i < Extras::N_PALAPAS; i++)
                     poner(palapa, glm::vec3(Extras::PALAPAS[i].x, Colisiones::alturaSuelo(Extras::PALAPAS[i].z), Extras::PALAPAS[i].z), Extras::PALAPAS[i].giro, 1.0f);
                 for (int i = 0; i < Extras::N_CASAS; i++)
+                {
+                    ventanasCasa(i, 100);   // X-56
                     poner(Extras::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
+                    poner(ventanaTrasera, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro, 1.0f);
+                }
             }
             if (fueraAlcance)   // X-29 (FUERA DEL ALCANCE ORIGINAL): alfombras de petalos, banda de musicos y comparsa
             {
@@ -1422,7 +1478,12 @@ int main()
                 calles.Draw(shader);
                 cimientos.Draw(shader);   // X-53: las casas de las laderas se apoyan en su punto mas alto; el cimiento llena el hueco hasta el suelo
                 for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                {
+                    ventanasCasa(i, 0);   // X-56
                     poner(PuebloFondo::CASAS[i].tipo == 0 ? casaA : casaB, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
+                    poner(ventanaTrasera, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro, 1.0f);
+                }
+                glUniform2f(glGetUniformLocation(shader.Program, "ventanaBrillo"), 0.0f, 0.0f);   // X-56: lo que siga no trae ventanas
                 for (int i = 0; i < PuebloFondo::N_ROCAS; i++)
                     poner(rocaMar, glm::vec3(PuebloFondo::ROCAS[i].x, PuebloFondo::ROCAS[i].y, PuebloFondo::ROCAS[i].z), PuebloFondo::ROCAS[i].giro, PuebloFondo::ROCAS[i].esc);
                 poner(palapa, glm::vec3(PuebloFondo::MIRADOR_X, PuebloFondo::MIRADOR_Y, PuebloFondo::MIRADOR_Z), 30.0f, 0.8f);   // mirador pequeno sobre la roca mayor
@@ -1883,6 +1944,42 @@ int main()
                 glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
                 cempasuchil.Draw(shader);
             }
+            // X-56: halo de cada ventana encendida (llama = 6, color de la casa). Un plano (halo_ventana.obj) por ventana y por pared (delantera y trasera),
+            // de 2.4 m; solo las casas a menos de 160 m y delante de la camara. Casas de la playa (salt 100) y del pueblo de fondo (salt 0).
+            if (fueraAlcance && !sinVentanas)
+            {
+                glUniform1i(glGetUniformLocation(shader.Program, "llama"), 6);
+                const glm::vec3 adelante = camera.GetFront();
+                auto halosCasa = [&](int i, int salt, glm::vec3 pos, float giro)
+                {
+                    const glm::vec3 d = pos - camh;
+                    const float dist = glm::length(d);
+                    if (dist > 160.0f || glm::dot(d, adelante) < -6.0f) return;
+                    // de cerca el plano taparia la pared con un velo: se desvanece entre 2 y 10 m; de lejos crece (hasta x2.5) para que el brillo se note
+                    const float cerca = glm::clamp((dist - 2.0f) / 8.0f, 0.0f, 1.0f);
+                    const float lejos = 1.0f + 1.5f * glm::clamp(dist / 120.0f, 0.0f, 1.0f);
+                    const LucesCasas::Ventanas v = LucesCasas::Estado(i, salt, th);
+                    glUniform3f(glGetUniformLocation(shader.Program, "ventanaColor"), v.color.x, v.color.y, v.color.z);
+                    const glm::mat4 base = glm::rotate(glm::translate(glm::mat4(1.0f), pos), glm::radians(giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                    for (int w = 0; w < 2; w++)
+                    {
+                        const float b = (w == 0) ? v.izq : v.der;
+                        if (b < 0.05f) continue;
+                        const float x = (w == 0) ? -LucesCasas::VENTANA_X : LucesCasas::VENTANA_X;
+                        glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.70f * b * cerca);
+                        glm::mat4 mh = glm::scale(glm::translate(base, glm::vec3(x, LucesCasas::VENTANA_Y, LucesCasas::VENTANA_Z)), glm::vec3(2.4f * lejos));   // plano de 1 m x 2.4 = 2.4 m
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                        haloVentana.Draw(shader);
+                        mh = glm::scale(glm::translate(base, glm::vec3(x, LucesCasas::VENTANA_Y, -LucesCasas::VENTANA_Z)), glm::vec3(2.4f * lejos)); mh = glm::rotate(mh, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));   // pared trasera: mismo plano girado 180 grados
+                        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mh));
+                        haloVentana.Draw(shader);
+                    }
+                };
+                for (int i = 0; i < Extras::N_CASAS; i++)
+                    halosCasa(i, 100, glm::vec3(Extras::CASAS[i].x, 0.0f, Extras::CASAS[i].z), Extras::CASAS[i].giro);
+                for (int i = 0; i < PuebloFondo::N_CASAS; i++)
+                    halosCasa(i, 0, glm::vec3(PuebloFondo::CASAS[i].x, PuebloFondo::CASAS[i].y, PuebloFondo::CASAS[i].z), PuebloFondo::CASAS[i].giro);
+            }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             glDepthMask(GL_TRUE);
             glDisable(GL_BLEND);
@@ -1953,6 +2050,7 @@ int main()
     tumba2.cleanup();
     tumba3.cleanup();
     tumba4.cleanup();
+    mesaOfrenda.cleanup(); veladora.cleanup(); calabaza.cleanup(); naranjas.cleanup(); patioTierra.cleanup();   // X-55
     cruz.cleanup();
     copalero.cleanup();
     barda.cleanup();
@@ -1964,7 +2062,7 @@ int main()
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
-    rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup();  // X-25..X-28
+    rocaMar.cleanup(); lancha.cleanup(); redPesca.cleanup(); aveCuerpo.cleanup(); aveAla.cleanup(); tortugaMar.cleanup(); hamaca.cleanup(); fogata.cleanup(); palapa.cleanup(); casaA.cleanup(); casaB.cleanup(); ventanaTrasera.cleanup(); haloVentana.cleanup();  // X-25..X-28
     calles.cleanup();  cimientos.cleanup();  // X-30, X-53
     tambor.cleanup(); alfombraFlores.cleanup(); alfombraCruz.cleanup();  // X-29
     farol.cleanup(); guitarra.cleanup(); cesta.cleanup(); murcielagoCuerpo.cleanup(); murcielagoAla.cleanup();  // X-24

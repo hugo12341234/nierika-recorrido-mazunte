@@ -56,52 +56,8 @@ namespace PlazaTrasera
     }
 
 
-    // X-54: panteon velado detras de la capilla. Tumbas en FILAS simetricas a ambos lados del camino de animas (x = 0): columnas x = +-4.8 y +-7.4,
-    // filas z = -5.2, -8.2, -11.2, -14.2 (3 m entre filas; las tumbas miden ~2 m de largo). Se omite el sitio que quede a menos de la distancia
-    // de seguridad de un farol (1.4 m), roca (2.0), palma (1.2), arbusto (1.3) o arbol (1.8) de las listas de VidaColinasDatos (nada se cruza).
-    // modelo: 1..4 = tumba1..4 (copias, cuentan una vez en el inventario). Cada una lleva 2 racimos de cempasuchil y 3 velas altas al pie.
-    struct Tumba { int modelo; float x, z; };
-    inline std::vector<Tumba> Panteon()
-    {
-        namespace D = VidaColinasDatos;
-        const float cols[4] = { -7.4f, -4.8f, 4.8f, 7.4f };
-        const float filas[4] = { -5.2f, -8.2f, -11.2f, -14.2f };
-        std::vector<Tumba> t;
-        auto libre = [&](float x, float z)
-        {
-            auto cerca = [&](float px, float pz, float r) { return (x - px) * (x - px) + (z - pz) * (z - pz) < r * r; };
-            for (int i = 0; i < D::N_FAROLES; i++)  if (cerca(D::FAROLES[i].x,  D::FAROLES[i].z,  1.4f)) return false;
-            for (int i = 0; i < D::N_ROCAS; i++)    if (cerca(D::ROCAS[i].x,    D::ROCAS[i].z,    2.0f)) return false;
-            for (int i = 0; i < D::N_PALMAS; i++)   if (cerca(D::PALMAS[i].x,   D::PALMAS[i].z,   1.2f)) return false;
-            for (int i = 0; i < D::N_ARBUSTOS; i++) if (cerca(D::ARBUSTOS[i].x, D::ARBUSTOS[i].z, 1.3f)) return false;
-            for (int i = 0; i < D::N_ARBOLES; i++)  if (cerca(D::ARBOLES[i].x,  D::ARBOLES[i].z,  1.8f)) return false;
-            return true;
-        };
-        for (int r = 0; r < 4; r++)
-            for (int c = 0; c < 4; c++)
-            {
-                if (!libre(cols[c], filas[r])) continue;
-                // simetria: el modelo depende de |x| y de la fila, no del lado
-                const int tipo = (c == 0 || c == 3) && r == 1 ? 1 : 2 + (r + (c == 1 || c == 2 ? 0 : 1)) % 3;
-                t.push_back({ tipo, cols[c], filas[r] });
-            }
-        return t;
-    }
-    // Vigilias: pares de personas arrodilladas al lado de las tumbas de la columna interior (x = +-4.8) de las filas 1 y 3, mirando a la tumba
-    struct Vigilia { float x, z, giro; };
-    inline std::vector<Vigilia> Vigilias(const std::vector<Tumba>& t)
-    {
-        std::vector<Vigilia> v;
-        for (const Tumba& u : t)
-        {
-            if (std::fabs(std::fabs(u.x) - 4.8f) > 0.01f) continue;
-            if (std::fabs(u.z + 5.2f) > 0.01f && std::fabs(u.z + 11.2f) > 0.01f) continue;
-            const float lado = u.x > 0 ? -1.0f : 1.0f;   // del lado del camino
-            v.push_back({ u.x + lado * 1.25f, u.z - 0.35f, u.x > 0 ? 90.0f : -90.0f });
-            v.push_back({ u.x + lado * 1.25f, u.z + 0.45f, u.x > 0 ? 90.0f : -90.0f });
-        }
-        return v;
-    }
+    // X-55: el panteon de 16 tumbas en filas (X-54) se QUITO de la arena (D2, 17/11: "tumbas en arena en playa" se veia fuera de lugar).
+    // Lo sustituyen 14 ofrendas familiares distintas en src/OfrendasFamiliares.h. Las 4 tumbas (modelos tumba1..4, B-9) siguen en el patio de la capilla.
 
     // Arco de cempasuchil: umbral por donde llega el camino de animas a la ofrenda comunitaria (al sur de la piramide, entre ella y la capilla)
     constexpr int N_ARCOS = 1;

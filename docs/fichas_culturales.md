@@ -161,6 +161,8 @@
 | 11 | Mariposas monarca | (0, -37.5) | Expansión Digital (2025) | Las 18 mariposas de las colinas | Periodismo sin fuente primaria; la creencia es purépecha (Michoacán), no de Oaxaca |
 | 12 | Tortugas de Mazunte | (21, 22.4) | México Desconocido (2010) | Tortugas y crías del modelo | Cifras del artículo de los años 1988 a 1997; la ficha solo usa la historia (veda de mayo de 1990) y la golfina. Es contexto local, no de Día de Muertos |
 
+**Ficha 13 (X-55, 17/11/2026):** «Ofrendas de las familias» (se agrega al cambiar el panteón de tumbas por 14 ofrendas familiares; **de 12 a 13 fichas**). Fuente: SEP (2026), UNESCO (s. f.) y Baños (2025), las mismas ya verificadas para las fichas 1, 2 y 4. Se activa a menos de 2 m de un punto 1.4 m delante de cada una de las 14 ofrendas (se calcula de `src/OfrendasFamiliares.h`). **Adaptación del estudio (lo dice la ficha):** las familias, los objetos de cada difunto, las frutas, los colores y las personas de rodillas. **Debilidad:** ninguna fuente del proyecto habla de qué objetos lleva cada familia ni de Mazunte en particular.
+
 **Referencias (APA 7).** Están completas en `src/Fichas.cpp` y se pintan en cada ficha. Nuevas:
 
 - México Desconocido. (2023, 19 de diciembre). *Bandas de viento de Oaxaca, música popular que engalana las fiestas comunales*. https://www.mexicodesconocido.com.mx/bandas-de-viento-de-oaxaca.html
