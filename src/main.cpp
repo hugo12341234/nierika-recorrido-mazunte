@@ -359,6 +359,11 @@ int main()
     // X-58: altar3 al centro del cuarto (ALTAR_POS, sin giro): su huella (1.6 x 0.9 m) ocupa x -0.80..+0.80, z -1.15..-0.25, y 0..1.20
     colisiones.agregar({ ALTAR_POS + glm::vec3(-0.80f, 0.0f, -0.45f) * ESCALA_ALTAR, ALTAR_POS + glm::vec3( 0.80f, 1.20f,  0.45f) * ESCALA_ALTAR });
 
+    // X-59: las 4 tumbas-capilla del cuarto (2 por muro lateral): huella 0.98 x 0.68 m girada -> x 1.13..1.81 (1.47 +- 0.34), z = +-0.62 +- 0.49, alto 1.45 m
+    for (int lado = -1; lado <= 1; lado += 2)
+        for (int c = -1; c <= 1; c += 2)
+            colisiones.agregar({ glm::vec3(1.47f * lado - 0.34f, 0.0f, 0.62f * c - 0.49f), glm::vec3(1.47f * lado + 0.34f, 1.45f, 0.62f * c + 0.49f) });
+
     // B-10: barda perimetral del panteón (recinto x -7..+7, z +3..+12, h 0.70, espesor 0.25)
     // Entradas de 2 m en el norte (z = 12) y, desde E-2 (12/11), tambien en el sur (z = 3), las dos centradas en x = 0 (abertura x -1..+1):
     // la del sur queda frente a la puerta del cuarto y por ella camina la silueta
@@ -879,22 +884,28 @@ int main()
         colocarEsc(mazeta, glm::vec3( 1.00f, 0.02f, -0.98f), 90.0f,  ESCALA_MACETA);
         colocarEsc(mazeta, glm::vec3(-1.60f, 0.02f, -1.05f), 40.0f,  ESCALA_MACETA);   // esquinas del fondo (la izquierda queda junto a la capilla)
         // X-44/X-46: dos tumbas-capilla (la capilla con domo y cruz de Maya, extra de D1) x0.75 contra el muro izquierdo, de frente al cuarto.
-        // Posicion del mundo de un punto local (lx, ly, lz) de la capilla en zc: (xc + lz*S, 0.02 + ly*S, zc - lx*S)  (giro 90 grados en Y)
+        // X-59: se clonan (instancias del mismo modelo, sin .obj nuevo) otras dos contra el muro derecho, espejadas (giro -90, de frente a -x).
+        // Posicion del mundo de un punto local (lx, ly, lz) de la capilla en zc: (xc + lado*lz*S, 0.02 + ly*S, zc - lado*lx*S)  (giro 90*lado grados en Y; lado = -1 izquierdo, +1 derecho)
         {
-            const float S = ESCALA_CAPILLA, xc = -1.47f;
-            for (int c = -1; c <= 1; c += 2)
+            const float S = ESCALA_CAPILLA;
+            for (int lado = -1; lado <= 1; lado += 2)
             {
-                const float zc = 0.62f * c;
-                colocarEsc(capillaMaya, glm::vec3(xc, 0.02f, zc), 90.0f, S);
-                // ofrenda en el nicho (suelo del nicho a y = 0.52 local): retrato (marco propio B-6), 2 velas y cempasuchil; la de z < 0 lleva la calavera de D1
-                const float yn = 0.02f + 0.52f * S + 0.02f;
-                colocar(marco, glm::vec3(xc + 0.0f, yn, zc), 90.0f);
-                colocar(vela,  glm::vec3(xc + 0.10f, yn, zc + 0.19f), 0.0f);
-                colocar(vela,  glm::vec3(xc + 0.10f, yn, zc - 0.19f), 0.0f);
-                for (int f = -1; f <= 1; f += 2)
-                    colocarEsc(cempasuchil, glm::vec3(xc + 0.11f, yn + 0.045f, zc + 0.10f * f), 0.0f, 1.7f);
+                // lado = -1: muro izquierdo (xc = -1.47, giro +90); lado = +1: muro derecho (xc = +1.47, giro -90). 'm' = +1 en el izquierdo, -1 en el derecho
+                const float m = (lado < 0) ? 1.0f : -1.0f, xc = 1.47f * lado, giro = 90.0f * m;
+                for (int c = -1; c <= 1; c += 2)
+                {
+                    const float zc = 0.62f * c;
+                    colocarEsc(capillaMaya, glm::vec3(xc, 0.02f, zc), giro, S);
+                    // ofrenda en el nicho (suelo del nicho a y = 0.52 local): retrato (marco propio B-6), 2 velas y cempasuchil; la de z < 0 lleva la calavera de D1
+                    const float yn = 0.02f + 0.52f * S + 0.02f;
+                    colocar(marco, glm::vec3(xc, yn, zc), giro);
+                    colocar(vela,  glm::vec3(xc + 0.10f * m, yn, zc + 0.19f), 0.0f);
+                    colocar(vela,  glm::vec3(xc + 0.10f * m, yn, zc - 0.19f), 0.0f);
+                    for (int f = -1; f <= 1; f += 2)
+                        colocarEsc(cempasuchil, glm::vec3(xc + 0.11f * m, yn + 0.045f, zc + 0.10f * f), 0.0f, 1.7f);
+                }
+                colocar(calavera, glm::vec3(xc + 0.10f * m, 0.02f + 0.52f * S + 0.02f, -0.62f), giro);
             }
-            colocar(calavera, glm::vec3(xc + 0.10f, 0.02f + 0.52f * S + 0.02f, -0.62f - 0.0f), 90.0f);
         }
         // X-44/X-46: un copalero a cada lado de la entrada (el modelo mide 0.18 m: x2.5 para que se vea como los braseros del video)
         glUniform1f(specLoc, 0.1f);
