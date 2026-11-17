@@ -379,3 +379,6 @@ txt = ("#ifndef VIDA_COLINAS_DATOS_H\n#define VIDA_COLINAS_DATOS_H\n"
        + "}\n#endif\n")
 open(os.path.join(RAIZ, "src", "VidaColinasDatos.h"), "w", encoding="utf-8", newline="\n").write(txt)
 print({k: len(v) for k, v in res.items()})
+# X-48 (auditoria del 17/11): reglas de exclusion (planta enterrada en roca o dentro de casa) y correcciones puntuales; ver tools/x48_corregir_solapes.py
+import x48_corregir_solapes
+x48_corregir_solapes.aplicar()

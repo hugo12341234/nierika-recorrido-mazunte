@@ -102,6 +102,10 @@ def vegetacion():
            "    constexpr int N_PALMAS = %d;\n    constexpr int N_ARBUSTOS = %d;\n}\n#endif\n" % (len(palmas), len(arbustos)))
     open(os.path.join(RAIZ, "src", "VegetacionColinas.h"), "w", encoding="utf-8", newline="\n").write(txt)
     print("vegetacion:", len(palmas), "palmas,", len(arbustos), "arbustos")
+    # X-48 (auditoria del 17/11): reglas de exclusion (casa contra casa, planta enterrada en roca o dentro de casa); ver tools/x48_corregir_solapes.py
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import x48_corregir_solapes
+    x48_corregir_solapes.aplicar()
 
 
 def modelos():

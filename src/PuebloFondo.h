@@ -5,7 +5,7 @@ namespace PuebloFondo
 {
     struct Casa { float x, y, z, giro; int tipo; };
     struct Roca { float x, y, z, giro, esc; };
-    inline const Casa CASAS[33] = {
+    inline const Casa CASAS[29] = {
         { -108.91f, 26.47f, -55.05f, -173.10f, 0 },
         { -107.09f, 24.11f, -40.16f, 6.90f, 0 },
         { -97.78f, 26.04f, -57.14f, -166.30f, 1 },
@@ -32,12 +32,8 @@ namespace PuebloFondo
         { -78.80f, 9.04f, -30.91f, -39.80f, 1 },
         { -68.24f, 8.85f, -43.58f, 140.20f, 1 },
         { -95.95f, 21.80f, -39.91f, -26.10f, 0 },
-        { -88.71f, 23.08f, -54.74f, 153.90f, 0 },
         { 64.44f, 1.36f, -9.47f, 59.70f, 1 },
         { 67.57f, 2.49f, -16.32f, 48.00f, 1 },
-        { 75.52f, 10.73f, -44.02f, -143.30f, 0 },
-        { 86.44f, 17.18f, -51.06f, -147.30f, 1 },
-        { 99.12f, 20.87f, -57.26f, -157.40f, 0 },
         { 104.88f, 21.41f, -43.41f, 22.60f, 0 }
     };
     inline const Roca ROCAS[6] = {
@@ -48,7 +44,7 @@ namespace PuebloFondo
         { -88.00f, 8.37f, 24.00f, 300.00f, 12.00f },
         { -72.00f, 3.13f, 28.00f, 40.00f, 9.00f }
     };
-    constexpr int N_CASAS = 33;
+    constexpr int N_CASAS = 29;
     constexpr int N_ROCAS = 6;
     constexpr float MIRADOR_X = -84.00f, MIRADOR_Y = 25.14f, MIRADOR_Z = 30.00f;
 }
