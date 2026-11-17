@@ -145,7 +145,7 @@
 **Correcciones hechas: 2** (ficha 2 y ficha 4), en `src/Fichas.cpp` y en este archivo. **La URL de Baños** quedó confirmada (era una de las dudas de la sección 5).
 **Sigue pendiente:** decidir el arco del papel picado (sección 5, punto 3) y el largo definitivo de las fichas (las 5 se ven completas a 1280×720 en las capturas de X-4).
 
-## 7. Fichas nuevas (X-50, 17/11/2026): de 5 a 12
+## 7. Fichas nuevas (X-52, 17/11/2026): de 5 a 12
 
 > **Cambio de alcance registrado en el ESTADO (sección 4, 17/11).** Las 5 fichas de arriba no cambian. Estas 7 cubren lo que se agregó después de la propuesta.
 > **Cómo se hizo y su límite:** cada página se leyó con la herramienta de web del asistente (resumen, no lectura humana) el 17/11/2026. Las frases del texto

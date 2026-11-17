@@ -17,12 +17,12 @@ namespace
         const char* texto;   // con su cita en el texto (APA 7)
         const char* nivel;   // nivel de evidencia (CONTEXTO sec. 5)
         const char* refs;    // referencias completas (APA 7), separadas por salto de linea
-        int nPos;            // cuantos puntos activan la ficha (X-50: las fichas nuevas cubren una zona con varios puntos)
+        int nPos;            // cuantos puntos activan la ficha (X-52: las fichas nuevas cubren una zona con varios puntos)
         glm::vec3 pos[4];    // puntos que se miden contra la camara (solo X y Z)
     };
 
     // Referencias APA 7. Son macros (y no const char*) para poder unirlas con literales contiguos.
-    // Las 3 primeras vienen de la Propuesta v2.0 y se verificaron el 12/11 (docs/fichas_culturales.md sec. 6); las demas son de X-50 (17/11).
+    // Las 3 primeras vienen de la Propuesta v2.0 y se verificaron el 12/11 (docs/fichas_culturales.md sec. 6); las demas son de X-52 (17/11).
     #define REF_SEP "Secretaría de Educación Pública. (2026, 22 de mayo). Elementos básicos para la ofrenda de Día de Muertos. Nueva Escuela Mexicana Digital. https://nuevaescuelamexicana.sep.gob.mx/contenido/recurso/elementos-basicos-para-la-ofrenda-de-dia-de-muertos/"
     #define REF_BANOS "Baños, L. (2025, 27 de octubre). Los pueblos mágicos de Oaxaca donde el Día de Muertos se vive con más alma. Oaxaca Informa. https://www.oaxacainforma.com/es/cultura/2025/pueblos-magicos-oaxaca-dia-de-muertos-2025"
     #define REF_UNESCO "UNESCO. (s. f.). Las fiestas indígenas dedicadas a los muertos. https://ich.unesco.org/es/RL/las-fiestas-indigenas-dedicadas-a-los-muertos-00054"
@@ -33,7 +33,7 @@ namespace
     #define REF_MONARCA "Expansión Digital. (2025, 20 de octubre). Mariposa monarca: por qué se cree que son las almas que regresan el Día de Muertos. Expansión. https://expansion.mx/tendencias/2025/10/20/por-que-mariposas-monarca-son-almas-regresan-dia-de-muertos"
     #define REF_TORTUGA "México Desconocido. (2010, 10 de agosto). El Centro Mexicano de la tortuga en Mazunte, Oaxaca. https://www.mexicodesconocido.com.mx/el-centro-mexicano-de-la-tortuga-en-mazunte-oaxaca.html"
 
-    // Textos de docs/fichas_culturales.md (C-7a y X-50). Fuente UTF-8: el .vcxproj compila con /utf-8. Sin raya larga ni comillas tipograficas (ImGui).
+    // Textos de docs/fichas_culturales.md (C-7a y X-52). Fuente UTF-8: el .vcxproj compila con /utf-8. Sin raya larga ni comillas tipograficas (ImGui).
     // POSICIONES: papel picado, altar y pan se movieron en B-13 (12/11) a donde están hoy los modelos; velas y cempasúchil siguen provisionales.
     // Velas y cempasúchil van en z = 23 porque la zona caminable llega solo hasta z = 24 (Colisiones::Z_MAX, A-9).
     const Ficha fichas[] = {
@@ -69,7 +69,7 @@ namespace
           REF_SEP,
           1, { glm::vec3(1.40f, 0.80f, 0.0f) } },  // B-13 (X-46): pan_muerto en el nivel medio del altar3; a < 0.9 m de la repisa gana a la del altar
 
-        // ---- X-50 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 12 fichas (ESTADO sec. 4) ----
+        // ---- X-52 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 12 fichas (ESTADO sec. 4) ----
         { "Banda de viento",
           "Las bandas de viento son una tradición oaxaqueña que da identidad y hermana a los pueblos indígenas del estado, y acompañan sus fiestas comunales (México Desconocido, 2023). "
           "Los músicos y los instrumentos de esta banda son una representación del estudio. La música que suena en el recorrido es Xochipitzahuatl, "
