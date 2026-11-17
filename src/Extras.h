@@ -105,7 +105,7 @@ namespace Extras
         { -1.5f, 18.0f,   0.0f, 0, 0.4f, 1.00f, 0 }, { -2.3f, 17.9f,   5.0f, 1, 1.8f, 0.60f, 0 }, {  1.6f, 16.2f, 355.0f, 1, 2.9f, 1.00f, 0 },
         // E4 panteon: cada tumba tiene visitantes
         { -4.3f,  6.6f,   0.0f, 2, 0.5f, 1.00f, 0 }, { -3.3f,  6.7f,   0.0f, 0, 1.7f, 0.60f, 0 },                     // tumba 2: abuela y nino
-        {  3.5f,  7.3f,   0.0f, 0, 2.4f, 1.00f, 0 }, {  4.5f,  7.2f,   0.0f, 1, 3.6f, 1.00f, 0 }, {  4.0f,  7.0f,   0.0f, 0, 4.4f, 0.60f, 0 },  // tumba 3: familia
+        {  3.2f,  6.5f,   0.0f, 0, 2.4f, 1.00f, 0 }, {  4.6f,  6.45f,  0.0f, 1, 3.6f, 1.00f, 0 }, {  3.9f,  6.3f,   0.0f, 0, 4.4f, 0.60f, 0 },  // tumba 3: familia (X-57: 0.6-0.7 m al sur, fuera del diseño de velas del este)
         { -5.0f, 10.9f,   0.0f, 2, 0.8f, 1.00f, 0 }, { -4.0f, 10.9f,   0.0f, 3, 2.0f, 0.95f, 0 },                     // tumba 4: dos personas de rodillas
         {  5.4f, 11.1f, 200.0f, 1, 1.1f, 1.00f, 1 }, {  3.3f, 11.0f, 170.0f, 0, 2.7f, 1.00f, 0 },                     // tumba 1: musico y acompanante
         { -2.5f,  5.1f,   0.0f, 3, 3.9f, 0.95f, 0 },                                                                   // la cruz de la entrada
