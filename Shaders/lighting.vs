@@ -6,6 +6,7 @@ layout (location = 2) in vec2 texCoords;
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 TexCoords;
+out vec3 LocalPos;   // X-56: posicion en el modelo (para saber si un fragmento de vidrio es la ventana izquierda o la derecha)
 
 uniform mat4 model;
 uniform mat4 view;
@@ -47,4 +48,5 @@ void main()
     // Matriz normal: transpuesta de la inversa, para que la normal siga bien con escalas no uniformes
     Normal = mat3(transpose(inverse(model))) * norm;
     TexCoords = texCoords;
+    LocalPos = position;
 }
