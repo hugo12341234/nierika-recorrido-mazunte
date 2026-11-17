@@ -19,7 +19,7 @@
 ## 3. Mientras grabas
 - Que se vea el **título de la ventana con los FPS** (`NNN FPS`): sirve de evidencia para E-1. Si se corta, grabar el cuadro completo de la ventana con borde.
 - **Ratón:** el cursor está oculto y atrapado; mueve el ratón despacio (la sensibilidad es 0.25) y camina recto con W. Los giros bruscos marean.
-- **No pulses** `T G Y H U J` ni `1`–`6` (son de depuración y mueven el reflector). **L** muestra cubos de las luces: úsala solo si el guion lo pide.
+- Teclas que sí hacen algo: **W A S D** / flechas, ratón, **V** (velas, cerca del altar), **M** (sonido), **R** (reinicia la silueta), **F1** (ayuda) y **Esc**. Las teclas de depuración y los cubos de luces se quitaron (X-61).
 - Si algo sale mal, **no cortes**: haz una pausa de 3 s y repite la toma; luego se recorta. Mejor 2–3 tomas por escena.
 - Para detener: la tecla de OBS (asígnala en *Configuración → Atajos*, p. ej. F9/F10) o el botón de OBS; **Esc** cierra el programa, no la grabación.
 

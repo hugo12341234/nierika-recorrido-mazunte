@@ -94,7 +94,6 @@ const float ALTAR_VELAS_RADIO = 3.0f;
 int mezclaSonido = 0;                             // M: 0 = mar y musica, 1 = solo mar, 2 = solo musica, 3 = silencio
 HudEstado hud;                                    // aviso breve (arriba) y ayuda de controles (F1)
 Audio* audioPtr = nullptr;                        // para que KeyCallback cambie la mezcla
-bool mostrarLuces = false; // L: cubos blancos que marcan donde estan las luces (ayuda de depuracion)
 
 // Reflector de la cruz (T/G, Y/H, U/J mueven su posicion; 1-6 su direccion)
 glm::vec3 spotLightPos = DeCapillaVieja(glm::vec3(0.0f, 3.0f, 2.0f));
@@ -2033,25 +2032,6 @@ int main()
             glDisable(GL_BLEND);
         }
 
-        // Cubos blancos que marcan las luces (tecla L; ayuda de depuracion, no van en la version final)
-        if (mostrarLuces)
-        {
-            lampShader.Use();
-            GLint lampModelLoc = glGetUniformLocation(lampShader.Program, "model");
-            glUniformMatrix4fv(glGetUniformLocation(lampShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-            glUniformMatrix4fv(glGetUniformLocation(lampShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-            glBindVertexArray(cuboVAO);
-            auto cubo = [&](glm::vec3 pos, float lado)
-            {
-                glm::mat4 m = glm::scale(glm::translate(glm::mat4(1.0f), pos), glm::vec3(lado));
-                glUniformMatrix4fv(lampModelLoc, 1, GL_FALSE, glm::value_ptr(m));
-                glDrawArrays(GL_TRIANGLES, 0, 36);
-            };
-            cubo(spotLightPos, 0.03f);
-            for (int i = 0; i < 6; i++) cubo(escalonSpotPos[i], 0.02f);
-            glBindVertexArray(0);
-        }
-
         // C-7b: ficha cultural si la camara esta a < 2 m de uno de los 5 objetos (se dibuja al final, sobre la escena)
         // X-60: avisos (arriba) y ayuda; el aviso fijo "V" aparece solo cerca del altar
         {
@@ -2178,20 +2158,6 @@ void DoMovement()
 
     // A-9: corrige la posicion con las colisiones AABB y la deja a 1.6 m sobre el suelo
     camera.SetPosition(colisiones.resolver(posAntes, camera.GetPosition()));
-
-    // Reflector de la cruz: posicion (T/G = X, Y/H = Y, U/J = Z) y direccion (1/2 = X, 3/4 = Y, 5/6 = Z)
-    if (keys[GLFW_KEY_T]) spotLightPos.x += 1.0f * deltaTime;
-    if (keys[GLFW_KEY_G]) spotLightPos.x -= 1.0f * deltaTime;
-    if (keys[GLFW_KEY_Y]) spotLightPos.y += 1.0f * deltaTime;
-    if (keys[GLFW_KEY_H]) spotLightPos.y -= 1.0f * deltaTime;
-    if (keys[GLFW_KEY_U]) spotLightPos.z -= 1.0f * deltaTime;
-    if (keys[GLFW_KEY_J]) spotLightPos.z += 1.0f * deltaTime;
-    if (keys[GLFW_KEY_1]) spotLightDir.x += 0.5f * deltaTime;
-    if (keys[GLFW_KEY_2]) spotLightDir.x -= 0.5f * deltaTime;
-    if (keys[GLFW_KEY_3]) spotLightDir.y += 0.5f * deltaTime;
-    if (keys[GLFW_KEY_4]) spotLightDir.y -= 0.5f * deltaTime;
-    if (keys[GLFW_KEY_5]) spotLightDir.z += 0.5f * deltaTime;
-    if (keys[GLFW_KEY_6]) spotLightDir.z -= 0.5f * deltaTime;
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -2244,10 +2210,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     // R: reinicia la caminata de la silueta (D-2)
     if (GLFW_KEY_R == key && GLFW_PRESS == action)
         tSilueta = 0.0f;
-
-    // L: muestra u oculta los cubos que marcan las luces
-    if (GLFW_KEY_L == key && GLFW_PRESS == action)
-        mostrarLuces = !mostrarLuces;
 }
 
 void MouseCallback(GLFWwindow* window, double xPos, double yPos)
