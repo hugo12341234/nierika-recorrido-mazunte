@@ -79,7 +79,7 @@ Registrada en `docs/ESTADO_PROYECTO.md` (sección 4, decisión «X-18 · expansi
 ### Pendiente de decisión de D2
 
 - **Comparsa (figura 7 de la propuesta):** no se incluye.
-- **Mariposas y aves diurnas:** no aplican de noche; se usaron murciélagos.
+- **Mariposas y aves diurnas:** ~~no aplican de noche; se usaron murciélagos~~ → **cambiado el 17/11 (X-49, pedido de D2): hay 18 mariposas en las colinas (vuelo y aleteo con senos, sin KeyFrames) además de los murciélagos;** las aves diurnas siguen sin aplicar.
 - **Audio:** las voces son un murmullo sintetizado; si D2 prefiere grabaciones libres (CC0), hay que descargarlas y citarlas.
 
 | **Lados de la escena (inspirados en Mazunte):** 18 rocas y acantilados, 16 palmas, 4 lanchas varadas y 6 ancladas, 3 redes de pesca, 40 linternas flotantes, 4 tortugas marinas y 8 crías en la arena, 7 aves, 2 fogatas sin humo y 2 hamacas | **X-25 a X-28** `x-25-lados` | `Models/roca_mar/`, `lancha/`, `red_pesca/`, `ave_cuerpo/`, `ave_ala/`, `tortuga/`, `hamaca/`, `fogata/` (≤ 130 caras cada uno), `tools/x25_lados.py`, `src/Extras.h` | Olas + péndulos + círculos + módulo (ver `justificacion_extras.md` §8) | Propios (Blender 5.2); datos de la investigación en `docs/investigacion_mazunte.md` (fuentes por verificar) | ~250 llamadas de dibujo más | ✅ |

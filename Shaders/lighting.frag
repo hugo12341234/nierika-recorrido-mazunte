@@ -159,6 +159,21 @@ void main()
         return;
     }
 
+    if (llama == 5)
+    {
+        vec4 tc = texture(texture_diffuse1, TexCoords);
+        color = vec4(tc.rgb * 1.6, 1.0);
+        return;
+    }
+
+    // X-49: emisivo con textura (llama = 5): llama del modelo fuego y mariposas. llamaFase = factor de brillo (sin luz ni sombra)
+    if (llama == 5)
+    {
+        vec4 tc = texture(texture_diffuse1, TexCoords);
+        color = vec4(tc.rgb * llamaFase, 1.0);
+        return;
+    }
+
     if (llama == 2)
     {
         if (llamaFase < 0.04) discard;
