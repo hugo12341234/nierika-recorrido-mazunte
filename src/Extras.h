@@ -45,7 +45,7 @@ namespace Extras
     // Ofrendas pequenas al pie de las tumbas y la cruz del panteon (x, z): una vela y tres flores de cempasuchil
     struct OfrendaTumba { float x, z; };
     constexpr int N_OFRENDAS_TUMBA = 5;
-    inline const OfrendaTumba OFRENDAS_TUMBA[N_OFRENDAS_TUMBA] = { { -4.0f, 5.75f }, { 4.0f, 6.2f }, { -5.8f, 6.95f }, { 5.8f, 7.1f }, { -2.5f, 4.1f } };
+    inline const OfrendaTumba OFRENDAS_TUMBA[N_OFRENDAS_TUMBA] = { { -4.0f, 5.75f }, { 4.0f, 6.2f }, { -5.8f, 7.15f }, { 5.8f, 6.7f }, { -2.5f, 4.1f } };
 
     // X-21: personas sobre tablas de remo en el mar (fotos de referencia de D2). La tabla recorre un circulo lento de radio R:
     //   (x, z)(t) = (cx + R*cos(w*t + fase), cz + R*sen(w*t + fase)),  w = 2*pi / PERIODO_TABLA
