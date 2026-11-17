@@ -16,7 +16,7 @@ namespace OfrendaMayor
     constexpr float ARCO_Z = 10.3f;   // arco de cempasuchil sobre el camino, entre las dos ofrendas
 
     enum Tipo { VELA, FLOR, RACIMO, PAN, CALAVERA, COPALERO, REFRESCO, MARCO };
-    struct Objeto { Tipo tipo; glm::vec3 pos; float esc; };
+    struct Objeto { Tipo tipo; glm::vec3 pos; float esc; float giro = 0.0f; };   // giro: grados en Y (los marcos miran hacia fuera)
 
     // Alturas de tope de los 4 niveles (iguales a las de tools/x51_altar_mayor.py)
     constexpr float Y_A = 0.40f, Y_B = 0.80f, Y_C = 1.20f, Y_D = 1.55f;

@@ -33,6 +33,7 @@
 #include "VegetacionColinas.h"
 #include "PuebloFondo.h"        // X-30 (fuera del alcance original): casas y promontorio al fondo (generado)  // X-18: posiciones de palmas y arbustos sobre las colinas (generado)
 #include "OfrendaMayor.h"  // X-51: datos de la ofrenda mayor del patio
+#include "PlazaTrasera.h"  // X-52: plaza detras de la capilla
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
 
 // GLM Mathematics
@@ -285,6 +286,7 @@ int main()
     Model arbolSelva((char*)"Models/arbol_selva/arbol_selva.obj");        // X-36: arbol de copa ancha (extra, no cuenta entre los 18 propios)
     Model arcoCemp((char*)"Models/arco_cempasuchil/arco_cempasuchil.obj"); // X-36: arco de carrizo y cempasuchil
     Model altarMayor((char*)"Models/altar_mayor/altar_mayor.obj");     // X-51: ofrenda mayor del patio (tela, faldones, retablo, columnas)
+    Model altarPiramide((char*)"Models/altar_piramide/altar_piramide.obj"); // X-52: altar de 5 niveles con dosel, centro de la plaza trasera
     Model racimoCemp((char*)"Models/racimo_cempasuchil/racimo_cempasuchil.obj"); // X-36: 7 flores juntas (1 llamada de dibujo)
     Model senderoTierra((char*)"Models/sendero/sendero.obj");             // X-36: caminos de tierra sobre las colinas (en coordenadas del mundo)
     Atuendos atuendos;                                                    // X-35: telas y prendas (falda, rebozo, sombrero) de las personas
@@ -343,6 +345,14 @@ int main()
     for (int lado = -1; lado <= 1; lado += 2)
         colisiones.agregar({ glm::vec3(OfrendaMayor::X_CENTRO * lado - OfrendaMayor::SEMI_X, 0.0f, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_ATRAS),
                              glm::vec3(OfrendaMayor::X_CENTRO * lado + OfrendaMayor::SEMI_X, OfrendaMayor::ALTO, OfrendaMayor::Z_CENTRO + OfrendaMayor::Z_FRENTE) });
+    // X-52: plaza trasera: altar de piramide (centro) y 2 altar_mayor girados 90 grados (cajas por su huella)
+    colisiones.agregar({ glm::vec3(-PlazaTrasera::SEMI_PIRAMIDE, 0.0f, PlazaTrasera::CZ - PlazaTrasera::SEMI_PIRAMIDE),
+                         glm::vec3( PlazaTrasera::SEMI_PIRAMIDE, PlazaTrasera::ALTO_PIRAMIDE, PlazaTrasera::CZ + PlazaTrasera::SEMI_PIRAMIDE) });
+    for (int lado = -1; lado <= 1; lado += 2)
+    {
+        glm::vec3 mn, mx; PlazaTrasera::CajaMayor(lado, mn, mx);
+        colisiones.agregar({ mn, mx });
+    }
     for (int t = 0; t < Extras::N_TENDEDEROS; t++)  // X-20: postes de los tendederos (cajas de 0.1 m)
         for (int k = 0; k <= Extras::TENDEDEROS[t].n; k++)
         {
@@ -619,15 +629,30 @@ int main()
             glUniform1f(glGetUniformLocation(shader.Program, "velasAltar.quadratic"), 0.44f);
         }
 
-        // X-51: luz calida de cada ofrenda mayor (2 puntuales, una por altar). Parpadeo = 2 senos de periodos distintos, fases distintas
+        // X-51/X-52: luz calida de las ofrendas mayores. Hay 5 fuentes (2 en el patio, 3 en la plaza trasera) pero solo las 2 MAS CERCANAS a la camara
+        // se envian al shader (costo fijo de 2 luces). Parpadeo = 2 senos de periodos distintos, con fase propia por fuente.
         {
             const float t = (float)Reloj();
-            for (int i = 0; i < 2; i++)
+            const glm::vec3 fuentes[5] = {
+                glm::vec3(-OfrendaMayor::X_CENTRO, 2.0f, OfrendaMayor::Z_CENTRO + 1.0f), glm::vec3(OfrendaMayor::X_CENTRO, 2.0f, OfrendaMayor::Z_CENTRO + 1.0f),
+                glm::vec3(0.0f, 2.2f, PlazaTrasera::CZ), glm::vec3(-PlazaTrasera::X_MAYOR + 1.0f, 2.0f, PlazaTrasera::CZ), glm::vec3(PlazaTrasera::X_MAYOR - 1.0f, 2.0f, PlazaTrasera::CZ) };
+            int sel[2] = { 0, 1 };
+            float dmin[2] = { 1e9f, 1e9f };
+            sel[0] = sel[1] = -1;
+            for (int i = 0; i < 5; i++)
             {
+                const glm::vec3 d = fuentes[i] - camera.GetPosition();
+                const float d2 = glm::dot(d, d);
+                if (d2 < dmin[0]) { dmin[1] = dmin[0]; sel[1] = sel[0]; dmin[0] = d2; sel[0] = i; }
+                else if (d2 < dmin[1]) { dmin[1] = d2; sel[1] = i; }
+            }
+            for (int k = 0; k < 2; k++)
+            {
+                const int i = sel[k];
                 const float par = 0.85f + 0.10f * sin(t * 6.1f + 2.1f * i) + 0.05f * sin(t * 11.3f + 0.9f + 1.7f * i);
                 const glm::vec3 col = glm::vec3(1.0f, 0.55f, 0.22f) * par;
-                const glm::vec3 pos((i == 0 ? -1.0f : 1.0f) * OfrendaMayor::X_CENTRO, 2.0f, OfrendaMayor::Z_CENTRO + 1.0f);
-                const std::string n = "altarMayor[" + std::to_string(i) + "].";
+                const glm::vec3 pos = fuentes[i];
+                const std::string n = "altarMayor[" + std::to_string(k) + "].";
                 glUniform3f(glGetUniformLocation(shader.Program, (n + "position").c_str()), pos.x, pos.y, pos.z);
                 glUniform3f(glGetUniformLocation(shader.Program, (n + "ambient").c_str()), col.x * 0.05f, col.y * 0.05f, col.z * 0.05f);
                 glUniform3f(glGetUniformLocation(shader.Program, (n + "diffuse").c_str()), col.x * 1.3f, col.y * 1.3f, col.z * 1.3f);
@@ -852,50 +877,117 @@ int main()
         colocar(papelPicado, glm::vec3(0.0f, 1.95f, 6.0f), 0.0f);
         colocar(barda,    glm::vec3( 0.0f, 0.0f,  0.0f), 0.0f);  // B-10: barda perimetral (ya en coordenadas del mundo)
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
-        // X-51: ofrendas mayores del patio (altar_mayor de 4 niveles + velas con llama, racimos, pan, calaveras, copaleros, refrescos, marcos y cempasuchil),
-        // a ambos lados del camino, y un arco de cempasuchil sobre el camino. Papel picado colgado del travesano de cada una.
+        // X-51/X-52: ofrendas mayores (patio y plaza trasera). 'dibujarOfrenda' dibuja una lista de objetos locales con la matriz T(P) R(giro) T(pos) S(esc);
+        // las velas llevan llama (sin luz; forma por ruido en lighting.frag) en su punta (0.15 m x escala).
         {
             glUniform1f(specLoc, 0.08f);
             const std::vector<OfrendaMayor::Objeto> objs = OfrendaMayor::Lista();
-            for (int lado = -1; lado <= 1; lado += 2)
+            const std::vector<OfrendaMayor::Objeto> objsPir = PlazaTrasera::ListaPiramide();
+            auto modeloDe = [&](OfrendaMayor::Tipo t) -> Model*
             {
-                const glm::vec3 P(OfrendaMayor::X_CENTRO * lado, 0.0f, OfrendaMayor::Z_CENTRO);
-                glm::mat4 ma = glm::translate(glm::mat4(1.0f), P);
-                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ma));
-                altarMayor.Draw(shader);
-                for (const OfrendaMayor::Objeto& o : objs)
+                switch (t)
                 {
-                    Model* mo = &vela;
-                    switch (o.tipo)
-                    {
-                    case OfrendaMayor::FLOR: mo = &cempasuchil; break;   case OfrendaMayor::RACIMO: mo = &racimoCemp; break;
-                    case OfrendaMayor::PAN: mo = &panMuerto; break;      case OfrendaMayor::CALAVERA: mo = &calavera; break;
-                    case OfrendaMayor::COPALERO: mo = &copalero; break;  case OfrendaMayor::REFRESCO: mo = &refresco; break;
-                    case OfrendaMayor::MARCO: mo = &marco; break;        default: break;
-                    }
-                    glm::mat4 mm = glm::scale(glm::translate(glm::mat4(1.0f), P + o.pos), glm::vec3(o.esc));
-                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
-                    mo->Draw(shader);
+                case OfrendaMayor::FLOR: return &cempasuchil;   case OfrendaMayor::RACIMO: return &racimoCemp;
+                case OfrendaMayor::PAN: return &panMuerto;      case OfrendaMayor::CALAVERA: return &calavera;
+                case OfrendaMayor::COPALERO: return &copalero;  case OfrendaMayor::REFRESCO: return &refresco;
+                case OfrendaMayor::MARCO: return &marco;        default: return &vela;
                 }
-                for (int k = 0; k < 2; k++)   // papel picado: 2 tiras de 1.7 m bajo el travesano (y = 2.68)
-                    colocar(papelPicado, P + glm::vec3(-0.85f + 1.70f * k, 2.66f, -0.78f), 0.0f);
-            }
-            colocar(arcoCemp, glm::vec3(0.0f, 0.0f, OfrendaMayor::ARCO_Z), 0.0f);
-            // llamas de las velas (sin luz; forma por ruido en lighting.frag)
-            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
-            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
-            for (int lado = -1; lado <= 1; lado += 2)
+            };
+            auto matriz = [&](glm::vec3 P, float giro, glm::vec3 pos, float esc, float giroItem)
             {
-                int nf = 0;
-                for (const OfrendaMayor::Objeto& o : objs)
+                glm::mat4 mm = glm::translate(glm::mat4(1.0f), P);
+                mm = glm::rotate(mm, glm::radians(giro), glm::vec3(0.0f, 1.0f, 0.0f));
+                mm = glm::translate(mm, pos);
+                mm = glm::rotate(mm, glm::radians(giroItem), glm::vec3(0.0f, 1.0f, 0.0f));
+                return glm::scale(mm, glm::vec3(esc));
+            };
+            auto dibujarLista = [&](const std::vector<OfrendaMayor::Objeto>& lista, glm::vec3 P, float giro, bool listaYaGirada)
+            {
+                for (const OfrendaMayor::Objeto& o : lista)
+                {
+                    glm::mat4 mm = matriz(P, giro, o.pos, o.esc, listaYaGirada ? o.giro : 0.0f);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
+                    modeloDe(o.tipo)->Draw(shader);
+                }
+            };
+            int nfGlobal = 0;
+            auto llamasLista = [&](const std::vector<OfrendaMayor::Objeto>& lista, glm::vec3 P, float giro)
+            {
+                for (const OfrendaMayor::Objeto& o : lista)
                 {
                     if (o.tipo != OfrendaMayor::VELA) continue;
-                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nf++) + (lado > 0 ? 0.4f : 0.0f));
-                    const glm::vec3 P(OfrendaMayor::X_CENTRO * lado, 0.0f, OfrendaMayor::Z_CENTRO);
-                    glm::mat4 ml = glm::scale(glm::translate(glm::mat4(1.0f), P + o.pos + glm::vec3(0.0f, 0.15f * o.esc, 0.0f)), glm::vec3(o.esc));
+                    glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nfGlobal++));
+                    glm::mat4 ml = matriz(P, giro, o.pos + glm::vec3(0.0f, 0.15f * o.esc, 0.0f), o.esc, 0.0f);
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
                     llamaModelo.Draw(shader);
                 }
+            };
+            struct MayorColocado { glm::vec3 P; float giro; };
+            const MayorColocado mayores[4] = {
+                { glm::vec3(-OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO), 0.0f }, { glm::vec3(OfrendaMayor::X_CENTRO, 0.0f, OfrendaMayor::Z_CENTRO), 0.0f },
+                { glm::vec3(-PlazaTrasera::X_MAYOR, 0.0f, PlazaTrasera::CZ), 90.0f }, { glm::vec3(PlazaTrasera::X_MAYOR, 0.0f, PlazaTrasera::CZ), -90.0f } };
+            for (const MayorColocado& m : mayores)
+            {
+                glm::mat4 ma = matriz(m.P, m.giro, glm::vec3(0.0f), 1.0f, 0.0f);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ma));
+                altarMayor.Draw(shader);
+                dibujarLista(objs, m.P, m.giro, false);
+                for (int k = 0; k < 2; k++)   // papel picado: 2 tiras de 1.7 m bajo el travesano (y = 2.68)
+                {
+                    glm::mat4 mp = matriz(m.P, m.giro, glm::vec3(-0.85f + 1.70f * k, 2.66f, -0.78f), 1.0f, 0.0f);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                    papelPicado.Draw(shader);
+                }
+            }
+            colocar(arcoCemp, glm::vec3(0.0f, 0.0f, OfrendaMayor::ARCO_Z), 0.0f);
+            // X-52: altar de piramide al centro de la plaza trasera, con papel picado colgado de los 4 travesanos del dosel (y = 2.50)
+            {
+                const glm::vec3 P(0.0f, 0.0f, PlazaTrasera::CZ);
+                glm::mat4 mp0 = matriz(P, 0.0f, glm::vec3(0.0f), 1.0f, 0.0f);
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp0));
+                altarPiramide.Draw(shader);
+                dibujarLista(objsPir, P, 0.0f, true);
+                for (int k = 0; k < 4; k++)
+                {
+                    glm::mat4 mp = matriz(P, 90.0f * k, glm::vec3(0.0f, 2.48f, 1.44f), 1.0f, 0.0f);
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
+                    papelPicado.Draw(shader);
+                }
+            }
+            // tumbas y cruces nuevas de la plaza, con ofrenda al pie (relieve de piedra como las del patio)
+            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 1);
+            for (int i = 0; i < PlazaTrasera::N_TUMBAS; i++)
+            {
+                const PlazaTrasera::Tumba& t = PlazaTrasera::TUMBAS[i];
+                Model* mt = t.modelo == 0 ? &cruz : t.modelo == 1 ? &tumba1 : t.modelo == 2 ? &tumba2 : t.modelo == 3 ? &tumba3 : &tumba4;
+                colocar(*mt, glm::vec3(t.x, 0.0f, t.z), t.giro);
+            }
+            glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
+            for (int i = 0; i < PlazaTrasera::N_TUMBAS; i++)
+            {
+                const PlazaTrasera::Tumba& t = PlazaTrasera::TUMBAS[i];
+                colocar(vela, glm::vec3(t.ofX + 0.25f, 0.0f, t.ofZ), 0.0f);
+                for (int k = 0; k < 3; k++)
+                {
+                    glm::mat4 mf = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(t.ofX - 0.2f + 0.14f * k, 0.06f, t.ofZ + 0.05f * (k % 2))), glm::vec3(1.7f));
+                    glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mf));
+                    cempasuchil.Draw(shader);
+                }
+            }
+            for (int i = 0; i < PlazaTrasera::N_ARCOS; i++)
+                colocar(arcoCemp, glm::vec3(PlazaTrasera::ARCOS[i].x, 0.0f, PlazaTrasera::ARCOS[i].y), 0.0f);
+            // llamas (todas las velas de las ofrendas y las de las tumbas nuevas)
+            glUniform1f(glGetUniformLocation(shader.Program, "tiempo"), (float)Reloj());
+            glUniform1i(glGetUniformLocation(shader.Program, "llama"), 1);
+            for (const MayorColocado& m : mayores) llamasLista(objs, m.P, m.giro);
+            llamasLista(objsPir, glm::vec3(0.0f, 0.0f, PlazaTrasera::CZ), 0.0f);
+            for (int i = 0; i < PlazaTrasera::N_TUMBAS; i++)
+            {
+                const PlazaTrasera::Tumba& t = PlazaTrasera::TUMBAS[i];
+                glUniform1f(glGetUniformLocation(shader.Program, "llamaFase"), 0.83f * (nfGlobal++));
+                glm::mat4 ml = glm::translate(glm::mat4(1.0f), glm::vec3(t.ofX + 0.25f, 0.15f, t.ofZ));
+                glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(ml));
+                llamaModelo.Draw(shader);
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
@@ -1774,7 +1866,7 @@ int main()
     palma.cleanup();    // X-9
     colinas.cleanup();  // X-18
     atuendos.cleanup();  // X-35
-    arbolSelva.cleanup(); arcoCemp.cleanup(); racimoCemp.cleanup(); altarMayor.cleanup(); senderoTierra.cleanup();  // X-36
+    arbolSelva.cleanup(); arcoCemp.cleanup(); racimoCemp.cleanup(); altarMayor.cleanup(); altarPiramide.cleanup(); senderoTierra.cleanup();  // X-36
     personaPieA.cleanup(); personaPieB.cleanup(); personaAgachadaA.cleanup(); personaAgachadaB.cleanup(); petate.cleanup();  // X-19
     arbusto.cleanup();  // X-9
     tablaRemo.cleanup(); luciernaga.cleanup();  // X-21, X-22 (faltaban)
