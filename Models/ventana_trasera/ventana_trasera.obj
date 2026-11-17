@@ -1,0 +1,19 @@
+# X-56: vidrios de las ventanas de la pared trasera de casa_a y casa_b (pared z = +2.0, plinto hasta z = 2.04). 1 u = 1 m, mismo origen que las casas
+mtllib ventana_trasera.mtl
+o ventana_trasera
+v -2.1200 1.0300 2.0600
+v -1.1800 1.0300 2.0600
+v -1.1800 2.0700 2.0600
+v -2.1200 2.0700 2.0600
+v 1.1800 1.0300 2.0600
+v 2.1200 1.0300 2.0600
+v 2.1200 2.0700 2.0600
+v 1.1800 2.0700 2.0600
+vt 0 0
+vt 1 0
+vt 1 1
+vt 0 1
+vn 0 0 1
+usemtl ventana_trasera_vidrio
+f 1/1/1 2/2/1 3/3/1 4/4/1
+f 5/1/1 6/2/1 7/3/1 8/4/1
