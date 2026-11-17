@@ -19,6 +19,7 @@ CONTROLES
  V (cerca del altar) .. enciende o apaga las velas del altar
  M .................... sonido: mar y música / solo mar / solo música / silencio
  F1 ................... muestra u oculta la ayuda de controles
+ T .................... recorrido guiado de 12 estaciones (T, Esc o W A S D lo cancelan)
  R .................... reinicia a la silueta (caminata y flor)
  Esc .................. salir
 

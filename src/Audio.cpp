@@ -12,6 +12,7 @@
 #include <cmath>
 #include <chrono>
 #include <cstdlib>
+#include <cstdio>
 
 namespace
 {
@@ -37,6 +38,8 @@ struct AudioImpl
     ma_engine engine;
     ma_sound  sonidos[NUM_PISTAS];
     bool      activo[NUM_PISTAS] = { false, false };
+    ma_sound  voz;                 // X-62: narracion del recorrido
+    bool      vozCargada = false;
 };
 
 bool Audio::init()
@@ -98,15 +101,25 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
     if (!impl) return;
     auto fija = [&](int i, float v) { if (impl->activo[i]) ma_sound_set_volume(&impl->sonidos[i], v); };
     auto lim = [](float v) { return (std::min)(1.0f, (std::max)(0.0f, v)); };  // parentesis: windows.h define min/max como macros
+    // X-62: atenuacion por la voz del recorrido (rampa de 0.6 s hacia 1 mientras suena, hacia 0 si no)
+    {
+        static auto previo = std::chrono::steady_clock::now();
+        const auto ahora = std::chrono::steady_clock::now();
+        const float dt = (std::min)(0.1f, std::chrono::duration<float>(ahora - previo).count());
+        previo = ahora;
+        const bool habla = impl->vozCargada && !ma_sound_at_end(&impl->voz);
+        atenuacion = (std::max)(0.0f, (std::min)(1.0f, atenuacion + (habla ? 1.0f : -1.0f) * dt / 0.6f));
+    }
+    const float factorMar = 1.0f - 0.4f * atenuacion, factorMusica = 1.0f - 0.65f * atenuacion;   // voz: mar x0.6, musica x0.35
     // Oleaje (D-6j): el volumen crece como 0.02 * 15^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~1 dB, parejo en todo el recorrido
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
-    fija(0, mezclaMar ? 0.02f * std::pow(15.0f, sMar) : 0.0f);   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
+    fija(0, mezclaMar ? factorMar * 0.02f * std::pow(15.0f, sMar) : 0.0f);   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
     // Musica (X-40): la FUENTE es la banda. Modelo: ley del inverso de la distancia (cada vez que d se duplica, -6 dB), con tope V0 = 0.24 a d0 = 3 m
     // (V0 = 0.48 * 0.50, el maximo que tenia la curva del altar en D-6b; 0.48 iguala la sonoridad del mp3 de -10 LUFS) y ventana lineal que la apaga a 60 m.
     const float dx = Extras::BANDA_X - x, dz = Extras::BANDA_Z - z;
     const float d = std::sqrt(dx * dx + dz * dz);
     const float D0 = 3.0f, V0 = 0.24f;
-    fija(1, mezclaMusica ? V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)) : 0.0f);   // X-60: M puede silenciar la pista
+    fija(1, mezclaMusica ? factorMusica * V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)) : 0.0f);   // X-60: M puede silenciar la pista
     // Paneo: derecha = (-fz, fx) en el plano XZ de OpenGL (frente x derecha con arriba +Y); cos del angulo con la direccion a la banda, reducido a 0.7
     if (impl->activo[1] && d > 0.01f)
     {
@@ -140,9 +153,39 @@ void Audio::SetMezcla(bool mar, bool musica)
     mezclaMusica = musica;
 }
 
+float Audio::IniciarVoz(int estacion)
+{
+    if (!impl) return 0.0f;
+    DetenerVoz();
+    char ruta[96];
+    std::snprintf(ruta, sizeof(ruta), "Audio/narracion/narracion_%02d.mp3", estacion);   // ruta relativa a la raiz del repo
+    // Sin STREAM: la narracion es corta y asi la duracion es exacta. NO_SPATIALIZATION: voz 2D, sin paneo
+    if (ma_sound_init_from_file(&impl->engine, ruta, MA_SOUND_FLAG_NO_SPATIALIZATION, nullptr, nullptr, &impl->voz) != MA_SUCCESS)
+    {
+        static bool avisado[64] = {};   // un aviso por estacion, no uno por cuadro ni por repeticion
+        if (estacion >= 0 && estacion < 64 && !avisado[estacion]) { avisado[estacion] = true; std::cout << "[Audio] Sin voz para la estacion " << estacion << " (falta " << ruta << "): el recorrido sigue en silencio." << std::endl; }
+        return 0.0f;
+    }
+    ma_sound_set_volume(&impl->voz, 1.0f);
+    if (ma_sound_start(&impl->voz) != MA_SUCCESS) { ma_sound_uninit(&impl->voz); return 0.0f; }
+    impl->vozCargada = true;
+    float largo = 0.0f;
+    if (ma_sound_get_length_in_seconds(&impl->voz, &largo) != MA_SUCCESS) largo = 0.0f;
+    std::cout << "[Audio] Voz de la estacion " << estacion << ": " << ruta << " (" << largo << " s)" << std::endl;
+    return largo;
+}
+
+void Audio::DetenerVoz()
+{
+    if (!impl || !impl->vozCargada) return;
+    ma_sound_uninit(&impl->voz);
+    impl->vozCargada = false;
+}
+
 void Audio::cleanup()
 {
     if (!impl) return;
+    DetenerVoz();
     for (int i = 0; i < NUM_PISTAS; i++)
         if (impl->activo[i]) ma_sound_uninit(&impl->sonidos[i]);
     ma_engine_uninit(&impl->engine);

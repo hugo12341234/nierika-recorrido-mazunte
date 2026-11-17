@@ -12,8 +12,9 @@
 | Velas del altar | **V** (a menos de 3 m del altar) | Enciende o apaga las velas del altar: la luz cálida y las llamas suben o bajan en un cuarto de segundo. Lejos del altar solo muestra un aviso |
 | Sonido | **M** | Cambia entre «mar y música», «solo el mar», «solo la música» y «silencio» (se avisa arriba en pantalla) |
 | Ayuda de controles | **F1** | Muestra u oculta la lista de controles |
+| Recorrido guiado | **T** | Una visita narrada por 12 estaciones (playa, ofrendas, altar, camino de las ánimas, mirador), con subtítulos y, si existen los audios, con voz. **T**, **Esc** o **W A S D** la cancelan y te dejan donde estás (ver `docs/RECORRIDO_GUIADO.md`) |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
-| Salir | **Esc** | Cierra el programa |
+| Salir | **Esc** | Cierra el programa (con el recorrido guiado activo, la primera pulsación solo lo cancela) |
 
 Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - La velocidad al caminar es de **2.0 m/s** (`SPEED` en `Camera.h`) y la sensibilidad del ratón es **0.25**.
@@ -21,7 +22,8 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Hay **colisiones** (A-9): no atraviesas muros, bardas ni el altar; si chocas de frente te deslizas por el lado. La zona caminable llega hasta la orilla (z = 24).
 - Al iniciar, las velas del altar están **encendidas**. Cerca del altar aparece arriba el recordatorio de **V**.
 - Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
-- Con Esc se cierra el programa directamente, sin pedir confirmación.
+- Con Esc se cierra el programa directamente, sin pedir confirmación; si el recorrido guiado (**T**) está activo, la primera pulsación solo lo cancela.
+- **T** (X-62, 17/11): durante el recorrido el ratón no mueve la cámara. No se compiló en VS 2022 al escribir esta nota.
 
 ## 2.2 Teclas sin función
 
