@@ -64,13 +64,13 @@ namespace
           "Aquí la ofrenda se presenta sobre un altar de tres niveles, con una forma que es adaptación del estudio.",
           "Tradición general (SEP, 2026); altar de tres niveles y cuarto: adaptación del estudio",
           REF_SEP "\n" REF_UNESCO,
-          1, { glm::vec3(1.35f, 0.0f, 0.6f) } },   // B-13 (X-46: valor original tras revertir X-45): desde la puerta (d ~ 1.5 m) gana a la del pan
+          1, { glm::vec3(0.0f, 0.0f, -0.10f) } },   // X-58: altar3 al centro del cuarto (antes (1.35, 0, 0.6)); desde la puerta (d ~ 1.5 m) gana a la del pan
         { "Pan de muerto",
           "El pan de muerto representa el afecto y la fraternidad hacia los difuntos (Secretaría de Educación Pública [SEP], 2026). "
           "Se coloca en el altar junto con las demás ofrendas para recibir a las ánimas.",
           "Tradición general (SEP, 2026)",
           REF_SEP,
-          1, { glm::vec3(1.40f, 0.80f, 0.0f) } },  // B-13 (X-46): pan_muerto en el nivel medio del altar3; a < 0.9 m de la repisa gana a la del altar
+          1, { glm::vec3(0.0f, 0.80f, -0.75f) } },  // X-58: pan_muerto en el nivel medio del altar3 al centro (antes (1.40, 0.80, 0)); a < 0.9 m de la repisa gana a la del altar
 
         // ---- X-52 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 12 fichas (ESTADO sec. 4) ----
         { "Banda de viento",
@@ -86,7 +86,7 @@ namespace
           "Aquí los dos copaleros y su humo son una adaptación del estudio: el humo es un modelo fijo, sin partículas.",
           "Tradición general (SEP, 2026; INAH, 2025); copaleros y humo: adaptación del estudio",
           REF_SEP "\n" REF_INAH562,
-          2, { glm::vec3(-1.05f, 0.0f, 1.75f), glm::vec3(1.05f, 0.0f, 1.75f) } },   // X-47: copaleros a (+-1.05, 1.75); el altar (1.35, 0.6) gana desde su lado
+          2, { glm::vec3(-1.05f, 0.0f, 1.75f), glm::vec3(1.05f, 0.0f, 1.75f) } },   // X-47: copaleros a (+-1.05, 1.75); el altar (0, -0.1) gana desde su lado
         { "Panteón y tumbas",
           "En las alumbradas de Oaxaca, las familias pasan la noche del 31 de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan de forma simbólica el camino de regreso (México Desconocido, 2026). "
           "Los platillos del difunto se colocan alrededor del altar familiar y de la tumba (UNESCO, s. f.). "

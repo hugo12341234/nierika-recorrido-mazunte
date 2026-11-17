@@ -8,7 +8,7 @@ There are **5**, made with Dear ImGui: candles, marigold flower, papel picado, o
 | Candles | shore, (−3, 23) |
 | Marigold flower | shore, (3, 23) |
 | Papel picado | cemetery, under the posts, (0, 6) |
-| Offering altar | room, beside the altar, (1.35, 0.6) |
+| Offering altar | room, in front of the altar, (0, −0.1) |
 | Pan de muerto | room, on the altar, (1.40, 0) |
 
 *(According to `src/Fichas.cpp` in `develop` with B-13; texts are those of `docs/fichas_culturales.md`, still **to be verified against the source**. Not yet compiled with ImGui in Visual Studio or seen on screen.)*

@@ -141,7 +141,7 @@ Es el equivalente de $\beta_{\text{der}}(t)=\beta_{\text{izq}}(t+T_p/2)=-\beta_{
 | rodilla | −3 a −60 (solo hacia atrás; 5 KeyFrames) | grados | `src/Silueta.cpp:82-86` |
 | $\gamma_{\max}$ (brazo) | ±20, antebrazo −10 a −35 | grados | `src/Silueta.cpp:88-94` |
 | desfase entre lados | $\pi$ (medio ciclo, 0.5 s) | rad | `src/Silueta.cpp:122` |
-| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=+0.45$ (D-5, 12/11; antes +1.0) | m | `src/Silueta.cpp:11,19,59-68` |
+| $\mathbf{p}_A,\ \mathbf{p}_B$ del torso | $z=24 \to 0.2$; al final paso al costado a $x=-0.22$ (X-58, 17/11; antes +0.45 en D-5 y +1.0 antes) | m | `src/Silueta.cpp:11,19,59-68` |
 | $t_A,\ t_B$ | 0 y 18.33 (rampas de 2 s) | s | `src/Silueta.cpp:15,61` |
 
 **Estado:** los valores son los escritos en el código. La caminata se compiló y vio en la PC de D2 el 04/11 con cubos (ESTADO, D-2); con el modelo real de D1 sigue **sin compilar**.
@@ -160,7 +160,7 @@ El brazo derecho se mueve por KeyFrames con slerp (`src/Silueta.cpp`, pistas `br
 | 3 (`T_REGRESA`) | +75° | +10° | smoothstep |
 | 4 (`T_FIN`) | reposo | reposo | — |
 
-La flor sale de la mano en $\tau=2$ s (`T_SUELTA`), con el brazo ya extendido. Con el torso en $(0.45,\ 0.90,\ 0.2)$ (D-5, 12/11; antes $x=1.0$) y el hombro en $(+0.22,\ +0.54,\ 0)$ respecto de él, la mano (punta del antebrazo, 0.30 m bajo el codo) queda en $P_0=(0.670,\ 1.336,\ -0.389)$ m: calculada el 12/11 con el código real (`Silueta.cpp` y `Animacion.cpp`, `g++`); el código la calcula en ejecución (`Silueta::ManoAlSoltar`). Con $x=1.0$ daba $(1.22,\ 1.336,\ -0.389)$: solo cambia $x$. **"Retrocede" del CONTEXTO se interpreta como el regreso del brazo a reposo** (la silueta no da pasos hacia atrás; simplificación registrada en el ESTADO, 11/11).
+La flor sale de la mano en $\tau=2$ s (`T_SUELTA`), con el brazo ya extendido. Con el torso en $(-0.22,\ 0.90,\ 0.2)$ (X-58, 17/11; antes $x=0.45$ y, en D-5, $x=1.0$) y el hombro en $(+0.22,\ +0.54,\ 0)$ respecto de él, la mano (punta del antebrazo, 0.30 m bajo el codo) queda en $P_0=(0.000,\ 1.336,\ -0.389)$ m (con $x=0.45$ daba $(0.670,\ 1.336,\ -0.389)$): calculada el 17/11 con el código real (`Silueta.cpp` y `Animacion.cpp`, `g++`); el código la calcula en ejecución (`Silueta::ManoAlSoltar`). Con $x=1.0$ daba $(1.22,\ 1.336,\ -0.389)$: solo cambia $x$. **"Retrocede" del CONTEXTO se interpreta como el regreso del brazo a reposo** (la silueta no da pasos hacia atrás; simplificación registrada en el ESTADO, 11/11).
 
 ### 3.2 Trayectoria de la flor
 La propuesta dice: la flor sigue una **Bézier cuadrática mano → nivel del altar, con caída final** [repo, CONTEXTO §4]:
@@ -171,9 +171,9 @@ $$
 
 | Punto | Significado | Valor |
 |---|---|---|
-| $P_0$ | mano al soltar ($\tau=2$ s) | $(0.670,\ 1.336,\ -0.389)$ m, calculada de la pose del brazo |
+| $P_0$ | mano al soltar ($\tau=2$ s) | $(0.000,\ 1.336,\ -0.389)$ m, calculada de la pose del brazo |
 | $P_1$ | punto de control | $\big(\tfrac{x_0+x_2}{2},\ y_0,\ \tfrac{z_0+z_2}{2}\big)$: a la altura de la mano y a medio camino horizontal |
-| $P_2$ | destino sobre la repisa del nivel inferior de `altar3` | $(1.05,\ 0.435,\ z_0)$ m, **provisional** (`src/main.cpp`; B-13 lo ajusta): `altar3` en $(1.35,0,0)$ girado −90° tiene la repisa en $x\in[0.90,1.15]$ con tope a $y=0.40$ [repo, ESTADO §5]; 0.035 m es la mitad de la flor |
+| $P_2$ | destino sobre la repisa del nivel inferior de `altar3` | $(0,\ 0.491,\ -0.375)$ m (X-58, 17/11; `src/main.cpp`): `altar3` en $(0,0,-0.70)$ sin giro tiene la repisa en $z\in[-0.50,-0.25]$ con tope a $y=0.40$ [repo, ESTADO §5]; la flor se dibuja ×2.6, su centro queda $0.035\cdot 2.6=0.091$ m sobre el tope (antes $(1.05,\ 0.435,\ z_0)$ con `altar3` en $(1.35,0,0)$ girado −90°) |
 
 Deducción y propiedades de $B(u)$: ver `justificacion_simples.md` §2.1 (De Casteljau; $B'(0)=2(P_1-P_0)$, $B'(1)=2(P_2-P_1)$).
 
@@ -220,7 +220,7 @@ $$
 - **Dónde empieza y termina cada una** (valores del código, `Silueta.cpp` y `Silueta.h`): la caminata ocupa $0\le t\le 18.33$ s (`Duracion()`); la de dejar la flor va con $\tau=t_{\text{sil}}-18.33$: el brazo se extiende de 0 a 1 s, la flor sale de la mano a los 2 s, el brazo regresa de 3 a 4 s. Después de $\tau=4$ s todo queda quieto: la silueta en su punto de llegada y la flor sobre la repisa.
 - **Se dispara sola.** No hay tecla ni zona que la active: corre desde que empieza el bucle de dibujo. La tecla **R** pone $t_{\text{sil}}=0$ y todo se repite, porque todo es función de $t_{\text{sil}}$ (incluida la posición de la flor).
 - **Arranque (D-5, 12/11).** `lastFrame` valía 0 al entrar al bucle, así que el primer $\Delta t$ incluía todo el tiempo de carga de modelos y texturas (segundos). Se fija `lastFrame = glfwGetTime()` justo antes del bucle y `tSilueta = 0`: la caminata empieza en la orilla y no ya avanzada.
-- **Fin de la caminata contra el altar (D-5, 12/11).** La caminata termina en $(x,z)=(0.45,\ 0.20)$ (antes $x=1.0$, dentro de la caja del `altar3`, que ocupa $x\in[0.90,1.80]$). Calculado con el código (programa aparte, `Silueta.cpp` + `Animacion.cpp`): en el último segundo las articulaciones y la mano llegan a $x\le 0.67$ m (la mano al soltar queda en $(0.670,\ 1.336,\ -0.389)$); sumando el grosor del brazo ($\approx 0.05$ m) hay $\approx 0.18$ m de holgura. La flor recorre 0.38 m horizontales en $T_b=0.429$ s hasta la repisa en $(1.05,\ 0.435,\ -0.389)$.
+- **Fin de la caminata frente al altar (X-58, 17/11).** La caminata termina en $(x,z)=(-0.22,\ 0.20)$ (D-5: $(0.45,\ 0.20)$, a un lado del `altar3` que estaba contra el muro derecho; antes $x=1.0$). El `altar3` ocupa ahora $x\in[-0.80,0.80]$, $z\in[-1.15,-0.25]$: el torso (0.20 m de fondo) queda a $\approx 0.35$ m de su frente y la mano al soltar, en $(0.000,\ 1.336,\ -0.389)$, queda sobre la repisa inferior. Calculado con el código (programa aparte, `Silueta.cpp` + `Animacion.cpp`). La flor cae $h=1.336-0.491=0.845$ m en $T_b=\sqrt{2h/g}=0.415$ s, con solo 0.014 m de desplazamiento horizontal hasta $(0,\ 0.491,\ -0.375)$. (Versión D-5, para referencia: la mano quedaba en $(0.670,\ 1.336,\ -0.389)$ y la flor recorría 0.38 m horizontales en $T_b=0.429$ s hasta $(1.05,\ 0.435,\ -0.389)$.)
 
 ---
 
