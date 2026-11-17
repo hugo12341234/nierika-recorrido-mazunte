@@ -77,7 +77,7 @@ con $T_v=1.5$ s, $g=9.81$ m/s², $r=0.055$ m: la pelota aterriza **exactamente**
 Con $T_b=60/\text{BPM}=0.667$ s (90 BPM), para cada músico con fase $\phi$ y sección $i$:
 $$\Delta y=A_i\left|\sin\!\left(\frac{\pi t}{T_b}+\phi\right)\right|,\qquad \theta_z=R_i\sin\!\left(\frac{\pi t}{T_b}+\phi\right),\qquad \theta_x=P_i\sin\!\left(\frac{2\pi t}{T_b}+\phi+\frac{\pi}{2}\right)$$
 $|\sin|$ vale 0 una vez por pulso (golpe del pie) y su periodo es $T_b$; el giro lateral dura 2 pulsos; la inclinación del instrumento, 1 pulso. Valores por sección (trompeta, clarinete, saxofón, trombón, tuba, tambora, tarola, platillos): $A$ = 2.8, 2.2, 2.2, 2.8, 1.2, 3.6, 3.6, 3.2 cm; $R$ = 3, 4, 4, 3.5, 2, 2.5, 2.5, 3°; $P$ = 5, 3, 3.5, 5, 2, 1.5, 1.5, 6°. Pruebas: el rebote es ≥ 0, < 4 cm y se repite cada $T_b$.
-> 🟡 **Límite:** el BPM de la música real (Xochipitzahuatl) **no se midió**; 90 BPM es el valor declarado de `Extras::BPM_BANDA`. Si no coincide, la banda se mueve a otro compás que la música.
+> 🟡 **Límite:** el BPM de la música real («Dios Nunca Muere», Banda Mixe de Oaxaca, D-6k) **no se midió**; 90 BPM es el valor declarado de `Extras::BPM_BANDA`. Si no coincide, la banda se mueve a otro compás que la música.
 
 ---
 

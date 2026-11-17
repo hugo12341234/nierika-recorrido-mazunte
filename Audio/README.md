@@ -5,7 +5,7 @@ Esta carpeta contiene **solo dos pistas con nombre fijo**, ambas `.mp3`, ambas e
 | Archivo | Qué suena | Volumen en el código (`src/Audio.cpp`, `ActualizarZona`, cada cuadro) |
 |---|---|---|
 | `oleaje.mp3` | Mar | 0.02·15^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6j): 0.020 en z ≤ 0, 0.039 en z = 6, 0.078 en z = 12, 0.153 en z = 18, 0.30 en la orilla (z = 24) |
-| `musica.mp3` | Música de la banda (X-40) | 0.24·3/max(d, 3)·(1 − clamp((d − 30)/30, 0, 1)), d = distancia al centro de la banda (−12.0, 18.0): 0.24 a ≤ 3 m, 0.12 a 6 m, 0.06 a 12 m, 0 a 60 m. Además paneo estéreo hacia el lado donde está la banda |
+| `musica.mp3` | Música de la banda (X-40): «Dios Nunca Muere», Banda Mixe de Oaxaca (D-6k) | 0.24·3/max(d, 3)·(1 − clamp((d − 30)/30, 0, 1)), d = distancia al centro de la banda (−12.0, 18.0): 0.24 a ≤ 3 m, 0.12 a 6 m, 0.06 a 12 m, 0 a 60 m. Además paneo estéreo hacia el lado donde está la banda |
 
 El código busca únicamente `Audio/oleaje.mp3` y `Audio/musica.mp3` (rutas relativas a la raíz del repo; **no carga `.wav` ni `.flac`**, así un archivo viejo olvidado no tapa a los mp3).
 Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa sigue sin ella. No hace falta recompilar para cambiar un mp3. `.ogg` no está soportado.
@@ -31,8 +31,10 @@ Ninguna de las dos es propia del estudio ni de Mazunte/Oaxaca; no cuentan como m
 - **No escuchado por Claude:** el tramo se eligió por nivel estable; si trae voces, aplausos o saltos, D2 dice el minuto y se cambia.
 - **Referencia APA 7 (incompleta):** *[Canal — PENDIENTE (D2)].* ([Año — PENDIENTE (D2)]). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo (fecha de consulta: PENDIENTE (D2)).
 
-### `musica.mp3`
-- **Original:** arreglo de «Xochipitzahuatl (Flor Menudita)» (canción tradicional náhuatl del centro de México; **no es de Mazunte ni de Oaxaca**), versión traducida. Archivo tal cual lo aportó D2 (sha256 `d21607438a40…a437`), sin recodificar. Empieza y termina en silencio, así que el bucle empalma sin clic.
-- **Referencia APA 7 (incompleta):** *[Intérprete/canal — PENDIENTE (D2)].* ([Año — PENDIENTE (D2)]). *Xochipitzahuatl Flor Menudita traducido* [Video/audio]. [URL — PENDIENTE (D2)] (fecha de consulta: PENDIENTE (D2)).
+### `musica.mp3` (D-6k, 17/11: cambio de pista, decisión de D2)
+- **Pista vigente en el código:** «Dios Nunca Muere», interpretada por la Banda Mixe de Oaxaca (según D2; es música de banda oaxaqueña, a diferencia de la pista anterior). El archivo conserva el nombre fijo `Audio/musica.mp3`: el código no cambia.
+- **ESTADO DEL ARCHIVO:** el mp3 lo aporta D2. Mientras no se reemplace, `Audio/musica.mp3` sigue siendo la pista anterior (Xochipitzahuatl, náhuatl, sacada del juego en cuanto D2 suba la nueva). Al reemplazarlo: medir sonoridad con ffmpeg (`ffmpeg -i Audio/musica.mp3 -af ebur128 -f null -`) y, si difiere mucho de −10 LUFS, ajustar V0 en `Audio.cpp` (registrar el valor en el ESTADO §5); comprobar que empieza y termina sin clic al repetir (bucle).
+- **Pista anterior (retirada):** arreglo de «Xochipitzahuatl (Flor Menudita)», canción tradicional náhuatl del centro de México; no era de Mazunte ni de Oaxaca.
+- **Referencia APA 7 (incompleta):** *[Banda Mixe de Oaxaca — confirmar intérprete/canal (D2)].* ([Año — PENDIENTE (D2)]). *Dios Nunca Muere* [Canción/Video]. [Plataforma o canal — PENDIENTE (D2)]. [URL — PENDIENTE (D2)] (fecha de consulta: PENDIENTE (D2)). Uso educativo no comercial, sin licencia libre confirmada (decisión previa de D2).
 
 Mientras falten esos campos, los créditos APA 7 de las dos pistas no están completos.
