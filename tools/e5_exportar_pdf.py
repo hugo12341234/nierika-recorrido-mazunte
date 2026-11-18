@@ -51,11 +51,11 @@ def limpiar(texto, base):
     t = re.sub(r"(?<!\!)\[([^\]]+)\]\((?!https?:|#|mailto:)[^)]*\)", r"\1", t)
     # imágenes relativas -> absolutas
     def img(m):
-        ruta = m.group(2)
+        ruta, titulo = m.group(2), m.group(3) or ""
         if re.match(r"https?:|data:", ruta):
             return m.group(0)
-        return "![%s](%s)" % (m.group(1), os.path.normpath(os.path.join(base, ruta)))
-    t = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", img, t)
+        return "![%s](%s%s)" % (m.group(1), os.path.normpath(os.path.join(base, ruta)), titulo)
+    t = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)(\s+\"[^\"]*\")?\)", img, t)
     return t
 
 # Aviso que el PDF muestra cuando falta un archivo que debe aportar otro hilo o un integrante.
@@ -72,6 +72,8 @@ def adaptar_raci(txt):
     txt = re.sub(r"^## 4\. .*\Z", "", txt, flags=re.M | re.S)
     txt = re.sub(r"^### ", "#### ", txt, flags=re.M)
     txt = re.sub(r"^## (\d)", r"### \1", txt, flags=re.M)
+    txt = re.sub(r"^### (\d+)\. ", r"### e.4.\1 ", txt, flags=re.M)
+    txt = re.sub(r"^#### (\d+)\.(\d+) ", r"#### e.4.\1.\2 ", txt, flags=re.M)
     return txt
 
 def adaptar_evidencias(raw):
@@ -82,6 +84,14 @@ def adaptar_evidencias(raw):
     raw = re.sub(r"^## 7\. .*\Z", "", raw, flags=re.M | re.S)
     raw = re.sub(r"^### ", "#### ", raw, flags=re.M)
     raw = re.sub(r"^## (\d)", r"### \1", raw, flags=re.M)
+    raw = re.sub(r"^### (\d+)\. ", r"### f.4.\1 ", raw, flags=re.M)
+    raw = re.sub(r"^#### (\d+)\.(\d+) ", r"#### f.4.\1.\2 ", raw, flags=re.M)
+    # los rótulos «Figura N» propios de la sección se sustituyen por la numeración global del documento (ver numerar_figuras)
+    raw = re.sub(r"^#### Figuras? \d[^\n]*\n\n", "", raw, flags=re.M)
+    raw = re.sub(r"!\[Figura (\d+)\. ([^\]]*)\]\(([^)\s]+)\)", r'![\2](\3 "ev\1")', raw)
+    raw = re.sub(r"^\*Figura \d+\. ", "*", raw, flags=re.M)
+    raw = re.sub(r"Figuras (\d+)(–| y )(\d+)", r"Figuras @@EV\1@@\2@@EV\3@@", raw)
+    raw = re.sub(r"Figura (\d+)(?!\d)", r"Figura @@EV\1@@", raw)
     return raw
 
 ANEXOS = {"justificacion_simples.md": "Anexo C. ", "justificacion_complejas.md": "Anexo D. ", "justificacion_personas.md": "Anexo E. "}
@@ -102,6 +112,8 @@ def unir(base, archivos):
             txt = limpiar(raw, os.path.dirname(ruta))
             if base == MT and a in ANEXOS:
                 txt = re.sub(r"^# ", "# " + ANEXOS[a], txt, count=1, flags=re.M)
+                L = ANEXOS[a].split()[1][0]   # «Anexo C. » -> C
+                txt = re.sub(r"^(#{2,4}) (\d+(?:\.\d+)*)\.? ", lambda m: "%s %s.%s " % (m.group(1), L, m.group(2)), txt, flags=re.M)
             if base == MT and a == "secciones/roles_raci_real.md":
                 txt = adaptar_raci(txt)
             partes.append(txt)
@@ -112,6 +124,71 @@ def run(cmd, **kw):
     if r.returncode != 0:
         sys.exit("ERROR en %s\n%s" % (" ".join(cmd[:3]), r.stderr))
     return r.stdout
+
+def numerar_figuras(h):
+    """Numera todas las figuras del documento en orden (Figura 1, 2, 3…) y les pone pie.
+    - Imagen sola en su párrafo -> <figure><img><figcaption>Figura N. …</figcaption></figure>.
+    - Si la imagen lleva título «evN» (figuras de la sección f.4), su pie es el párrafo en cursiva que la sigue
+      y las referencias @@EVN@@ del texto se sustituyen por el número global."""
+    claves, n = {}, [0]
+    def fig(m):
+        img, resto = m.group(1), m.group(2)
+        n[0] += 1
+        num = n[0]
+        alt = html.unescape(re.search(r'alt="([^"]*)"', img).group(1)) if 'alt="' in img else ""
+        k = re.search(r' title="(ev\d+)"', img)
+        pie = None
+        if k:
+            claves[k.group(1)[2:]] = num
+            img = img.replace(k.group(0), "")
+            c = re.match(r"\s*<p><em>(.*?)</em></p>", resto, flags=re.S)
+            if c:
+                pie, resto = c.group(1), resto[c.end():]
+        if pie is None:
+            pie = html.escape(alt, quote=False)
+        return '<figure><div class="fimg">%s</div><figcaption><span class="fn">Figura %d.</span> %s</figcaption></figure>%s' % (img, num, pie, resto)
+    h = re.sub(r"<p>(<img [^>]*>)</p>(.*?)(?=<p><img |\Z)", lambda m: fig(m), h, flags=re.S)
+    h = re.sub(r"@@EV(\d+)@@", lambda m: str(claves.get(m.group(1), "?")), h)
+    return h, n[0]
+
+def clasificar_tablas(h):
+    """Colorea la columna «Lectura» de la matriz RACI y marca la tabla para darle anchos propios."""
+    h = re.sub(r"<td>(Concentrado en D2[^<]*)</td>", r'<td class="lec lec-d2">\1</td>', h)
+    h = re.sub(r"<td>(Parcial: aporte de D1[^<]*)</td>", r'<td class="lec lec-parcial">\1</td>', h)
+    h = re.sub(r"<td>(Sin evidencia del aporte de D1[^<]*)</td>", r'<td class="lec lec-sin">\1</td>', h)
+    h = re.sub(r"<table>(\s*<thead>\s*<tr>\s*<th>Área \(actividades\)</th>\s*<th>Plan \(propuesta\))", r'<table class="raci">\1', h)
+    return h
+
+def norm(s):
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", s))).strip().lower()
+
+def paginar_toc(h, pdf_texto):
+    """Pone el número de página (el del pie de página del cuerpo) a cada entrada del índice. pdf_texto: texto de cada página del PDF."""
+    entradas = re.findall(r'<a href="#([^"]+)" id="toc-[^"]+">(.*?)</a>', h, flags=re.S)
+    paginas = [norm(p) for p in pdf_texto]
+    claves = [norm(e[1])[:32] for e in entradas]
+    n_toc = 0
+    for p in paginas:   # páginas del índice: las iniciales con casi todas las entradas
+        if sum(1 for k in claves if k in p) >= 8:
+            n_toc += 1
+        else:
+            break
+    actual, num = n_toc, {}
+    for (hid, txt), k in zip(entradas, claves):
+        hallada = None
+        for i in range(actual, len(paginas)):
+            if k in paginas[i]:
+                hallada = i
+                break
+        if hallada is None:
+            print("   (sin página en el índice) " + k)
+            hallada = actual
+        actual = hallada
+        num[hid] = hallada + 1
+    def pon(m):
+        hid, resto = m.group(1), m.group(2)
+        return '<a href="#%s" id="toc-%s"><span class="t">%s</span><span class="dots"></span><span class="pg">%d</span></a>' % (hid, hid, resto, num[hid])
+    return re.sub(r'<a href="#([^"]+)" id="toc-[^"]+">(.*?)</a>', pon, h, flags=re.S), n_toc
 
 def construir(clave, titulo, subtitulo, base, archivos, nombre, version, toc_prof):
     print("== %s" % nombre)
@@ -136,21 +213,36 @@ def construir(clave, titulo, subtitulo, base, archivos, nombre, version, toc_pro
     # pandoc pone el título como <header id="title-block-header">: lo quitamos (la portada ya lo trae)
     h = open(cuerpo, encoding="utf8").read()
     h = re.sub(r'<header id="title-block-header">.*?</header>', "", h, flags=re.S)
-    open(cuerpo, "w", encoding="utf8").write(h)
+    h, nfig = numerar_figuras(h)
+    h = clasificar_tablas(h)
+    if clave == "u":   # manual de usuario: capturas algo más angostas para que quepan dos por página
+        h = h.replace("</head>", "<style>figure img{max-width:80%}</style></head>", 1)
     pie = "Nierika Studio · Equipo 15 · %s · 319266894 · 321332086" % titulo
+    if toc_prof:
+        # dos pasadas: la primera calcula en qué página cae cada título; la segunda escribe esos números en el índice
+        h1 = re.sub(r'(<a href="#[^"]+" id="toc-[^"]+">)(.*?)</a>', r'\1<span class="t">\2</span><span class="dots"></span><span class="pg">00</span></a>', h, flags=re.S)
+        open(cuerpo, "w", encoding="utf8").write(h1)
+        run(["node", JS, tmp, pie])
+        texto = run(["pdftotext", "-layout", os.path.join(tmp, "cuerpo.pdf"), "-"]).split("\f")
+        h, n_toc = paginar_toc(h, texto)
+        print("   índice: %d páginas" % n_toc)
+    open(cuerpo, "w", encoding="utf8").write(h)
     run(["node", JS, tmp, pie])
     os.makedirs(SAL, exist_ok=True)
     destino = os.path.join(SAL, nombre)
     run(["pdfunite", os.path.join(tmp, "portada.pdf"), os.path.join(tmp, "cuerpo.pdf"), destino])
     paginas = run(["pdfinfo", destino]).split("Pages:")[1].split()[0]
-    print("   %s  (%s páginas, %.1f MB)" % (destino, paginas, os.path.getsize(destino) / 1e6))
-    shutil.rmtree(tmp, ignore_errors=True)
+    print("   %s  (%s páginas, %.1f MB, %d figuras)" % (destino, paginas, os.path.getsize(destino) / 1e6, nfig))
+    if os.environ.get("E5_CONSERVAR"):
+        print("   temporales:", tmp)
+    else:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 def main():
     que = sys.argv[1] if len(sys.argv) > 1 else "todo"
     if que in ("usuario", "todo"):
         construir("u", "Manual de usuario", "Cómo ejecutar, recorrer e interactuar con la experiencia", MU, USUARIO,
-                  "ManualDeUsuario_%s.pdf" % SUF, "1.0 (18/11/2026)", 0)
+                  "ManualDeUsuario_%s.pdf" % SUF, "1.0 (18/11/2026)", 2)
     if que in ("tecnico", "todo"):
         construir("t", "Manual técnico", "Arquitectura, investigación, gestión, animaciones, conclusiones y créditos", MT, TECNICO,
                   "ManualTecnico_%s.pdf" % SUF, "1.0 (18/11/2026)", 2)
