@@ -11,7 +11,7 @@
 4. [Fichas culturales y audio](04_fichas_y_audio.md)
 5. [Problemas frecuentes](05_problemas_frecuentes.md)
 
-Las capturas están en [`capturas/`](capturas/README.md). La carpeta `en/` es una traducción anterior (v0.6 del 17/11) que **no forma parte de la entrega** y puede diferir del español.
+Las capturas están en [`capturas/`](capturas/README.md). La traducción anterior al inglés (v0.6 del 17/11) se movió a `docs/archivo/manual_usuario_en_v0.6/`: **no forma parte de la entrega** y puede diferir del español.
 
 ## Cómo generar el PDF
 

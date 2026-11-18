@@ -22,9 +22,13 @@
 | `FLUJO_DE_TRABAJO.md` | **Cómo trabajamos** (este archivo) | Si cambia la forma de trabajar |
 | `INSTRUCCIONES_PROYECTO_CLAUDE.md` | Texto que se pega en las instrucciones del Proyecto de Claude (web) | Si cambian las reglas de Claude |
 | `propuesta/` | PDFs entregados al profesor: propuesta v2.0 y plan de trabajo | No |
-| `manual_tecnico/`, `manual_usuario/` | Entregables finales; cada bloque deja aquí sus capturas y parámetros | Sí, al cerrar cada bloque |
-| `manual_tecnico/evidencias/` | Captura semanal del Trello y minuta de cada viernes (evidencia de gestión) | Sí, cada viernes |
-| `videos/` | Los 3 MP4 finales | Al final (E-4) |
+| `manual_tecnico/`, `manual_usuario/` | Fuente en Markdown de los dos manuales (capítulos a–m y anexos; el PDF sale de `tools/e5_exportar_pdf.py` a `docs/entrega/`) | Sí, y se regeneran los PDF |
+| `manual_tecnico/evidencias/` | Capturas de la escena, del Trello y del Gantt (evidencia) | Sí, al agregar evidencia |
+| `videos/` | Guiones y notas de los 3 videos; los MP4 **no** se suben a Git (se entregan aparte) | Solo texto |
+| `REFERENCIAS.md` | Todas las referencias APA 7 del proyecto (alimenta el menú Créditos y el manual) | Sí, si cambia una fuente |
+| `entrega/` | Los 2 PDF de los manuales, texto del paquete, notas del Release y lista de verificación | Al entregar |
+| `archivo/` | Material anterior que ya no forma parte de la entrega | No |
+| `README.md` | Índice de todos los documentos de `docs/` | Si se agrega o quita uno |
 
 **Si dos documentos dicen cosas distintas, manda:** (1) el Registro de decisiones del ESTADO →
 (2) `CONTEXTO_PROYECTO.md` → (3) `PLAN_ACTIVIDADES.md` y los PDFs. Y la contradicción se corrige, no se ignora.
@@ -35,12 +39,14 @@
 |---|---|
 | `NierikaStudio.sln` / `.vcxproj` | Solución de Visual Studio 2022 (solo x64) |
 | `vcpkg.json` | Librerías que instala vcpkg: Assimp, GLFW, GLEW, GLM (versiones fijas por `builtin-baseline`) |
-| `src/` | Código C++: `main.cpp` y las clases `Camera.h`, `Shader.h`, `Model.h`, `Mesh.h` |
+| `src/` | Código C++: `main.cpp`, las clases del curso (`Camera.h`, `Shader.h`, `Model.h`, `Mesh.h`) y un módulo por función (fichas, audio, menú, recorrido guiado, animaciones, colisiones…) |
 | `vendor/SOIL2/` | SOIL2 + stb_image en código fuente (se compilan con el proyecto) |
+| `vendor/miniaudio/` | miniaudio (audio), un solo encabezado |
+| `Audio/` | `oleaje.mp3`, `musica.mp3` (ver `Audio/README.md`) y `narracion/` (12 mp3 del recorrido guiado) |
 | `vendor/imgui/` | Dear ImGui en código fuente (C-7b; ver `vendor/imgui/LEEME.md`) |
 | `Models/<objeto>/` | Cada modelo con su `.obj`, `.mtl` y **sus texturas** |
 | `Shaders/` | Shaders GLSL 330 (`.vs` y `.frag`) |
-| `tools/` | Scripts de apoyo; hoy `empaquetar_release.ps1` (compila Release x64 y genera `dist/` y el .zip) |
+| `tools/` | Scripts de apoyo (generadores de modelos con Blender/`bpy`, pruebas numéricas, exportar manuales, `empaquetar_release.ps1`); índice en `tools/README.md` |
 | `build/` | Salida de compilación (no se sube a Git) |
 | `docs/entrega/` | Texto del paquete (`LEEME_PAQUETE.txt`), notas del Release y lista de verificación de la entrega (E-7) |
 | `dist/` | Release autónomo (.exe + DLL + `Models/` + `Shaders/`); no se sube a Git, va como .zip en el Release (E-3, E-7) |

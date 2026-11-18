@@ -444,8 +444,9 @@ CLAUDE.local.md
 *.blend2
 **/.mayaSwatches/
 
-# Videos crudos de OBS (solo se suben los 3 MP4 finales en docs/videos/)
+# Videos: ni los crudos de OBS ni los 3 MP4 finales (~450 MB) se suben a Git; se entregan aparte (docs/videos/README.md)
 *.mkv
+*.mp4
 
 # Nierika: salida de compilacion y paquetes de vcpkg (se regeneran)
 build/

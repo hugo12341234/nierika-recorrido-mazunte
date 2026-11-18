@@ -1,6 +1,6 @@
 # Recorrido virtual guiado (X-62) · Diseño, guion y lo que se implementó
 
-Fecha: 17/11/2026 · Estado: **implementado (17/11), visto solo en Linux; sin compilar en VS 2022, sin FPS medidos y sin oír el audio**. D2 aprobó el orden, la tecla **T**, los subtítulos y la silueta sincronizada («adelante», 17/11).
+Fecha: 17/11/2026 · Estado: **implementado y fusionado (PR #135, #137, #138, #140, #143); D2 lo probó en VS 2022 el 18/11 (con voz, según D2 en el chat del proyecto; sin captura de esa prueba)**. *Nota del 18/11 (X-71): el texto de abajo conserva lo escrito el 17/11, cuando solo se había visto en Linux.* D2 aprobó el orden, la tecla **T**, los subtítulos y la silueta sincronizada («adelante», 17/11).
 Todo lo de "dónde está cada cosa" sale de `src/Extras.h`, `Fichas.cpp`, `PlazaTrasera.h`, `OfrendasFamiliares.h`, `Silueta.cpp` y del ESTADO (sec. 5) de `develop` (f6ea1de). Las coordenadas de cámara son **propuestas inferidas de esos datos**: se afinan con capturas en Linux al implementar.
 
 ## 1. La idea en una frase
