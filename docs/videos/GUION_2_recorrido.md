@@ -40,5 +40,5 @@ La narración hablada es la del propio programa (voz del recorrido guiado); el v
 ## Antes de entregar, confirmar al ver el MP4
 - [ ] Que el recorrido de **T** esté completo (12 estaciones) y se oigan las 12 voces.
 - [ ] Que se vean **F1, V, M y R** funcionando y al menos una ficha a < 2 m.
-- [ ] Pendiente conocido (ESTADO): `narracion_07` y `narracion_08` duran lo mismo; confirmar al oírlas que no sea una copia.
+- Nota: `narracion_07` y `narracion_08` duran lo mismo pero son distintas (confirmado por D2, 18/11).
 - [ ] Que no se afirme nada fuera de alcance.
