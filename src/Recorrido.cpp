@@ -1,5 +1,6 @@
 // Recorrido.cpp - X-62: ver Recorrido.h
 #include "Recorrido.h"
+#include <cstdlib>
 
 #include <algorithm>
 #include <cmath>
@@ -55,16 +56,16 @@ namespace
           7.0f, 17.0f, 2, { { 1.0f, 12.8f }, { 7.5f, 12.5f } }, { 13.0f, 12.2f }, { 13.0f, 12.2f }, { 14.0f, 1.3f, 8.0f }, { 14.0f, 1.3f, 8.0f }, 0.0f, 0.0f, false },
         { "Panteón",
           "En las alumbradas de Oaxaca, las familias pasan la noche del treinta y uno de octubre junto a las tumbas de sus seres queridos, y las velas sobre las lápidas iluminan, de forma simbólica, el camino de regreso, según México Desconocido. Los platillos del difunto se colocan alrededor del altar familiar y de la tumba, dice la UNESCO.",
-          6.0f, 26.0f, 1, { { 6.5f, 4.2f } }, { 2.6f, 7.0f }, { -2.6f, 7.0f }, { 4.0f, 0.7f, 6.2f }, { -4.0f, 0.7f, 5.75f }, 0.0f, 0.0f, false },
+          6.0f, 26.0f, 0, {}, { 0.5f, 11.2f }, { -0.5f, 11.2f }, { 0.0f, 0.8f, 5.3f }, { 0.0f, 0.8f, 5.3f }, 0.0f, 0.0f, false },
         { "Copal",
           "Antes de entrar, un aroma: el copal. Forma parte de la ofrenda, junto con las velas, las flores y el pan, según la Secretaría de Educación Pública. En el panteón tepehua de Pisaflores, en Veracruz, las tumbas se adornan en medio del humo del copal, informó el INAH.",
-          4.5f, 22.0f, 0, {}, { 0.0f, 3.3f }, { 0.0f, 3.3f }, { 0.0f, 1.0f, 1.2f }, { 0.0f, 1.0f, 1.2f }, 0.0f, 0.0f, false },
+          6.0f, 22.0f, 0, {}, { 0.0f, 5.2f }, { 0.0f, 4.4f }, { 0.0f, 0.9f, 1.75f }, { 0.0f, 0.9f, 1.75f }, 0.0f, 0.0f, false },
         { "El altar",
           "Y llegamos al altar. Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros, según la Secretaría de Educación Pública. El pan de muerto representa el afecto y la fraternidad hacia los difuntos. Mira... llega la figura del camino, y deja su flor.",
-          6.0f, 24.0f, 2, { { 0.0f, 2.2f }, { 0.0f, 1.2f } }, { 0.85f, 0.55f }, { 0.85f, 0.55f }, { 0.0f, 0.9f, -0.7f }, { 0.0f, 0.9f, -0.7f }, 0.0f, 0.0f, false },
+          6.0f, 24.0f, 1, { { 0.0f, 3.4f } }, { 0.5f, 2.6f }, { 0.3f, 2.1f }, { 0.2f, 0.7f, -0.6f }, { 0.2f, 0.7f, -0.6f }, 0.0f, 0.0f, false },
         { "Ofrendas de las familias",
           "Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso, según la UNESCO y la Secretaría de Educación Pública. Fíjate en los objetos que cada familia deja para su difunto.",
-          11.0f, 29.0f, 4, { { 0.0f, 1.9f }, { 0.0f, 3.0f }, { -3.2f, 3.6f }, { -3.2f, -3.0f } }, { -3.2f, -8.5f }, { -3.2f, -8.5f }, { -6.1f, 1.0f, -13.2f }, { -6.1f, 1.0f, -13.2f }, 0.0f, 0.0f, false },
+          11.0f, 29.0f, 4, { { 0.0f, 2.6f }, { -3.2f, 3.6f }, { -3.2f, -3.0f }, { -1.0f, -7.0f } }, { -1.0f, -9.5f }, { -1.6f, -9.9f }, { -8.0f, 0.9f, -12.8f }, { -9.5f, 0.9f, -12.3f }, 0.0f, 0.0f, false },
         { "Camino de las ánimas",
           "Sube conmigo por el camino de las ánimas. En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile, según México Desconocido. Los faroles, el cempasúchil y las velas marcan el camino.",
           11.0f, 17.0f, 2, { { -3.0f, -16.0f }, { 0.0f, -21.0f } }, { 0.5f, -26.6f }, { 0.8f, -30.5f }, { 0.5f, 1.2f, -32.0f }, { 0.8f, 1.2f, -36.0f }, 0.0f, 0.0f, false },
@@ -75,7 +76,7 @@ namespace
           "Desde aquí arriba se ve todo: la capilla, la playa, el mar. "
           "Así es esta fiesta: una noche en que la flama y el aroma guían a quienes se fueron de regreso a casa, y quienes se quedan los reciben con luz, con flores, con pan... y con música. "
           "Gracias por caminar con nosotros. Ahora el camino es tuyo: recórrelo a tu ritmo, acércate a cada ofrenda y lee su ficha.",
-          0.0f, 31.0f, 0, {}, { -0.8f, -35.0f }, { -0.8f, -35.0f }, { -0.8f, 1.6f, -50.0f }, { -0.8f, 1.6f, -50.0f }, 180.0f, -5.0f, false },
+          3.5f, 31.0f, 0, {}, { -3.4f, -34.6f }, { -3.4f, -34.6f }, { -4.0f, 1.6f, -50.0f }, { -0.8f, 1.6f, -50.0f }, 180.0f, -5.0f, false },
     };
 
     const int ESTACION_ALTAR = 7;       // la silueta llega al altar 14 s despues de que la camara se detiene ahi (cuando la voz dice: llega la figura y deja su flor)
@@ -138,7 +139,16 @@ void Recorrido::Iniciar(const RecorridoPose& actual, Audio* audio, float duracio
     siluetaInicio_ = -1.0f;
     comparsaSuave_ = comparsa_;
     pose_ = actual;
+    // Solo desarrollo: NIERIKA_RECORRIDO_DESDE=N salta a la estacion N (para revisar un encuadre sin recorrer las anteriores)
+    if (const char* desde = std::getenv("NIERIKA_RECORRIDO_DESDE"))
+    {
+        idx_ = (std::max)(0, (std::min)(N_ESTACIONES - 1, std::atoi(desde)));
+        const glm::vec2 q = E[idx_].llega;
+        pose_.pos = glm::vec3(q.x, AlturaOjos(q.x, q.y), q.y);
+        inicioTramo_ = pose_;
+    }
     EmpezarTramo();
+    if (std::getenv("NIERIKA_RECORRIDO_DESDE")) tramoReal_ = 0.01f;
 }
 
 void Recorrido::Cancelar()
