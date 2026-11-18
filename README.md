@@ -13,7 +13,7 @@ Real-time, first-person 3D virtual tour that recreates the Day of the Dead celeb
 - **First-person navigation** (keyboard + mouse) with AABB collisions, start menu, pause menu and on-screen help (**F1**).
 - **Guided tour** (key **T**): 12 narrated stations with subtitles and voice (`Audio/narracion/`); any movement key cancels it.
 - **Lighting**: warm ambient light + key lights, Blinn-Phong.
-- **10 animations** (5 keyframed + 5 simple; see `docs/ESTADO_PROYECTO.md` and the technical manual): walking silhouette, placing a flower on the altar, sea waves, floating candles and flowers, flames, and more.
+- **10 animations** (5 keyframed + 5 simple; details in `docs/manual_tecnico/09_i_animaciones.md`): walking silhouette, placing a flower on the altar, family dance, playing with the dog and copal censing (keyframed); sea waves, floating candles with flame, floating flowers, band beat and hostess (simple). Only the first five were in the approved proposal.
 - **13 cultural information cards** (Dear ImGui) shown within 2 m of an object, each citing its source.
 - Ambient audio by zone (waves + band music) and narration; **M** switches the sound mix.
 
@@ -29,7 +29,7 @@ Real-time, first-person 3D virtual tour that recreates the Day of the Dead celeb
 | F1 | Show/hide help |
 | Esc | Pause menu |
 
-Full details: `docs/manual_usuario/en/` (English) and `docs/manual_usuario/` (Spanish).
+Full details (Spanish): `docs/manual_usuario/`. The delivered PDFs are in `docs/entrega/`.
 
 ## Tech stack
 
@@ -48,25 +48,29 @@ Full details: `docs/manual_usuario/en/` (English) and `docs/manual_usuario/` (Sp
 ```
 NierikaStudio.sln / .vcxproj   Visual Studio 2022 solution (x64 only)
 vcpkg.json                     Dependencies installed by vcpkg (assimp, glfw3, glew, glm), pinned by builtin-baseline
-src/                           C++ source (main.cpp, Camera.h, Shader.h, Model.h, Mesh.h)
-vendor/SOIL2/                  SOIL2 + stb_image, compiled with the project
-Models/<object>/               3D model: <object>.obj + .mtl + its textures
+src/                           C++ source (main.cpp and one module per feature: Camera, Shader, Model, Mesh, Fichas, Audio, Menu, Recorrido, ...)
+vendor/                        SOIL2 + stb_image, Dear ImGui and miniaudio, compiled with the project
+Models/<object>/               3D model: <object>.obj + .mtl + its textures (+ .blend source for the team's own models)
 Shaders/                       GLSL 330 core shaders (.vs / .frag)
+Audio/                         Sea and music tracks (Audio/README.md) and the 12 guided-tour narration files (Audio/narracion/)
+tools/                         Helper scripts (Blender/bpy generators, tests, release packaging); see tools/README.md
 ```
 
-**Documentation** (Spanish — the full map is in `docs/FLUJO_DE_TRABAJO.md`, section 1)
+**Documentation** (Spanish; start with `docs/README.md`, which indexes every file)
 
 ```
 docs/
-  ESTADO_PROYECTO.md                Live status: current plan with task codes, progress, decisions, parameters
+  README.md                         Index of all documents and their status
+  ESTADO_PROYECTO.md                Live status: current plan with task codes, progress, decisions, parameters, open problems
   CONTEXTO_PROYECTO.md              What was promised: scope, acceptance criteria, stack, conventions
   PLAN_ACTIVIDADES.md               Original work breakdown (60 activities, reference only)
   FLUJO_DE_TRABAJO.md               How the team works: repository map, task cycle, Git rules
-  INSTRUCCIONES_PROYECTO_CLAUDE.md  Instructions for the team's Claude project
+  REFERENCIAS.md                    All APA 7 references of the project
+  entrega/                          Delivery: the two manual PDFs, release notes and checklist
+  manual_tecnico/, manual_usuario/  Source (Markdown) of the two manuals
+  videos/                           Scripts and notes of the 3 demo videos (the MP4 files are delivered separately, not in Git)
   propuesta/                        Submitted proposal and work plan (PDF)
-  manual_tecnico/                   Technical manual (ES/EN)
-  manual_usuario/                   User manual (ES/EN)
-  videos/                           Demo videos
+  archivo/                          Superseded material, kept for history
 CLAUDE.md                           Project rules for the AI assistant (Claude Code)
 .claude/                            AI-assistant configuration (settings, commands and agents)
 ```
@@ -85,13 +89,27 @@ CLAUDE.md                           Project rules for the AI assistant (Claude C
 3. Open `NierikaStudio.sln`, choose **Release | x64** (or Debug) and press **F5**.
    The first build downloads and compiles Assimp, GLFW, GLEW and GLM (about 10–20 min); later builds are fast.
 
+## Delivery and current status (Nov 18, 2026)
+
+| Item | Where | Status |
+|---|---|---|
+| Source code and Visual Studio project | this repository (`develop`) | Builds and runs in Visual Studio 2022 according to D2 (Nov 18); the game's behavior was not changed in the final repository review |
+| User manual and technical manual (PDF) | `docs/entrega/` | Generated Nov 18 from the Markdown sources; the technical manual still lacks D1's individual sections (g and j) |
+| 3 demo videos (MP4) | not in Git (~450 MB) | Recorded Nov 18 according to D2; delivered separately (`docs/videos/README.md`) |
+| Performance | `docs/manual_tecnico/15_anexo_pruebas.md` | Measured by D2 on an Intel Core i5 (11th gen) with integrated graphics: minimum 45 FPS, about 60 FPS on average (before the culling optimization: about 15 FPS). Only one machine was measured |
+| Standalone Release `.zip` | `tools/empaquetar_release.ps1` | **Not built or published yet**; not tested on a PC without Visual Studio |
+| D1's participation | `docs/manual_tecnico/05_e_roles_raci.md` | **No evidence of D1's work in the repository** (no commits or pull requests under D1's account); D1's individual texts are pending and nobody else writes them |
+
+Open items and decisions are tracked in `docs/ESTADO_PROYECTO.md` (section 6 and section 7).
+
 ## License and credits
 
 - **Source code** (`src/`, `Shaders/`, `tools/`) is released under the **MIT License** (see `LICENSE`).
-- **Models, textures and audio are not covered by that license.** Some are third-party material with their own
-  terms (Poly Haven textures are CC0; the two ambient audio tracks are used for non-commercial educational purposes
-  with no free license confirmed). Details and credits: `Audio/README.md`, `docs/manual_tecnico/06_modelos_y_recursos.md`
-  and the in-app Credits screen. Do not redistribute them commercially.
+- **Models, textures and audio are not covered by that license.** The sea and music tracks are third-party recordings used
+  for non-commercial educational purposes, with no free license confirmed; the 12 narration files were synthesized with
+  ElevenLabs (voice and terms in `docs/manual_tecnico/13_m_creditos_licencias.md`); some textures are CC0 (Poly Haven).
+  Full credits and APA 7 references: `docs/REFERENCIAS.md`, `Audio/README.md` and the in-app Credits screen.
+  Do not redistribute them commercially.
 - Libraries in `vendor/` and those installed by vcpkg keep their own licenses.
 
 ## Branching

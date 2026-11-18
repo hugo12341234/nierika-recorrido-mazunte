@@ -34,4 +34,4 @@ Requisitos: python3, pandoc, poppler (`pdfunite`), Node.js con `playwright` y Ch
 python3 tools/e5_figuras.py          # figuras SVG (arquitectura, ciclo de render, cronograma)
 python3 tools/e5_exportar_pdf.py     # usuario | tecnico | todo (por omisión)
 ```
-Salida en `docs/entrega/`. `en/` es un resumen antiguo y **no forma parte de la entrega**.
+Salida en `docs/entrega/`. El resumen en inglés antiguo (v0.5) se movió a `docs/archivo/manual_tecnico_en_v0.5/` y **no forma parte de la entrega**.
