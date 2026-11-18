@@ -114,13 +114,14 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
     // Oleaje (D-6j): el volumen crece como 0.02 * 15^s (s = cercania a la orilla, z = 24): cada metro hacia el mar sube ~1 dB, parejo en todo el recorrido
     const float sMar = lim(1.0f - (std::max)(0.0f, 24.0f - z) / 24.0f);
     fija(0, mezclaMar ? factorMar * 0.02f * std::pow(15.0f, sMar) : 0.0f);   // D-6j: exponencial en s = decibelios lineales con la distancia: 0.02 (z <= 0) a 0.30 (z = 24), +23.5 dB en total
-    // Musica (X-40, D-6l): la FUENTE es la banda. Modelo: ley del inverso de la distancia (cada vez que d se duplica, -6 dB), con tope V0 = 0.40 a d0 = 3 m
-    // (D-6l: 0.355 en D-6k, +1.0 dB) y un PISO de fondo VMIN = 0.04 que nunca se apaga (antes una ventana lineal la callaba a 60 m y a 45 m ya casi no se oia).
-    // v = max(V0 * D0 / d, VMIN): el piso toma el relevo a d = V0 * D0 / VMIN = 30 m; mas lejos suena igual (fondo lejano) en toda la playa.
+    // Musica (X-40, D-6l/D-6m): la FUENTE es la banda. Hasta D1 = 30 m: ley del inverso de la distancia (cada vez que d se duplica, -6 dB), con tope V0 = 0.40 a d0 = 3 m
+    // (D-6l: 0.355 en D-6k, +1.0 dB); en d = 30 m vale 0.04. D-6m: de 30 m en adelante sigue bajando mas rapido que el inverso, v = 0.04 * (30 / d)^1.36
+    // (exponente = ln(0.04 / 0.012) / ln(73 / 30): 0.012 en d = 73 m, el punto mas lejano de la playa), con PISO VMIN = 0.012 que nunca se apaga. D-6l tenia piso plano 0.04 y se oia demasiado lejos.
     const float dx = Extras::BANDA_X - x, dz = Extras::BANDA_Z - z;
     const float d = std::sqrt(dx * dx + dz * dz);
-    const float D0 = 3.0f, V0 = 0.40f, VMIN = 0.04f;
-    fija(1, mezclaMusica ? factorMusica * (std::max)(V0 * D0 / (std::max)(d, D0), VMIN) : 0.0f);   // X-60: M puede silenciar la pista; X-62: factorMusica baja la musica mientras habla la voz (tambien el piso)
+    const float D0 = 3.0f, V0 = 0.40f, D1 = 30.0f, V1 = 0.04f, EXP_LEJOS = 1.36f, VMIN = 0.012f;
+    const float vMusica = d <= D1 ? V0 * D0 / (std::max)(d, D0) : (std::max)(V1 * std::pow(D1 / d, EXP_LEJOS), VMIN);
+    fija(1, mezclaMusica ? factorMusica * vMusica : 0.0f);   // X-60: M puede silenciar la pista; X-62: factorMusica baja la musica mientras habla la voz (tambien el fondo)
     // Paneo: derecha = (-fz, fx) en el plano XZ de OpenGL (frente x derecha con arriba +Y); cos del angulo con la direccion a la banda, reducido a 0.7
     if (impl->activo[1] && d > 0.01f)
     {

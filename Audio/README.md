@@ -5,7 +5,7 @@ Esta carpeta contiene **solo dos pistas con nombre fijo**, ambas `.mp3`, ambas e
 | Archivo | Qué suena | Volumen en el código (`src/Audio.cpp`, `ActualizarZona`, cada cuadro) |
 |---|---|---|
 | `oleaje.mp3` | Mar | 0.02·15^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6j): 0.020 en z ≤ 0, 0.039 en z = 6, 0.078 en z = 12, 0.153 en z = 18, 0.30 en la orilla (z = 24) |
-| `musica.mp3` | Música de la banda (X-40): «Dios Nunca Muere», Banda Mixe de Oaxaca (D-6k) | max(0.40·3/max(d, 3), 0.04) (D-6l), d = distancia al centro de la banda (−12.0, 18.0): 0.40 a ≤ 3 m, 0.20 a 6 m, 0.10 a 12 m, 0.04 de 30 m en adelante (piso, no se apaga). Además paneo estéreo hacia el lado donde está la banda |
+| `musica.mp3` | Música de la banda (X-40): «Dios Nunca Muere», Banda Mixe de Oaxaca (D-6k) | 0.40·3/max(d, 3) hasta 30 m y 0.04·(30/d)^1.36 de 30 m en adelante, con piso 0.012 (D-6l/D-6m), d = distancia al centro de la banda (−12.0, 18.0): 0.40 a ≤ 3 m, 0.20 a 6 m, 0.10 a 12 m, 0.06 a 20 m, 0.04 a 30 m, 0.020 a 50 m, 0.012 a 73 m en adelante (piso, no se apaga). Además paneo estéreo hacia el lado donde está la banda |
 
 El código busca únicamente `Audio/oleaje.mp3` y `Audio/musica.mp3` (rutas relativas a la raíz del repo; **no carga `.wav` ni `.flac`**, así un archivo viejo olvidado no tapa a los mp3).
 Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa sigue sin ella. No hace falta recompilar para cambiar un mp3. `.ogg` no está soportado.
