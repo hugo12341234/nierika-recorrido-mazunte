@@ -1,32 +1,31 @@
-# Video 1 — El entorno (≈ 1:30–2:00)
+# Video 1 — Entorno y ambientación
 
-> **Qué muestra:** qué es Nierika Studio, qué hay en la escena y con qué se hizo. Es el video de presentación.
-> **Verificado:** datos técnicos y alcance (CONTEXTO, README, manual de usuario). **Inferido:** los tiempos, que dependen de tu ritmo al narrar.
-> Narración en español, voz natural; lo entre [corchetes] es una indicación, no se lee.
+- **Archivo:** `Evidencia1_Equipo15_319266894_321332086.mp4` · **Duración:** 2:50 · 1280×720, 30 fps, H.264 + AAC
+- **Rúbrica:** (a) entorno y ambientación (`CONTEXTO_PROYECTO.md` §9).
+- **Narración:** ninguna; solo **rótulos** en pantalla, con el audio real del programa (mar y música). *Según el hilo de grabación.*
+- **Cómo se hizo:** programa real en modo de video (`NIERIKA_VIDEO`, X-16), desde `develop` 4e03274.
 
-## Tomas a grabar (programa real)
-| Toma | Qué hacer en el programa | Duración |
-|---|---|---|
-| A | Abrir el `.exe`: ventana con el título y los FPS; quedarse 5 s en el punto de inicio (panteón, bajo el papel picado; sale su ficha) | 10 s |
-| B | Girar despacio con el ratón 180° hacia la playa y caminar con W hasta la orilla; dejar ver olas, velas y flores | 20 s |
-| C | Desde la orilla, girar hacia el panteón y mostrar la barda, tumbas, cruz y roca | 15 s |
-| D | Caminar al cuarto por la puerta sur de la barda y mostrar el altar de tres niveles | 20 s |
-| E | Pantalla de cierre (título + créditos, hecha en el editor) | 10 s |
+## Qué se ve (orden según el hilo de grabación; sin tiempos por escena, no están verificados)
+| # | Escena | Qué demuestra | Verificado en el repo |
+|---|---|---|---|
+| 1 | **Menú de inicio** | Pantalla previa con *Iniciar recorrido, Controles, Créditos, Salir* (X-63) | `src/Menu.cpp` |
+| 2 | **Playa con olas** | Mar con oleaje animado (vertex shader), arena y cielo nocturno | ESTADO X-68 / justificación de olas |
+| 3 | **Velas y flores** | Velas con llama y flores de cempasúchil flotando en la orilla | `docs/manual_tecnico/justificacion_simples.md` |
+| 4 | **Comparsa** | Grupo que desfila en la orilla | ficha «Comparsa en la orilla» |
+| 5 | **Colinas** | Fondo de colinas | ESTADO (X-48 «colinas») |
+| 6 | **Banda** | Banda de viento con sus músicos | ficha «Banda de viento» |
+| 7 | **Camino** | Camino de flores / sendero hacia el arco y el cuarto | `docs/RECORRIDO_GUIADO.md` (estación 3) |
+| 8 | **Cuarto del altar** | Altar de ofrenda de tres niveles con velas, flores y pan | ficha «Altar de ofrenda» |
+| 9 | **Créditos** | Pantalla de créditos del programa | `src/Menu.cpp` |
 
-## Guion
-| Tiempo | Imagen | Narración |
-|---|---|---|
-| 0:00 | [Título: «Nierika Studio — Recorrido virtual: Día de Muertos en Mazunte»] | «Nierika Studio presenta un recorrido virtual 3D en primera persona del Día de Muertos en Mazunte, Oaxaca.» |
-| 0:10 | Toma A | «Es un programa en tiempo real, hecho en C++ con OpenGL 3.3. Aquí se ve funcionando, con los cuadros por segundo en el título de la ventana.» |
-| 0:25 | Toma B | «El recorrido empieza en la playa: el mar tiene olas, y en la orilla se ofrendan velas y flores de cempasúchil sobre el agua.» |
-| 0:45 | Toma C | «Tierra adentro está el panteón, con su barda de piedra, tumbas, una cruz, una roca y papel picado colgado.» |
-| 1:00 | Toma D | «Al fondo, un cuarto del cementerio con una ofrenda de tres niveles: velas, marco, botella, copalero, pan de muerto y cempasúchil. Esta parte del cuarto es una adaptación del estudio.» |
-| 1:20 | Toma D (primer plano de la ficha) | «Al acercarte a menos de dos metros de ciertos objetos aparece una ficha cultural que explica su significado y cita su fuente.» |
-| 1:35 | [Texto en pantalla: C++17 · OpenGL 3.3 · GLFW · GLEW · GLM · Assimp · Dear ImGui · miniaudio · Blender · GIMP] | «El proyecto usa C++17, OpenGL 3.3, las librerías GLFW, GLEW, GLM, Assimp, Dear ImGui y miniaudio, y modelos propios hechos en Blender.» |
-| 1:50 | Toma E | «Proyecto final de Computación Gráfica e Interacción Humano-Computadora, Facultad de Ingeniería, UNAM. Equipo 15, Nierika Studio.» |
+## Lo que dicen los rótulos
+No se tiene el texto exacto de los rótulos (el hilo de grabación no lo dio): **no se transcribe aquí**. Si se necesita, revisar el MP4.
 
-## Antes de publicar este video, confirmar
-- [ ] Que la frase «adaptación del estudio» coincida con la ficha/CONTEXTO §5 (el cuarto del cementerio lo es).
-- [ ] Que la lista de objetos del altar sea la que ves en pantalla (velas, marco, botella, copalero, pan, cempasúchil; fuente: manual de usuario §3).
-- [ ] No decir «Punta Cometa», «pueblo», «humo» ni nada fuera de alcance.
-- [ ] Créditos: modelos propios; texturas CC0 de Poly Haven y ambientCG (según `manual_tecnico/11_referencias.md`).
+## Qué NO hay en este video
+Voz, recorrido guiado con **T**, fichas culturales abiertas ni las animaciones explicadas una por una (eso es del video 2 y 3).
+
+## Antes de entregar, confirmar al ver el MP4
+- [ ] Que el orden de las escenas sea el de la tabla.
+- [ ] Que el cuarto del altar se presente como **adaptación del estudio** (ficha del altar y CONTEXTO §5).
+- [ ] Que no aparezca nada fuera de alcance (pueblo, Punta Cometa, humo con partículas).
+- [ ] Créditos: modelos propios; texturas y audio con su crédito (`docs/REFERENCIAS.md`, `Audio/README.md`).

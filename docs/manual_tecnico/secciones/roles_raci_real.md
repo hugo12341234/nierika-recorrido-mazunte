@@ -1,5 +1,7 @@
 # Roles ejecutados frente a la Matriz RACI inicial
 
+> **Pendientes al 18/11/2026 (D2):** (1) justificación del trabajo de D1 y sus dos textos individuales: **pendientes, sin inventar**; (2) D2 reescribirá sus borradores individuales (`*_BORRADOR.md`) después.
+
 > **Sección suelta para el manual técnico (reemplaza a §5.3–5.4 de `05_raci.md` cuando el dueño del manual la integre).**
 > Estado al **18/11/2026**. Todo lo que aparece aquí sale del repositorio, de `docs/ESTADO_PROYECTO.md` o de la propuesta v2.0.
 > Cada afirmación lleva su fuente o está marcada **«sin evidencia»**. No se corrige ni reescribe el historial de Git.
@@ -64,7 +66,8 @@ Los commits se concentran en 15 días con actividad: 18–20/10 (61), 25–26/10
 - **Dato objetivo:** `thecurlyguy` (id 125844014) es colaborador del repositorio con permiso **write**; el único otro es `hugo12341234` (admin) **[API de GitHub, 18/11]**. El 21/10 la lista de colaboradores solo mostraba a `hugo12341234` (nota del hilo de esa fecha); por tanto la cuenta se unió **después del 21/10** (por aceptar una invitación o por una nueva) **[inferido]**.
 - **A favor de que sea D1 [inferido]:** el ESTADO dice que D1 fue invitado como colaborador (18/10), «pendiente de aceptar», y no se registra ninguna otra persona invitada.
 - **En contra o sin soporte:** no tiene commits, PR, comentarios ni revisiones; el ESTADO nunca registró un nombre de usuario de D1 (la tabla de `CLAUDE.md` §5 dice «pendiente»); no se pudo consultar su perfil (el entorno bloquea ese endpoint).
-- **Conclusión: no se afirma.** Hugo debe preguntarle a D1 su usuario de GitHub. Si es `thecurlyguy`, no hay que cambiar permisos (ya puede subir por PR). Si no lo es, hay que invitar al usuario correcto y decidir si se retira el acceso de `thecurlyguy`. **Este hilo no cambió ningún permiso.**
+- **Confirmación (D2, 18/11/2026):** Hugo indicó que `thecurlyguy` es la cuenta de D1 (palabra de D2; no verificable desde el repositorio). No se cambió ningún permiso: la cuenta ya puede subir por PR.
+- **Estado de la justificación del trabajo de D1: PENDIENTE.** D2 declara que no puede justificar con evidencia el trabajo de D1 más allá de lo listado en §2.2 (palabra de D2 y ESTADO). Hasta que D1 aporte su propia evidencia, **no se afirma nada más**.
 
 ## 3. Matriz RACI: planeada frente a ejecutada
 
@@ -102,7 +105,7 @@ Leyenda: «R real» = quién ejecutó según el repo/ESTADO. Cuando una tarea de
 
 ## 5. Qué hacer hoy para que la sección sea verdadera y completa
 
-1. **Hugo:** preguntar a D1 su usuario de GitHub y si `thecurlyguy` es suyo (§2.4).
+1. ~~Preguntar a D1 su usuario de GitHub~~: confirmado por D2, es `thecurlyguy` (§2.4).
 2. **D1:** leer y corregir §2.2 (¿qué hizo realmente, con qué herramienta, cuándo?) y aportar la fuente (archivos `.ma`/`.blend`, capturas, fechas). Todo eso entra por PR **desde su cuenta** (guía `GUIA_D1_HOY.md`).
 3. **Hugo y D1:** completar la causa en §4 y decidir si se publica tal cual.
 4. **Hugo:** consultar el tablero de Trello (tarjetas, miembros asignados, actividad) y añadir aquí lo que muestre; esta sección no pudo acceder a él.
