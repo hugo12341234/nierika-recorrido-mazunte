@@ -1,4 +1,6 @@
-# Notas del Release (borrador para pegar en GitHub)
+# Notas del Release (borrador; **no se publica**)
+
+> **Decisión de D2 (18/11/2026): no se entrega `.exe`, `.zip` ni Release.** La entrega es el proyecto de Visual Studio compilable. Este borrador se conserva solo por si se retoma.
 
 > **Estado:** borrador actualizado el 18/11/2026 (X-71; el del 12/11 decía cosas que ya no son ciertas). Se completa con los datos reales
 > (fecha, tamaño, SHA-256) **después** de correr `tools/empaquetar_release.ps1` y probar el .zip en otra PC. Lo marcado ⚠️ **no está verificado**.
