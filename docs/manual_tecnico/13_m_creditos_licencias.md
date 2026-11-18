@@ -45,5 +45,8 @@ El oleaje y la música son de terceros y se usan con fines educativos; **no se d
 ## m.6 Pendientes que solo el equipo puede cerrar
 
 - ~~Texto «Pendiente: origen de laminado1.jpg» en Créditos~~: **cerrado**. La pantalla de Créditos ya declara `laminado1.jpg` y `concreto.jpg` como texturas propias hechas en Blender (X-69); si se ve el texto viejo, es un ejecutable anterior al 18/11 y hay que recompilar.
-- Confirmar canal y fecha del oleaje.
+- ~~Licencia del código~~: **cerrado**. D2 confirmó por escrito el 18/11/2026 la licencia MIT (m.2).
+- ~~Referencias APA de voz, música y texturas~~: **cerradas**. Están en la sección k y en `docs/REFERENCIAS.md` (68 fuentes con su estado de verificación) y en la pantalla de Créditos.
+- Confirmar canal y fecha del oleaje: D2 debe abrir el video una vez (la lectura salió de metadatos). **Sigue abierto.**
+- Fuente APA de la chilena (ver `justificacion_personas.md`): **no existe en el repositorio**; la coreografía se declara adaptación del estudio. **Sigue abierto.**
 - Registrar las versiones de las bibliotecas de vcpkg, de Blender, Visual Studio y Maya.
