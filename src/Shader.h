@@ -7,12 +7,14 @@
 #include <iostream>
 
 #include <GL/glew.h>
+#include "Cull.h"   // X-68: Shader::Use avisa a Cull cual es el uniform "model" del programa en uso
 
 class Shader
 {
 public:
 	GLuint Program;
 	GLuint uniformColor;
+	GLint locModel = -1;   // X-68: ubicacion del uniform "model" (-1 si el programa no lo tiene)
 	// Constructor generates the shader on the fly
 	Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
 	{
@@ -86,6 +88,7 @@ public:
 		}
 		//le damos la localidad de color
 		uniformColor = glGetUniformLocation(this->Program, "color");
+		locModel = glGetUniformLocation(this->Program, "model");
 		// Delete the shaders as they're linked into our program now and no longer necessery
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
@@ -94,6 +97,7 @@ public:
 	// Uses the current shader
 	void Use()
 	{
+		Cull::CambiarPrograma(this->locModel);   // sube la matriz pendiente al programa anterior
 		glUseProgram(this->Program);
 	}
 

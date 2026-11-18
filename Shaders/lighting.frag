@@ -273,9 +273,12 @@ void main()
     {
         // X-22: franja de espuma donde el mar toca la orilla (z ~ 24): ruido de Perlin que avanza hacia la playa; f en [0, 1]
         float borde = smoothstep(26.2, 24.3, FragPos.z);
-        float n = ruidoFbm(vec2(FragPos.x * 0.7, FragPos.z * 0.9 - tiempo * 0.45));
-        float f = borde * smoothstep(0.02, 0.30, n + 0.18 + 0.18 * sin(tiempo * 0.8 - FragPos.z * 1.6));
-        albedo = mix(albedo, vec3(0.80, 0.88, 0.95), clamp(f, 0.0, 0.85));
+        if (borde > 0.0)   // X-68: mar adentro (z > 26.2) borde = 0 => f = 0 => el albedo no cambia: no se calcula el ruido
+        {
+            float n = ruidoFbm(vec2(FragPos.x * 0.7, FragPos.z * 0.9 - tiempo * 0.45));
+            float f = borde * smoothstep(0.02, 0.30, n + 0.18 + 0.18 * sin(tiempo * 0.8 - FragPos.z * 1.6));
+            albedo = mix(albedo, vec3(0.80, 0.88, 0.95), clamp(f, 0.0, 0.85));
+        }
     }
     if (colina == 1)
     {
@@ -284,14 +287,19 @@ void main()
         // X-36 (pulido): colinas ~30 % mas claras (se veian casi negras de noche)
         albedo = colorPasto(albedo, FragPos.xz, FragPos.y);
         // X-66: cerca de z = -20 aparecen manchas de arena (misma funcion de peso que la playa: el borde ya no es una recta)
-        float wA = pesoArena(FragPos.xz) * mascaraPlaya(FragPos.x);   // solo en el borde de la playa
+        // X-68: pesoArena = 0 con certeza si z < BORDE_Z - 8 (el ruido suma como mucho +-8 * 0.62 = +-4.95 m y la mezcla acaba en -3): ahi no se calcula
+        float wA = 0.0;
+        float mp = mascaraPlaya(FragPos.x);
+        if (mp > 0.0 && FragPos.z > BORDE_Z - 8.0)
+            wA = pesoArena(FragPos.xz) * mp;   // solo en el borde de la playa
         if (wA > 0.001)
             albedo = mix(albedo, colorArena(texture(texture_mezcla, vec2(FragPos.x, -FragPos.z) * 0.5).rgb, FragPos.xz, FragPos.y), wA);
     }
     if (arena == 1)
     {
         // X-36 (pulido): con la luna azul la arena parecia concreto. Tinte calido (menos azul) y grano fino a ~25 cm; mojada = bajo y = 0
-        float wA = pesoArena(FragPos.xz);
+        // X-68: pesoArena vale exactamente 1 si z > BORDE_Z + 8 (s >= 3 con el ruido en su peor caso) y 0 si z < BORDE_Z - 8: solo se calcula en la franja de mezcla
+        float wA = (FragPos.z > BORDE_Z + 8.0) ? 1.0 : ((FragPos.z < BORDE_Z - 8.0) ? 0.0 : pesoArena(FragPos.xz));
         vec3 arenaCol = colorArena(albedo, FragPos.xz, FragPos.y);
         // X-66: cerca de z = -20 entran matas de pasto en la arena (solo se muestrea el pasto donde hace falta)
         if (wA < 0.999)
@@ -355,14 +363,24 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 albedo)
     return ambient + diffuse + specular;
 }
 
+// X-68: descarte temprano de luces que no se ven. La suma original no cambia; solo se evita calcular lo que da (casi) cero.
+// Cota de lo que una puntual puede aportar a un canal: (ambiente + difusa) * albedo + especular * brillo (difusa y Blinn valen <= 1)
+// multiplicada por la atenuacion. Si esa cota es < 0.0002 (< 0.06/255) el aporte no cambia el color de 8 bits, y las luces apagadas (color 0, p. ej.
+// las 4 puntuales de D1, las fogatas lejanas o las velas con V) dan cota 0 y se saltan siempre.
+float maxComp(vec3 v) { return max(v.x, max(v.y, v.z)); }
+
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 albedo)
 {
-    vec3 lightDir = normalize(light.position - fragPos);
+    vec3 toLight = light.position - fragPos;
+    float distance = length(toLight);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
+    float cota = (maxComp(light.ambient + light.diffuse) * maxComp(albedo) + maxComp(light.specular) * specularStrength) * attenuation;
+    if (cota < 0.0002)
+        return vec3(0.0);
+
+    vec3 lightDir = normalize(toLight);
     float diff = max(dot(normal, lightDir), 0.0);
     float spec = BlinnSpec(lightDir, normal, viewDir);
-
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
 
     vec3 ambient = light.ambient * albedo;
     vec3 diffuse = light.diffuse * diff * albedo;
@@ -373,15 +391,18 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, v
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 albedo)
 {
     vec3 lightDir = normalize(light.position - fragPos);
+    // X-68: fuera del cono exterior la intensidad es exactamente 0 (y el aporte entero tambien): se sale antes de calcular Blinn y la atenuacion
+    float theta = dot(lightDir, normalize(-light.direction));
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+    if (intensity <= 0.0)
+        return vec3(0.0);
+
     float diff = max(dot(normal, lightDir), 0.0);
     float spec = BlinnSpec(lightDir, normal, viewDir);
 
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * distance * distance);
-
-    float theta = dot(lightDir, normalize(-light.direction));
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
     vec3 ambient = light.ambient * albedo;
     vec3 diffuse = light.diffuse * diff * albedo;
