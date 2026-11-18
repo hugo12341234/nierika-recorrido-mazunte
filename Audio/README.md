@@ -5,7 +5,7 @@ Esta carpeta contiene **solo dos pistas con nombre fijo**, ambas `.mp3`, ambas e
 | Archivo | Qué suena | Volumen en el código (`src/Audio.cpp`, `ActualizarZona`, cada cuadro) |
 |---|---|---|
 | `oleaje.mp3` | Mar | 0.02·15^s, con s = clamp(1 − max(0, 24 − z)/24, 0, 1) (D-6j): 0.020 en z ≤ 0, 0.039 en z = 6, 0.078 en z = 12, 0.153 en z = 18, 0.30 en la orilla (z = 24) |
-| `musica.mp3` | Música de la banda (X-40): «Dios Nunca Muere», Banda Mixe de Oaxaca (D-6k) | 0.355·3/max(d, 3)·(1 − clamp((d − 30)/30, 0, 1)), d = distancia al centro de la banda (−12.0, 18.0): 0.355 a ≤ 3 m, 0.18 a 6 m, 0.089 a 12 m, 0 a 60 m. Además paneo estéreo hacia el lado donde está la banda |
+| `musica.mp3` | Música de la banda (X-40): «Dios Nunca Muere», Banda Mixe de Oaxaca (D-6k) | max(0.40·3/max(d, 3), 0.04) (D-6l), d = distancia al centro de la banda (−12.0, 18.0): 0.40 a ≤ 3 m, 0.20 a 6 m, 0.10 a 12 m, 0.04 de 30 m en adelante (piso, no se apaga). Además paneo estéreo hacia el lado donde está la banda |
 
 El código busca únicamente `Audio/oleaje.mp3` y `Audio/musica.mp3` (rutas relativas a la raíz del repo; **no carga `.wav` ni `.flac`**, así un archivo viejo olvidado no tapa a los mp3).
 Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa sigue sin ella. No hace falta recompilar para cambiar un mp3. `.ogg` no está soportado.
@@ -17,7 +17,7 @@ Si falta una pista, la consola avisa (`[Audio] Falta Audio/...`) y el programa s
 | Pista | Duración | Peso | Formato | Sonoridad | Pico |
 |---|---|---|---|---|---|
 | `oleaje.mp3` | 2 min 00 s | 2.85 MB | mp3 VBR `-q:a 0` (≈190 kb/s), estéreo 48 kHz | −23.0 LUFS | −3.6 dBFS |
-| `musica.mp3` | 6 min 40 s | 6.49 MB | mp3 aportado por D2, recortado sin recodificar (`-c copy`, 129 kb/s), estéreo 48 kHz | −13.5 LUFS | +1.6 dBFS de pico verdadero (viene de origen; con volumen ≤ 0.355 en el juego no satura) |
+| `musica.mp3` | 6 min 40 s | 6.49 MB | mp3 aportado por D2, recortado sin recodificar (`-c copy`, 129 kb/s), estéreo 48 kHz | −13.5 LUFS | +1.6 dBFS de pico verdadero (viene de origen; con volumen ≤ 0.40 en el juego no satura) |
 
 **Importante sobre el balance:** con la curva actual el oleaje queda unos 20 dB por debajo de la música (oleaje −23.0 LUFS × 0.02…0.30 ≈ −57…−36 LUFS; música −10.0 × 0.048…0.24 ≈ −36…−22 LUFS). La música tapa al mar, por eso el cambio de volumen del mar casi no se nota. Subirlo es una decisión de D2 (valor a registrar en el ESTADO §5).
 
