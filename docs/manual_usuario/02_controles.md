@@ -14,7 +14,7 @@
 | Ayuda de controles | **F1** | Muestra u oculta la lista de controles |
 | Recorrido guiado | **T** | Una visita narrada por 12 estaciones (playa, ofrendas, altar, camino de las ánimas, mirador), con subtítulos y, si existen los audios, con voz. **T**, **Esc** o **W A S D** la cancelan y te dejan donde estás (ver `docs/RECORRIDO_GUIADO.md`) |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
-| Salir | **Esc** | Cierra el programa (con el recorrido guiado activo, la primera pulsación solo lo cancela) |
+| Pausa / menú | **Esc** | Con el recorrido guiado activo, la primera pulsación solo lo cancela. Si no, abre el menú de pausa (Continuar, Controles, Créditos, Salir); otra vez **Esc** continúa. En el menú de inicio, **Esc** sale |
 
 Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - La velocidad al caminar es de **2.0 m/s** (`SPEED` en `Camera.h`) y la sensibilidad del ratón es **0.25**.
@@ -22,8 +22,9 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Hay **colisiones** (A-9): no atraviesas muros, bardas ni el altar; si chocas de frente te deslizas por el lado. La zona caminable llega hasta la orilla (z = 24).
 - Al iniciar, las velas del altar están **encendidas**. Cerca del altar aparece arriba el recordatorio de **V**.
 - Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
-- Con Esc se cierra el programa directamente, sin pedir confirmación; si el recorrido guiado (**T**) está activo, la primera pulsación solo lo cancela.
-- **T** (X-62, 17/11): durante el recorrido el ratón no mueve la cámara. No se compiló en VS 2022 al escribir esta nota.
+- Desde X-63 (17/11) **Esc ya no cierra el programa directamente**: abre la pausa. Para salir: Esc y luego «Salir» (clic o Enter). En el menú de inicio, Esc sí sale.
+- En los menús el cursor reaparece y se puede hacer clic; también sirven las flechas (o W S) y Enter. En Créditos, flechas arriba/abajo o la rueda del ratón desplazan el texto.
+- **T** (X-62, 17/11): durante el recorrido guiado el ratón no mueve la cámara. No se compiló en VS 2022 al escribir esta nota.
 
 ## 2.2 Teclas sin función
 
@@ -51,3 +52,9 @@ Lista de controles que muestra **F1**:
 ![Ayuda de controles con F1](capturas/02_ayuda_F1.jpg)
 
 *Capturas del 17/11/2026 en la PC de D2 (con las variables `NIERIKA_UI=velas_apagadas` y `NIERIKA_UI=ayuda` del modo de captura; el juego muestra lo mismo al pulsar las teclas).*
+
+Misma lista en el menú de inicio (botón **Controles**):
+
+![Controles en el menú](capturas/01_menu_controles.jpg)
+
+*Captura del 17/11/2026 en Linux (X-63); falta verla en la PC de D2.*

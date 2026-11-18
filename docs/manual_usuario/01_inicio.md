@@ -19,7 +19,16 @@ al panteón y entras a un cuarto con una ofrenda. *(Alcance: `docs/CONTEXTO_PROY
 El script que arma el paquete existe (`tools/empaquetar_release.ps1`, E-3) pero el `.zip` todavía no se publicó ni se probó en otra PC.
 Hasta entonces el programa se compila desde Visual Studio 2022 (ver `README.md` de la raíz).
 
-## 1.4 Qué ves al abrir
+## 1.4 Menú de inicio (X-63)
+Al abrir el programa aparece primero un **menú de inicio** sobre la escena, que da vueltas despacio de fondo. La silueta, el recorrido y la música **todavía no empiezan**. Botones: **Iniciar recorrido** (arranca todo desde el panteón, como antes), **Controles** (las teclas reales), **Créditos** (equipo, texturas y audio de terceros, bibliotecas; lo que falta de las referencias dice PENDIENTE) y **Salir**. Se elige con clic o con flechas y Enter; **Esc** sale. Dentro del recorrido, **Esc** abre la misma pantalla como pausa.
+
+![Menú de inicio](capturas/01_menu_inicio.jpg)
+
+![Créditos](capturas/01_menu_creditos.jpg)
+
+*Capturas del 17/11/2026 hechas en Linux (Mesa, sin sonido) con las variables de desarrollo `NIERIKA_UI=menu_creditos_fin` y `NIERIKA_MENU_PNG`; falta verlo en la PC de D2 con VS 2022.*
+
+## 1.5 Qué ves al abrir el recorrido
 La ventana se titula *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte* y, tras unos instantes, agrega los cuadros por segundo (`NNN FPS`).
 El cursor desaparece (ver sección 2). La cámara empieza en el **panteón**, en la posición (0, 1.6, 6) m: 6 m al frente del cuarto, a la altura de los ojos de una persona (1.6 m).
 Ese punto queda bajo el papel picado, así que **la primera ficha que aparece es la del papel picado** (ver sección 4).

@@ -16,7 +16,16 @@ A first-person 3D virtual tour of the Day of the Dead in Mazunte, Oaxaca: you wa
 ## 1.3 How to open it
 **PENDING (E-3, E-7).** This will explain: unzip the `.zip` published in the GitHub *Release* and run `NierikaStudio.exe`. The script that builds the package exists (`tools/empaquetar_release.ps1`, E-3), but the `.zip` has not yet been published or tested on another PC. Until then the program is built from Visual Studio 2022 (see the root `README.md`).
 
-## 1.4 What you see when it opens
+## 1.4 Start menu (X-63)
+When the program opens, a **start menu** shows first over the scene, which slowly circles in the background. The silhouette, the tour and the music **have not started yet**. Buttons: **Iniciar recorrido** (starts everything from the cemetery, as before), **Controles** (the real keys), **Créditos** (team, third-party textures and audio, libraries; missing reference data is marked PENDIENTE) and **Salir** (quit). Pick with a click or with the arrow keys and Enter; **Esc** quits. During the tour, **Esc** opens the same screen as a pause menu.
+
+![Start menu](../capturas/01_menu_inicio.jpg)
+
+![Credits](../capturas/01_menu_creditos.jpg)
+
+*Screenshots of Nov 17, 2026 taken on Linux (Mesa, no sound) with the development variables `NIERIKA_UI=menu_creditos_fin` and `NIERIKA_MENU_PNG`; not yet seen on D2's PC with VS 2022.*
+
+## 1.5 What you see when the tour opens
 The window is titled *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte* and, after a moment, adds the frames per second (`NNN FPS`). The cursor disappears (see section 2). The camera starts in the **cemetery** at position (0, 1.6, 6) m: 6 m in front of the room, at human eye height (1.6 m). That spot is under the papel picado, so **the first card to appear is the papel picado card** (see section 4).
 
 ![Window just opened](../capturas/01_ventana_inicio.jpg)

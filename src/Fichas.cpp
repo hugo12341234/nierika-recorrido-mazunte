@@ -233,7 +233,7 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
         ImGui::TextUnformatted("W A S D / flechas   caminar\nRaton              mirar\nV                  encender o apagar las velas (cerca del altar)\n"
                                "M                  sonido: mar y musica / solo mar / solo musica / silencio\nR                  reiniciar la caminata de la silueta\n"
                                "T                  recorrido guiado (T, Esc o W A S D lo cancelan)\n"
-                               "F1                 mostrar u ocultar esta ayuda\nEsc                salir");
+                               "F1                 mostrar u ocultar esta ayuda\nEsc                pausa (menu: continuar, controles, creditos, salir)");
         ImGui::Spacing();
         ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Acercate a menos de 2 m de un objeto para leer su ficha cultural.");
         ImGui::End();

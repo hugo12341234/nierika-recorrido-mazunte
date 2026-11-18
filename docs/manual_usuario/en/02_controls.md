@@ -14,7 +14,7 @@
 | Controls help | **F1** | Shows or hides the list of controls |
 | Guided tour | **T** | A narrated visit through 12 stations (beach, offerings, altar, path of the souls, viewpoint), with subtitles and, if the audio files exist, a voice. **T**, **Esc** or **W A S D** cancel it and leave you where you are (see `docs/RECORRIDO_GUIADO.md`, in Spanish) |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
-| Quit | **Esc** | Closes the program (with the guided tour on, the first press only cancels it) |
+| Pause / menu | **Esc** | With the guided tour active, the first press only cancels it. Otherwise it opens the pause menu (Continue, Controls, Credits, Quit); **Esc** again continues. On the start menu, **Esc** quits |
 
 Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Walking speed is **2.0 m/s** (`SPEED` in `Camera.h`); mouse sensitivity is **0.25**.
@@ -22,8 +22,9 @@ Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - There are **collisions** (A-9): you cannot pass through walls, the cemetery wall or the altar; if you hit one head-on you slide along it. The walkable area reaches the shore (z = 24).
 - At start the altar candles are **on**. Near the altar a reminder for **V** appears at the top.
 - Since X-60 (Nov 17) the **space bar does nothing**: the colored lights were removed (ESTADO sec. 4, Nov 17).
-- Esc closes the program directly, with no confirmation; if the guided tour (**T**) is on, the first press only cancels it.
-- **T** (X-62, Nov 17): during the tour the mouse does not move the camera. This note was written before compiling in VS 2022.
+- Since X-63 (Nov 17) **Esc no longer closes the program directly**: it opens the pause menu. To quit: Esc, then "Salir" (click or Enter). On the start menu, Esc does quit.
+- The cursor reappears in the menus and you can click; the arrow keys (or W S) and Enter also work. In Credits, the up/down arrows or the mouse wheel scroll the text.
+- **T** (X-62, Nov 17): during the guided tour the mouse does not move the camera. Not compiled in VS 2022 when this note was written.
 
 ## 2.2 Keys without a function
 
@@ -49,3 +50,9 @@ The controls list shown by **F1**:
 ![Controls help with F1](../capturas/02_ayuda_F1.jpg)
 
 *Screenshots of Nov 17, 2026 on D2's PC (using the capture mode variables `NIERIKA_UI=velas_apagadas` and `NIERIKA_UI=ayuda`; the game shows the same when you press the keys).*
+
+The same list on the start menu (**Controles** button):
+
+![Controls in the menu](../capturas/01_menu_controles.jpg)
+
+*Screenshot of Nov 17, 2026 on Linux (X-63); not yet seen on D2's PC.*
