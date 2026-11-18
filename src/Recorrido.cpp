@@ -31,6 +31,7 @@ namespace
         float giro;                   // grados extra de giro de la cabeza durante el reten (0 = ninguno)
         float pitchFin;               // con giro != 0: pitch final
         bool miraComparsa;            // true: mira al centro de la comparsa (se mueve sola)
+        bool miraSilueta = false;     // X-65: true: mira a la silueta mientras camina
     };
 
     // Textos: el contenido de cada afirmacion sale de las fichas culturales (Fichas.cpp) y del guion de docs/RECORRIDO_GUIADO.md; lo que es adaptacion del estudio se dice como tal.
@@ -50,7 +51,7 @@ namespace
           6.3f, 23.0f, 0, {}, { -9.5f, 18.4f }, { -9.5f, 18.4f }, { -16.0f, 1.0f, 22.6f }, { -16.0f, 1.0f, 22.6f }, 0.0f, 0.0f, true },
         { "Camino de flores al arco",
           "Ahora sigue el camino de flores hasta la puerta. Ese papel picado que se mece sobre el sendero le da color a la ofrenda y representa el aire, dice la Secretaría de Educación Pública. Fíjate en la figura que va caminando rumbo al altar: lleva una flor para dejarla ahí.",
-          6.5f, 23.0f, 0, {}, { -0.8f, 20.5f }, { -1.6f, 7.5f }, { 0.0f, 1.6f, 1.3f }, { 0.0f, 1.6f, 1.3f }, 0.0f, 0.0f, false },
+          6.5f, 23.0f, 0, {}, { -0.9f, 27.0f }, { -0.2f, 16.8f }, { 0.0f, 1.0f, 24.0f }, { 0.0f, 1.0f, 24.0f }, 0.0f, 0.0f, false, true },
         { "Banda de viento",
           "¿Los oyes? Son metales. Las bandas de viento son una tradición oaxaqueña: dan identidad y hermanan a los pueblos indígenas del estado, y acompañan sus fiestas comunales, según México Desconocido. Su música llena la noche.",
           7.0f, 17.0f, 2, { { 1.0f, 12.8f }, { 7.5f, 12.5f } }, { 13.0f, 12.2f }, { 13.0f, 12.2f }, { 14.0f, 1.3f, 8.0f }, { 14.0f, 1.3f, 8.0f }, 0.0f, 0.0f, false },
@@ -62,7 +63,7 @@ namespace
           6.0f, 22.0f, 0, {}, { 0.0f, 5.2f }, { 0.0f, 4.4f }, { 0.0f, 0.9f, 1.75f }, { 0.0f, 0.9f, 1.75f }, 0.0f, 0.0f, false },
         { "El altar",
           "Y llegamos al altar. Cada objeto cumple una función para recibir a las ánimas: velas, flores, pan, agua y sal, y copal, entre otros, según la Secretaría de Educación Pública. El pan de muerto representa el afecto y la fraternidad hacia los difuntos. Mira... llega la figura del camino, y deja su flor.",
-          6.0f, 24.0f, 1, { { 0.0f, 3.4f } }, { 0.5f, 2.6f }, { 0.3f, 2.1f }, { 0.2f, 0.7f, -0.6f }, { 0.2f, 0.7f, -0.6f }, 0.0f, 0.0f, false },
+          6.0f, 24.0f, 1, { { 0.0f, 3.2f } }, { 0.95f, 1.05f }, { 1.0f, 0.95f }, { -0.1f, 0.8f, -0.6f }, { -0.1f, 0.8f, -0.6f }, 0.0f, 0.0f, false },
         { "Ofrendas de las familias",
           "Afuera, detrás de la capilla, cada familia prepara su ofrenda a su manera. Los platillos del difunto se colocan alrededor del altar y de la tumba, y la flama de las velas y el aroma de las flores guían a las almas de regreso, según la UNESCO y la Secretaría de Educación Pública. Fíjate en los objetos que cada familia deja para su difunto.",
           11.0f, 29.0f, 4, { { 0.0f, 2.6f }, { -3.2f, 3.6f }, { -3.2f, -3.0f }, { -1.0f, -7.0f } }, { -1.0f, -9.5f }, { -1.6f, -9.9f }, { -8.0f, 0.9f, -12.8f }, { -9.5f, 0.9f, -12.3f }, 0.0f, 0.0f, false },
@@ -79,8 +80,9 @@ namespace
           3.5f, 31.0f, 0, {}, { -3.4f, -34.6f }, { -3.4f, -34.6f }, { -4.0f, 1.6f, -50.0f }, { -0.8f, 1.6f, -50.0f }, 180.0f, -5.0f, false },
     };
 
-    const int ESTACION_ALTAR = 7;       // la silueta llega al altar 14 s despues de que la camara se detiene ahi (cuando la voz dice: llega la figura y deja su flor)
-    const float SILUETA_RETRASO = 14.0f;
+    const int ESTACION_CAMINO = 3;      // X-65: la silueta camina por el camino de flores mientras la voz dice «la figura que va caminando rumbo al altar»
+    const int ESTACION_ALTAR = 7;       // X-65: la silueta llega al altar cuando la voz dice «llega la figura» (a 80 % del audio) y deja la flor 2 s despues
+    const float FRACCION_LLEGADA = 0.80f;
 
     float Suave(float u) { u = (std::min)(1.0f, (std::max)(0.0f, u)); return u * u * (3.0f - 2.0f * u); }   // smoothstep 3u^2 - 2u^3
     float Envolver180(float a) { while (a > 180.0f) a -= 360.0f; while (a < -180.0f) a += 360.0f; return a; }
@@ -120,8 +122,9 @@ namespace
         return glm::vec2((std::min)(40.0f, (std::max)(-40.0f, comparsa.x + 9.0f)), e.llega.y);
     }
 
-    glm::vec3 PuntoMira(const Parada& e, bool fin, const glm::vec2& comparsa)
+    glm::vec3 PuntoMira(const Parada& e, bool fin, const glm::vec2& comparsa, const glm::vec3* silueta = nullptr)
     {
+        if (e.miraSilueta && silueta) return glm::vec3(silueta->x, Colisiones::alturaTerreno(silueta->x, silueta->z) + 1.0f, silueta->z);
         if (e.miraComparsa) return glm::vec3(comparsa.x, Colisiones::alturaTerreno(comparsa.x, comparsa.y) + 1.0f, comparsa.y);
         const glm::vec3& m = fin ? e.miraFin : e.mira;
         return glm::vec3(m.x, Colisiones::alturaTerreno(m.x, m.z) + m.y, m.z);
@@ -137,6 +140,7 @@ void Recorrido::Iniciar(const RecorridoPose& actual, Audio* audio, float duracio
     idx_ = 0;
     reloj_ = 0.0f;
     siluetaInicio_ = -1.0f;
+    siluetaA_ = -1.0f;
     comparsaSuave_ = comparsa_;
     pose_ = actual;
     // Solo desarrollo: NIERIKA_RECORRIDO_DESDE=N salta a la estacion N (para revisar un encuadre sin recorrer las anteriores)
@@ -179,9 +183,6 @@ void Recorrido::EmpezarTramo()
     }
     if (idx_ == 0 && e.tramo <= 0.0f && glm::length(glm::vec2(pose_.pos.x, pose_.pos.z) - e.llega) < 0.5f) tramoReal_ = 0.0f;
     if (idx_ > 0 && e.tramo <= 0.0f) tramoReal_ = 0.0f;   // la ultima estacion se queda donde esta
-    // La silueta llega al altar SILUETA_RETRASO s despues de que la camara se detenga ahi: sale al empezar este tramo (o despues, si no alcanza)
-    if (idx_ == ESTACION_ALTAR)
-        siluetaInicio_ = reloj_ + (std::max)(0.0f, tramoReal_ + SILUETA_RETRASO - duracionSil_);
     if (tramoReal_ <= 0.0f) EmpezarReten();
 }
 
@@ -196,6 +197,10 @@ void Recorrido::EmpezarReten()
         const float dur = audio_->IniciarVoz(idx_);   // 0 si no hay archivo: el recorrido sigue con su tiempo de diseno
         if (dur > 0.0f) retenReal_ = (std::max)(4.0f, dur + 1.5f);
     }
+    // X-65: la silueta camina con la voz. En la estacion 4 arranca con la voz (camina 18.4 s hacia el arco); en la 8 llega al altar al 80 % del reten
+    // (cuando la voz dice «llega la figura») y 2 s despues suelta la flor; si eso cae antes de ahora, la caminata arranca ya (llega un poco tarde).
+    if (idx_ == ESTACION_CAMINO) siluetaA_ = reloj_;
+    if (idx_ == ESTACION_ALTAR) siluetaInicio_ = reloj_ + (std::max)(0.0f, FRACCION_LLEGADA * retenReal_ - duracionSil_);
 }
 
 bool Recorrido::Actualizar(float dt, RecorridoPose& pose)
@@ -219,7 +224,8 @@ bool Recorrido::Actualizar(float dt, RecorridoPose& pose)
         // La orientacion va del rumbo con que salio al rumbo de la estacion, por el arco mas corto, con el mismo smoothstep
         float yawB, pitchB;
         const glm::vec3 ojosB(llegaE.x, AlturaOjos(llegaE.x, llegaE.y), llegaE.y);
-        Apuntar(ojosB, PuntoMira(e, false, comparsaSuave_), yawB, pitchB);
+        const glm::vec3 sp = posSilueta_ ? posSilueta_(TiempoSilueta()) : glm::vec3(0.0f, 0.0f, 24.0f);
+        Apuntar(ojosB, PuntoMira(e, false, comparsaSuave_, &sp), yawB, pitchB);
         pose_.pos = glm::vec3(p.x, AlturaOjos(p.x, p.y), p.y);
         pose_.yaw = inicioTramo_.yaw + Envolver180(yawB - inicioTramo_.yaw) * u;
         pose_.pitch = glm::mix(inicioTramo_.pitch, pitchB, u);
@@ -242,7 +248,8 @@ bool Recorrido::Actualizar(float dt, RecorridoPose& pose)
         }
         else
         {
-            const glm::vec3 m = e.miraComparsa ? PuntoMira(e, false, comparsaSuave_) : glm::mix(PuntoMira(e, false, comparsaSuave_), PuntoMira(e, true, comparsaSuave_), u);
+            const glm::vec3 sp = posSilueta_ ? posSilueta_(TiempoSilueta()) : glm::vec3(0.0f, 0.0f, 24.0f);
+            const glm::vec3 m = (e.miraComparsa || e.miraSilueta) ? PuntoMira(e, false, comparsaSuave_, &sp) : glm::mix(PuntoMira(e, false, comparsaSuave_), PuntoMira(e, true, comparsaSuave_), u);
             Apuntar(ojos, m, yawA, pitchA);
         }
         pose_.pos = ojos + glm::vec3(0.0f, 0.03f * std::sin(2.0f * PI * reloj_ / 7.0f), 0.0f);   // balanceo minimo para que no se vea congelada
@@ -263,8 +270,12 @@ bool Recorrido::Actualizar(float dt, RecorridoPose& pose)
 float Recorrido::TiempoSilueta() const
 {
     if (!activo_) return -1.0f;
-    if (siluetaInicio_ < 0.0f) return 0.0f;
-    return (std::max)(0.0f, reloj_ - siluetaInicio_);
+    // Caminata del altar (estacion 8), una vez arrancada, sigue hasta el final del recorrido (la flor se queda en el altar)
+    if (siluetaInicio_ >= 0.0f) return (std::max)(0.0f, reloj_ - siluetaInicio_);
+    // Caminata del camino de flores (estacion 4): desde que empieza su voz hasta que empieza el reten de la estacion 5 (la camara ya mira a otro lado)
+    const bool caminoActivo = siluetaA_ >= 0.0f && (idx_ == ESTACION_CAMINO || (idx_ == ESTACION_CAMINO + 1 && !enReten_));
+    if (caminoActivo) return reloj_ - siluetaA_;
+    return 0.0f;   // en la orilla, esperando
 }
 
 const char* Recorrido::Titulo() const { return E[(std::min)(idx_, N_ESTACIONES - 1)].titulo; }

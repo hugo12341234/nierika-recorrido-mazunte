@@ -684,6 +684,8 @@ int main()
             glm::vec2 cc(0.0f);   // centro de la comparsa en este instante (la estacion 2 la mira)
             for (int i = 0; i < Extras::N_COMPARSA; i++) { float cx, cz, cy; Extras::ComparsaN(i, (float)Reloj(), cx, cz, cy); cc += glm::vec2(cx, cz); }
             recorrido.FijarComparsa(cc / (float)Extras::N_COMPARSA);
+            // X-65: donde esta el torso de la silueta en el instante t de su caminata (la estacion 4 la mira caminar)
+            recorrido.FijarPosicionSilueta([&](float t) { Silueta copia = silueta; copia.Actualizar(t); return glm::vec3(copia.Nodos()[0].mundo[3]); });
             RecorridoPose rp;
             // Solo desarrollo: NIERIKA_RECORRIDO_CAPTURAS="carpeta" corre el recorrido a 30 pasos de 0.1 s por cuadro y guarda un PNG por cuadro (cada 3 s de recorrido)
             const int pasos = recCapturas ? 30 : 1;
