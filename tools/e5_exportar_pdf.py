@@ -33,7 +33,7 @@ TECNICO = [
     "14_anexo_modelos.md", "15_anexo_pruebas.md",
     "justificacion_simples.md", "justificacion_complejas.md", "justificacion_personas.md",
 ]
-USUARIO = ["01_inicio.md", "02_controles.md", "03_recorrido.md", "04_fichas_y_audio.md", "05_problemas_frecuentes.md"]
+USUARIO = ["01_inicio.md", "02_controles.md", "03_recorrido.md", "04_fichas_y_audio.md", "05_problemas_frecuentes.md", "06_codigo_fuente.md"]
 
 EMOJI = "✅🔄⏳❓📷🟡🤝❌⚠️🔴🟠🟢📌"
 
