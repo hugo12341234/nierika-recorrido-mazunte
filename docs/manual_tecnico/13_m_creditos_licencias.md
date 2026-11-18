@@ -6,7 +6,7 @@ Nierika Studio, Equipo 15: D1 (319266894) y D2 (321332086). Proyecto final de Co
 
 ## m.2 Código
 
-El código propio (`src/`, `Shaders/`, `tools/`) tiene licencia **MIT** (archivo `LICENSE`, «Nierika Studio (Equipo 15)»). La licencia la eligió el asistente al preparar el repositorio y **D2 no la ha confirmado por escrito**. Los modelos, texturas y audio **no** están cubiertos por esa licencia.
+El código propio (`src/`, `Shaders/`, `tools/`) tiene licencia **MIT** (archivo `LICENSE`, «Nierika Studio (Equipo 15)»). D2 confirmó el 18/11/2026 que se usa la licencia MIT. Los modelos, texturas y audio **no** están cubiertos por esa licencia.
 
 ## m.3 Bibliotecas
 
@@ -45,6 +45,5 @@ El oleaje y la música son de terceros y se usan con fines educativos; **no se d
 ## m.6 Pendientes que solo el equipo puede cerrar
 
 - El texto de la pantalla de Créditos del programa todavía dice «Pendiente: origen de laminado1.jpg»; está desactualizado (la textura es propia) y no se modificó porque ya no se cambia el código.
-- Confirmar la licencia MIT.
 - Confirmar canal y fecha del oleaje.
 - Registrar las versiones de las bibliotecas de vcpkg, de Blender, Visual Studio y Maya.
