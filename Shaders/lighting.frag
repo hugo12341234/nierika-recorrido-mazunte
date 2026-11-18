@@ -172,6 +172,12 @@ float pesoArena(vec2 xz)
     float s = (xz.y - BORDE_Z) + 6.0 * ruidoFbm(xz * 0.30) + 2.0 * ruidoFbm(xz * 1.9);
     return smoothstep(-BORDE_ANCHO, BORDE_ANCHO, s);
 }
+// X-66 (correccion): la mezcla solo existe frente a la playa (|x| < 50). Las laderas de las colinas junto a la playa (z > -20, |x| > 50)
+// quedaban con peso de arena = 1; esta mascara las deja con pasto. 1 dentro de |x| <= 46, 0 a partir de |x| >= 52
+float mascaraPlaya(float x)
+{
+    return 1.0 - smoothstep(46.0, 52.0, abs(x));
+}
 
 void main()
 {
@@ -278,7 +284,7 @@ void main()
         // X-36 (pulido): colinas ~30 % mas claras (se veian casi negras de noche)
         albedo = colorPasto(albedo, FragPos.xz, FragPos.y);
         // X-66: cerca de z = -20 aparecen manchas de arena (misma funcion de peso que la playa: el borde ya no es una recta)
-        float wA = pesoArena(FragPos.xz);
+        float wA = pesoArena(FragPos.xz) * mascaraPlaya(FragPos.x);   // solo en el borde de la playa
         if (wA > 0.001)
             albedo = mix(albedo, colorArena(texture(texture_mezcla, vec2(FragPos.x, -FragPos.z) * 0.5).rgb, FragPos.xz, FragPos.y), wA);
     }
