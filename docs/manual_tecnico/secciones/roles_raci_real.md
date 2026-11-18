@@ -74,25 +74,32 @@ Los commits se concentran en 15 días con actividad: 18–20/10 (61), 25–26/10
 
 Leyenda: «R real» = quién ejecutó según el repo/ESTADO. Cuando una tarea del repo se hizo desde las cuentas y sesiones de D2, se escribe **D2** (con ayuda de Claude cuando el ESTADO lo registra: B-3, B-4, B-7, B-9, B-10, B-12, E-2, D-6, y desde el 04/11 casi todo el código).
 
-| Área (actividades) | R planeado D1 | R planeado D2 | R real según evidencia | Evidencia / observaciones |
+| Área (actividades) | Plan (propuesta) | R real según evidencia | Lectura | Evidencia / observaciones |
 |---|---|---|---|---|
-| Investigación y propuesta (1–2) | 1 | 1 | D2 (propuesta v2.0 en el repo); investigación (act. 1): **sin evidencia de autoría de D1** | `docs/propuesta/`; `docs/investigacion_mazunte.md` y `REFERENCIAS.md` están a nombre de D2 |
-| Infraestructura (3–6) | 1 (act. 4) | 3 | **D2** (repo, Trello, vcpkg, VS); base de código de un reporte de D1 **[inferido]** | PR #1; ESTADO act. 3–6; X-1 (versiones de Blender/GIMP en ambas PC) sigue sin captura |
-| Cuarto del cementerio, diseño (7) | 1 | 0 | Sin evidencia de bocetos de D1 | ESTADO X-2 (bocetos) pendiente |
-| Playa, mar y panteón (8, 10, 13, 14) | 1 (act. 13) | 3 | **D2** (A-5, A-6, A-7, B-9) | ESTADO; arena Poly Haven; Blender 5.2.2 |
-| Cámara, render y colisiones (9, 11, 12, 15) | 3 | 1 | **D2** (A-9, A-3/A-4, E-2) | ESTADO A-9; **ninguna** ejecutada por D1 |
-| Cuarto del cementerio (16–22) | 3 | 4 | **D2** (A-2, A-10, A-11, A-12, B-8, B-10, B-11) | PR #11 y siguientes |
-| Objetos de la ofrenda (23–30) | 4 | 4 | **D2** con scripts `bpy` y ayuda de Claude (B-1…B-8, B-14). D1: pan, flor y calavera de Maya como **extras** (X-3), que no sustituyen a B-3/B-4 | PR #17; inventario del ESTADO §2 |
-| Texturizado (31–34) | 2 | 2 | **D2** (B-12, X-6, texturas por script) | `tools/b12_texturas.py`, `x6_texturas.py` |
-| Integración e iluminación (35–38) | 2 | 2 | **D2** integra; **D1 aporta la base de la iluminación (A-8)** | PR #16; ESTADO §4 04/11 |
-| Animaciones simples (39–45) | 3 | 4 | **D2** (C-1…C-8) | ESTADO; animación de las 4 luces de D1 (seno de 2t) se acepta como propia por palabra de D2 |
-| Animaciones complejas (46–50, 53) | 3 | 3 | **D2** (D-2…D-7, X-7); D1 aportó el primer modelo de la silueta (D-1, PR #39), luego sustituido | `Silueta.cpp`, `Keyframes.*` en `src/` |
-| Fichas y audio (51–52) | 1 | 1 | **D2** (C-7, D-6; voz de narración con ElevenLabs, confirmado por D2) | `docs/REFERENCIAS.md` |
-| Pruebas, videos, manuales y entrega (54–60) | 4 | 3 | **D2**; los videos MP4, el Release y el manual en inglés siguen pendientes al 18/11 | `docs/entrega/LISTA_VERIFICACION.md` |
+| Investigación y propuesta (1–2) | **D1** R 1 · A 1<br>**D2** R 1 · A 1 | D2 (propuesta v2.0 en el repo); investigación (act. 1): **sin evidencia de autoría de D1** | Sin evidencia del aporte de D1 | `docs/propuesta/`; `docs/investigacion_mazunte.md` y `REFERENCIAS.md` están a nombre de D2 |
+| Infraestructura (3–6) | **D1** R 1 · A 3<br>**D2** R 3 · A 1 | **D2** (repo, Trello, vcpkg, VS); base de código de un reporte de D1 **[inferido]** | Concentrado en D2 | PR #1; ESTADO act. 3–6; X-1 (versiones de Blender/GIMP en ambas PC) sigue sin captura |
+| Cuarto del cementerio, diseño (7) | **D1** R 1 · A 0<br>**D2** R 0 · A 1 | Sin evidencia de bocetos de D1 | Sin evidencia del aporte de D1 | ESTADO X-2 (bocetos) pendiente |
+| Playa, mar y panteón (8, 10, 13, 14) | **D1** R 1 · A 3<br>**D2** R 3 · A 1 | **D2** (A-5, A-6, A-7, B-9) | Concentrado en D2 | ESTADO; arena Poly Haven; Blender 5.2.2 |
+| Cámara, render y colisiones (9, 11, 12, 15) | **D1** R 3 · A 1<br>**D2** R 1 · A 3 | **D2** (A-9, A-3/A-4, E-2) | Concentrado en D2 | ESTADO A-9; **ninguna** ejecutada por D1 |
+| Cuarto del cementerio (16–22) | **D1** R 3 · A 4<br>**D2** R 4 · A 3 | **D2** (A-2, A-10, A-11, A-12, B-8, B-10, B-11) | Concentrado en D2 | PR #11 y siguientes |
+| Objetos de la ofrenda (23–30) | **D1** R 4 · A 4<br>**D2** R 4 · A 4 | **D2** con scripts `bpy` y ayuda de Claude (B-1…B-8, B-14). D1: pan, flor y calavera de Maya como **extras** (X-3), que no sustituyen a B-3/B-4 | Parcial: aporte de D1 (extras de Maya) | PR #17; inventario del ESTADO §2 |
+| Texturizado (31–34) | **D1** R 2 · A 2<br>**D2** R 2 · A 2 | **D2** (B-12, X-6, texturas por script) | Concentrado en D2 | `tools/b12_texturas.py`, `x6_texturas.py` |
+| Integración e iluminación (35–38) | **D1** R 2 · A 2<br>**D2** R 2 · A 2 | **D2** integra; **D1 aporta la base de la iluminación (A-8)** | Parcial: aporte de D1 (base de la iluminación) | PR #16; ESTADO §4 04/11 |
+| Animaciones simples (39–45) | **D1** R 3 · A 4<br>**D2** R 4 · A 3 | **D2** (C-1…C-8) | Concentrado en D2 | ESTADO; animación de las 4 luces de D1 (seno de 2t) se acepta como propia por palabra de D2 |
+| Animaciones complejas (46–50, 53) | **D1** R 3 · A 3<br>**D2** R 3 · A 3 | **D2** (D-2…D-7, X-7); D1 aportó el primer modelo de la silueta (D-1, PR #39), luego sustituido | Parcial: aporte de D1 (primer modelo de la silueta, sustituido) | `Silueta.cpp`, `Keyframes.*` en `src/` |
+| Fichas y audio (51–52) | **D1** R 1 · A 1<br>**D2** R 1 · A 1 | **D2** (C-7, D-6; voz de narración con ElevenLabs, confirmado por D2) | Concentrado en D2 | `docs/REFERENCIAS.md` |
+| Pruebas, videos, manuales y entrega (54–60) | **D1** R 4 · A 3<br>**D2** R 3 · A 4 | **D2**; los videos MP4, el Release y el manual en inglés siguen pendientes al 18/11 | Concentrado en D2 | `docs/entrega/LISTA_VERIFICACION.md` |
 
 **Columna A (quien aprueba):** el plan asignaba al otro integrante revisar cada actividad. En la práctica D2 aprobó todo (`/verificar` en sesiones de Claude, visto bueno en pantalla) y, por decisiones escritas del ESTADO (19/10, 11/11, 12/11, 14/11, 17/11, 18/11), los PR se fusionaron **sin revisión de otra persona**. Sin evidencia de revisión humana independiente en ningún PR.
 
 **Cambio formal del reparto (ESTADO §4, 18/10):** las columnas Resp./Verif. dejaron de seguirse; «quien está libre toma la siguiente tarea y el otro revisa». En los hechos no hubo segundo integrante que revisara.
+
+### Lectura de la diferencia
+
+- **Resumen por área (13 áreas):** el trabajo real quedó **concentrado en D2 en 8 áreas**, hay **aporte parcial de D1 en 3** (extras de Maya en objetos de la ofrenda, base de la iluminación y primer modelo de la silueta) y **sin evidencia del aporte de D1 en 2** (investigación y bocetos del cuarto).
+- **Responsable (R):** el plan repartía 29 actividades a D1 y 31 a D2; en el repositorio constan como hechas por D2 casi todas, con las excepciones de la lista anterior. No hay registro de horas reales de ninguno de los dos.
+- **Aprobador (A):** el plan asignaba cada actividad a un aprobador distinto del responsable. Según el registro, esa revisión por una segunda persona **no se produjo**.
+- **Qué no se afirma:** que el plan se cumplió, ni que D1 hizo lo que el repositorio no muestra. La causa del reparto real queda para que la redacten D1 y D2 con sus propias palabras.
 
 ## 4. Redacción propuesta (para que D1 y D2 la ajusten; no la cierra este hilo)
 

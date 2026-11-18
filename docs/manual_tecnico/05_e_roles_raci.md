@@ -21,6 +21,7 @@ Entre paréntesis, el número de actividades de cada área. Esta tabla es **lo q
 | Animaciones complejas | 46–50, 53 | R (3) / A (3) | R (3) / A (3) | I |
 | Puntos de información y audio | 51–52 | R (1) / A (1) | R (1) / A (1) | C |
 | Pruebas, videos, manuales y entrega | 54–60 | R (4) / A (3) | R (3) / A (4) | A |
+| **Total** | **60** | **R 29 · A 31** | **R 31 · A 29** | |
 
 ## e.2 Cambio de forma de trabajo
 
