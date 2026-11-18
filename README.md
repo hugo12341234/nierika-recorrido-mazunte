@@ -143,7 +143,7 @@ Lo verificado en el repositorio se distingue de lo que solo declara el equipo.
 | Manual de usuario y manual técnico (PDF) | [`docs/entrega/`](docs/entrega/) | Generados el 18/11 desde las fuentes Markdown; al manual técnico aún le falta el texto individual de D1 (secciones g y j) |
 | 3 videos de demostración (MP4) | fuera de Git (≈ 450 MB) | Grabados el 18/11 según D2; se entregan aparte ([`docs/videos/README.md`](docs/videos/README.md)) |
 | Rendimiento | [`15_anexo_pruebas.md`](docs/manual_tecnico/15_anexo_pruebas.md) | 45 FPS mínimo y ≈ 60 de promedio en una sola máquina con gráficos integrados |
-| Release `.zip` autónomo | `tools/empaquetar_release.ps1` | **Aún no construido ni publicado**; no se probó en una PC sin Visual Studio |
+| Release `.zip` autónomo | `tools/empaquetar_release.ps1` | **Construido el 18/11/2026** (`NierikaStudio_2026-11-18.zip`, 209.6 MB, SHA-256 `07f060135e918fc3d724b0fbb0591d20df0a167b8cc3ebf5c949170191340a69`). **No va en Git** (209 MB, más que el límite de 100 MB por archivo de GitHub) ni hay Release publicado: se entrega aparte. Arrancó y siguió abierto 8 s al descomprimirlo en una carpeta nueva, pero en una PC con Visual Studio; **no se probó en una PC sin Visual Studio** |
 | Rama `main` | — | **Todavía no contiene la versión final** (sigue en la estructura inicial); todo el trabajo está en `develop` |
 | Participación de D1 | [`05_e_roles_raci.md`](docs/manual_tecnico/05_e_roles_raci.md) | **Sin evidencia en el repositorio** (ningún commit ni pull request a su nombre); sus textos individuales están pendientes y nadie más los escribe |
 
