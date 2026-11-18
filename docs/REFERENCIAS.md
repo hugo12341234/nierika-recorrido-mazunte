@@ -107,7 +107,7 @@ Textos copiados tal cual de `docs/propuesta/Propuesta_Nierika_v2.0.pdf` (§ Refe
 
 **[A-01] Oleaje** (`Audio/oleaje.mp3`; externo, uso educativo no comercial; tramo de 123 s recortado en bucle por el equipo, ver `Audio/README.md`).
 Quiet. (2020, 31 de marzo). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo
-- Estado: 🔄 Cierra el pendiente «canal / año» de `Audio/README.md`: la lectura devolvió **canal «Quiet»** y **«Premiered Mar 31, 2020»** (estreno). YouTube mostró una página anti-bot, así que esos dos datos salieron de los **metadatos incrustados**, no de la página visible: **D2 debe abrir el enlace una vez y confirmar canal y fecha** (⏳). Duración no verificada. Consulta: 18/11/2026.
+- Estado: 🤝 **D2 abrió el video el 18/11/2026 y confirmó canal «Quiet» y fecha 31/03/2020** (antes eran datos leídos de metadatos, porque YouTube mostró una página anti-bot). Duración no verificada por el asistente. Consulta: 18/11/2026.
 
 **[A-02] Música de fondo** (`Audio/musica.mp3`; D-6k; externo, uso educativo no comercial).
 Tizo, R. (2012, 24 de octubre). *Dios Nuca Muere con la Banda Mixe de Oaxaca* [Video]. YouTube. https://www.youtube.com/watch?v=EyObXpnZsJg
@@ -274,7 +274,7 @@ No se pudo comprobar hoy (sin ISBN/DOI a mano o error de lectura): Marschner y S
 Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02), `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06), y los modelos de Maya = del equipo (T-07). Lo que sigue abierto es opcional y solo se anota:
 
 1. ~~`laminado1.jpg` y `concreto.jpg`~~: **cerrado (18/11)**, son propias (Blender).
-2. **Oleaje (A-01):** abrir el video una vez y confirmar canal («Quiet») y fecha (31/03/2020).
+2. ~~**Oleaje (A-01):** confirmar canal («Quiet») y fecha (31/03/2020)~~: **cerrado (18/11)**, D2 abrió el video y lo confirmó.
 3. **Modelos de Maya (T-07):** cerrado (son del equipo). Solo queda, opcional, la herramienta de las texturas del zip y el permiso del retrato del cuadro (D1).
 4. **«Al atardecer» (H-1):** comprobación visual en el artículo de Baños (opcional).
 5. **Versiones:** `vcpkg list` (GLFW, GLEW, GLM, Assimp), versión de Blender, de Visual Studio y de Maya.
@@ -287,10 +287,10 @@ Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video d
 | Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ pendiente |
 |---|---|---|---|---|---|---|
 | C · fuentes culturales y de contenido | 24 | 11 | 0 | 2 | 11 | 0 |
-| A · música, audio y voz | 4 | 0 | 2 | 2 | 0 | 0 |
+| A · música, audio y voz | 4 | 0 | 3 | 1 | 0 | 0 |
 | T · texturas y modelos externos | 7 | 4 | 3 | 0 | 0 | 0 |
 | S · bibliotecas, software y estándares | 23 | 9 | 0 | 10 | 4 | 0 |
 | M · bibliografía técnica y matemática | 10 | 7 | 0 | 3 | 0 | 0 |
-| **Total** | **68** | **31** | **5** | **17** | **15** | **0** |
+| **Total** | **68** | **31** | **6** | **16** | **15** | **0** |
 
-Los 11 ❌ del grupo C son 10 citas de la propuesta que no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye A-01 (falta que D2 confirme canal y fecha) y A-04.
+Los 11 ❌ del grupo C son 10 citas de la propuesta que no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye A-04 (condiciones de ElevenLabs leídas hasta la sección 12).
