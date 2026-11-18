@@ -33,6 +33,6 @@
 - [ ] 1. Proyecto de Visual Studio + repositorio con Release publicado
 - [ ] 2. `dist/` con .exe autónomo y .dll
 - [ ] 3. 3 videos MP4 (entorno, recorrido, animaciones e interactividad)
-- [ ] 4. Manual técnico ES + EN (PDF) — **la versión en inglés aún no existe**
-- [ ] 5. Manual de usuario ES + EN (PDF) — **la versión en inglés aún no existe**
+- [ ] 4. Manual técnico (PDF): `ManualTecnico_Equipo15_319266894_321332086.pdf` generado el 18/11 con `tools/e5_exportar_pdf.py`; faltan los textos de D1 y la revisión de D2. **No hay versión completa en inglés** (solo la redacción individual, sección j)
+- [ ] 5. Manual de usuario (PDF): `ManualDeUsuario_Equipo15_319266894_321332086.pdf` generado el 18/11. **No hay versión en inglés**
 - [ ] Enlace de entrega enviado al profesor
