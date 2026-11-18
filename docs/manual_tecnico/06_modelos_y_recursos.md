@@ -63,12 +63,13 @@ La capilla provisional no sale en videos ni capturas finales (ESTADO, decisión 
 | `piso_barro.jpg` (1024×1024) | Piso del cuarto | *Clay Floor 001*, Poly Haven, CC0 (Savva y Cilliers, 2021; X-11) | Ver [§11](11_referencias.md) |
 | `barda_arenisca.jpg` (1024×1024) | Barda | *Large Sandstone Blocks 01*, Poly Haven, CC0 (Tuytel, 2020; X-14) | Ver [§11](11_referencias.md) |
 | `mar_agua.png` (1024×1024) | Mar | Generada con `tools/x6_texturas.py` (X-6); sustituye a `mar_provisional.png` | Propia |
+| `concreto.jpg` | Arco, fachada y piso | Creada en Blender por el equipo (confirmado por D2, 18/11/2026; X-69) | Propia |
 | `piedra.jpg` (1024×1024) | Muros, dovelas y roca (el piso y la barda ya usan Poly Haven) | Procedural (Voronoi), generada por el equipo (A-12) | Propia |
 | `altar3_tela.png`, `vela_cera.png`, `botella_vidrio.png`, `marco_madera.png`, `copalero_barro.png`, `pan_muerto_relieve.png` (1024×1024) | Ofrenda | Generadas con `tools/b12_texturas.py` (numpy, semilla fija) | Propias |
 | `cempasuchil.png`, `papel_picado.png`, `pan_muerto.png` (1024×1024 RGBA) | Flor, papel picado, pan | Generadas con `tools/b3_*.py`, `b7_*.py`, `b4_*.py` | Propias |
-| `laminado1.jpg` (512×512) | Fachada y techo | ❓ el ESTADO no registra su origen; no cumple 1K | ❓ **POR DEFINIR**: reemplazar o registrar la excepción (revisada el 12/11: la imagen no trae metadatos de autor ni licencia; **no se pudo comprobar su origen**) |
+| `laminado1.jpg` (512×512) | Fachada y techo | Creada en Blender por el equipo (confirmado por D2, 18/11/2026; X-69) | Propia; excepción de tamaño (512 px, no 1K) ya registrada en el ESTADO (X-48) |
 | `tumba1..4_piedra.png`, `cruz_piedra.png`, `soportes_madera.png`, `silueta_tela.png`, `foto_retrato.png` (1024×1024) | Tumbas, cruz, soportes, silueta, foto del marco | Generadas con `tools/x6_texturas.py` (X-6, X-10); la foto es un retrato genérico sin rostro | Propias |
 | `palma_tronco.png`, `palma_hoja.png`, `arbusto_hoja.png` (1024×1024) | Palmas y arbustos decorativos (X-9) | Generadas con `tools/x9_vegetacion.py` | Propias |
-| `texture_diffuse.png` / `shaded.png` | Calavera, flor, pan de Maya y capilla (esta última ya no se carga) | Maya (D1/D2) | Extras que no cuentan como propios |
+| `texture_diffuse.png` / `shaded.png` | Calavera, flor, pan de Maya y capilla (esta última ya no se carga) | Maya, hechos por el equipo (D2 lo confirmó el 18/11/2026) | Propios del equipo, pero no cuentan entre los modelos de Blender del inventario (decisión «solo Blender», 19/10) |
 
 📷 **CAPTURA pendiente por modelo** (vista 3D en Blender y en la escena) a medida que se cierre cada tarea.

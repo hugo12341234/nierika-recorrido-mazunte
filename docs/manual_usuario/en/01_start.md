@@ -17,11 +17,13 @@ A first-person 3D virtual tour of the Day of the Dead in Mazunte, Oaxaca: you wa
 **PENDING (E-3, E-7).** This will explain: unzip the `.zip` published in the GitHub *Release* and run `NierikaStudio.exe`. The script that builds the package exists (`tools/empaquetar_release.ps1`, E-3), but the `.zip` has not yet been published or tested on another PC. Until then the program is built from Visual Studio 2022 (see the root `README.md`).
 
 ## 1.4 Start menu (X-63)
-When the program opens, a **start menu** shows first over the scene, which slowly circles in the background. The silhouette, the tour and the music **have not started yet**. Buttons: **Iniciar recorrido** (starts everything from the cemetery, as before), **Controles** (the real keys), **Créditos** (team, third-party textures and audio, libraries; missing reference data is marked PENDIENTE) and **Salir** (quit). Pick with a click or with the arrow keys and Enter; **Esc** quits. During the tour, **Esc** opens the same screen as a pause menu.
+When the program opens, a **start menu** shows first over the scene, which slowly circles in the background. The silhouette, the tour and the music **have not started yet**. Buttons: **Iniciar recorrido** (starts everything from the cemetery, as before), **Controles** (the real keys), **Créditos** (team and **all the project's references in APA 7**, grouped by topic: cultural sources, music and voice, textures, libraries and technical bibliography; it is a long list: scroll with the mouse wheel or the arrow keys) and **Salir** (quit). Pick with a click or with the arrow keys and Enter; **Esc** quits. During the tour, **Esc** opens the same screen as a pause menu.
 
 ![Start menu](../capturas/01_menu_inicio.jpg)
 
 ![Credits](../capturas/01_menu_creditos.jpg)
+
+![Credits, end of the list](../capturas/01_menu_creditos_fin.jpg)
 
 *Screenshots of Nov 17, 2026 taken on Linux (Mesa, no sound) with the development variables `NIERIKA_UI=menu_creditos_fin` and `NIERIKA_MENU_PNG`; not yet seen on D2's PC with VS 2022.*
 

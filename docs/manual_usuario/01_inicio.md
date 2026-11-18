@@ -20,13 +20,15 @@ El script que arma el paquete existe (`tools/empaquetar_release.ps1`, E-3) pero 
 Hasta entonces el programa se compila desde Visual Studio 2022 (ver `README.md` de la raíz).
 
 ## 1.4 Menú de inicio (X-63)
-Al abrir el programa aparece primero un **menú de inicio** sobre la escena, que da vueltas despacio de fondo. La silueta, el recorrido y la música **todavía no empiezan**. Botones: **Iniciar recorrido** (arranca todo desde el panteón, como antes), **Controles** (las teclas reales), **Créditos** (equipo, texturas y audio de terceros, bibliotecas; lo que falta de las referencias dice PENDIENTE) y **Salir**. Se elige con clic o con flechas y Enter; **Esc** sale. Dentro del recorrido, **Esc** abre la misma pantalla como pausa.
+Al abrir el programa aparece primero un **menú de inicio** sobre la escena, que da vueltas despacio de fondo. La silueta, el recorrido y la música **todavía no empiezan**. Botones: **Iniciar recorrido** (arranca todo desde el panteón, como antes), **Controles** (las teclas reales), **Créditos** (equipo y **todas las referencias del proyecto en APA 7**, agrupadas por tema: fuentes culturales, música y voz, texturas, bibliotecas y bibliografía técnica; es una lista larga: se baja con la rueda del ratón o las flechas) y **Salir**. Se elige con clic o con flechas y Enter; **Esc** sale. Dentro del recorrido, **Esc** abre la misma pantalla como pausa.
 
 ![Menú de inicio](capturas/01_menu_inicio.jpg)
 
 ![Créditos](capturas/01_menu_creditos.jpg)
 
-*Capturas del 17/11/2026 hechas en Linux (Mesa, sin sonido) con las variables de desarrollo `NIERIKA_UI=menu_creditos_fin` y `NIERIKA_MENU_PNG`; falta verlo en la PC de D2 con VS 2022.*
+![Créditos, final de la lista](capturas/01_menu_creditos_fin.jpg)
+
+*Capturas de Créditos del 18/11/2026 (X-69); las demás del 17/11/2026, hechas en Linux (Mesa, sin sonido) con las variables de desarrollo `NIERIKA_UI=menu_creditos_fin` y `NIERIKA_MENU_PNG`; falta verlo en la PC de D2 con VS 2022.*
 
 ## 1.5 Qué ves al abrir el recorrido
 La ventana se titula *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte* y, tras unos instantes, agrega los cuadros por segundo (`NNN FPS`).
