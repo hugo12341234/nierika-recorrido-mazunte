@@ -1,132 +1,174 @@
-# Nierika Studio — Virtual Tour: Día de Muertos in Mazunte, Oaxaca
+# Nierika Studio — Recorrido virtual del Día de Muertos en Mazunte, Oaxaca
 
 *«Ver más allá de lo visible»*
 
-Real-time, first-person 3D virtual tour that recreates the Day of the Dead celebration in **Mazunte, Oaxaca (Mexico)**: the beach where candles and marigolds are set adrift on the sea at sunset, the village cemetery, and the cemetery chapel with its three-tier offering altar. Visitors walk freely and open short cultural cards that explain the meaning of each element, with its source.
+Recorrido 3D interactivo, en primera persona y en tiempo real, que recrea el Día de Muertos en **Mazunte, Oaxaca (México)**:
+la playa donde se dejan velas y cempasúchil en el mar, el panteón con su camino de ánimas y la capilla con un altar de ofrenda
+de tres niveles. El visitante camina libremente, escucha un recorrido guiado con voz y abre fichas culturales cortas que
+explican el significado de cada elemento y citan su fuente.
 
-> Final project for *Computer Graphics and Human-Computer Interaction* — School of Engineering, UNAM (semester 2027-1).
-> Delivery: **November 18, 2026**.
+> Proyecto final de **Computación Gráfica e Interacción Humano-Computadora** — Facultad de Ingeniería, UNAM (semestre 2027-1).
+> Equipo 15 · **Nierika Studio** · Entrega: **18 de noviembre de 2026**.
 
-## Features
+## Si es la primera vez que abres este repositorio
 
-- One continuous scene with three zones: **beach and shoreline**, **cemetery** with stone wall, **cemetery chapel** with altar.
-- **First-person navigation** (keyboard + mouse) with AABB collisions, start menu, pause menu and on-screen help (**F1**).
-- **Guided tour** (key **T**): 12 narrated stations with subtitles and voice (`Audio/narracion/`); any movement key cancels it.
-- **Lighting**: warm ambient light + key lights, Blinn-Phong.
-- **10 animations** (5 keyframed + 5 simple; details in `docs/manual_tecnico/09_i_animaciones.md`): walking silhouette, placing a flower on the altar, family dance, playing with the dog and copal censing (keyframed); sea waves, floating candles with flame, floating flowers, band beat and hostess (simple). Only the first five were in the approved proposal.
-- **13 cultural information cards** (Dear ImGui) shown within 2 m of an object, each citing its source.
-- Ambient audio by zone (waves + band music) and narration; **M** switches the sound mix.
-
-## Controls
-
-| Key | Action |
+| Quiero… | Ve a… |
 |---|---|
-| W A S D / arrows + mouse | Walk and look around |
-| T | Guided tour (T, Esc or W A S D cancel it) |
-| V | Candles on/off (within 3 m of the altar) |
-| M | Sound: sea + music / sea / music / mute |
-| R | Restart the silhouette |
-| F1 | Show/hide help |
-| Esc | Pause menu |
+| Ejecutar el juego | [Compilar y ejecutar](#compilar-y-ejecutar) |
+| Saber cómo se maneja | [Controles](#controles) |
+| Leer los manuales entregados (PDF) | [`docs/entrega/`](docs/entrega/) |
+| Ver los guiones de los 3 videos | [`docs/videos/`](docs/videos/README.md) |
+| Saber qué está terminado y qué no | [Estado de la entrega](#estado-de-la-entrega-18-de-noviembre-de-2026) |
+| Ver créditos, licencias y referencias | [Licencia y créditos](#licencia-y-créditos) |
 
-Full details (Spanish): `docs/manual_usuario/`. The delivered PDFs are in `docs/entrega/`.
+## Qué incluye
 
-## Tech stack
+- **Una escena continua con tres zonas:** playa y orilla del mar, panteón con tumbas y barda de piedra, y capilla con altar.
+- **Navegación en primera persona** (teclado y ratón) con colisiones AABB, menú de inicio, menú de pausa y ayuda en pantalla (**F1**).
+- **Recorrido guiado** (tecla **T**): 12 estaciones con subtítulos y voz (`Audio/narracion/`); cualquier tecla de movimiento lo cancela.
+  El guion está en [`docs/RECORRIDO_GUIADO.md`](docs/RECORRIDO_GUIADO.md).
+- **Iluminación** cálida con luces puntuales y direccionales (modelo Blinn-Phong); las velas del altar se encienden y apagan con **V**.
+- **10 animaciones** (5 por cuadros clave y 5 simples; detalle y justificación matemática en
+  [`docs/manual_tecnico/09_i_animaciones.md`](docs/manual_tecnico/09_i_animaciones.md)):
+  - Por cuadros clave: caminata de la silueta, «dejar flores» en el altar, baile familiar, juego con el perro y sahumerio con copal.
+  - Simples: olas del mar, velas flotantes con llama, flores flotantes, ritmo de la banda y la anfitriona.
+  - **Aclaración honesta:** la propuesta aprobada pedía 5 animaciones (2 por cuadros clave y 3 simples); el resto se agregó después
+    (decisiones registradas en `docs/ESTADO_PROYECTO.md`, sección 4).
+- **13 fichas culturales** (Dear ImGui) que aparecen solas a menos de 2 m de un objeto, con su nivel de evidencia y sus referencias en APA 7
+  (fuentes en [`docs/fichas_culturales.md`](docs/fichas_culturales.md)). Lo que es adaptación del estudio lo dice la propia ficha.
+- **Audio:** oleaje y música de banda por zona, más la narración del recorrido. **M** cambia la mezcla de sonido.
 
-| Area | Tools |
+## Controles
+
+| Tecla | Acción |
 |---|---|
-| Language / API | C++17 · OpenGL 3.3 Core · GLSL 330 |
-| Libraries | GLFW · GLEW · GLM · Assimp · SOIL2 / stb_image · Dear ImGui · miniaudio |
-| IDE | Visual Studio 2022 (x64) |
-| Assets | Blender · GIMP · CC0 textures (Poly Haven, ambientCG) |
-| Management | Git / GitHub (feature branches + pull requests) · Kanban |
+| **W A S D** o flechas + ratón | Caminar y mirar alrededor |
+| **T** | Recorrido guiado (**T**, **Esc** o **W A S D** lo cancelan) |
+| **V** | Encender/apagar las velas del altar (a menos de 3 m de él) |
+| **M** | Sonido: mar y música / solo mar / solo música / silencio |
+| **R** | Reiniciar la silueta |
+| **F1** | Mostrar/ocultar la ayuda |
+| **Esc** | Menú de pausa |
 
-## Repository layout
+Más detalle: [`docs/manual_usuario/`](docs/manual_usuario/README.md).
 
-**Application**
+## Compilar y ejecutar
 
-```
-NierikaStudio.sln / .vcxproj   Visual Studio 2022 solution (x64 only)
-vcpkg.json                     Dependencies installed by vcpkg (assimp, glfw3, glew, glm), pinned by builtin-baseline
-src/                           C++ source (main.cpp and one module per feature: Camera, Shader, Model, Mesh, Fichas, Audio, Menu, Recorrido, ...)
-vendor/                        SOIL2 + stb_image, Dear ImGui and miniaudio, compiled with the project
-Models/<object>/               3D model: <object>.obj + .mtl + its textures (+ .blend source for the team's own models)
-Shaders/                       GLSL 330 core shaders (.vs / .frag)
-Audio/                         Sea and music tracks (Audio/README.md) and the 12 guided-tour narration files (Audio/narracion/)
-tools/                         Helper scripts (Blender/bpy generators, tests, release packaging); see tools/README.md
-```
+### Requisitos
 
-**Documentation** (Spanish; start with `docs/README.md`, which indexes every file)
+- Windows 10/11 de 64 bits y una tarjeta gráfica con **OpenGL 3.3** (basta una integrada).
+- **Visual Studio 2022** con la carga de trabajo *Desarrollo de escritorio con C++*.
+- **Git**, y conexión a internet la primera vez (vcpkg descarga las dependencias).
 
-```
-docs/
-  README.md                         Index of all documents and their status
-  ESTADO_PROYECTO.md                Live status: current plan with task codes, progress, decisions, parameters, open problems
-  CONTEXTO_PROYECTO.md              What was promised: scope, acceptance criteria, stack, conventions
-  PLAN_ACTIVIDADES.md               Original work breakdown (60 activities, reference only)
-  FLUJO_DE_TRABAJO.md               How the team works: repository map, task cycle, Git rules
-  REFERENCIAS.md                    All APA 7 references of the project
-  entrega/                          Delivery: the two manual PDFs, release notes and checklist
-  manual_tecnico/, manual_usuario/  Source (Markdown) of the two manuals
-  videos/                           Scripts and notes of the 3 demo videos (the MP4 files are delivered separately, not in Git)
-  propuesta/                        Submitted proposal and work plan (PDF)
-  archivo/                          Superseded material, kept for history
-CLAUDE.md                           Project rules for the AI assistant (Claude Code)
-.claude/                            AI-assistant configuration (settings, commands and agents)
-```
+### Pasos
 
-## Build and run
-
-1. Install **Visual Studio 2022** with the *Desktop development with C++* workload.
-2. Install vcpkg once (this is what the team uses):
+1. **Clona el repositorio** y entra a la rama `develop` (la versión completa; ver [Estado](#estado-de-la-entrega-18-de-noviembre-de-2026)).
+2. **Instala vcpkg una sola vez** (así lo usa el equipo):
    ```
    git clone https://github.com/microsoft/vcpkg C:\vcpkg
    C:\vcpkg\bootstrap-vcpkg.bat
    C:\vcpkg\vcpkg integrate install
    ```
-   If vcpkg was cloned before, update it with `git -C C:\vcpkg pull`: `vcpkg.json` pins the library versions with a
-   `builtin-baseline`, and that commit must exist in your vcpkg copy.
-3. Open `NierikaStudio.sln`, choose **Release | x64** (or Debug) and press **F5**.
-   The first build downloads and compiles Assimp, GLFW, GLEW and GLM (about 10–20 min); later builds are fast.
+   Si ya tenías vcpkg, actualízalo con `git -C C:\vcpkg pull`: `vcpkg.json` fija las versiones con un `builtin-baseline`
+   y ese *commit* debe existir en tu copia.
+3. **Abre `NierikaStudio.sln`**, elige **Release | x64** (o Debug | x64) y presiona **F5**.
+   - La primera compilación descarga y compila Assimp, GLFW, GLEW y GLM (unos 10–20 minutos); las siguientes son rápidas.
+   - F5 ya fija el directorio de trabajo en la raíz del repositorio, así que las rutas relativas a `Models/`, `Shaders/` y `Audio/` funcionan sin configurar nada.
+4. Desde terminal (Developer PowerShell) también se puede compilar con
+   `msbuild NierikaStudio.sln /p:Configuration=Release /p:Platform=x64`; el ejecutable queda en `build/x64/<Configuración>/`.
 
-## Delivery and current status (Nov 18, 2026)
+**Si algo falla:** consulta [`docs/manual_usuario/05_problemas_frecuentes.md`](docs/manual_usuario/05_problemas_frecuentes.md).
+Un error del *baseline* de vcpkg casi siempre se arregla con el `git pull` del paso 2.
 
-| Item | Where | Status |
-|---|---|---|
-| Source code and Visual Studio project | this repository (`develop`) | Builds and runs in Visual Studio 2022 according to D2 (Nov 18); the game's behavior was not changed in the final repository review |
-| User manual and technical manual (PDF) | `docs/entrega/` | Generated Nov 18 from the Markdown sources; the technical manual still lacks D1's individual sections (g and j) |
-| 3 demo videos (MP4) | not in Git (~450 MB) | Recorded Nov 18 according to D2; delivered separately (`docs/videos/README.md`) |
-| Performance | `docs/manual_tecnico/15_anexo_pruebas.md` | Measured by D2 on an Intel Core i5 (11th gen) with integrated graphics: minimum 45 FPS, about 60 FPS on average (before the culling optimization: about 15 FPS). Only one machine was measured |
-| Standalone Release `.zip` | `tools/empaquetar_release.ps1` | **Not built or published yet**; not tested on a PC without Visual Studio |
-| D1's participation | `docs/manual_tecnico/05_e_roles_raci.md` | **No evidence of D1's work in the repository** (no commits or pull requests under D1's account); D1's individual texts are pending and nobody else writes them |
+## Rendimiento
 
-Open items and decisions are tracked in `docs/ESTADO_PROYECTO.md` (section 6 and section 7).
+Medido por D2 en un procesador Intel Core i5 de 11.ª generación con **gráficos integrados**, a 1280×720: **mínimo 45 FPS y promedio
+cercano a 60 FPS** (antes de la optimización por *frustum culling* eran unos 15 FPS). El requisito era ≥ 30 FPS.
+**Límite:** se midió en una sola máquina. Método y datos: [`docs/manual_tecnico/15_anexo_pruebas.md`](docs/manual_tecnico/15_anexo_pruebas.md).
 
-## License and credits
+## Tecnologías
 
-- **Source code** (`src/`, `Shaders/`, `tools/`) is released under the **MIT License** (see `LICENSE`).
-- **Models, textures and audio are not covered by that license.** The sea and music tracks are third-party recordings used
-  for non-commercial educational purposes, with no free license confirmed; the 12 narration files were synthesized with
-  ElevenLabs (voice and terms in `docs/manual_tecnico/13_m_creditos_licencias.md`); some textures are CC0 (Poly Haven).
-  Full credits and APA 7 references: `docs/REFERENCIAS.md`, `Audio/README.md` and the in-app Credits screen.
-  Do not redistribute them commercially.
-- Libraries in `vendor/` and those installed by vcpkg keep their own licenses.
-
-## Branching
-
-- `main` — tested, deliverable versions only.
-- `develop` — daily integration.
-- `feature/<task-code>-<name>` (e.g. `feature/a-10-dovelas`) — one branch per task; merged into `develop` through a pull request reviewed by the other team member.
-
-## Team — Nierika Studio (Team 15)
-
-| Member | Student ID |
+| Área | Herramientas |
 |---|---|
-| D1 | 319266894 |
-| D2 | 321332086 |
+| Lenguaje y API gráfica | C++17 · OpenGL 3.3 Core · GLSL 330 (sin OpenGL legacy) |
+| Bibliotecas | GLFW · GLEW · GLM · Assimp · SOIL2 / stb_image · Dear ImGui · miniaudio |
+| Entorno | Visual Studio 2022 (solo x64) · vcpkg |
+| Contenido | Blender · GIMP · texturas CC0 (Poly Haven, ambientCG) |
+| Gestión | Git / GitHub (ramas `feature/` + pull requests) · tablero Kanban |
 
----
+## Estructura del repositorio
 
-### Resumen (español)
+**Aplicación**
 
-Recorrido virtual 3D en tiempo real del Día de Muertos en Mazunte, Oaxaca: playa con velas y cempasúchil en el mar, panteón y cuarto del cementerio con altar de tres niveles. Navegación en primera persona con colisiones, iluminación Blinn-Phong, diez animaciones (cinco por cuadros clave), recorrido guiado narrado (tecla T) y 13 fichas culturales con fuente. Desarrollado en C++17 con OpenGL 3.3 en Visual Studio 2022. La documentación del proyecto está en `docs/`. El código tiene licencia MIT; los modelos, texturas y audio **no** (ver «License and credits»).
+```
+NierikaStudio.sln / .vcxproj   Solución de Visual Studio 2022 (solo x64)
+vcpkg.json                     Dependencias que instala vcpkg (assimp, glfw3, glew, glm), fijadas con builtin-baseline
+src/                           Código C++ (main.cpp y un módulo por función: Camera, Shader, Model, Mesh, Fichas, Audio, Menu, Recorrido, ...)
+vendor/                        SOIL2 + stb_image, Dear ImGui y miniaudio, compilados con el proyecto
+Models/<objeto>/               Modelo 3D: <objeto>.obj + .mtl + sus texturas (y el .blend de los modelos propios)
+Shaders/                       Shaders GLSL 330 core (.vs / .frag)
+Audio/                         Pistas de mar y música (Audio/README.md) y los 12 archivos de narración (Audio/narracion/)
+tools/                         Scripts auxiliares (generadores Blender/bpy, pruebas, empaquetado); ver tools/README.md
+LICENSE                        Licencia MIT del código
+```
+
+**Documentación** (en español; empieza por [`docs/README.md`](docs/README.md), que indexa todo)
+
+```
+docs/
+  README.md                         Índice de documentos y su estado
+  ESTADO_PROYECTO.md                Dónde vamos: plan con códigos de tarea, avance, decisiones, parámetros y problemas abiertos
+  CONTEXTO_PROYECTO.md              Qué se prometió: alcance, criterios de aceptación, stack y convenciones
+  PLAN_ACTIVIDADES.md               Las 60 actividades originales (solo referencia)
+  FLUJO_DE_TRABAJO.md               Cómo trabaja el equipo: mapa del repositorio, ciclo de tareas y reglas de Git
+  REFERENCIAS.md                    Referencias APA 7 de todo el proyecto
+  fichas_culturales.md              Texto y fuentes de las fichas culturales
+  RECORRIDO_GUIADO.md               Guion del recorrido guiado
+  entrega/                          Entrega: los dos manuales en PDF, notas de versión y lista de verificación
+  manual_tecnico/, manual_usuario/  Fuente (Markdown) de los dos manuales
+  videos/                           Guiones y notas de los 3 videos de demostración (los MP4 se entregan aparte, no están en Git)
+  propuesta/                        Propuesta y plan entregados (PDF)
+  archivo/                          Material reemplazado, conservado por historia
+CLAUDE.md                           Reglas del proyecto para el asistente de IA (Claude Code)
+.claude/                            Configuración del asistente de IA (ajustes, comandos y agentes)
+```
+
+## Estado de la entrega (18 de noviembre de 2026)
+
+Lo verificado en el repositorio se distingue de lo que solo declara el equipo.
+
+| Elemento | Dónde | Estado |
+|---|---|---|
+| Código y proyecto de Visual Studio | este repositorio, rama `develop` | Compila y corre en Visual Studio 2022 en la PC de D2 (**lo declara D2**; no se pudo comprobar desde la nube) |
+| Manual de usuario y manual técnico (PDF) | [`docs/entrega/`](docs/entrega/) | Generados el 18/11 desde las fuentes Markdown; al manual técnico aún le falta el texto individual de D1 (secciones g y j) |
+| 3 videos de demostración (MP4) | fuera de Git (≈ 450 MB) | Grabados el 18/11 según D2; se entregan aparte ([`docs/videos/README.md`](docs/videos/README.md)) |
+| Rendimiento | [`15_anexo_pruebas.md`](docs/manual_tecnico/15_anexo_pruebas.md) | 45 FPS mínimo y ≈ 60 de promedio en una sola máquina con gráficos integrados |
+| Release `.zip` autónomo | `tools/empaquetar_release.ps1` | **Aún no construido ni publicado**; no se probó en una PC sin Visual Studio |
+| Rama `main` | — | **Todavía no contiene la versión final** (sigue en la estructura inicial); todo el trabajo está en `develop` |
+| Participación de D1 | [`05_e_roles_raci.md`](docs/manual_tecnico/05_e_roles_raci.md) | **Sin evidencia en el repositorio** (ningún commit ni pull request a su nombre); sus textos individuales están pendientes y nadie más los escribe |
+
+Los pendientes y las decisiones se llevan en [`docs/ESTADO_PROYECTO.md`](docs/ESTADO_PROYECTO.md) (secciones 4, 6 y 7).
+
+## Licencia y créditos
+
+- El **código fuente** (`src/`, `Shaders/`, `tools/`) se publica bajo la **licencia MIT** (ver [`LICENSE`](LICENSE)); D2 la confirmó el 18/11.
+- **Los modelos, texturas y audio no están cubiertos por esa licencia.** Las pistas de mar y música son grabaciones de terceros usadas con
+  fines educativos no comerciales, sin licencia libre confirmada; los 12 archivos de narración se sintetizaron con ElevenLabs (voz y términos en
+  [`docs/manual_tecnico/13_m_creditos_licencias.md`](docs/manual_tecnico/13_m_creditos_licencias.md)); algunas texturas son CC0 (Poly Haven).
+  No los redistribuyas con fines comerciales.
+- Créditos y referencias APA 7: [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md), [`Audio/README.md`](Audio/README.md) y la pantalla de Créditos dentro del juego.
+  Algunas referencias de audio aún están pendientes de completar; el inventario marca cuáles.
+- Las bibliotecas de `vendor/` y las que instala vcpkg conservan sus propias licencias.
+
+## Ramas
+
+- `main` — solo versiones probadas y entregables.
+- `develop` — integración diaria.
+- `feature/<código>-<nombre>` (p. ej. `feature/a-10-dovelas`) — una rama por tarea; entra a `develop` por pull request.
+
+## Equipo — Nierika Studio (Equipo 15)
+
+| Integrante | Número de cuenta | Cuenta de GitHub |
+|---|---|---|
+| D1 | 319266894 | `thecurlyguy` — **sin confirmar**: D2 indica que es la cuenta de D1, pero no hay commits ni pull requests suyos que lo respalden |
+| D2 | 321332086 | `hugo12341234` |
