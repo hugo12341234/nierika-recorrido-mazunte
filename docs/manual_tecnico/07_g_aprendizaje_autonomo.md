@@ -18,7 +18,7 @@ Cada integrante tiene su archivo en `docs/manual_tecnico/individual/`:
 
 | Integrante | Archivo | Estado al 18/11/2026 |
 |---|---|---|
-| D1 (319266894) | `D1_aprendizaje_autonomo.md` | **Plantilla vacía**: la completa D1 |
-| D2 (321332086) | `D2_aprendizaje_autonomo.md` | **Borrador con datos del repositorio**: lo revisa y completa D2 |
+| D1 (319266894) | `D1_aprendizaje_autonomo.md` | Completo (texto de D1) |
+| D2 (321332086) | `D2_aprendizaje_autonomo.md` | Completo (texto de D2) |
 
-Al terminar, se vuelve a generar el PDF con `python3 tools/e5_exportar_pdf.py tecnico`. Los textos de los integrantes aparecen a continuación.
+Los textos de los integrantes aparecen a continuación.

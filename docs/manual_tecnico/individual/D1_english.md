@@ -1,11 +1,9 @@
 ## j.4 Team member D1 (319266894)
 
-> **PENDING: D1 writes this text.** It cannot be written for D1: it describes their own experience. Delete this box when finished (about 300 to 500 words, in English).
+**Participation.** My main contributions to the project were the lighting and several 3D models. I adapted the lighting from my Practice 8: one directional light, four animated point lights, a spotlight on the cross and six spotlights on the steps. This became the base of the final Blinn-Phong lighting of the scene. I also modeled objects in Autodesk Maya for the altar and the offering: the skull, the bread of the dead, the flower, fire, smoke, butterflies, flower pots, a picture frame, a soda bottle and paper decorations. I also made the first version of the 10-piece silhouette. Several of these models are part of the final scene, especially the fire, the smoke, the papers, the pots and the picture frame.
 
-**Participation:** [What did you do in the project? The repository records D1's lighting work (Blinn-Phong with animated point lights), the Maya models and the 10-piece silhouette model.]
+**Difficulties.** The hardest technical part was exporting the Maya models to OBJ so that they looked correct in OpenGL. Sometimes the normals or the texture coordinates did not work as expected, and the scale and orientation did not match the scene. My textures were also too large, 2048 pixels, so they had to be reduced to 1K. The most important difficulty, however, was teamwork. I delivered my work to my teammate outside the Git repository instead of uploading it myself, so it was integrated late, and my teammate had to adapt the lighting so that it worked with the rest of the code.
 
-**Difficulties:** [What was hard, and how did you deal with it?]
+**Learning.** I learned how lights are calculated in a shader: the ambient, diffuse and specular components, and how directional lights, point lights and spotlights behave and lose intensity with distance. I also learned how to animate a light with a sine function over time, so that it moves smoothly. With Maya I improved my modeling, texturing and exporting skills, and I understood that a model must be prepared for a real-time program, not only look good in the modeling software. About teamwork, I learned that it is important to work inside the shared repository and use the tools the team agreed on, such as Git and Trello, so that everyone can see the progress and the work can be integrated on time.
 
-**Learning:** [What did you learn about computer graphics, teamwork and tools?]
-
-**Looking back:** [What would you do differently?]
+**Looking back.** I would join the repository from the first week, upload my work with my own commits and pull requests, and review my teammate’s changes. I would also deliver my models earlier and with the right texture size, so that they could be integrated before the last two weeks of the project. Finally, I would communicate more often with my teammate to share the workload in a more balanced way.
