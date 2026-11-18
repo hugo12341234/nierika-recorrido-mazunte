@@ -137,11 +137,11 @@ ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz]. https://elevenlabs
 
 **[T-04]** Poly Haven. (s. f.). *License*. https://polyhaven.com/license — ✅ Todos los assets son CC0 («effectively Public Domain»), uso libre incluso comercial; «You do not need to give credit… although it is appreciated».
 
-### 3.2 Texturas y modelos de origen NO registrado (⏳ pendientes de D2)
+### 3.2 Texturas de la fachada (propias, confirmado por D2) y modelos de Maya de D1 (pendiente)
 
-**[T-05] `laminado1.jpg`** (512×512; fachada y techo): ⏳ **textura de origen no documentado.** Qué se investigó: (1) aparece desde el primer commit del repo con el modelo (`5ef12a2`, 19/10/2026, `Models/fachada/`), junto con `concreto.jpg`, ya referenciado por `fachada.mtl` generado con Blender 4.4.3; el historial de git no tiene un commit anterior; (2) el archivo no trae metadatos (sin EXIF; JFIF, 72 dpi, SHA-1 `6a3bc76bca9f…`); (3) ni el ESTADO ni el manual registran su origen; (4) un archivo local no se puede rastrear en la web. **No se afirma que sea de Poly Haven ni de ambientCG** (la propuesta dice que las texturas vienen de esos sitios, pero eso no demuestra el origen de este archivo). Queda listada como **textura de origen no documentado** en el manual y los créditos; D2 solo necesita decir de dónde la bajó (sitio, autor, licencia) para completar la referencia.
+**[T-05] `laminado1.jpg`** (512×512; fachada y techo): 🤝 **textura propia: D2 confirmó el 18/11/2026 que la crearon ellos en Blender.** No es una fuente externa y no lleva referencia (el historial de git y el archivo no lo contradicen, pero tampoco lo prueban: sin metadatos, llegó en el commit `5ef12a2` del 19/10 junto con la fachada de Blender 4.4.3; SHA-1 `6a3bc76bca9f…`). El menú de créditos aún dice «Pendiente: origen de laminado1.jpg» (`src/Menu.cpp`): ese texto quedó desactualizado, y no se modifica por decisión de D2.
 
-**[T-06] `concreto.jpg`** (arco, fachada y piso): ⏳ **textura de origen no documentado**, mismas condiciones que T-05 (llegó en el mismo commit `5ef12a2`, 178,040 bytes). **El menú de créditos y el manual solo mencionan `laminado1.jpg`**: `concreto.jpg` no aparece en ningún crédito (ver H-6).
+**[T-06] `concreto.jpg`** (arco, fachada y piso): 🤝 **textura propia, creada en Blender (confirmado por D2 el 18/11/2026)**; mismas condiciones que T-05 (mismo commit `5ef12a2`). No lleva referencia y no aparecía en créditos (solo cae bajo «las demás texturas son del equipo», H-6).
 
 **[T-07] Modelos de Maya de D1** (`calavera`, `pan`/`pan_muerto` de D1, `flor`, `altar` (capilla provisional), y el zip del altar subido en X-43: `cuadro`, `fuego`, `humo`, `mariposa_*`, `mazeta`, `refresco`, `papel_fucsia`, `papel_morado`, `papel_naranja`): ⏳ **PENDIENTE — autoría y herramienta sin confirmar.** El ESTADO los marca como extras que **no cuentan como propios**; D1 se los pasó a D2, la herramienta con la que se hicieron **no está confirmada** (las texturas tienen formato de generador automático) y el retrato del `cuadro` parece una persona real (**permiso sin confirmar**). Sin esos datos no se puede escribir su referencia APA. D1 debe indicar herramienta, fuente y si hay terceros.
 
@@ -255,7 +255,7 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 
 ### 7.2 Documentación del proyecto incompleta o contradictoria
 
-- **H-6 · `concreto.jpg` sin crédito.** Se usa en arco, fachada y piso y **no aparece en ningún crédito** (T-06).
+- **H-6 · `concreto.jpg`.** Se usa en arco, fachada y piso y no aparecía en ningún crédito; **resuelto:** es propia (Blender), D2 lo confirmó el 18/11. El menú de créditos sigue diciendo «Pendiente: origen de laminado1.jpg»: texto desactualizado, sin cambiar por decisión de D2.
 - **H-7 · Versión de Blender.** Los documentos citan Blender 4.4.3, 5.2, 5.2.2, 5.2.4 y 5.3 (`bpy`). Puede ser correcto (distintas PC/etapas), pero no hay una versión única para citar. Propuesta: anotar `bpy.app.version_string` o `Help > About` en cada PC (era X-1 🔄).
 - **H-8 · GIMP.** El manual técnico §3 dice «sin uso registrado» (las texturas propias salieron de scripts de Python), pero el menú de créditos (`Menu.cpp`) y el README lo listan. Decidir: quitar GIMP de los créditos o registrar para qué se usó.
 - **H-9 · miniaudio.** El repo trae la v0.11.26 (31/10/2026); la página de GitHub leída mostraba 0.11.25 (04/03/2026) como «Latest». No es un error del proyecto (se cita la del repo); solo conviene no escribir la versión de la web.
@@ -271,9 +271,9 @@ No se pudo comprobar hoy (sin ISBN/DOI a mano o error de lectura): Marschner y S
 
 ## 8. Qué falta (lo que queda abierto)
 
-Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03) y `musica.mp3` = el video de «Ricardo Tizo» (A-02). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
+Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02) y `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
 
-1. **`laminado1.jpg` y `concreto.jpg` (T-05, T-06):** de dónde se bajaron (sitio, autor, licencia). Mientras tanto quedan como textura de origen no documentado.
+1. ~~`laminado1.jpg` y `concreto.jpg`~~: **cerrado (18/11)**, son propias (Blender).
 2. **Oleaje (A-01):** abrir el video una vez y confirmar canal («Quiet») y fecha (31/03/2020).
 3. **Modelos de Maya de D1 (T-07):** herramienta, fuente y permiso del retrato del cuadro (D1).
 4. **«Al atardecer» (H-1):** comprobación visual en el artículo de Baños (opcional).
@@ -284,13 +284,13 @@ Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03) y `musica.mp3` = el video 
 
 ## 9. Conteo (consulta del 18/11/2026)
 
-| Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ origen por documentar |
+| Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ pendiente (T-07) |
 |---|---|---|---|---|---|---|
 | C · fuentes culturales y de contenido | 24 | 11 | 0 | 2 | 11 | 0 |
 | A · música, audio y voz | 4 | 0 | 2 | 2 | 0 | 0 |
-| T · texturas y modelos externos | 7 | 4 | 0 | 0 | 0 | 3 |
+| T · texturas y modelos externos | 7 | 4 | 2 | 0 | 0 | 1 |
 | S · bibliotecas, software y estándares | 23 | 9 | 0 | 10 | 4 | 0 |
 | M · bibliografía técnica y matemática | 10 | 7 | 0 | 3 | 0 | 0 |
-| **Total** | **68** | **31** | **2** | **17** | **15** | **3** |
+| **Total** | **68** | **31** | **4** | **17** | **15** | **1** |
 
 Los 11 ❌ del grupo C son 10 citas de la propuesta que no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye A-01 (falta que D2 confirme canal y fecha) y A-04.
