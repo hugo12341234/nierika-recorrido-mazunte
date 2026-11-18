@@ -44,6 +44,6 @@ El oleaje y la música son de terceros y se usan con fines educativos; **no se d
 
 ## m.6 Pendientes que solo el equipo puede cerrar
 
-- El texto de la pantalla de Créditos del programa todavía dice «Pendiente: origen de laminado1.jpg»; está desactualizado (la textura es propia) y no se modificó porque ya no se cambia el código.
+- ~~Texto «Pendiente: origen de laminado1.jpg» en Créditos~~: **cerrado**. La pantalla de Créditos ya declara `laminado1.jpg` y `concreto.jpg` como texturas propias hechas en Blender (X-69); si se ve el texto viejo, es un ejecutable anterior al 18/11 y hay que recompilar.
 - Confirmar canal y fecha del oleaje.
 - Registrar las versiones de las bibliotecas de vcpkg, de Blender, Visual Studio y Maya.

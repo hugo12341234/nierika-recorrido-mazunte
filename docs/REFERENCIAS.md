@@ -139,7 +139,7 @@ ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz]. https://elevenlabs
 
 ### 3.2 Texturas de la fachada (propias, confirmado por D2) y modelos de Maya de D1 (pendiente)
 
-**[T-05] `laminado1.jpg`** (512×512; fachada y techo): 🤝 **textura propia: D2 confirmó el 18/11/2026 que la crearon ellos en Blender.** No es una fuente externa y no lleva referencia (el historial de git y el archivo no lo contradicen, pero tampoco lo prueban: sin metadatos, llegó en el commit `5ef12a2` del 19/10 junto con la fachada de Blender 4.4.3; SHA-1 `6a3bc76bca9f…`). El menú de créditos aún dice «Pendiente: origen de laminado1.jpg» (`src/Menu.cpp`): ese texto quedó desactualizado, y no se modifica por decisión de D2.
+**[T-05] `laminado1.jpg`** (512×512; fachada y techo): 🤝 **textura propia: D2 confirmó el 18/11/2026 que la crearon ellos en Blender.** No es una fuente externa y no lleva referencia (el historial de git y el archivo no lo contradicen, pero tampoco lo prueban: sin metadatos, llegó en el commit `5ef12a2` del 19/10 junto con la fachada de Blender 4.4.3; SHA-1 `6a3bc76bca9f…`). El menú de créditos ya no dice «Pendiente»: desde X-69 (PR #150) `src/Creditos.h` la lista como textura propia hecha en Blender; la verificación del 18/11 (X-71) confirmó que ningún archivo de `src/` conserva ese texto.
 
 **[T-06] `concreto.jpg`** (arco, fachada y piso): 🤝 **textura propia, creada en Blender (confirmado por D2 el 18/11/2026)**; mismas condiciones que T-05 (mismo commit `5ef12a2`). No lleva referencia y no aparecía en créditos (solo cae bajo «las demás texturas son del equipo», H-6).
 
@@ -255,7 +255,7 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 
 ### 7.2 Documentación del proyecto incompleta o contradictoria
 
-- **H-6 · `concreto.jpg`.** Se usa en arco, fachada y piso y no aparecía en ningún crédito; **resuelto:** es propia (Blender), D2 lo confirmó el 18/11. El menú de créditos sigue diciendo «Pendiente: origen de laminado1.jpg»: texto desactualizado, sin cambiar por decisión de D2.
+- **H-6 · `concreto.jpg`.** Se usa en arco, fachada y piso y no aparecía en ningún crédito; **resuelto:** es propia (Blender), D2 lo confirmó el 18/11. El menú de créditos ya no dice «Pendiente» (corregido en X-69; comprobado en X-71).
 - **H-7 · Versión de Blender.** Los documentos citan Blender 4.4.3, 5.2, 5.2.2, 5.2.4 y 5.3 (`bpy`). Puede ser correcto (distintas PC/etapas), pero no hay una versión única para citar. Propuesta: anotar `bpy.app.version_string` o `Help > About` en cada PC (era X-1 🔄).
 - **H-8 · GIMP.** El manual técnico §3 dice «sin uso registrado» (las texturas propias salieron de scripts de Python), pero el menú de créditos (`Menu.cpp`) y el README lo listan. Decidir: quitar GIMP de los créditos o registrar para qué se usó.
 - **H-9 · miniaudio.** El repo trae la v0.11.26 (31/10/2026); la página de GitHub leída mostraba 0.11.25 (04/03/2026) como «Latest». No es un error del proyecto (se cita la del repo); solo conviene no escribir la versión de la web.
