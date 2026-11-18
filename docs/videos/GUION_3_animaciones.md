@@ -1,50 +1,34 @@
-# Video 3 — Animaciones e interactividad (≈ 3:00–4:00)
+# Video 3 — Animaciones y elementos culturales interactivos
 
-> **Qué muestra:** las 5 animaciones, una por una, con su idea matemática, y la interactividad (cámara, colisiones, luces, fichas).
-> **Verificado (de `justificacion_simples.md` y `justificacion_complejas.md`):** valores de abajo con su fuente. **Inferido:** tiempos y qué tan visibles se ven
-> en pantalla (hay que probarlo). Regla del cliente: **solo** la caminata y «dejar flores» son KeyFrames.
+- **Archivo:** `Evidencia3_Equipo15_319266894_321332086.mp4` · **Duración:** 3:04 · 1280×720, 30 fps, H.264 + AAC
+- **Rúbrica:** (c) animaciones y elementos culturales interactivos (el CONTEXTO §9 lo llama «animaciones e interactividad»).
+- **Narración:** ninguna; solo **rótulos**, con el audio real del programa. *Según el hilo de grabación.*
+- **Qué muestra (según el hilo):** las **10 animaciones**, las **fichas culturales** y la tecla **V**.
 
-## Las 5 animaciones (conteo oficial: CONTEXTO §2 y §6 «olas, velas y flores» + 2 KeyFrames)
-| # | Animación | Tipo | Idea matemática (para decirla en una frase) |
-|---|---|---|---|
-| 1 | Olas | Simple | Suma de **3 senoidales** en el *vertex shader*: amplitudes 0.040 / 0.025 / 0.015 m, longitudes de onda 12 / 7 / 4.5 m |
-| 2 | Velas flotando | Simple | Trayectoria de **Bézier** mar adentro + vaivén **senoidal** (0.012 m, periodo 2.4 s), 4 velas con desfase 2πj/4. Su **llama** (ruido de Perlin, 3 octavas, en el *fragment shader*) es parte de esta animación, no una sexta |
-| 3 | Flores flotando | Simple | **Movimiento circular** de radio pequeño + rotación sobre su eje, con pausas |
-| 4 | Caminata de la silueta | KeyFrames | **Slerp** de cuaterniones + **smoothstep**; jerarquía cadera–rodilla, hombro–codo; 18.33 s |
-| 5 | Dejar la flor | KeyFrames | **Bézier cuadrática** que coincide con una caída libre (0.38 m en 0.429 s) |
+## Las 10 animaciones (ESTADO, decisión 17/11 X-55; valores de `docs/manual_tecnico/justificacion_*.md`)
+| # | Animación | Tipo | Idea matemática | Fuente de los valores |
+|---|---|---|---|---|
+| 1 | Olas | Simple | Suma de 3 senoidales en el *vertex shader* (0.040 / 0.025 / 0.015 m; 12 / 7 / 4.5 m de longitud de onda) | `justificacion_simples.md` |
+| 2 | Velas flotando (con su llama) | Simple | Trayectoria de Bézier + vaivén senoidal (0.012 m, 2.4 s); llama con ruido de Perlin | `justificacion_simples.md` |
+| 3 | Flores flotando | Simple | Movimiento circular + rotación, con pausas | `justificacion_simples.md` |
+| 4 | Caminata de la silueta | KeyFrames | Slerp de cuaterniones + smoothstep; jerarquía de articulaciones | `justificacion_complejas.md` |
+| 5 | Dejar la flor | KeyFrames | Bézier cuadrática que coincide con una caída libre | `justificacion_complejas.md` |
+| 6 | Baile familiar | KeyFrames | Órbita de 8 s con 12 KeyFrames de radio 0.95 m, paso de 2 s | `justificacion_personas.md` |
+| 7 | Juego con el perro | KeyFrames | Pelota con tiro parabólico (1.5 s de vuelo), ciclo de 10 s | `justificacion_personas.md` |
+| 8 | Sahumerio con copal | KeyFrames | Copalero como péndulo (14°, 1.1 s), ciclo de 9 s; sin humo con partículas | `justificacion_personas.md` |
+| 9 | Banda al compás | Simple | Rebote al compás de 90 BPM, 1.2–3.6 cm según la sección | `justificacion_personas.md` |
+| 10 | Anfitriona que saluda | Simple | Gira hacia el visitante a < 9 m con τ = 1/3 s | `justificacion_personas.md` |
 
-> **Nota de conteo (inferido, confirmar):** el ESTADO (C-5/C-8) nombra la llama aparte (C-2), pero el CONTEXTO cuenta solo 3 simples (olas, velas y flores).
-> **Pendiente (17/11, X-55):** este guion **no** incluye las 5 animaciones nuevas (baile familiar, juego con el perro, sahumerio, banda al compás, anfitriona; ver `docs/manual_tecnico/justificacion_personas.md`). Hay que agregarlas y volver a grabar el video 3.
-> Este guion trata la llama como parte de las velas para que el video diga «5 animaciones». Si D2 prefiere otro conteo, se registra en el ESTADO y se ajusta el video.
+Velas, llama, olas, flores flotantes, papel picado y humo **no** son KeyFrames. Conteo: 5 KeyFrames + 5 simples. Las 5 primeras son las de la propuesta; las otras 5 se agregaron el 17/11 (X-55).
+Los valores 6 a 10 son del ESTADO (registrados el 17/11). Según el hilo de grabación, el video se hizo corriendo el juego real.
 
-## Tomas a grabar
-| Toma | Qué hacer | Duración |
-|---|---|---|
-| A | Orilla, mirando el mar: dejar correr las olas 10 s | 15 s |
-| B | Velas flotando; acercarte a ver el vaivén | 20 s |
-| C | Llama de una vela del altar, de cerca (≈ 1 m) | 15 s |
-| D | Flores flotando en la orilla | 20 s |
-| E | **R** en la orilla; la silueta camina completa (≈ 18 s) vista de lado | 30 s |
-| F | La silueta llega al cuarto y suelta la flor (≈ 4 s); repetir con **R** y verla otra vez | 25 s |
-| G | Interactividad: caminar hacia un muro (colisión), tecla **V** cerca del altar (velas), **M** (sonido) y **F1** (ayuda), acercarse y alejarse de una ficha | 40 s |
+## Qué se ve, además
+- **Fichas culturales** (a < 2 m): lista de las 13 en `GUION_2_recorrido.md`.
+- **Tecla V:** enciende y apaga las velas del altar (a menos de 3 m).
+- El orden y los minutos de cada animación dentro de los 3:04 **no están verificados**; se confirma al ver el MP4.
 
-## Guion
-| Tiempo | Imagen | Narración |
-|---|---|---|
-| 0:00 | Título «Animaciones e interactividad» | «Este video muestra las animaciones del proyecto y cómo interactúa el visitante.» |
-| 0:10 | Toma A | «Primera animación simple: las olas. Se calculan en el *vertex shader* sumando tres senoidales de distintas amplitudes y longitudes de onda; la luz reacciona porque también se calcula su normal.» |
-| 0:30 | Toma B | «Segunda: las velas flotan siguiendo una curva de Bézier mar adentro, con un vaivén senoidal desfasado para que cada vela se mueva distinto.» |
-| 0:55 | Toma C | «La llama de esas velas parpadea con ruido de Perlin calculado en el *fragment shader*; forma parte de la animación de las velas.» |
-| 1:10 | Toma D | «Las flores flotan con un movimiento circular y una rotación continua, con pausas.» |
-| 1:35 | Toma E | «Ahora las animaciones por KeyFrames. La silueta camina con una jerarquía de articulaciones; entre posturas interpolamos con *slerp* de cuaterniones y suavizamos con *smoothstep*.» |
-| 2:10 | Toma F | «Al llegar al altar extiende el brazo y suelta una flor. Su trayectoria es una Bézier cuadrática que reproduce una caída libre.» |
-| 2:40 | Toma G (colisión) | «La cámara en primera persona tiene colisiones: no atravesamos muros ni el altar.» |
-| 3:00 | Toma G (V, M, F1) | «Cerca del altar, la tecla V enciende o apaga las velas; con M elegimos entre el mar y la música, y F1 muestra los controles.» |
-| 3:15 | Toma G (ficha) | «Y al acercarnos a menos de dos metros aparece la ficha cultural; al alejarnos desaparece.» |
-| 3:35 | Cierre | «La justificación matemática de cada animación está en el manual técnico.» |
-
-## Confirmar antes de publicar
-- [ ] Confirmar el conteo (la llama dentro de «velas»; ver la nota de arriba).
-- [ ] Que cada frase matemática coincida con los valores reales del código (`src/Olas.h`, `src/main.cpp`, `Shaders/lighting.frag`, `src/Animacion.cpp`, `src/DejarFlor.h`); si cambió algo, usar el valor del código.
-- [ ] Que «velas, llama, olas y flores flotantes no son KeyFrames» se diga igual que en `justificacion_*.md`.
-- [ ] No afirmar que «ninguna animación es del curso» sin haber revisado el argumento de D-7 §5 con D2 (el ESTADO lo deja pendiente).
+## Antes de entregar, confirmar al ver el MP4
+- [ ] Que aparezcan las 10 animaciones de la tabla (no solo las 5 originales).
+- [ ] Que cada rótulo diga KeyFrames o simple como en la tabla.
+- [ ] Que no se diga «ninguna es del curso» sin el argumento de D-7 §5 (ESTADO lo deja pendiente de revisión).
+- [ ] Que los valores de los rótulos coincidan con el código (`src/Olas.h`, `src/Animacion.cpp`, `src/DejarFlor.h`, `src/PersonasAnim.cpp`).

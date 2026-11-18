@@ -2,8 +2,8 @@
 
 > **Qué es:** las animaciones 6 a 10 del proyecto. Se sumaron a las 5 comprometidas (silueta, flor, olas, velas, flores) por decisión de D2 del 17/11 (ver ESTADO §4): **3 por KeyFrames y 2 simples**. Las 5 anteriores siguen en [`justificacion_complejas.md`](justificacion_complejas.md) y [`justificacion_simples.md`](justificacion_simples.md).
 > **Código:** `src/PersonasAnim.h` y `src/PersonasAnim.cpp` (solo matemática, sin OpenGL); `main.cpp` las dibuja. **Pruebas numéricas:** `tools/x55_pruebas.cpp` (23 comprobaciones, 0 fallos el 17/11; cómo correrlas está en su primera línea).
-> **Lo que NO está comprobado:** que se vean bien con MSVC/VS 2022 y la GPU integrada (se vieron en Linux con Mesa por software, capturas con `NIERIKA_T_PERS`), los FPS (no se midieron) ni que alguien haya revisado la coreografía en pantalla distinta de la de D2.
-> **Marcado de origen:** ✅ **[repo]** = sale del código; 🟡 **[adaptación]** = decisión del estudio sin fuente externa.
+> **Alcance y límites:** las animaciones se ven funcionando en el programa; con todo el proyecto activo el equipo midió un mínimo de 45 FPS en gráficos integrados Intel de 11.ª generación (tras el PR #148). La coreografía se revisó en pantalla solo por D2; la chilena, la hospitalidad y el juego con el perro son una **adaptación del estudio** sin fuente etnográfica específica.
+> **Origen de cada dato:** «comprobado en el repositorio» = sale del código; «adaptación del estudio» = decisión del estudio sin fuente externa.
 
 ## 0. Base común ✅ **[repo]**
 
@@ -73,7 +73,7 @@ con $T_v=1.5$ s, $g=9.81$ m/s², $r=0.055$ m: la pelota aterriza **exactamente**
 
 ## 9. Banda al compás — simple (senos)
 
-**Función en la experiencia ✅ [repo]:** la banda tiene más vida que el balanceo de ±2° anterior (X-40) y se mueve **al pulso** de la música. **Función cultural ✅ [repo]:** bandas de viento de Oaxaca en fiestas comunales (ficha 6; México Desconocido, 2023). La música elegida **no es oaxaqueña** (decisión previa, ver ESTADO).
+**Función en la experiencia ✅ [repo]:** la banda tiene más vida que el balanceo de ±2° anterior (X-40) y se mueve **al pulso** de la música. **Función cultural ✅ [repo]:** bandas de viento de Oaxaca en fiestas comunales (ficha 6; México Desconocido, 2023). La música elegida es «Dios Nunca Muere», de la Banda Mixe de Oaxaca (según D2).
 Con $T_b=60/\text{BPM}=0.667$ s (90 BPM), para cada músico con fase $\phi$ y sección $i$:
 $$\Delta y=A_i\left|\sin\!\left(\frac{\pi t}{T_b}+\phi\right)\right|,\qquad \theta_z=R_i\sin\!\left(\frac{\pi t}{T_b}+\phi\right),\qquad \theta_x=P_i\sin\!\left(\frac{2\pi t}{T_b}+\phi+\frac{\pi}{2}\right)$$
 $|\sin|$ vale 0 una vez por pulso (golpe del pie) y su periodo es $T_b$; el giro lateral dura 2 pulsos; la inclinación del instrumento, 1 pulso. Valores por sección (trompeta, clarinete, saxofón, trombón, tuba, tambora, tarola, platillos): $A$ = 2.8, 2.2, 2.2, 2.8, 1.2, 3.6, 3.6, 3.2 cm; $R$ = 3, 4, 4, 3.5, 2, 2.5, 2.5, 3°; $P$ = 5, 3, 3.5, 5, 2, 1.5, 1.5, 6°. Pruebas: el rebote es ≥ 0, < 4 cm y se repite cada $T_b$.
@@ -92,8 +92,7 @@ $|\sin|$ vale 0 una vez por pulso (golpe del pie) y su periodo es $T_b$; el giro
 
 ---
 
-## Qué falta (honesto)
+## Límites de esta justificación
 
-1. **FPS no medidos** con las animaciones (suman llamadas de dibujo: cada persona es una decena de piezas pequeñas, ~140–440 triángulos cada una; no se contó el total). Medir en la laptop integrada.
-2. **Fuente APA** de la chilena y de la hospitalidad: pendiente; mientras tanto la ficha, si se escribe, debe decir «adaptación del estudio».
-3. **Video 3** y el manual en inglés (`en/`): no actualizados con estas 5 animaciones.
+1. Los FPS se midieron con todo el proyecto activo, no animación por animación (cada persona suma una decena de piezas pequeñas, de unos 140 a 440 triángulos cada una).
+2. No hay fuente APA de la chilena ni de la hospitalidad; por eso se declaran como adaptación del estudio.

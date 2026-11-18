@@ -1,40 +1,64 @@
-# 1. Qué es el recorrido y qué necesitas
+# 1. Qué es el recorrido y cómo abrirlo
 
 ## 1.1 Qué es
-Un recorrido virtual 3D en primera persona del Día de Muertos en Mazunte, Oaxaca: caminas de la playa
-al panteón y entras a un cuarto con una ofrenda. *(Alcance: `docs/CONTEXTO_PROYECTO.md`.)*
+
+**Recorrido virtual: Día de Muertos en Mazunte** es una experiencia 3D en primera persona, en tiempo real, hecha por Nierika Studio (Equipo 15). Empieza al atardecer en la playa de Mazunte, Oaxaca, donde se ofrendan velas y flores de cempasúchil al mar, y te lleva por el panteón hasta un cuarto con una ofrenda de tres niveles. Caminas libremente, escuchas el mar y la música de una banda de viento, abres fichas con la explicación cultural de cada elemento (con su fuente) o dejas que un recorrido narrado te lleve por 12 estaciones.
+
+Este manual explica cómo **ejecutarla**, **moverte** e **interactuar**. Si buscas cómo está hecha por dentro, consulta el Manual técnico.
 
 ## 1.2 Qué necesitas
-| Requisito | Valor | Estado |
-|---|---|---|
-| Sistema | Windows, **solo 64 bits (x64)** | Real (CLAUDE.md §3) |
-| Gráficos | Compatibles con **OpenGL 3.3** | Real |
-| Resolución de la ventana | **1280 × 720** (fija en el código) | Real (`WIDTH, HEIGHT`) |
-| Rendimiento esperado | ≥ 30 FPS en una laptop con gráficos integrados | **Objetivo, sin medir** en ese equipo (ver `manual_tecnico/08_pruebas_y_rendimiento.md` §8.2.1) |
-| Teclado y ratón | Sí | Real |
-| Sonido | Opcional: si no hay tarjeta de sonido o faltan los archivos de `Audio/`, el programa avisa en la consola y sigue sin audio | Real (`Audio.cpp`) |
+
+| Requisito | Valor |
+|---|---|
+| Sistema operativo | Windows de 64 bits |
+| Gráficos | Cualquier tarjeta compatible con **OpenGL 3.3** (basta la gráfica integrada del procesador) |
+| Pantalla | La ventana mide **1280 × 720** píxeles y no cambia de tamaño |
+| Teclado y ratón | Sí (se necesitan los dos) |
+| Sonido | Recomendado, pero opcional: sin salida de audio el programa funciona sin sonido |
+| Rendimiento | El equipo midió el programa en una laptop con procesador Intel Core i5 de 11.ª generación y **gráficos integrados**: mínimo 45 y promedio de unos 60 cuadros por segundo. En una tarjeta gráfica dedicada midió entre 200 y 340 |
 
 ## 1.3 Cómo abrirlo
-**PENDIENTE (E-3, E-7).** Aquí irá: descomprimir el `.zip` publicado en el *Release* de GitHub y ejecutar `NierikaStudio.exe`.
-El script que arma el paquete existe (`tools/empaquetar_release.ps1`, E-3) pero el `.zip` todavía no se publicó ni se probó en otra PC.
-Hasta entonces el programa se compila desde Visual Studio 2022 (ver `README.md` de la raíz).
 
-## 1.4 Menú de inicio (X-63)
-Al abrir el programa aparece primero un **menú de inicio** sobre la escena, que da vueltas despacio de fondo. La silueta, el recorrido y la música **todavía no empiezan**. Botones: **Iniciar recorrido** (arranca todo desde el panteón, como antes), **Controles** (las teclas reales), **Créditos** (equipo y **todas las referencias del proyecto en APA 7**, agrupadas por tema: fuentes culturales, música y voz, texturas, bibliotecas y bibliografía técnica; es una lista larga: se baja con la rueda del ratón o las flechas) y **Salir**. Se elige con clic o con flechas y Enter; **Esc** sale. Dentro del recorrido, **Esc** abre la misma pantalla como pausa.
+Hay dos formas, según lo que hayas recibido.
+
+**A. Con el paquete listo (carpeta o archivo .zip del Release)**
+
+1. Si recibiste un archivo `.zip`, **descomprímelo por completo** en una carpeta (no ejecutes el programa desde dentro del `.zip`).
+2. Abre `NierikaStudio.exe`. No hace falta instalar nada más.
+3. Deja el `.exe` junto a las carpetas `Models`, `Shaders` y `Audio`: el programa las busca ahí.
+4. Si Windows avisa que falta `VCRUNTIME140.dll` o `MSVCP140.dll`, instala el *Microsoft Visual C++ Redistributable* de 64 bits (gratuito, de Microsoft) y vuelve a abrir el programa.
+
+**B. Desde el proyecto de Visual Studio 2022 (código fuente)**
+
+1. Instala **Visual Studio 2022** con la carga de trabajo *Desarrollo de escritorio con C++*.
+2. Instala **vcpkg** una sola vez (`git clone https://github.com/microsoft/vcpkg C:\vcpkg`, luego `C:\vcpkg\bootstrap-vcpkg.bat` y `C:\vcpkg\vcpkg integrate install`). Las bibliotecas Assimp, GLFW, GLEW y GLM se descargan solas al compilar la primera vez (unos 10 a 20 minutos).
+3. Abre `NierikaStudio.sln`, elige **Release | x64** y pulsa **F5**.
+
+En ambos casos la primera pantalla es el menú de inicio.
+
+## 1.4 Menú de inicio
+
+Al abrir el programa aparece un **menú de inicio** sobre la escena, que gira despacio de fondo. La silueta, el recorrido y la música todavía no empiezan.
+
+| Botón | Qué hace |
+|---|---|
+| **Iniciar recorrido** | Comienza la experiencia en el panteón: empieza a sonar el audio y la silueta inicia su caminata |
+| **Controles** | Muestra la lista de teclas |
+| **Créditos** | Muestra el equipo y todas las referencias del proyecto en formato APA 7 (se baja con la rueda del ratón o las flechas) |
+| **Salir** | Cierra el programa |
+
+Se elige con clic o con las flechas y **Enter**. En este menú, **Esc** cierra el programa.
 
 ![Menú de inicio](capturas/01_menu_inicio.jpg)
 
 ![Créditos](capturas/01_menu_creditos.jpg)
 
-![Créditos, final de la lista](capturas/01_menu_creditos_fin.jpg)
+## 1.5 Qué ves al empezar
 
-*Capturas de Créditos del 18/11/2026 (X-69); las demás del 17/11/2026, hechas en Linux (Mesa, sin sonido) con las variables de desarrollo `NIERIKA_UI=menu_creditos_fin` y `NIERIKA_MENU_PNG`; falta verlo en la PC de D2 con VS 2022.*
+La ventana se titula *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte* y, tras unos instantes, agrega los cuadros por segundo (por ejemplo, `60 FPS`). El cursor desaparece: el ratón ahora controla la cámara. Empiezas en el **panteón**, a 6 metros del cuarto del cementerio, con la altura de los ojos de una persona (1.6 m). Como estás bajo el papel picado, lo primero que aparece es la ficha del papel picado.
 
-## 1.5 Qué ves al abrir el recorrido
-La ventana se titula *Nierika Studio - Recorrido virtual: Dia de Muertos en Mazunte* y, tras unos instantes, agrega los cuadros por segundo (`NNN FPS`).
-El cursor desaparece (ver sección 2). La cámara empieza en el **panteón**, en la posición (0, 1.6, 6) m: 6 m al frente del cuarto, a la altura de los ojos de una persona (1.6 m).
-Ese punto queda bajo el papel picado, así que **la primera ficha que aparece es la del papel picado** (ver sección 4).
+![Ventana recién abierta, con la ficha del papel picado](capturas/01_ventana_inicio.jpg)
 
-![Ventana recién abierta](capturas/01_ventana_inicio.jpg)
+*Si quieres volver al menú en cualquier momento, pulsa **Esc**: abre la pausa (Continuar recorrido, Controles, Créditos, Salir).*
 
-*Captura tomada el 17/11/2026 en la PC de D2 con el código de `develop` hasta el PR #131 (modo de captura del programa, Release x64, 1280×720). Se ve la ficha del papel picado porque la cámara empieza bajo los postes.*
+![Menú de pausa](capturas/01_menu_pausa.jpg)
