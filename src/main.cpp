@@ -1580,7 +1580,7 @@ int main()
                     bandaInst[mu.inst].Draw(shader);
                     glUniform1f(specLoc, 0.05f);
                 }
-                // comparsa: 12 figuras marchando por la orilla; cada 5.a lleva un tambor; cada par de adelante sostiene una tira de papel picado
+                // comparsa: 12 figuras marchando por la orilla; la 1.a, 5.a y 9.a llevan un tambor; cada par de adelante sostiene una tira de papel picado
                 for (int i = 0; i < Extras::N_COMPARSA; i++)
                 {
                     float cx, cz, cy;
@@ -1590,9 +1590,9 @@ int main()
                     mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 1.0f / Extras::COMPARSA_F * 2.0f, 0.6f * i, 3.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                     atuendos.dibujar(shader, i % 3 == 0 ? personaPieB : personaPieA, false, 300 + i, mm);   // X-35
-                    if (i % 5 == 0)
+                    if (i % 4 == 0)   // X-64: tambor solo en la columna de tierra (i par: 0, 4, 8) y mas al frente: antes (i % 5, -0.38 m) quedaba dentro de la falda
                     {
-                        glm::mat4 mt = glm::translate(mm, glm::vec3(0.0f, 0.62f, -0.38f));
+                        glm::mat4 mt = glm::translate(mm, glm::vec3(0.0f, 0.62f, -0.62f));
                         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mt));
                         tambor.Draw(shader);
                     }

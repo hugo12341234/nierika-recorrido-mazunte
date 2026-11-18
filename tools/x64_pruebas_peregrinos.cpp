@@ -42,6 +42,31 @@ int main()
                     malos++;
                 }
         }
+    // Entre las propias figuras: falda de 0.84 m (radio 0.42); el tambor (radio 0.22, 0.62 m al frente del cuerpo) lo llevan las figuras 0, 4 y 8
+    int malosFig = 0; float minDist = 1e9f;
+    for (float t = 0.0f; t < COMPARSA_CICLO; t += 0.1f)
+    {
+        float px[N_COMPARSA], pz[N_COMPARSA], y;
+        for (int i = 0; i < N_COMPARSA; i++) ComparsaN(i, t, px[i], pz[i], y);
+        const float g = ComparsaGiro(t) * PI / 180.0f;   // el modelo mira a -z: frente = (-sen g, -cos g)
+        for (int i = 0; i < N_COMPARSA; i++)
+            for (int j = i + 1; j < N_COMPARSA; j++)
+            {
+                const float d = std::hypot(px[i] - px[j], pz[i] - pz[j]);
+                minDist = std::fmin(minDist, d);
+                if (d < 0.84f) { malosFig++; std::printf("CHOCA  figura %d con figura %d en t=%.1f (d=%.2f)\n", i, j, t, d); }
+            }
+        for (int i = 0; i < N_COMPARSA; i += 4)
+        {
+            const float tx = px[i] - 0.62f * std::sin(g), tz = pz[i] - 0.62f * std::cos(g);
+            for (int j = 0; j < N_COMPARSA; j++)
+                if (j != i && std::hypot(tx - px[j], tz - pz[j]) < 0.22f + 0.42f) { malosFig++; std::printf("CHOCA  tambor de %d con figura %d en t=%.1f\n", i, j, t); }
+            for (const Caja& b : o)
+                if (tx > b.x0 - 0.22f && tx < b.x1 + 0.22f && tz > b.z0 - 0.22f && tz < b.z1 + 0.22f) { malosFig++; std::printf("CHOCA  tambor de %d con %s en t=%.1f\n", i, b.nombre.c_str(), t); }
+        }
+    }
+    std::printf("%s: figuras y tambores entre si, %d choques (distancia minima entre figuras %.2f m)\n", malosFig ? "FALLA" : "OK", malosFig, minDist);
+    malos += malosFig;
     // La silueta (KeyFrames de D-1/D-5) camina por x = 0 .. -0.22 de z = 24 a z = 0.2: tampoco debe cruzar nada de esta lista
     int malosSil = 0;
     for (float z = 0.2f; z <= 24.0f; z += 0.05f)

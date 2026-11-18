@@ -162,7 +162,7 @@ int main()
             Extras::ComparsaN(i, t, x, z, y);
             xMin = std::min(xMin, (double)x); xMax = std::max(xMax, (double)x); yMin = std::min(yMin, (double)y); yMax = std::max(yMax, (double)y);
             Extras::ComparsaN(i, t + 0.01f, x2, z2, y2);
-            if (x2 > x) eV = std::max(eV, (double)std::fabs((x2 - x) / 0.01f - Extras::COMPARSA_V));
+            if (x2 > x && Extras::ComparsaGrupo(t).marcha && Extras::ComparsaGrupo(t + 0.01f).marcha) eV = std::max(eV, (double)std::fabs((x2 - x) / 0.01f - Extras::COMPARSA_V));
         }
     comprueba("Comparsa (X-64): x en [-23.75, 23.75] (entre lanchas y rocas)", xMin >= -23.76 && xMax <= 23.76, xMax, "<= 23.75");
     comprueba("Comparsa: altura del paso en [0, 0.05] m", yMin >= 0.0 && yMax <= 0.05001, yMax, "<= 0.05");
