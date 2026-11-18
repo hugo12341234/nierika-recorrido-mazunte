@@ -3,7 +3,7 @@
 > **Estado:** borrador actualizado el 18/11/2026 (X-71; el del 12/11 decía cosas que ya no son ciertas). Se completa con los datos reales
 > (fecha, tamaño, SHA-256) **después** de correr `tools/empaquetar_release.ps1` y probar el .zip en otra PC. Lo marcado ⚠️ **no está verificado**.
 
-**Etiqueta (tag) propuesta:** `v1.0.0` sobre `main` (⚠️ hoy `main` sigue en la estructura inicial: hace falta el PR `develop` → `main`) · **Título:** `Nierika Studio v1.0.0 — Entrega final` ·
+**Etiqueta (tag) propuesta:** `v1.0.0` sobre `main` (`main` ya tiene el contenido final de `develop` desde los PR #159 y #176 del 18/11) · **Título:** `Nierika Studio v1.0.0 — Entrega final` ·
 **Archivo adjunto:** `NierikaStudio_<fecha>.zip` (+ `NierikaStudio_<fecha>.zip.sha256`)
 
 ---
