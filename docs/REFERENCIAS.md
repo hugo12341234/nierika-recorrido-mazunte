@@ -3,14 +3,14 @@
 Equipo 15 · Números de cuenta: 321332086 · 319266894 · Proyecto final de Computación Gráfica e Interacción Humano-Computadora (FI UNAM, 2027-1)
 Fecha de consulta de todas las páginas web de este archivo: **18 de noviembre de 2026** (hora de México), salvo donde se indique otra.
 
-> **Qué es este archivo.** El inventario único de **todas** las fuentes que usa el proyecto: fichas culturales, narración, música y voz, texturas, bibliotecas, software y bibliografía técnica. Reúne y corrige lo que estaba repartido en `docs/manual_tecnico/11_referencias.md`, `docs/fichas_culturales.md`, `docs/investigacion_mazunte.md`, `Audio/README.md`, `src/Fichas.cpp` y `src/Menu.cpp`. **No cambia código ni decisiones**: lo que contradice al código o a otro documento está en la sección 7 (hallazgos), para que D2 decida y se registre en el ESTADO.
+> **Qué es este archivo.** El inventario único de **todas** las fuentes que usa el proyecto: fichas culturales, narración, música y voz, texturas, bibliotecas, software y bibliografía técnica. Reúne y corrige lo que estaba repartido en `docs/manual_tecnico/11_referencias.md`, `docs/fichas_culturales.md`, `docs/investigacion_mazunte.md`, `Audio/README.md`, `src/Fichas.cpp` y `src/Menu.cpp`. **No cambia código, fichas, narración ni audio** (decisión de D2 del 18/11: ya no se modifica el proyecto): lo que no tiene respaldo directo en la fuente citada queda anotado aquí con honestidad (sección 7), sin tocar el proyecto.
 
 ## Cómo se verificó y su límite (léelo primero)
 
 - Cada página se abrió el 18/11/2026 con la herramienta de lectura web del asistente (agentes de lectura), que **devuelve el texto o un resumen de la página; no es lectura humana**. Los DOI de artículos se comprobaron en la API de Crossref y los libros en Open Library.
-- Leyenda de estado: ✅ **verificada** (título, autor/organización, fecha y, si aplica, el dato citado coinciden con la página) · 🔄 **parcial** (abrió, pero falta un dato o parte del texto solo llegó resumido) · ❌ **NO VERIFICADO** (no abrió, o no se pudo comprobar) · ⏳ **PENDIENTE** (falta un dato que solo D2 tiene).
+- Leyenda de estado: 🤝 **confirmada por el equipo** (dato dado por D2 el 18/11/2026, no comprobado por el asistente) · ✅ **verificada** (título, autor/organización, fecha y, si aplica, el dato citado coinciden con la página) · 🔄 **parcial** (abrió, pero falta un dato o parte del texto solo llegó resumido) · ❌ **NO VERIFICADO** (no abrió, o no se pudo comprobar) · ⏳ **PENDIENTE** (falta un dato que solo D2 tiene).
 - Cuando la página no muestra la fecha, la que se usa sale de sus **metadatos** (se dice en la nota). Un «s. f.» significa que ni la página ni sus metadatos dan fecha.
-- **Nada se rellenó de memoria.** Si un dato no apareció, dice NO APARECE.
+- **Segunda ronda (18/11, tras la respuesta de D2):** se volvieron a leer las fuentes de los hallazgos; el resultado está en cada entrada y en la sección 7. **Nada se rellenó de memoria.** Si un dato no apareció, dice NO APARECE.
 - Sin logos ni datos personales (solo los dos números de cuenta).
 
 ---
@@ -25,7 +25,7 @@ Fecha de consulta de todas las páginas web de este archivo: **18 de noviembre d
 - Usada en: fichas 1, 2, 3, 4, 5, 7, 9 y 11; narración 01, 03, 06, 07, 08 y 11.
 
 **[C-02]** Baños, L. (2025, 27 de octubre). *Los pueblos mágicos de Oaxaca donde el Día de Muertos se vive con más alma*. Oaxaca Informa. https://www.oaxacainforma.com/es/cultura/2025/pueblos-magicos-oaxaca-dia-de-muertos-2025
-- Estado: 🔄 La URL abre y el título y la autora (Lili Baños) coinciden; la página menciona Mazunte. **Solo se leyeron literalmente los primeros ~39,900 de ~68,000 caracteres; la fecha (27/10/2025) y la frase de «flores y velas al mar» llegaron en un resumen automático**, no en texto literal. **La expresión «al atardecer» NO APARECE** (ver hallazgo H-1).
+- Estado: 🔄 La URL abre y el título y la autora (Lili Baños) coinciden; la página menciona Mazunte. **Solo se leyeron literalmente ~39,900 de ~68,000 caracteres; la sección de Mazunte llegó en un resumen automático, no en texto literal.** Ese resumen **no es consistente**: en la primera lectura (18/11) no mostraba «al atardecer»; en la segunda (18/11, pedida solo para esa sección) sí decía que las ceremonias se hacen «al atardecer» y que «se lanzan flores y velas al mar para recordar a quienes partieron». **Conclusión honesta: «al atardecer» está respaldado solo por un resumen automático y no se pudo confirmar en texto literal** (ver H-1). Fecha 27/10/2025 y autoría: de la misma vía.
 - Usada en: fichas 1, 2 y 9; narración 01 (y el título en la 00).
 
 **[C-03]** UNESCO. (s. f.). *Las fiestas indígenas dedicadas a los muertos*. https://ich.unesco.org/es/RL/las-fiestas-indigenas-dedicadas-a-los-muertos-00054
@@ -53,21 +53,27 @@ Fecha de consulta de todas las páginas web de este archivo: **18 de noviembre d
 - Usada en: ficha 12; narración 10.
 
 **[C-09]** México Desconocido. (2010, 10 de agosto). *El Centro Mexicano de la tortuga en Mazunte, Oaxaca*. https://www.mexicodesconocido.com.mx/el-centro-mexicano-de-la-tortuga-en-mazunte-oaxaca.html
-- Estado: ✅ Título y autoría («México Desconocido») coinciden. **La fecha no se ve en la página; sale de los metadatos (publicado 2010-08-10, modificado 2020-05-29).** Comprobado: «en mayo de 1990, cuando se decreta la veda total de la tortuga», la explotación fue «la actividad preponderante de la población», y «es la golfina la especie que más se reproduce en estas playas». **«En los años sesenta» y «con el apoyo del Centro Mexicano de la Tortuga» no se comprobaron hoy** (ver H-3).
+- Estado: ✅ Título y autoría («México Desconocido») coinciden. **La fecha no se ve en la página; sale de los metadatos (publicado 2010-08-10, modificado 2020-05-29).** Segunda lectura (18/11) con texto literal: «Para la década de los años sesenta la explotación de estos reptiles se convirtió en la actividad preponderante de la población»; «en mayo de 1990, cuando se decreta la veda total de la tortuga»; «gracias al apoyo del CMT, hoy Mazunte ya no es ejemplo de devastación y sacrificio de tortugas»; «es la golfina la especie que más se reproduce». **Las dos afirmaciones de la ficha 13 que la primera lectura no encontró («años sesenta» y el apoyo del Centro) SÍ están en esta página** (la primera lectura estaba incompleta). Límites: es una sola fuente secundaria y **no da el año de creación del Centro** (menciona 1977 PIOSA, 1985 Instituto Nacional de la Pesca y «en 1992 nace el nuevo concepto»; ver H-3).
 - Usada en: ficha 13; narración 00.
 
 ### 1.2 Investigación de los lados de la escena (`docs/investigacion_mazunte.md`, X-25)
 
 **[C-10]** México Desconocido. (2017, 28 de julio). *El milagro de Mazunte*. https://www.mexicodesconocido.com.mx/el-milagro-de-mazunte-oaxaca.html
-- Estado: ✅ Abre; título y autoría («México Desconocido») coinciden. **Fecha de los metadatos (2017-07-28)**; el documento de la investigación y el manual lo citaban «s. f.». Contenido: tras la prohibición de la caza en 1990 la comunidad impulsó reforestación, ecoturismo y una cooperativa de cosméticos naturales.
+- Estado: ✅ Abre; título y autoría («México Desconocido») coinciden. **Fecha de los metadatos (2017-07-28)**; el documento de la investigación y el manual la citaban «s. f.». Contenido: tras la prohibición de la caza de 1990 la comunidad impulsó reforestación, ecoturismo y una cooperativa de cosméticos naturales (Cosméticos Naturales de Mazunte, 15 familias). **Dice que el Centro Mexicano de la Tortuga fue «abierto en 1994 por la Secretaría de Recursos Ambientales»**, y no le atribuye el paso a la conservación (lo atribuye a la comunidad); C-09 da otras fechas para el Centro (ver H-3).
 - Usada en: `investigacion_mazunte.md` (pesca, lanchas y cambio del pueblo). Ninguna ficha ni la narración la citan.
 
 **[C-11]** Secretaría de Turismo de Oaxaca. (s. f.). *Plan de marketing del Pueblo Mágico Mazunte* [Documento]. Gobierno del Estado de Oaxaca. https://www.oaxaca.gob.mx/sectur/wp-content/uploads/sites/65/2020/12/Plan-de-Marketing-Playa-Mazunte.pdf
-- Estado: 🔄 Abre (PDF; se leyeron ~39,900 de ~56,400 caracteres). Título del encabezado: «PLAN DE MARKETING DEL PUEBLO MÁGICO MAZUNTE»; autoría: «Dirección de Comercialización Turística, Secretaría de Turismo del Gobierno del Estado de Oaxaca». **El documento no declara año**: el «2020» que usaban los demás archivos sale solo de la ruta de subida (`/2020/12/`). Por eso aquí va «s. f.» (ver H-5). El texto dice que Mazunte fue declarado Pueblo Mágico «el 28 de septiembre del 2015».
+- Estado: 🔄 Abre (PDF; se leyeron ~39,900 de ~56,400 caracteres). Título del encabezado: «PLAN DE MARKETING DEL PUEBLO MÁGICO MAZUNTE»; autoría: «Dirección de Comercialización Turística, Secretaría de Turismo del Gobierno del Estado de Oaxaca». **El documento no declara año**: el «2020» que usaban los demás archivos sale solo de la ruta de subida (`/2020/12/`), por eso va «s. f.». El texto dice que Mazunte fue declarado Pueblo Mágico **«el 28 de septiembre del 2015»**: **es la fecha que se usa en el proyecto** (ver H-12).
 - Usada en: `investigacion_mazunte.md`; manual técnico §11.
 
 **[C-12]** ❌ Gobierno del Estado de Oaxaca. (2019). *Mazunte* [Documento]. https://www.oaxaca.gob.mx/wp-content/uploads/sites/65/2019/10/MAZUNTE.pdf
 - Estado: ❌ **NO VERIFICADO**: la URL no abrió el 18/11 (error de cliente). Título, organismo y año vienen solo de `investigacion_mazunte.md` (que ya la marcaba «por verificar»). No se usa en ninguna ficha ni narración; si no se abre, quitarla del manual (§11) o citarla sin datos de más.
+
+**[C-23]** *The continued devaluation of the Magic Town program: 28 more Magic Towns named*. (2015, 28 de septiembre). Geo-Mexico. https://geo-mexico.com/?p=13269
+- Estado: ✅ (solo para lo que se cita) Entrada de blog sin autor visible, fechada 28/09/2015; dice que la Secretaría de Turismo anunció 28 nuevos Pueblos Mágicos en la Segunda Feria Anual de Pueblos Mágicos en Puebla («recently») y **Mazunte está en la lista**. **No da el día de la declaratoria**: el 28/09 es la fecha de la entrada. El título es opinión del blog; se cita solo para confirmar que Mazunte fue nombrado en septiembre de 2015.
+
+**[C-24]** Cervantes-Hernández, P., Pérez-Vives, E., y Gómez-Ponce, M. A. (2017). Arribada y explotación de la tortuga golfina en la Playa Escobilla, Oaxaca, México. *Revista Ciencias Marinas y Costeras, 9*(1), 91–107. https://doi.org/10.15359/revmar.9-1.6
+- Estado: ✅ (datos bibliográficos del encabezado del PDF, leído en https://www.redalyc.org/pdf/6337/633766726006.pdf). **No se usa en ninguna ficha ni narración**: se anota solo porque su fecha de la veda permanente («a partir del 16 de marzo de 1994», Pacífico mexicano; vedas desde 1972; datos de captura de Escobilla de 1978 a mayo de 1990) **no coincide con la «veda total de mayo de 1990»** de C-09 (ver H-3). No habla de Mazunte como pueblo, solo como sede del Centro que recopiló los datos.
 
 ### 1.3 Citadas en la propuesta v2.0 (PDF entregado), no usadas en fichas ni narración
 
@@ -105,14 +111,14 @@ Quiet. (2020, 31 de marzo). *Relajarse Relax - Sonido Olas del Mar - Playa Atard
 
 **[A-02] Música de fondo** (`Audio/musica.mp3`; D-6k; externo, uso educativo no comercial).
 Tizo, R. (2012, 24 de octubre). *Dios Nuca Muere con la Banda Mixe de Oaxaca* [Video]. YouTube. https://www.youtube.com/watch?v=EyObXpnZsJg
-- Estado: 🔄 El id `EyObXpnZsJg` es el sufijo del nombre del archivo que D2 subió el 17/11; la página con ese id dice: **título «Dios Nuca Muere con la Banda Mixe de Oaxaca»** (con la errata «Nuca» tal como está publicado; en APA se respeta el título original), **canal «Ricardo Tizo»**, **fecha 24/10/2012**, descripción solo «Villa Hidalgo Yalàlag». Mismos límites que A-01 (metadatos, no página visible).
-- **Lo que NO está verificado:** (a) que el audio del mp3 sea exactamente ese video (nadie lo comparó oyendo; solo coincide el id y el título); (b) **quién compuso la obra «Dios Nunca Muere»**: no se encontró en ninguna fuente abierta hoy, no se afirma; (c) el autor APA: se usa el nombre del canal (Ricardo Tizo) porque es quien publica; si D2 sabe que el canal es una institución o un grupo, se cambia (⏳).
+- Estado: 🤝 **D2 confirmó (18/11/2026) que `Audio/musica.mp3` es ese video del canal «Ricardo Tizo»**. La página con el id `EyObXpnZsJg` (sufijo del nombre del archivo que D2 subió el 17/11) da: **título «Dios Nuca Muere con la Banda Mixe de Oaxaca»** (con la errata «Nuca» tal como está publicado; en APA se respeta el título original), **canal «Ricardo Tizo»**, **fecha 24/10/2012**, descripción solo «Villa Hidalgo Yalàlag» (título, canal y fecha leídos de metadatos, no de la página visible).
+- **Lo que sigue sin respaldo:** **quién compuso la obra «Dios Nunca Muere»** (no se encontró en ninguna fuente abierta; no se afirma) y qué banda concreta toca (solo el título del video dice «Banda Mixe de Oaxaca»; ver H-2).
 - La pista anterior («Xochipitzahuatl», náhuatl) ya no está en el repo; no se cita.
 
 **[A-03] Voz de la narración del recorrido guiado** (`Audio/narracion/narracion_00..11.mp3`, 12 archivos, X-62; la voz es sintética y **lee un guion, no es un personaje**).
-ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz; voz «El Faraon»]. https://elevenlabs.io/docs/overview/models
-- Estado: 🔄 **Modelo:** la página de ElevenLabs lista «Eleven v4» (id `eleven_v4`, «our most emotionally rich, expressive speech synthesis model»; publicador ElevenLabs). **No aparece fecha de lanzamiento**: el año 2026 es el **año de uso** que indicó D2, no un dato de la página. **Voz «El Faraon»:** ❌ NO se encontró en la biblioteca pública de voces (solo muestra voces destacadas; no se abrió la búsqueda interactiva): falta el **enlace de la voz y su autor** (⏳ D2; si es una voz de la biblioteca, APA pide citar también al creador de la voz).
-- **Lo que D2 debe confirmar:** el plan de ElevenLabs con el que se generaron los 12 archivos (los términos dicen que el plan gratuito es solo para uso no comercial y que el de pago permite uso comercial; el proyecto es educativo, pero conviene anotarlo) y la fecha de generación. No se oyeron los audios.
+ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz]. https://elevenlabs.io/docs/overview/models
+- Estado: 🤝 **D2 confirmó (18/11/2026): la voz salió de ElevenLabs** (herramienta; año de uso 2026; **sin autor de voz pública**, por eso la referencia no lleva creador de voz). **Modelo:** la página de ElevenLabs lista «Eleven v4» (id `eleven_v4`, «our most emotionally rich, expressive speech synthesis model»; publicador ElevenLabs); la página **no da fecha de lanzamiento** y el 2026 es el año de uso que indica D2. El nombre «El Faraon» lo dio el equipo; **no figura en la biblioteca pública de voces** (no se abrió la búsqueda interactiva) y no se cita como autor.
+- No se oyeron los audios. El plan de ElevenLabs con que se generaron no está registrado; los términos dicen que el plan gratuito es solo para uso no comercial y el de pago permite uso comercial (el proyecto es educativo, no comercial).
 
 **[A-04]** ElevenLabs. (2026, 9 de octubre). *Terms of use* [Condiciones del servicio]. https://elevenlabs.io/terms-of-use
 - Estado: 🔄 Abre (versión no EEE, «Last Updated: 09 October 2026»; leída hasta la sección 12, el resto resumido). **No se encontró exigencia de atribución** del audio generado; el nombre y logotipos de ElevenLabs no se pueden usar sin permiso (por eso los créditos nombran la herramienta en texto, sin logo). No se leyó el *Voice Library Addendum* (https://elevenlabs.io/vla), que puede tener condiciones propias para las voces de la biblioteca.
@@ -133,9 +139,9 @@ ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz; voz «El Faraon»].
 
 ### 3.2 Texturas y modelos de origen NO registrado (⏳ pendientes de D2)
 
-**[T-05] `laminado1.jpg`** (512×512; fachada y techo): ⏳ **PENDIENTE — origen NO determinado.** Qué se investigó: (1) aparece desde el **primer commit del repo con el modelo** (`5ef12a2`, 19/10/2026, `Models/fachada/`), junto con `concreto.jpg`, ya referenciado por `fachada.mtl` generado con Blender 4.4.3; el historial de git no tiene un commit anterior que lo agregue desde otra fuente; (2) el archivo no trae metadatos (sin EXIF; JFIF, 72 dpi, SHA-1 `6a3bc76bca9f…`); (3) ni el ESTADO ni el manual registran de dónde salió. **No se puede afirmar que sea de Poly Haven ni de ambientCG** (la propuesta dice que las texturas vienen de esos dos sitios, pero eso no demuestra el origen de este archivo). Lo único cierto: **estaba en la escena base de la fachada que hizo el equipo antes de entrar al repo**. **D2/D1 deben decir dónde lo descargaron** (sitio, autor, licencia); si no se sabe, reemplazarlo por una textura CC0 conocida o por una propia.
+**[T-05] `laminado1.jpg`** (512×512; fachada y techo): ⏳ **textura de origen no documentado.** Qué se investigó: (1) aparece desde el primer commit del repo con el modelo (`5ef12a2`, 19/10/2026, `Models/fachada/`), junto con `concreto.jpg`, ya referenciado por `fachada.mtl` generado con Blender 4.4.3; el historial de git no tiene un commit anterior; (2) el archivo no trae metadatos (sin EXIF; JFIF, 72 dpi, SHA-1 `6a3bc76bca9f…`); (3) ni el ESTADO ni el manual registran su origen; (4) un archivo local no se puede rastrear en la web. **No se afirma que sea de Poly Haven ni de ambientCG** (la propuesta dice que las texturas vienen de esos sitios, pero eso no demuestra el origen de este archivo). Queda listada como **textura de origen no documentado** en el manual y los créditos; D2 solo necesita decir de dónde la bajó (sitio, autor, licencia) para completar la referencia.
 
-**[T-06] `concreto.jpg`** (arco, fachada y piso): ⏳ **PENDIENTE — origen NO determinado**, mismas condiciones que T-05 (llegó en el mismo commit `5ef12a2`, 178,040 bytes). **El menú de créditos y el manual solo mencionan `laminado1.jpg`**: `concreto.jpg` no aparece en ningún crédito (ver H-6).
+**[T-06] `concreto.jpg`** (arco, fachada y piso): ⏳ **textura de origen no documentado**, mismas condiciones que T-05 (llegó en el mismo commit `5ef12a2`, 178,040 bytes). **El menú de créditos y el manual solo mencionan `laminado1.jpg`**: `concreto.jpg` no aparece en ningún crédito (ver H-6).
 
 **[T-07] Modelos de Maya de D1** (`calavera`, `pan`/`pan_muerto` de D1, `flor`, `altar` (capilla provisional), y el zip del altar subido en X-43: `cuadro`, `fuego`, `humo`, `mariposa_*`, `mazeta`, `refresco`, `papel_fucsia`, `papel_morado`, `papel_naranja`): ⏳ **PENDIENTE — autoría y herramienta sin confirmar.** El ESTADO los marca como extras que **no cuentan como propios**; D1 se los pasó a D2, la herramienta con la que se hicieron **no está confirmada** (las texturas tienen formato de generador automático) y el retrato del `cuadro` parece una persona real (**permiso sin confirmar**). Sin esos datos no se puede escribir su referencia APA. D1 debe indicar herramienta, fuente y si hay terceros.
 
@@ -214,7 +220,7 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 
 | # | Ficha (título en pantalla) | Referencias | Qué dice la ficha que es adaptación del estudio | Estado de la cita |
 |---|---|---|---|---|
-| 1 | Velas | C-01, C-02 | «Representación del estudio» solo en la escena (velas flotando) | 🔄 H-1 («al atardecer») |
+| 1 | Velas | C-01, C-02 | «Representación del estudio» solo en la escena (velas flotando) | 🔄 H-1 («al atardecer» solo en un resumen automático) |
 | 2 | Flor de cempasúchil | C-01, C-02 | — | 🔄 H-1 |
 | 3 | Papel picado | C-01 | «las tiras cuelgan de soportes… en el arco del cuarto» es la escena (sin cita) | ✅ |
 | 4 | Altar de ofrenda | C-01, C-03 | altar de tres niveles y cuarto | ✅ |
@@ -226,11 +232,11 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 | 10 | Comparsa en la orilla | C-07 | la comparsa de la escena | ✅ (es la de la ciudad de Oaxaca, no de Mazunte) |
 | 11 | Camino de las ánimas | C-01, C-06 | la procesión completa | ✅ |
 | 12 | Mariposas monarca | C-08 | las mariposas de las colinas | 🔄 H-11 (sin fuente primaria) |
-| 13 | Tortugas de Mazunte | C-09 | tortugas y crías del modelo | 🔄 H-3 |
+| 13 | Tortugas de Mazunte | C-09 | tortugas y crías del modelo | ✅ («años sesenta» y el Centro sí están en C-09; fuente única, H-3) |
 
 **Narración del recorrido (`docs/RECORRIDO_GUIADO.md` §7)** — qué fuente respalda cada estación (las dichas en voz alta son las mismas que las de las fichas): 00 → C-02 (el título «se vive con más alma») y C-09; 01 → C-02 y C-01; 02 → C-07; 03 → C-01; 04 → C-04; 05 → C-06 y C-03; 06 → C-01 y C-05; 07 → C-01; 08 → C-03 y C-01; 09 → C-06; 10 → C-08; 11 → idea de fondo de C-01 (redacción del estudio). **Las frases de «mira cómo…», «ven, camina conmigo», «gracias por caminar con nosotros» y la apertura/cierre no tienen fuente: son narrativa del estudio.**
 
-**Créditos del menú (`src/Menu.cpp`, X-63)** — qué incluye y qué le falta: lista las 3 texturas Poly Haven (T-01 a T-03), la música (A-02, sin año/canal/URL), la voz (A-03, sin herramienta), el oleaje (A-01, sin canal/año), las bibliotecas y las herramientas. **Pendientes ahí:** quitar «PENDIENTE» de A-01, A-02, A-03 cuando D2 confirme los datos de arriba; `laminado1.jpg` y `concreto.jpg` (T-05, T-06).
+**Créditos del menú (`src/Menu.cpp`, X-63)** — qué incluye y qué le falta: lista las 3 texturas Poly Haven (T-01 a T-03), la música (A-02, sin año/canal/URL), la voz (A-03, sin herramienta), el oleaje (A-01, sin canal/año), las bibliotecas y las herramientas. **Datos que ya existen para completarlo (si D2 decide tocarlo algún día; hoy no se modifica):** A-02 (canal «Ricardo Tizo», 2012) y A-03 (ElevenLabs, 2026), ya confirmados por D2; A-01 (canal «Quiet», 2020) falta que D2 lo confirme. `laminado1.jpg` y `concreto.jpg` (T-05, T-06) siguen sin origen.
 
 ---
 
@@ -238,13 +244,13 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 
 ### 7.1 Afirmaciones del proyecto contra lo leído en la fuente
 
-- **H-1 · «al atardecer» (fichas 1, 2 y 9; también en la narración 01 como «en la ceremonia local que se vive al atardecer»).** Esa expresión **no aparece** en el texto de Baños (C-02) leído el 18/11 (ni en el texto literal ni en el resumen); la fuente solo dice, según el resumen, que se «lanzan flores y velas al mar para recordar a quienes partieron». Además, lo que se leyó de Baños es parcial (ver C-02). La verificación del 12/11 (X-17) no marcó este punto. **Propuesta:** quitar «al atardecer» o abrir la sección «Mazunte» del artículo y comprobar la frase. Si cambia el texto de una ficha hay que registrar la decisión en el ESTADO §4.
-- **H-2 · Banda Mixe vs. el video.** La ficha 6 y el crédito dicen «Banda Mixe de Oaxaca» (el título del video lo dice así); la descripción del video solo dice «Villa Hidalgo Yalàlag». No hay evidencia en las fuentes para decir de qué banda concreta es la grabación: el título del video es lo único que respalda «Banda Mixe». Además, el video tiene la errata «Nuca» y **no se identificó al compositor** (ver A-02).
-- **H-3 · Ficha 13 (tortugas) y narración 00.** La ficha dice «en los años sesenta la explotación de tortugas fue la actividad principal» y «con el apoyo del Centro Mexicano de la Tortuga, el pueblo pasó a la conservación y al ecoturismo»: **no se encontró «años sesenta» ni esa causa en lo leído hoy** (sí: veda total de mayo de 1990, explotación como actividad preponderante, golfina). La narración 00 dice «hasta que en mayo de 1990 se decretó la veda total» (coincide). Además, `investigacion_mazunte.md` ya anotaba que las fechas de creación del centro **difieren entre fuentes (1991 y 1994)**: sin resolver.
+- **H-1 · «al atardecer» (fichas 1, 2 y 9; narración 01).** **Resuelto a medias.** Dos lecturas automáticas de la página de Baños (C-02) dieron resultados opuestos: la primera no mostró «al atardecer»; la segunda, pedida solo para la sección de Mazunte, sí lo dice (junto con «se lanzan flores y velas al mar para recordar a quienes partieron»). Ninguna llegó como texto literal (la sección de Mazunte cae en la parte que la herramienta resume). **Estado: respaldada solo por un resumen automático.** Como D2 pidió no modificar las fichas, se deja así y se anota; **comprobación humana de 30 segundos:** abrir el artículo y buscar «atardecer» en la sección de Mazunte.
+- **H-2 · Banda Mixe vs. el video.** **Resuelto en lo esencial:** D2 confirmó (18/11) que el mp3 es ese video (A-02). Sigue sin respaldo en las fuentes qué banda concreta toca: solo el título del video dice «Banda Mixe de Oaxaca» (la descripción dice «Villa Hidalgo Yalàlag»); el título trae la errata «Nuca» y no se identificó al compositor.
+- **H-3 · Ficha 13 (tortugas) y narración 00.** **Resuelto:** «años sesenta» y «con el apoyo del Centro Mexicano de la Tortuga» **sí están** en C-09 (segunda lectura, texto literal; la primera lectura estaba incompleta: ver C-09). **Quedan dos discrepancias entre fuentes, sin tocar el proyecto:** (a) **año del Centro:** C-10 dice «abierto en 1994»; C-09 menciona 1977 (PIOSA), 1985 (Instituto Nacional de la Pesca) y 1992 («nace el nuevo concepto»); `investigacion_mazunte.md` ya anotaba 1991 vs. 1994. Ninguna ficha ni narración da el año del Centro, así que no hay error en pantalla; (b) **veda:** la ficha y la narración dicen «mayo de 1990» (C-09), pero C-24 da la veda permanente del Pacífico mexicano desde el 16/03/1994 (con vedas desde 1972). **La ficha sigue a su fuente citada (C-09); no hay otra fuente que confirme «mayo de 1990»** (queda como «respaldo en una sola fuente secundaria»). Además C-10 atribuye la recuperación a la comunidad y a la cooperativa, no al Centro, a diferencia de C-09.
 - **H-4 · Ficha 7 (copal).** «En el panteón tepehua de Pisaflores, Veracruz, las tumbas se adornan en medio del humo del copal»: el boletín (C-05) dice que los tepehuas de Pisaflores, Ixhuatlán de Madero, «acuden al panteón» y que «en medio del humo del copal, adornan los sepúlcros»; une dos frases del mismo texto, sin contradecirlas. La fuente **no define el copal ni su significado** (eso lo respalda la SEP, C-01: «limpian el lugar y alejan malos espíritus»).
 - **H-5 · Año del Plan de marketing.** Los documentos citan «(2020)»; el documento no declara año (solo la ruta de subida dice 2020/12). Corregido en la sección 1 a «s. f.» hasta que alguien lo confirme en la portada.
 - **H-11 · Mariposas (ficha 12 / narración 10).** La ficha agrega «los bosques de oyamel»: **no se comprobó en la página de Expansión** (sí: creencia purépecha, finales de octubre–principios de noviembre). La fuente es periodismo sin fuente primaria y la imagen del artículo es de una IA («Gemini»).
-- **H-12 · Fecha de Pueblo Mágico.** `investigacion_mazunte.md` dice «declarado Pueblo Mágico el 25/09/2015»; el plan de marketing (C-11) dice **«el 28 de septiembre del 2015»**. Contradicción entre fuentes; no se usa en ficha ni narración. Si se menciona, citar C-11 y resolverlo.
+- **H-12 · Fecha de Pueblo Mágico.** **Resuelto:** se usa **28 de septiembre de 2015**, que es la que da un documento oficial (C-11, «el 28 de septiembre del 2015»). El **25/09/2015** de `investigacion_mazunte.md` **no tiene respaldo** en ninguna fuente leída (venía de un resultado de búsqueda sin abrir). C-23 confirma que Mazunte fue nombrado Pueblo Mágico en septiembre de 2015 pero no da el día. Ninguna ficha ni narración la menciona.
 - **H-13 · Fuente de contenido de marca.** La ficha 8 y 11 y las narraciones 05 y 09 se apoyan en un artículo firmado «advertorial MD» (C-06). No es incorrecto, pero es contenido patrocinado: el equipo ya lo declara en `fichas_culturales.md` §7.
 
 ### 7.2 Documentación del proyecto incompleta o contradictoria
@@ -263,28 +269,28 @@ No se pudo comprobar hoy (sin ISBN/DOI a mano o error de lectura): Marschner y S
 
 ---
 
-## 8. Qué falta y solo D2 (o D1) puede dar
+## 8. Qué falta (lo que queda abierto)
 
-1. **Oleaje (A-01):** abrir https://www.youtube.com/watch?v=6TGHwQHdDlo y confirmar canal («Quiet») y fecha (31/03/2020); duración del video completo.
-2. **Música (A-02):** confirmar que `Audio/musica.mp3` es ese video, el canal («Ricardo Tizo») y, si lo saben, el autor de la obra y de la interpretación.
-3. **Voz (A-03):** enlace de la voz «El Faraon» en ElevenLabs y quién la creó; plan de ElevenLabs usado (gratuito o de pago); fecha de generación de los 12 audios.
-4. **`laminado1.jpg` y `concreto.jpg` (T-05, T-06):** de dónde se descargaron (sitio, autor, licencia) o decidir reemplazarlas.
-5. **Modelos de Maya de D1 (T-07):** herramienta, fuente y permiso del retrato del cuadro (D1).
-6. **Versiones:** `vcpkg list` (GLFW, GLEW, GLM, Assimp), versión de Blender, de Visual Studio y de Maya.
-7. **Decidir los hallazgos H-1, H-3 y H-8** (cambian texto de fichas o créditos: se registran en el ESTADO §4 antes de tocar `Fichas.cpp`/`Menu.cpp`).
-8. Confirmar con el libro de Farin la edición y el subtítulo (M-08).
+Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03) y `musica.mp3` = el video de «Ricardo Tizo» (A-02). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
+
+1. **`laminado1.jpg` y `concreto.jpg` (T-05, T-06):** de dónde se bajaron (sitio, autor, licencia). Mientras tanto quedan como textura de origen no documentado.
+2. **Oleaje (A-01):** abrir el video una vez y confirmar canal («Quiet») y fecha (31/03/2020).
+3. **Modelos de Maya de D1 (T-07):** herramienta, fuente y permiso del retrato del cuadro (D1).
+4. **«Al atardecer» (H-1):** comprobación visual en el artículo de Baños (opcional).
+5. **Versiones:** `vcpkg list` (GLFW, GLEW, GLM, Assimp), versión de Blender, de Visual Studio y de Maya.
+6. **Farin (M-08):** edición y subtítulo del libro.
 
 ---
 
 ## 9. Conteo (consulta del 18/11/2026)
 
-| Grupo | Total | ✅ verificadas | 🔄 parciales | ❌ NO VERIFICADO | ⏳ PENDIENTE |
-|---|---|---|---|---|---|
-| C · fuentes culturales y de contenido | 22 | 9 | 2 | 11 | 0 |
-| A · música, audio y voz | 4 | 0 | 4 | 0 | 0 |
-| T · texturas y modelos externos | 7 | 4 | 0 | 0 | 3 |
-| S · bibliotecas, software y estándares | 23 | 9 | 10 | 4 | 0 |
-| M · bibliografía técnica y matemática | 10 | 7 | 3 | 0 | 0 |
-| **Total** | **66** | **29** | **19** | **15** | **3** |
+| Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ origen por documentar |
+|---|---|---|---|---|---|---|
+| C · fuentes culturales y de contenido | 24 | 11 | 0 | 2 | 11 | 0 |
+| A · música, audio y voz | 4 | 0 | 2 | 2 | 0 | 0 |
+| T · texturas y modelos externos | 7 | 4 | 0 | 0 | 0 | 3 |
+| S · bibliotecas, software y estándares | 23 | 9 | 0 | 10 | 4 | 0 |
+| M · bibliografía técnica y matemática | 10 | 7 | 0 | 3 | 0 | 0 |
+| **Total** | **68** | **31** | **2** | **17** | **15** | **3** |
 
-Los 11 ❌ del grupo C son 10 citas de la propuesta que hoy no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye las referencias donde falta un dato que solo D2 tiene (A-01 a A-04).
+Los 11 ❌ del grupo C son 10 citas de la propuesta que no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye A-01 (falta que D2 confirme canal y fecha) y A-04.
