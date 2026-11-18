@@ -1,17 +1,9 @@
 # Justificación matemática de las 3 animaciones simples (C-8)
 
-**Nierika Studio · Equipo 15 · Manual técnico — BORRADOR con valores del código (11/11/2026)**
-Tarea: C-8 (act. 45) · Cuentas: 319266894, 321332086
+**Nierika Studio · Equipo 15 · Manual técnico — versión del 18/11/2026**
+Tareas C-1 a C-4 y C-8 · Cuentas: 319266894, 321332086
 
-> **Estado del documento (11/11/2026):** las cuatro piezas ya tienen código en `develop` (olas C-1, flores C-4, velas C-3
-> y llama C-2) y las tablas llevan **los valores del código** con su `archivo:línea`. **Ninguna se ha compilado ni visto
-> en pantalla en el entorno donde se redactó esto** (ESTADO: "falta compilar"): los valores son los escritos en el código,
-> no los observados. Lo que sigue sin cerrar queda como `[PENDIENTE]`.
-> Regla del proyecto: los valores deben ser **los del código** (archivo:línea). No se rellena nada de memoria.
->
-> **Marcas:** `[repo]` = está escrito en el repo · `[PENDIENTE]` = falta el código · `[propuesta]` = idea redactora, no es regla hasta registrarla en el ESTADO (§4/§5).
-
-**Cómo cerrar este documento:** cuando una tarea se fusione, sustituir cada `[PENDIENTE]` por el valor y el `archivo:línea` reales, y quitar el aviso de la sección correspondiente.
+> **Alcance.** Fórmulas, significado de cada término y **valores del código** (con su archivo) de las tres animaciones simples comprometidas en la propuesta (olas, velas flotando con su llama, flores flotando). En la PC de D2 (Visual Studio 2022, Release x64) el programa compila y las animaciones se ven funcionando; tras el PR #148 el equipo midió en una laptop con gráficos integrados Intel (i5 de 11.ª generación) un mínimo de 45 y un promedio de unos 60 FPS con todas las animaciones activas. La forma exacta de cada curva (por ejemplo, la altura real de la ola) no se midió en pantalla: lo que sigue es la matemática del código.
 
 ---
 
@@ -34,7 +26,7 @@ Las animaciones simples son del tipo 1 y el código lo confirma: olas (`tiempo` 
 
 ## 1. Olas del mar (C-1) — suma de senoidales en el *vertex shader*
 
-**Estado:** implementado (C-1, 04/11) en `src/Olas.h` (parámetros y misma altura en CPU) y `Shaders/lighting.vs` (con `uniform int oleaje`; no existe `olas.vs`: decisión 04/11 "Olas"). Sin compilar.
+**Estado:** implementado (C-1, 04/11) en `src/Olas.h` (parámetros y misma altura en CPU) y `Shaders/lighting.vs` (con `uniform int oleaje`; no existe `olas.vs`: decisión 04/11 "Olas").
 **Malla ya fija [repo]:** `Models/mar/mar.obj`, 100 × 100 cuadros de 1 m, 10 201 vértices, x −50…+50, z +22…+122, plano en y = −0.2 (ESTADO §1 y decisión 20/10).
 
 ### 1.1 Objetivo visual y por qué esta técnica
@@ -77,7 +69,7 @@ $$
 \mathbf{n}=\frac{\left(-\dfrac{\partial y}{\partial x},\ 1,\ -\dfrac{\partial y}{\partial z}\right)}{\left\|\left(-\dfrac{\partial y}{\partial x},\ 1,\ -\dfrac{\partial y}{\partial z}\right)\right\|}
 $$
 
-Con $y$ constante da $\mathbf{n}=(0,1,0)$, que es la normal actual del `.obj` [repo]. Sin esta normal, las olas se moverían pero la iluminación seguiría plana (el mar tiene especular 0.6 [repo, ESTADO §5]). El código la calcula así, tanto en GPU (`lighting.vs:42`, `normalize(vec3(-dhdx, 1.0, -dhdz))`) como en CPU (`Olas.h:58-67`). Según el ESTADO (04/11), una prueba en CPU con `g++` dio un error de 3×10⁻⁵ contra diferencias finitas; no se repitió en este borrador.
+Con $y$ constante da $\mathbf{n}=(0,1,0)$, que es la normal actual del `.obj` [repo]. Sin esta normal, las olas se moverían pero la iluminación seguiría plana (el mar tiene especular 0.6 [repo, ESTADO §5]). El código la calcula así, tanto en GPU (`lighting.vs:42`, `normalize(vec3(-dhdx, 1.0, -dhdz))`) como en CPU (`Olas.h:58-67`). Según el ESTADO (04/11), una prueba en CPU con `g++` dio un error de 3×10⁻⁵ contra diferencias finitas; no se repitió para este manual.
 
 ### 1.5 Restricciones numéricas (verificables ya, antes del código)
 1. **Muestreo (Nyquist).** La malla tiene un vértice cada $h=1$ m. Para que una senoide se vea como tal hacen falta ≥ 4 vértices por longitud de onda: $\lambda_i\ge 4h=4$ m. Esta es la razón registrada el 20/10 para los cuadros de 1 m [repo, decisión "Playa y mar"]. Con $\lambda<2$ m ocurre *aliasing* (la ola aparece con otra longitud).
@@ -106,7 +98,7 @@ Argumento (a revisar por D2: **no se comparó con el código de las prácticas d
 
 ## 2. Velas flotando (C-3) y llama (C-2)
 
-**Estado:** implementado el 11/11: trayectoria y vaivén en `src/AnimVelas.h` (C-3) y llama en `Shaders/lighting.frag` (C-2). Sin compilar; el GLSL no se validó. Valores y motivos: ESTADO §4, decisiones del 11/11 "Velas flotando" y "Llama".
+**Estado:** implementado el 11/11: trayectoria y vaivén en `src/AnimVelas.h` (C-3) y llama en `Shaders/lighting.frag` (C-2). Valores y motivos: ESTADO §4, decisiones del 11/11 "Velas flotando" y "Llama".
 **Aclaración del profesor [repo]:** las velas flotando **no** cuentan como KeyFrames (CONTEXTO §4).
 
 ### 2.1 Trayectoria: Bézier mar adentro
@@ -134,7 +126,7 @@ $u(0)=0$ (orilla), $u(T/2)=1$ (mar adentro), $u(T)=0$; $\dot u=0$ en los extremo
 Para la vela $j$ de un total de $M$:
 
 $$
-y_j(t)=y_{\text{base}}+a\,\sin(\omega_v\,t+\varphi_j),\qquad \varphi_j=\frac{2\pi\,j}{M}\ \ [\text{propuesta}]
+y_j(t)=y_{\text{base}}+a\,\sin(\omega_v\,t+\varphi_j),\qquad \varphi_j=\frac{2\pi\,j}{M}
 $$
 
 | Término | Significado | Valor |
@@ -179,7 +171,7 @@ Argumento (a revisar por D2: **no se comparó con las prácticas del curso**): l
 
 ## 3. Flores de cempasúchil flotando (C-4)
 
-**Estado:** implementado (C-4, 04/11) en `src/AnimFlores.h` y `src/main.cpp` (5 flores en la orilla). Usa `Models/flor/flor.obj` (extra de D1, X-3) como modelo provisional. Sin compilar.
+**Estado:** implementado (C-4, 04/11) en `src/AnimFlores.h` y `src/main.cpp` (5 flores en la orilla). Usa `Models/flor/flor.obj` (extra de D1, X-3) como modelo provisional.
 
 ### 3.1 Movimiento circular de radio pequeño
 Para la flor $j$ con centro $\mathbf{c}_j=(c_x,c_z)$ y radio $r$:
@@ -219,14 +211,7 @@ Argumento (a revisar por D2: **no se comparó con las prácticas del curso**): l
 
 ---
 
-## 4. Qué falta para cerrar C-8
+## 4. Límites de esta justificación
 
-| Hueco | Quién lo cierra |
-|---|---|
-| Compilar y ver las cuatro animaciones en pantalla; los valores de este documento son los del código, **no los observados** | D2 (F5, Release x64) |
-| Medir FPS con las tres animaciones a la vez (C-5): no hay ningún valor medido | D2 |
-| Confirmar con D2 los valores propuestos el 11/11 (velas y llama) y los del 04/11 (olas y flores) | D2, en el ESTADO §4 |
-| Revisar el argumento "no es una animación del curso" de cada una contra las prácticas (no están en el repo) | D2 / D1 |
-| Número de página y referencias APA 7 del documento final (manual técnico, E-5) | E-5 |
-
-**Criterio de terminado de C-8 [repo]:** fórmulas y parámetros **reales** en `docs/manual_tecnico/`. Los valores ya son los del código; la tarea pasa a ✅ cuando se vean funcionando y D2 confirme los argumentos.
+- Los valores son los del código; la comparación «no es una animación del curso» de cada sección se argumenta con las diferencias de técnica, pero las prácticas del curso no forman parte del repositorio y la revisión final contra ellas es de los integrantes.
+- Los FPS se midieron con todo el proyecto activo (ver el anexo de pruebas), no animación por animación.
