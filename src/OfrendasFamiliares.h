@@ -19,6 +19,7 @@
 namespace OfrendasFamiliares
 {
     constexpr float PI = 3.14159265f;
+    constexpr float CENTRO_CUERPO = 0.24f;   // X-67: distancia (m) del anclaje de persona_agachada al centro de su cuerpo, hacia donde mira (medida del .obj: z -0.76..0.28)
 
     enum Pieza { VELA, VELADORA, RACIMO, FLOR, PAN, COPALERO, BOTELLA, REFRESCO, MARCO, CUADRO, CESTA, PETATE, CRUZ, MAZETA, ALF_FLORES, ALF_CRUZ,
                  MESA, ALTAR3, ALTAR_MAYOR, ARCO, SOPORTES, PAPEL, CALABAZA, NARANJAS, GUITARRA, HAMACA, LANCHA, RED, TABLA, TAMBOR, FAROL, ROCA, CALAVERA,
@@ -91,10 +92,14 @@ namespace OfrendasFamiliares
                 add(t, cx + r * std::sin(a), y, cz + r * std::cos(a), esc, 0.0f, (tinte2.x >= 0.0f && i % 2) ? tinte2 : tinte);
             }
         }
-        // persona de rodillas en (x, z) que mira al punto (tx, tz) (coordenadas locales)
+        // persona de rodillas cuyo CUERPO queda centrado en (x, z) y que mira al punto (tx, ty) (coordenadas locales).
+        // X-67: el modelo persona_agachada mira hacia -Z local (cabeza en z -0.29, manos en z -0.76, pies en z +0.28): antes se giraba con +Z hacia
+        // la ofrenda y la gente le daba la espalda. Ahora se suma 180 grados y el punto de anclaje se retrocede 0.48 m (distancia del anclaje al
+        // centro del cuerpo x 2) para que el cuerpo siga donde ya habia sido verificado sin solapes y solo las manos apunten a la ofrenda.
         void vela_persona(float x, float z, float tx, float tz, int modelo)
         {
-            f.velan.push_back({ x, z, std::atan2(tx - x, tz - z) * 180.0f / PI, modelo });
+            const float dx = tx - x, dz = tz - z, d = std::max(std::sqrt(dx * dx + dz * dz), 1e-4f);
+            f.velan.push_back({ x - CENTRO_CUERPO * 2.0f * dx / d, z - CENTRO_CUERPO * 2.0f * dz / d, std::atan2(dx, dz) * 180.0f / PI + 180.0f, modelo });
         }
     };
 
@@ -334,7 +339,7 @@ namespace OfrendasFamiliares
         {
             float r = 0.0f;
             for (const Item& it : f.items) r = std::max(r, std::sqrt(it.pos.x * it.pos.x + it.pos.z * it.pos.z) + RadioPieza(it.tipo) * it.esc);
-            for (const Velador& p : f.velan) r = std::max(r, std::sqrt(p.x * p.x + p.z * p.z) + 0.80f);   // la persona de rodillas se extiende 0.76 m hacia atras (persona_agachada: z -0.76..0.28)
+            for (const Velador& p : f.velan) r = std::max(r, std::sqrt(p.x * p.x + p.z * p.z) + 0.28f);   // X-67: el anclaje queda 0.28 m detras de la persona (ella mira hacia dentro de la familia; las manos llegan 0.76 m delante)
             f.radio = r;
         }
         return v;
@@ -433,7 +438,8 @@ namespace OfrendasFamiliares
         for (const Velador& p : f.velan)
         {
             const float m = p.mira * PI / 180.0f;
-            const glm::vec2 w = mundo(glm::vec3(p.x - 0.35f * std::sin(m), 0.0f, p.z - 0.35f * std::cos(m)));
+            // X-67: la persona mira hacia -Z local: cuerpo 0.24 m delante del anclaje (circulo de 0.40 m) (las manos, a 0.76 m, quedan hacia dentro de la familia)
+            const glm::vec2 w = mundo(glm::vec3(p.x - CENTRO_CUERPO * std::sin(m), 0.0f, p.z - CENTRO_CUERPO * std::cos(m)));
             h.push_back({ w.x, w.y, 0.40f });
         }
         return h;

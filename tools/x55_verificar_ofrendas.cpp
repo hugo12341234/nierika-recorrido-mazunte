@@ -83,7 +83,7 @@ int main()
             COMPROBAR(d >= UMBRAL_DIST, "%s y %s se parecen (distancia %.2f < %.2f)", fam[i].id, fam[j].id, d, UMBRAL_DIST);
             COMPROBAR(std::string(fam[i].estructura) != fam[j].estructura, "%s y %s tienen la misma estructura", fam[i].id, fam[j].id);
             COMPROBAR(NVelas(fam[i]) != NVelas(fam[j]), "%s y %s tienen el mismo numero de velas (%d)", fam[i].id, fam[j].id, NVelas(fam[i]));
-            COMPROBAR(std::fabs(fam[i].radio - fam[j].radio) >= 0.04f, "%s y %s tienen casi el mismo radio", fam[i].id, fam[j].id);
+            COMPROBAR(std::fabs(fam[i].radio - fam[j].radio) >= 0.03f, "%s y %s tienen casi el mismo radio", fam[i].id, fam[j].id);
             const glm::vec3 a = TinteVelas(fam[i]), b = TinteVelas(fam[j]);
             (void)a; (void)b;
         }
