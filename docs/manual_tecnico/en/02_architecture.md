@@ -11,7 +11,7 @@ Tour application (C++17, Visual Studio 2022)
  ├─ Shaders and lighting    (GLSL 330)             ✅ lighting.vs/.frag: Blinn-Phong (A-8), waves (C-1), flame (C-2)
  ├─ Animation               (KeyFrames · slerp)    ✅ Animacion.cpp · Silueta.cpp · DejarFlor.h; simple: Olas.h, AnimVelas.h, AnimFlores.h
  ├─ Cultural cards          (Dear ImGui)           🔄 Fichas.cpp (ImGui is in vendor/; not yet compiled in VS)
- └─ Audio                   (miniaudio)            ✅ Audio.cpp; tracks Audio/oleaje.mp3 and musica.mp3 (external, credited; D-6)
+ └─ Audio                   (miniaudio)            ✅ Audio.cpp; tracks Audio/oleaje.mp3 and musica.mp3 ("Dios Nunca Muere", Banda Mixe de Oaxaca; external, credited; D-6, D-6k)
 OpenGL 3.3 Core Profile (GLEW)
 GPU / Resources (.obj, textures, audio, keyframes)
 ```

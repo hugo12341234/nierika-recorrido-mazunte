@@ -75,8 +75,8 @@ namespace
         // ---- X-52 (17/11, pedido de D2): fichas de lo que se agrego despues de la propuesta. Cambio de alcance: de 5 a 13 fichas (ESTADO sec. 4) ----
         { "Banda de viento",
           "Las bandas de viento son una tradición oaxaqueña que da identidad y hermana a los pueblos indígenas del estado, y acompañan sus fiestas comunales (México Desconocido, 2023). "
-          "Los músicos y los instrumentos de esta banda son una representación del estudio. La música que suena en el recorrido es Xochipitzahuatl, "
-          "un canto en náhuatl, y no es música oaxaqueña.",
+          "Los músicos y los instrumentos de esta banda son una representación del estudio. La música que suena en el recorrido es «Dios Nunca Muere», "
+          "interpretada por la Banda Mixe de Oaxaca.",
           "Tradición regional de Oaxaca (México Desconocido, 2023); la banda y la música elegida: adaptación del estudio",
           REF_BANDAS,
           2, { glm::vec3(12.6f, 0.0f, 10.4f), glm::vec3(15.4f, 0.0f, 10.4f) } },   // frente a la fila delantera (z = 9, X-42); la banda esta en (14, 8)

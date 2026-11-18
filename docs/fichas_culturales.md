@@ -153,7 +153,7 @@
 
 | # | Ficha | Dónde (x, z) | Fuente | Qué es adaptación | Debilidad de la fuente |
 |---|---|---|---|---|---|
-| 6 | Banda de viento | frente a la banda (12.6 y 15.4, 10.4) | México Desconocido (2023) | Los 9 músicos, sus instrumentos y la música elegida (Xochipitzahuatl, náhuatl, no oaxaqueña) | El artículo **no habla de Día de Muertos** ni de Mazunte: la ficha solo dice «tradición oaxaqueña» y «fiestas comunales» |
+| 6 | Banda de viento | frente a la banda (12.6 y 15.4, 10.4) | México Desconocido (2023) | Los 9 músicos, sus instrumentos y la música elegida («Dios Nunca Muere», Banda Mixe de Oaxaca; D-6k) | El artículo **no habla de Día de Muertos** ni de Mazunte: la ficha solo dice «tradición oaxaqueña» y «fiestas comunales» |
 | 7 | Copal y copalero | (±1.05, 1.75) | SEP (2026); INAH (2025, Boletín 562) | Los dos copaleros y el humo (modelo fijo) | El boletín del INAH describe a los tepehuas de Veracruz, no a Oaxaca; no define el copal ni su significado |
 | 8 | Panteón y tumbas | al pie de las 4 tumbas | México Desconocido (2026); UNESCO (s. f.) | El panteón de 4 tumbas | La nota de las alumbradas es contenido de marca («advertorial MD») y no cita fuentes |
 | 9 | Comparsa en la orilla | (-12, 22) | La Razón Online (2025) | La comparsa de 12 figuras | Crónica festiva de Oaxaca ciudad; no es de Mazunte |
