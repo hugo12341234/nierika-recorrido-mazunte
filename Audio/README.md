@@ -38,3 +38,14 @@ Ninguna de las dos es propia del estudio ni de Mazunte/Oaxaca; no cuentan como m
 - **Referencia APA 7 (incompleta):** *[Banda Mixe de Oaxaca — confirmar intérprete/canal (D2)].* ([Año — PENDIENTE (D2)]). *Dios Nunca Muere* [Canción/Video]. [Plataforma o canal — PENDIENTE (D2)]. [URL — PENDIENTE (D2)] (fecha de consulta: PENDIENTE (D2)). Uso educativo no comercial, sin licencia libre confirmada (decisión previa de D2).
 
 Mientras falten esos campos, los créditos APA 7 de las dos pistas no están completos.
+
+## Narración del recorrido guiado (X-62, 17/11) — los archivos aún NO existen
+
+Además de las dos pistas ambientales, el recorrido guiado (tecla **T**) busca **12 archivos de voz**, uno por estación, en **`Audio/narracion/`** (carpeta aparte, para no romper la regla de «solo `oleaje.mp3` y `musica.mp3`» de arriba):
+
+`narracion_00.mp3` … `narracion_11.mp3` (el texto de cada uno está en `docs/RECORRIDO_GUIADO.md`, sección 7).
+
+- Si falta uno, la consola dice `[Audio] Sin voz para la estacion N …` y la estación dura su tiempo de diseño (con subtítulos): **no truena**.
+- Si existe, la estación dura lo que dura el audio **+ 1.5 s**: no hay que reajustar tiempos.
+- Mientras habla la voz, la música baja a ×0.35 y el mar a ×0.6 (rampa de 0.6 s, `Audio::ActualizarZona`); la tecla **M** no silencia la voz.
+- Formato: `.mp3`. La voz es sintética: **crédito APA 7 de la herramienta: pendiente** (D2 la elige; se anota aquí, en el ESTADO y en el manual).

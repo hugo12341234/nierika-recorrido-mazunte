@@ -91,6 +91,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\Fichas.cpp" />
+    <ClCompile Include="src\Recorrido.cpp" />
     <!-- Dear ImGui se compila desde codigo fuente (vendor\imgui) con los backends de GLFW y OpenGL3 (C-7b) -->
     <ClCompile Include="vendor\imgui\imgui.cpp" />
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Fichas.h" />
     <ClInclude Include="src\Hud.h" />
+    <ClInclude Include="src\Recorrido.h" />
     <ClInclude Include="src\Colisiones.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />

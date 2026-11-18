@@ -12,8 +12,9 @@
 | Altar candles | **V** (within 3 m of the altar) | Turns the altar candles on or off: the warm light and the flames fade in or out in a quarter of a second. Away from the altar it only shows a notice |
 | Sound | **M** | Cycles through "sea and music", "sea only", "music only" and "silence" (a notice appears at the top of the screen) |
 | Controls help | **F1** | Shows or hides the list of controls |
+| Guided tour | **T** | A narrated visit through 12 stations (beach, offerings, altar, path of the souls, viewpoint), with subtitles and, if the audio files exist, a voice. **T**, **Esc** or **W A S D** cancel it and leave you where you are (see `docs/RECORRIDO_GUIADO.md`, in Spanish) |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
-| Quit | **Esc** | Closes the program |
+| Quit | **Esc** | Closes the program (with the guided tour on, the first press only cancels it) |
 
 Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Walking speed is **2.0 m/s** (`SPEED` in `Camera.h`); mouse sensitivity is **0.25**.
@@ -21,7 +22,8 @@ Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - There are **collisions** (A-9): you cannot pass through walls, the cemetery wall or the altar; if you hit one head-on you slide along it. The walkable area reaches the shore (z = 24).
 - At start the altar candles are **on**. Near the altar a reminder for **V** appears at the top.
 - Since X-60 (Nov 17) the **space bar does nothing**: the colored lights were removed (ESTADO sec. 4, Nov 17).
-- Esc closes the program directly, with no confirmation.
+- Esc closes the program directly, with no confirmation; if the guided tour (**T**) is on, the first press only cancels it.
+- **T** (X-62, Nov 17): during the tour the mouse does not move the camera. This note was written before compiling in VS 2022.
 
 ## 2.2 Keys without a function
 
