@@ -3,6 +3,7 @@
 // personas). Docs: docs/RECORRIDO_GUIADO.md. Una clase por par .h/.cpp; sin GPU: solo posicion y orientacion de la camara.
 #pragma once
 
+#include <functional>
 #include <glm/glm.hpp>
 
 class Audio;
@@ -32,8 +33,13 @@ public:
     // Centro de la comparsa en planta (x, z): lo fija main cada cuadro; la estacion 2 mira hacia alla (la comparsa camina sola, ver ESTADO X-62)
     void FijarComparsa(const glm::vec2& centro) { comparsa_ = centro; }
 
+    // X-65: posicion del torso de la silueta (mundo) en el instante t de su caminata; main la calcula con una copia de la silueta.
+    // La estacion 4 mira a la silueta mientras camina por el camino de flores.
+    void FijarPosicionSilueta(std::function<glm::vec3(float)> f) { posSilueta_ = f; }
+
     // Tiempo (s) que main debe poner en tSilueta mientras dura el recorrido, o -1 si el recorrido no controla la silueta.
-    // La silueta espera en la orilla (t = 0) y arranca para llegar al altar justo cuando la camara esta ahi (estacion 7).
+    // X-65: la silueta camina DOS veces, ambas con la voz: (1) en la estacion 4 (camino de flores: «la figura que va caminando rumbo al altar»), y se
+    // devuelve a la orilla al empezar la estacion 5; (2) en la estacion 8 llega al altar y deja la flor cuando la voz dice «llega la figura... y deja su flor».
     float TiempoSilueta() const;
 
     // Para los subtitulos: estacion actual (0..11), titulo y texto; el texto solo se da mientras la camara esta detenida en la estacion
@@ -51,7 +57,9 @@ private:
     float tramoReal_ = 1.0f;    // duracion efectiva del tramo actual
     float retenReal_ = 1.0f;    // duracion efectiva del reten actual (la voz, si existe, manda)
     float duracionSil_ = 18.4f;
-    float siluetaInicio_ = -1.0f;   // reloj_ al que arranca la caminata de la silueta (-1 = aun no)
+    float siluetaA_ = -1.0f;        // X-65: reloj_ al que arranca la caminata de la estacion 4 (-1 = aun no)
+    float siluetaInicio_ = -1.0f;   // reloj_ al que arranca la caminata de la estacion 8, la del altar (-1 = aun no)
+    std::function<glm::vec3(float)> posSilueta_;
     Audio* audio_ = nullptr;
     RecorridoPose pose_{};      // ultima pose entregada
     RecorridoPose inicioTramo_{};
