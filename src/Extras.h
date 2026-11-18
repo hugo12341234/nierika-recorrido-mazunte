@@ -1,0 +1,299 @@
+#ifndef EXTRAS_H
+#define EXTRAS_H
+
+// X-19..X-22: datos y formulas de los extras de ambiente (fase "mejorar y producir", ver docs/EXTRAS_Y_MEJORAS.md).
+// Solo <cmath>: se puede probar aparte (tools/x19_pruebas_extras.cpp). SIN KeyFrames: todo es matematica simple.
+
+#include <cmath>
+
+namespace Extras
+{
+    constexpr float PI = 3.14159265358979f;
+
+    // Balanceo senoidal: theta(t) = A * sen(2*pi*t/T + fase), en grados. Lo usan las figuras (balanceo suave sobre su pivote)
+    // y los tendederos de papel picado (pendulo de pequena amplitud).
+    inline float Balanceo(float t, float periodo, float fase, float amplitudGrados)
+    {
+        return amplitudGrados * std::sin(2.0f * PI * t / periodo + fase);
+    }
+
+    // Figuras de la ceremonia (poses FIJAS; no hay IA). tipo: 0 persona_pie_a, 1 persona_pie_b, 2 persona_agachada_a, 3 persona_agachada_b.
+    struct Figura { float x, z, giroY; int tipo; float fase; };
+    constexpr int N_FIGURAS = 12;
+    // giroY = 180: mira a +z (hacia el mar). Los petates estan en z ~ 20 (la playa es plana hasta z = +20)
+    inline const Figura FIGURAS[N_FIGURAS] = {
+        {  8.0f, 19.5f, 180.0f, 2, 0.0f }, {  8.7f, 19.5f, 180.0f, 3, 1.1f },     // junto al petate 1
+        { 11.0f, 18.7f, 180.0f, 3, 2.0f }, { 11.8f, 18.8f, 175.0f, 2, 0.4f },     // junto al petate 2
+        { 14.0f, 19.7f, 180.0f, 2, 3.1f }, { 14.7f, 19.6f, 185.0f, 3, 4.2f },     // junto al petate 3
+        { 32.9f,  7.0f,  90.0f, 0, 0.7f }, { 30.7f,  8.9f,  -9.0f, 1, 1.9f },     // X-42: de pie, alrededor de la fogata este (31, 7)
+        { 29.2f,  6.4f, -108.0f, 0, 2.6f }, { 31.9f,  5.4f, 151.0f, 1, 3.8f },
+        {  5.0f, 20.8f, 150.0f, 1, 5.0f }, { 17.2f, 20.9f, 210.0f, 0, 0.3f }      // mirando el mar
+    };
+    // Petates con ofrenda (centro x, z y giro)
+    struct Petate { float x, z, giroY; };
+    constexpr int N_PETATES = 3;
+    inline const Petate PETATES[N_PETATES] = { { 8.4f, 20.35f, 0.0f }, { 11.4f, 19.55f, 0.0f }, { 14.35f, 20.55f, 0.0f } };
+
+    // X-20: tendederos de papel picado que cruzan la playa (propuesta, tabla 2.1). Cada tendedero es una hilera de N bastidores
+    // de Models/soportes (1.85 m de ancho, postes de 2 m) con una tira de Models/papel_picado colgada de cada uno.
+    struct Tendedero { float x0, z; int n; };
+    constexpr int N_TENDEDEROS = 2;
+    inline const Tendedero TENDEDEROS[N_TENDEDEROS] = { { -22.0f, 15.0f, 9 }, { 4.0f, 14.2f, 8 } };
+    constexpr float ANCHO_BASTIDOR = 1.85f;   // m (x -0.925..+0.925 en soportes.obj)
+    constexpr float ALTO_PAPEL = 1.95f;       // m: la tira cuelga de aqui (pivote en su borde superior)
+
+    // Ofrendas pequenas al pie de las tumbas y la cruz del panteon (x, z): una vela y tres flores de cempasuchil
+    struct OfrendaTumba { float x, z; };
+    constexpr int N_OFRENDAS_TUMBA = 5;
+    inline const OfrendaTumba OFRENDAS_TUMBA[N_OFRENDAS_TUMBA] = { { -4.0f, 5.75f }, { 4.0f, 6.2f }, { -5.8f, 7.15f }, { 5.8f, 6.7f }, { -2.5f, 4.1f } };
+
+    // X-21: personas sobre tablas de remo en el mar (fotos de referencia de D2). La tabla recorre un circulo lento de radio R:
+    //   (x, z)(t) = (cx + R*cos(w*t + fase), cz + R*sen(w*t + fase)),  w = 2*pi / PERIODO_TABLA
+    // y sigue la ola: y = Olas::Altura(x, z, t) y su vertical se alinea con la normal Olas::Normal (cabeceo y alabeo). Sin KeyFrames.
+    struct Tabla { float cx, cz, radio, fase; int persona; };   // persona: 0 persona_pie_a, 1 persona_pie_b
+    constexpr int N_TABLAS = 5;
+    constexpr float PERIODO_TABLA = 70.0f;   // s por vuelta
+    inline const Tabla TABLAS[N_TABLAS] = { { -14.0f, 30.0f, 3.0f, 0.0f, 0 }, { -5.0f, 36.0f, 4.0f, 1.2f, 1 }, { 6.0f, 29.0f, 3.0f, 2.4f, 0 },
+                                            { 15.0f, 38.0f, 4.0f, 3.6f, 1 }, { 26.0f, 33.0f, 3.0f, 4.8f, 0 } };
+    // Posicion y direccion de avance (dx, dz) de la tabla i en el instante t
+    inline void PosicionTabla(const Tabla& b, float t, float& x, float& z, float& dx, float& dz)
+    {
+        const float w = 2.0f * PI / PERIODO_TABLA, a = w * t + b.fase;
+        x = b.cx + b.radio * std::cos(a);  z = b.cz + b.radio * std::sin(a);
+        dx = -std::sin(a);  dz = std::cos(a);   // tangente unitaria (la tabla avanza de proa)
+    }
+
+    // X-22: luciernagas. Cada una vuela en una curva de Lissajous 3D alrededor de su centro y parpadea con un seno elevado al cubo:
+    //   p(t) = c + (Ax*sen(ax*t + px), Ay*sen(ay*t + py), Az*sen(az*t + pz)),   brillo(t) = max(0, sen(2*pi*t/Tb + fase))^3
+    // Frecuencias distintas por eje (cocientes casi irracionales) para que la trayectoria no se repita pronto. No es un sistema de particulas
+    // con fisica: cada punto se calcula en forma cerrada. Sin KeyFrames.
+    constexpr int N_LUCIERNAGAS = 48;
+    struct Luciernaga { float cx, cy, cz, fase; };
+    inline Luciernaga LuciernagaN(int i)   // centros repartidos por la playa y el panteon (x -32..32, z 4..21), alturas 0.6..1.8 m
+    {
+        const float u = std::fmod(std::sin(12.9898f * (i + 1)) * 43758.5453f, 1.0f), v = std::fmod(std::sin(78.233f * (i + 1)) * 12345.6789f, 1.0f);
+        const float a = u < 0 ? -u : u, b = v < 0 ? -v : v;
+        return { -32.0f + 64.0f * a, 0.6f + 1.2f * b, 4.0f + 17.0f * std::fmod(a * 7.31f + b * 3.17f, 1.0f), 6.2832f * std::fmod(a * 13.7f, 1.0f) };
+    }
+    inline void PosicionLuciernaga(int i, float t, float& x, float& y, float& z)
+    {
+        const Luciernaga l = LuciernagaN(i);
+        const float k = 1.0f + 0.07f * (i % 5);
+        x = l.cx + 1.6f * std::sin(0.41f * k * t + l.fase);
+        y = l.cy + 0.45f * std::sin(0.67f * k * t + 2.0f * l.fase);
+        z = l.cz + 1.6f * std::sin(0.53f * k * t + 3.0f * l.fase);
+    }
+    inline float BrilloLuciernaga(int i, float t)
+    {
+        const float s = std::sin(2.0f * PI * t / 2.6f + LuciernagaN(i).fase * 3.0f);
+        return s > 0.0f ? s * s * s : 0.0f;
+    }
+
+    // ======== X-24: NARRATIVA EN 5 ESTACIONES (del atardecer a la noche) ========
+    // E1 llegada a la playa (z ~ 21.6, x < 0) · E2 ofrendas y velas al mar (ceremonia X-19, musico) · E3 sendero de cempasuchil y papel picado
+    // (x ~ 0, z 22 -> 2) · E4 panteon con familias ante las tumbas · E5 la puerta del cuarto y el altar. Coinciden con las 5 fichas.
+    // Figuras en POSES FIJAS (sin IA) con balanceo senoidal; escala 1 = adulto, ~0.6 = nino. inst: 0 ninguno, 1 guitarra (musico).
+    struct FiguraN { float x, z, giroY; int tipo; float fase; float esc; int inst; };
+    constexpr int N_FIGURAS_N = 24;
+    inline const FiguraN FIGURAS_N[N_FIGURAS_N] = {
+        // E1 llegada: una familia que mira el mar y una abuela que deja velas en la orilla
+        { -7.0f, 21.6f, 175.0f, 0, 0.2f, 1.00f, 0 }, { -6.2f, 21.7f, 185.0f, 1, 1.4f, 1.00f, 0 }, { -29.2f, 8.6f, 72.0f, 0, 2.6f, 0.62f, 0 },
+        { -32.6f, 8.9f, -61.0f, 1, 3.3f, 0.58f, 0 }, { -31.0f, 6.1f, 180.0f, 3, 0.9f, 0.95f, 0 },   // X-42: estos 3 pasan al campamento oeste (fogata en (-31, 8))
+        // E2: musico con guitarra y un nino junto a la ceremonia
+        {  2.7f, 19.0f, 270.0f, 0, 1.0f, 1.00f, 1 }, {  3.7f, 19.8f, 265.0f, 1, 2.2f, 0.60f, 0 },
+        // E3 sendero: una familia que camina hacia el panteon (a >= 1.3 m del eje x = 0 de la caminata)
+        { -1.5f, 18.0f,   0.0f, 0, 0.4f, 1.00f, 0 }, { -2.3f, 17.9f,   5.0f, 1, 1.8f, 0.60f, 0 }, {  1.6f, 16.2f, 355.0f, 1, 2.9f, 1.00f, 0 },
+        // E4 panteon: cada tumba tiene visitantes
+        { -4.3f,  6.6f,   0.0f, 2, 0.5f, 1.00f, 0 }, { -3.3f,  6.7f,   0.0f, 0, 1.7f, 0.60f, 0 },                     // tumba 2: abuela y nino
+        {  3.2f,  6.5f,   0.0f, 0, 2.4f, 1.00f, 0 }, {  4.6f,  6.45f,  0.0f, 1, 3.6f, 1.00f, 0 }, {  3.9f,  6.3f,   0.0f, 0, 4.4f, 0.60f, 0 },  // tumba 3: familia (X-57: 0.6-0.7 m al sur, fuera del diseño de velas del este)
+        { -5.0f, 10.9f,   0.0f, 2, 0.8f, 1.00f, 0 }, { -4.0f, 10.9f,   0.0f, 3, 2.0f, 0.95f, 0 },                     // tumba 4: dos personas de rodillas
+        {  5.4f, 11.1f, 200.0f, 1, 1.1f, 1.00f, 1 }, {  3.3f, 11.0f, 170.0f, 0, 2.7f, 1.00f, 0 },                     // tumba 1: musico y acompanante
+        { -2.5f,  5.1f,   0.0f, 3, 3.9f, 0.95f, 0 },                                                                   // la cruz de la entrada
+        // E5 puerta del cuarto: una abuela con su vela y un nino esperan afuera
+        {  1.9f,  2.7f,   0.0f, 2, 1.3f, 0.95f, 0 }, { -1.9f,  2.8f,   0.0f, 1, 4.0f, 0.60f, 0 },
+        // al fondo de la playa oeste: pareja con tabla al hombro mirando el mar
+        { -16.0f, 19.0f, 160.0f, 0, 0.1f, 1.00f, 0 }, { -15.1f, 19.2f, 170.0f, 1, 1.0f, 1.00f, 0 }
+    };
+    // Cestas con flores (x, z): llegada y panteon
+    struct Cesta { float x, z; };
+    constexpr int N_CESTAS = 4;
+    inline const Cesta CESTAS[N_CESTAS] = { { -6.4f, 21.0f }, { 4.5f, 10.7f }, { -3.2f, 11.4f }, { 2.6f, 18.4f } };
+    // Faroles (poste con linterna; la luz es una esfera emisiva que parpadea): x, z
+    constexpr int N_FAROLES = 16;
+    inline const Cesta FAROLES[N_FAROLES] = {
+        { -3.2f, 22.3f }, { -26.0f, 6.0f }, { 26.0f, 5.0f }, { 18.8f, 21.4f },                      // E1, E2
+        { -2.2f, 19.4f }, { 2.2f, 17.2f }, { -2.2f, 14.6f }, { 2.2f, 13.0f },                        // E3 sendero
+        { -6.2f, 11.2f }, { 6.2f, 11.2f }, { -6.2f, 4.3f }, { 6.2f, 4.3f },                          // E4 esquinas del panteon
+        { -1.8f, 2.0f }, { 1.8f, 2.0f }, { -18.0f, 13.0f }, { 18.0f, 9.0f }                           // E5 puerta, y dos en la playa
+    };
+    // Camino de cempasuchil de la orilla a la puerta: el eje serpentea x(z) = 0.9*sen(0.35*z) y cada paso de 0.28 m deja una flor
+    // con dispersion deterministica de +-0.45 m. Las flores no se dibujan sobre los muros de la barda.
+    inline float EjeSendero(float z) { return 0.9f * std::sin(0.35f * z); }
+    constexpr float Z_SENDERO_ORILLA = 22.4f, Z_SENDERO_PUERTA = 2.3f, PASO_SENDERO = 0.28f;
+    inline int NumFloresSendero() { return (int)((Z_SENDERO_ORILLA - Z_SENDERO_PUERTA) / PASO_SENDERO); }
+    inline bool FlorSenderoEn(int i, float& x, float& z)
+    {
+        z = Z_SENDERO_ORILLA - PASO_SENDERO * i;
+        const float r1 = std::fmod(std::fabs(std::sin(12.9898f * i + 1.3f) * 43758.5453f), 1.0f);
+        const float r2 = std::fmod(std::fabs(std::sin(78.233f * i + 4.1f) * 12345.6789f), 1.0f);
+        x = EjeSendero(z) + (r1 * 2.0f - 1.0f) * 0.45f;
+        z += (r2 * 2.0f - 1.0f) * 0.12f;
+        const bool muroSur = z > 2.9f && z < 3.35f, muroNorte = z > 11.7f && z < 12.05f;
+        return !((muroSur || muroNorte) && std::fabs(x) > 0.95f);
+    }
+
+    // Murcielagos al anochecer: vuelan en circulos (centro, radio, altura) a velocidad lineal v; las alas baten con theta = 40 grados * sen(2*pi*f*t)
+    struct Murcielago { float cx, cz, radio, altura, fase; };
+    constexpr int N_MURCIELAGOS = 7;
+    constexpr float VEL_MURCIELAGO = 4.5f, FREC_ALETEO = 3.2f, AMP_ALETEO = 40.0f;
+    inline const Murcielago MURCIELAGOS[N_MURCIELAGOS] = { { 0.0f, 8.0f, 14.0f, 8.0f, 0.0f }, { 6.0f, 10.0f, 18.0f, 11.0f, 1.9f }, { -8.0f, 6.0f, 22.0f, 9.5f, 3.4f },
+                                                          { 12.0f, 14.0f, 12.0f, 7.0f, 4.7f }, { -14.0f, 16.0f, 16.0f, 12.5f, 2.6f }, { 2.0f, 2.0f, 26.0f, 14.0f, 5.5f },
+                                                          { 0.0f, 20.0f, 10.0f, 6.5f, 0.8f } };
+    inline void PosicionMurcielago(const Murcielago& m, float t, float& x, float& y, float& z, float& dx, float& dz)
+    {
+        const float a = VEL_MURCIELAGO / m.radio * t + m.fase;
+        x = m.cx + m.radio * std::cos(a);  z = m.cz + m.radio * std::sin(a);
+        y = m.altura + 0.8f * std::sin(0.7f * t + m.fase * 2.0f);
+        dx = -std::sin(a);  dz = std::cos(a);
+    }
+
+    // ======== X-25..X-28: LOS LADOS DE LA ESCENA (costa de Mazunte; ver docs/investigacion_mazunte.md) ========
+    // FUERA DEL ALCANCE ORIGINAL (propuesta v2.0, tabla 2): casas y palapas. Se agregan por decision del equipo del 13/11/2026 (ESTADO seccion 4)
+    // y se pueden QUITAR poniendo MOSTRAR_FUERA_DE_ALCANCE = false o con la variable de entorno NIERIKA_SIN_FUERA_ALCANCE=1.
+    constexpr bool MOSTRAR_FUERA_DE_ALCANCE = true;
+    struct Obj { float x, z, giro, esc; };                       // giro en grados alrededor de Y; esc = escala
+    // Rocas costeras y acantilados (esc 1..8 m): agrupadas en las dos puntas de la bahia
+    constexpr int N_ROCAS = 18;
+    inline const Obj ROCAS[N_ROCAS] = {
+        { -44.0f, 23.0f, 10.0f, 2.2f }, { -41.0f, 26.0f, 70.0f, 1.4f }, { -47.0f, 29.0f, 130.0f, 3.0f }, { -38.0f, 31.0f, 200.0f, 1.0f }, { -50.0f, 20.0f, 20.0f, 4.5f },
+        { -46.0f, 36.0f, 300.0f, 2.6f }, { -52.0f, 12.0f, 80.0f, 6.0f }, { -49.0f, 2.0f, 150.0f, 5.0f }, { -42.0f, 21.0f, 250.0f, 0.9f },
+        {  44.0f, 23.5f, 190.0f, 2.0f }, {  41.0f, 27.0f, 40.0f, 1.5f }, {  47.0f, 30.0f, 100.0f, 3.2f }, {  38.0f, 32.0f, 280.0f, 1.1f }, {  50.0f, 21.0f, 330.0f, 4.8f },
+        {  46.0f, 37.0f, 60.0f, 2.8f }, {  52.0f, 10.0f, 170.0f, 6.5f }, {  49.0f, 0.0f, 20.0f, 5.2f }, {  43.0f, 20.5f, 210.0f, 0.8f }
+    };
+    // Lanchas de pescadores: varadas en la arena (giro 90: el eje largo va a lo largo de la orilla) y ancladas en el agua (suben con la ola)
+    constexpr int N_LANCHAS_VARADAS = 4;
+    inline const Obj LANCHAS_VARADAS[N_LANCHAS_VARADAS] = { { -31.0f, 21.8f, 100.0f, 1.0f }, { -36.0f, 22.6f, 80.0f, 1.0f }, { 30.0f, 21.9f, 80.0f, 1.0f }, { 35.0f, 22.5f, 100.0f, 1.0f } };
+    constexpr int N_LANCHAS_AGUA = 6;
+    inline const Obj LANCHAS_AGUA[N_LANCHAS_AGUA] = { { -26.0f, 31.0f, 80.0f, 0.0f }, { -34.0f, 38.0f, 100.0f, 1.3f }, { -18.0f, 44.0f, 70.0f, 2.6f },
+                                                      { 27.0f, 33.0f, 100.0f, 3.9f }, { 36.0f, 40.0f, 80.0f, 5.1f }, { 20.0f, 48.0f, 110.0f, 0.7f } };
+    // Redes de pesca secandose (cuelgan de un bastidor de Models/soportes estirado x1.3): x, z
+    constexpr int N_REDES = 3;
+    inline const Obj REDES[N_REDES] = { { -33.5f, 18.5f, 0.0f, 1.3f }, { -27.0f, 17.0f, 0.0f, 1.3f }, { 32.0f, 18.0f, 0.0f, 1.3f } };
+    // FUERA DEL ALCANCE ORIGINAL: palapas (techo de palma, abiertas) y casas costeras (tipo 0 = pared turquesa, 1 = pared ocre)
+    constexpr int N_PALAPAS = 5;
+    inline const Obj PALAPAS[N_PALAPAS] = { { -31.0f, 14.5f, 0.0f, 1.0f }, { -39.0f, 1.5f, 20.0f, 1.0f }, { 31.0f, 13.0f, 0.0f, 1.0f }, { 38.0f, 0.5f, 340.0f, 1.0f }, { -23.0f, -3.5f, 0.0f, 1.0f } };
+    struct Casa { float x, z, giro; int tipo; };
+    constexpr int N_CASAS = 6;
+    inline const Casa CASAS[N_CASAS] = { { -43.0f, 10.0f, 270.0f, 0 }, { -43.0f, -5.0f, 270.0f, 1 }, { -45.0f, -12.0f, 270.0f, 0 },
+                                         {  41.0f, 8.0f, 90.0f, 1 }, {  42.5f, -7.0f, 90.0f, 0 }, {  45.0f, -14.0f, 90.0f, 1 } };
+    // Fogatas sin humo (la llama es el shader de las velas), hamacas entre postes, palmas extra en los lados
+    constexpr int N_FOGATAS = 2;
+    inline const Obj FOGATAS[N_FOGATAS] = { { -31.0f, 8.0f, 0.0f, 1.0f }, { 31.0f, 7.0f, 0.0f, 1.0f } };
+    constexpr int N_HAMACAS = 2;
+    inline const Obj HAMACAS[N_HAMACAS] = { { -36.0f, 12.0f, 0.0f, 1.0f }, { 38.0f, 13.5f, 0.0f, 1.0f } };
+    constexpr int N_PALMAS_LADOS = 16;
+    inline const Obj PALMAS_LADOS[N_PALMAS_LADOS] = {
+        { -22.0f, 8.0f, 30.0f, 1.0f }, { -24.0f, 16.0f, 100.0f, 1.2f }, { -28.0f, 6.0f, 200.0f, 0.9f }, { -35.0f, 15.0f, 280.0f, 1.1f }, { -41.0f, 18.0f, 60.0f, 1.0f },
+        { -40.0f, 15.5f, 140.0f, 1.3f }, { -33.0f, 3.0f, 10.0f, 1.0f }, { -45.5f, 14.0f, 220.0f, 1.1f },
+        {  22.0f, 10.0f, 300.0f, 1.0f }, {  25.0f, 17.0f, 120.0f, 1.2f }, {  27.0f, 11.5f, 20.0f, 0.9f }, {  34.0f, 19.0f, 180.0f, 1.1f }, {  41.0f, 14.0f, 260.0f, 1.0f },
+        {  35.0f, 9.0f, 90.0f, 1.3f }, {  34.0f, -3.0f, 340.0f, 1.0f }, {  45.0f, 15.0f, 50.0f, 1.1f }
+    };
+
+    // Aves (pelicanos y fragatas, simplificadas): vuelan en circulos y baten las alas: theta = 25 grados * sen(2*pi*0.9*t + fase)
+    struct Ave { float cx, cz, radio, altura, fase, vel; };
+    constexpr int N_AVES = 7;
+    constexpr float FREC_ALETEO_AVE = 0.9f, AMP_ALETEO_AVE = 25.0f;
+    inline const Ave AVES[N_AVES] = { { -20.0f, 40.0f, 14.0f, 12.0f, 0.0f, 3.0f }, { 20.0f, 42.0f, 16.0f, 16.0f, 1.6f, 3.4f }, { 0.0f, 55.0f, 20.0f, 20.0f, 3.1f, 3.8f },
+                                      { -35.0f, 30.0f, 9.0f, 9.0f, 4.2f, 2.8f }, { 35.0f, 28.0f, 10.0f, 10.0f, 5.0f, 2.6f }, { 0.0f, 35.0f, 12.0f, 14.0f, 2.2f, 3.2f }, { -8.0f, 48.0f, 11.0f, 18.0f, 0.9f, 3.5f } };
+    inline void PosicionAve(const Ave& a, float t, float& x, float& y, float& z, float& dx, float& dz)
+    {
+        const float ang = a.vel / a.radio * t + a.fase;
+        x = a.cx + a.radio * std::cos(ang);  z = a.cz + a.radio * std::sin(ang);
+        y = a.altura + 1.2f * std::sin(0.4f * t + a.fase);
+        dx = -std::sin(ang);  dz = std::cos(ang);
+    }
+    // Tortugas marinas: nadan en circulos lentos en la superficie (R m, 0.4 m/s) con un cabeceo de aletas de +-10 grados cada 1.8 s
+    struct TortugaMar { float cx, cz, radio, fase; };
+    constexpr int N_TORTUGAS = 4;
+    inline const TortugaMar TORTUGAS[N_TORTUGAS] = { { -14.0f, 34.0f, 5.0f, 0.0f }, { 12.0f, 36.0f, 6.0f, 1.7f }, { -3.0f, 44.0f, 5.0f, 3.1f }, { 24.0f, 32.0f, 4.0f, 4.4f } };
+    constexpr float VEL_TORTUGA = 0.4f;
+    inline void PosicionTortuga(const TortugaMar& t, float tiempo, float& x, float& z, float& dx, float& dz)
+    {
+        const float a = VEL_TORTUGA / t.radio * tiempo + t.fase;
+        x = t.cx + t.radio * std::cos(a);  z = t.cz + t.radio * std::sin(a);
+        dx = -std::sin(a);  dz = std::cos(a);
+    }
+    // Crias de tortuga que avanzan hacia el mar (propuesta de Mazunte: Centro Mexicano de la Tortuga): z(t) = Z0 + ((v*t + fase) mod L)
+    constexpr int N_CRIAS = 8;
+    constexpr float CRIA_Z0 = 20.2f, CRIA_L = 4.2f, CRIA_VEL = 0.18f;
+    inline float CriaZ(int i, float t) { return CRIA_Z0 + std::fmod(CRIA_VEL * t + 0.53f * i * CRIA_L, CRIA_L); }
+    inline float CriaX(int i) { return 18.0f + 0.9f * i + 0.3f * std::sin(2.0f * i); }
+    // Linternas de papel flotando en la bahia (mismas ofrendas de luz que las velas); hash determinista por indice
+    constexpr int N_LINTERNAS = 40;
+    inline void LinternaN(int i, float& x, float& z)
+    {
+        const float a = std::fmod(std::fabs(std::sin(12.9898f * (i + 3)) * 43758.5453f), 1.0f);
+        const float b = std::fmod(std::fabs(std::sin(78.233f * (i + 3)) * 12345.6789f), 1.0f);
+        x = -46.0f + 92.0f * a;  z = 27.0f + 32.0f * b;
+    }
+
+    // ======== X-29: COMPARSA, MUSICA EN VIVO Y ALFOMBRAS DE FLORES (FUERA DEL ALCANCE ORIGINAL; detras de MOSTRAR_FUERA_DE_ALCANCE) ========
+    // Figuras en POSES FIJAS (sin IA) con balanceo senoidal. Sin musica propia (D-6c, 14/11: se quito Audio/banda.wav); no hay musicos ni grabaciones reales.
+    // X-40 (15/11): BANDA DE VIENTO OAXAQUENA de 9 musicos (reemplaza a los 5 mudos de X-29). Cada uno es un modelo propio de Blender
+    // (musico_* con los brazos en la pose del instrumento + banda_* modelado en las mismas coordenadas locales, tools/x40_banda.py).
+    // inst: 0 trompeta, 1 clarinete, 2 saxofon, 3 trombon, 4 tuba, 5 tambora, 6 tarola, 7 platillos.
+    // X-42 (15/11): la banda se mudo de la orilla (-12, 18) al ala este de la playa, en (14, 8): a 16 m de la orilla (z = 24), detras del tendedero y de cara al nucleo
+    // ceremonial y a la orilla (+z, giro 180), con espacio libre alrededor. Dos filas de 5 y 4 musicos; cada uno va a (dx, dz) del centro y gira 5 grados por metro
+    // hacia el centro del grupo (abanico). Solo hay que cambiar BANDA_X y BANDA_Z para mover todo (musicos, colisiones y sonido).
+    struct Musico { float x, z, giro; int inst; float fase; };
+    constexpr int N_BANDA = 9, N_INST_BANDA = 8;
+    constexpr float BANDA_X = 14.0f, BANDA_Z = 8.0f;        // centro del grupo: de aqui se mide la distancia del sonido (Audio::ActualizarZona)
+    // dx: posicion a lo ancho de la fila; dz: +1.0 fila de adelante (maderas y metales), -0.9 fila de atras (tuba y percusion)
+    inline Musico MusicoBanda(float dx, float dz, int inst, float fase) { return { BANDA_X + dx, BANDA_Z + dz, 180.0f - 5.0f * dx, inst, fase }; }
+    inline const Musico BANDA[N_BANDA] = {
+        MusicoBanda(-2.2f,  1.0f, 1, 0.0f), MusicoBanda(-1.1f,  1.0f, 2, 1.1f), MusicoBanda(0.0f,  1.0f, 0, 2.2f), MusicoBanda(1.1f,  1.0f, 0, 3.3f), MusicoBanda(2.2f,  1.0f, 3, 4.4f),
+        MusicoBanda(-1.6f, -0.9f, 4, 5.5f), MusicoBanda(-0.5f, -0.9f, 5, 0.6f), MusicoBanda(0.7f, -0.9f, 6, 1.7f), MusicoBanda(1.9f, -0.9f, 7, 2.8f) };
+    constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
+    // Comparsa: 12 figuras (2 columnas de 6) que van y vienen por la orilla. X-65 (18/11): antes marchaban en linea recta de x = -48 a +48 por z = 22.6 +-0.9 y
+    // atravesaban las 4 lanchas varadas, 6 rocas, un farol y la familia de la llegada; ademas las figuras (falda de 0.84 m de ancho, sombrero de 0.78 m) y los
+    // tambores se encimaban entre si. Ahora recorren SOLO el tramo libre de la arena humeda (z = 23.2 +-0.55, a >= 0.25 m del agua en z = 24) entre x = -23.75 y +23.75
+    // (las lanchas empiezan en |x| = 27.3 y las rocas en |x| >= 40). Separacion: 1.1 m entre columnas y 1.6 m entre filas (el tambor sobresale 0.84 m del cuerpo).
+    // Al llegar a cada extremo el grupo se detiene COMPARSA_T_GIRO s, da media vuelta MIRANDO A TIERRA (el tambor va en la columna de tierra: no choca con nadie) y regresa.
+    // El grupo es un bloque rigido: x_i = u(t) + d_i, u(t) = centro (onda triangular con paradas), d_i = 1.6 (i div 2) - 4.0 (filas centradas).
+    //   marcha:  u = -U + V p  (ida)  /  u = U - V p  (vuelta);  parada: u = +-U y giro = 180 * suavizado(p/T_GIRO), suavizado(s) = 3 s^2 - 2 s^3
+    //   paso: y = 0.05 |sen(2 pi f t)| (solo marchando), balanceo +-3 grados (main.cpp)
+    constexpr int N_COMPARSA = 12;
+    constexpr float COMPARSA_Z = 23.2f, COMPARSA_SEP = 1.1f, COMPARSA_FILA = 1.6f;       // eje de la comparsa y separacion entre sus dos columnas
+    constexpr float COMPARSA_U = 19.75f, COMPARSA_L = 2.0f * COMPARSA_U, COMPARSA_V = 1.0f, COMPARSA_F = 1.0f, COMPARSA_T_GIRO = 2.5f;
+    constexpr float COMPARSA_CICLO = 2.0f * (COMPARSA_L / COMPARSA_V + COMPARSA_T_GIRO);   // ida + giro + vuelta + giro = 84 s
+    // Estado del grupo en el instante t: centro u (m), rumbo en grados para la rotacion Y del modelo (270 = avanza hacia +x, 90 = hacia -x) y si va marchando
+    struct ComparsaEstado { float u, giro; bool marcha; };
+    inline ComparsaEstado ComparsaGrupo(float t)
+    {
+        const float leg = COMPARSA_L / COMPARSA_V;
+        float p = std::fmod(t + 0.5f * leg, COMPARSA_CICLO);   // t = 0: el grupo esta en el centro (u = 0) yendo hacia +x
+        if (p < 0.0f) p += COMPARSA_CICLO;
+        auto suave = [](float s) { return s * s * (3.0f - 2.0f * s); };
+        if (p < leg)                         return { -COMPARSA_U + COMPARSA_V * p, 270.0f, true };
+        p -= leg;
+        if (p < COMPARSA_T_GIRO)             return { COMPARSA_U, 270.0f + 180.0f * suave(p / COMPARSA_T_GIRO), false };
+        p -= COMPARSA_T_GIRO;
+        if (p < leg)                         return { COMPARSA_U - COMPARSA_V * p, 90.0f, true };
+        p -= leg;
+        return { -COMPARSA_U, 90.0f - 180.0f * suave(p / COMPARSA_T_GIRO), false };
+    }
+    inline float ComparsaGiro(float t) { return ComparsaGrupo(t).giro; }
+    inline void ComparsaN(int i, float t, float& x, float& z, float& y)
+    {
+        const ComparsaEstado e = ComparsaGrupo(t);
+        x = e.u + COMPARSA_FILA * (i / 2) - 2.5f * COMPARSA_FILA;
+        z = COMPARSA_Z + ((i % 2) ? 0.5f * COMPARSA_SEP : -0.5f * COMPARSA_SEP);
+        y = e.marcha ? 0.05f * std::fabs(std::sin(2.0f * PI * COMPARSA_F * t + 0.6f * i)) : 0.0f;
+    }
+    // Alfombras de PETALOS DE CEMPASUCHIL (relieve de flores de color y hojas; NO son arena de colores): centro x, z; ancho, largo; tipo 0 rect, 1 cruz
+    struct Alfombra { float x, z, ancho, largo; int tipo; };
+    constexpr int N_ALFOMBRAS = 3;
+    inline const Alfombra ALFOMBRAS[N_ALFOMBRAS] = { { 0.0f, 7.6f, 4.0f, 4.0f, 1 }, { -21.0f, 6.0f, 7.0f, 1.6f, 0 }, { 0.0f, 22.2f, 5.0f, 1.8f, 0 } };
+}
+
+#endif

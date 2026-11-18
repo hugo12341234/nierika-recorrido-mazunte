@@ -1,0 +1,78 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 560' width='760' height='560'><rect width='760' height='560' fill='#fffdf8'/>
+<text x='380.0' y='22' font-size='13.5' fill='#1f2430' text-anchor='middle' font-weight='700' font-family='Inter, Liberation Sans, Arial, sans-serif'>Figura 3. Cronograma: plan inicial (propuesta v2.0) frente a la ejecución real</text>
+<line x1='250.0' y1='40' x2='250.0' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='250.0' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>28/09</text>
+<line x1='315.96153846153845' y1='40' x2='315.96153846153845' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='315.96153846153845' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>05/10</text>
+<line x1='381.9230769230769' y1='40' x2='381.9230769230769' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='381.9230769230769' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>12/10</text>
+<line x1='447.88461538461536' y1='40' x2='447.88461538461536' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='447.88461538461536' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>19/10</text>
+<line x1='513.8461538461538' y1='40' x2='513.8461538461538' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='513.8461538461538' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>26/10</text>
+<line x1='579.8076923076924' y1='40' x2='579.8076923076924' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='579.8076923076924' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>02/11</text>
+<line x1='645.7692307692307' y1='40' x2='645.7692307692307' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='645.7692307692307' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>09/11</text>
+<line x1='711.7307692307693' y1='40' x2='711.7307692307693' y2='520' stroke='#e6dfcc' stroke-width='1'/>
+<text x='711.7307692307693' y='534' font-size='8' fill='#6b7280' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>16/11</text>
+<text x='10' y='52' font-size='10' fill='#7a5a1e' text-anchor='start' font-weight='700' font-family='Inter, Liberation Sans, Arial, sans-serif'>PLAN INICIAL (8 semanas)</text>
+<text x='244' y='71' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 1 · Arranque e infraestructura</text>
+<rect x='250.0' y='60' width='47.11538461538464' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='91' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 2 · Escenario base y navegación</text>
+<rect x='315.96153846153845' y='80' width='47.11538461538464' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='111' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 3 · Cuarto del cementerio y panteón</text>
+<rect x='381.9230769230769' y='100' width='47.11538461538464' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='131' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 4 · Objetos de la ofrenda</text>
+<rect x='447.88461538461536' y='120' width='47.11538461538464' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='151' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 5 · Texturizado, integración, luz</text>
+<rect x='513.8461538461538' y='140' width='47.11538461538464' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='171' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 6 · Animaciones simples</text>
+<rect x='579.8076923076924' y='160' width='47.11538461538453' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='191' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 7 · Animaciones complejas, fichas, audio</text>
+<rect x='645.7692307692307' y='180' width='47.115384615384755' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='244' y='211' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Sem. 8 · Pruebas, empaquetado y entrega</text>
+<rect x='711.7307692307693' y='200' width='28.269230769230717' height='14' rx='3' fill='#d8c9a5' stroke='#b4781e'/>
+<text x='10' y='238' font-size='10' fill='#2f6b35' text-anchor='start' font-weight='700' font-family='Inter, Liberation Sans, Arial, sans-serif'>EJECUCIÓN REAL (primer a último cierre del bloque en el ESTADO)</text>
+<text x='244' y='257' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>A · Escena base con luz (A-1…A-12)</text>
+<rect x='447.88461538461536' y='246' width='160.19230769230774' height='14' rx='3' fill='#cfe7cf' stroke='#4f9a55'/>
+<text x='244' y='277' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>B · Panteón y altar (B-1…B-14)</text>
+<rect x='598.6538461538462' y='266' width='84.80769230769226' height='14' rx='3' fill='#cfe7cf' stroke='#4f9a55'/>
+<text x='244' y='297' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>C · Animaciones simples y fichas (C-1…C-8)</text>
+<rect x='598.6538461538462' y='286' width='84.80769230769226' height='14' rx='3' fill='#cfe7cf' stroke='#4f9a55'/>
+<text x='244' y='317' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>D · KeyFrames y audio (D-1…D-7)</text>
+<rect x='598.6538461538462' y='306' width='84.80769230769226' height='14' rx='3' fill='#cfe7cf' stroke='#4f9a55'/>
+<text x='244' y='337' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>E · Pruebas, manuales, empaquetado (E-1…E-7)</text>
+<rect x='598.6538461538462' y='326' width='141.3461538461538' height='14' rx='3' fill='#cfe7cf' stroke='#4f9a55'/>
+<text x='244' y='357' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>X · Extras y refinamiento (X-4…X-70)</text>
+<rect x='674.0384615384615' y='346' width='65.96153846153845' height='14' rx='3' fill='#e4d3f0' stroke='#8a5aa0'/>
+<text x='10' y='384' font-size='10' fill='#8a5aa0' text-anchor='start' font-weight='700' font-family='Inter, Liberation Sans, Arial, sans-serif'>ACTIVIDAD EN EL REPOSITORIO (commits por día en develop; el historial empieza el 19/10)</text>
+<line x1='250' y1='456' x2='740' y2='456' stroke='#999' stroke-width='1'/>
+<rect x='448.88461538461536' y='434.8076923076923' width='7.538461538461539' height='21.19230769230769' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='452.65384615384613' y='431.8076923076923' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>38</text>
+<rect x='458.30769230769226' y='443.7307692307692' width='7.538461538461539' height='12.269230769230768' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='462.07692307692304' y='440.7307692307692' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>22</text>
+<rect x='514.8461538461538' y='454.3269230769231' width='7.538461538461539' height='1.6730769230769231' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='518.6153846153845' y='451.3269230769231' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>3</text>
+<rect x='599.6538461538462' y='398.0' width='7.538461538461539' height='58.0' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='603.4230769230769' y='395.0' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>104</text>
+<rect x='665.6153846153845' y='442.61538461538464' width='7.538461538461539' height='13.384615384615385' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='669.3846153846152' y='439.61538461538464' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>24</text>
+<rect x='675.0384615384615' y='449.3076923076923' width='7.538461538461539' height='6.6923076923076925' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='678.8076923076923' y='446.3076923076923' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>12</text>
+<rect x='684.4615384615385' y='410.8269230769231' width='7.538461538461539' height='45.17307692307693' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='688.2307692307692' y='407.8269230769231' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>81</text>
+<rect x='693.8846153846155' y='443.1730769230769' width='7.538461538461539' height='12.826923076923077' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='697.6538461538462' y='440.1730769230769' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>23</text>
+<rect x='703.3076923076924' y='434.25' width='7.538461538461539' height='21.75' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='707.0769230769231' y='431.25' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>39</text>
+<rect x='722.1538461538462' y='416.96153846153845' width='7.538461538461539' height='39.03846153846154' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='725.9230769230769' y='413.96153846153845' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>70</text>
+<rect x='731.5769230769231' y='428.6730769230769' width='7.538461538461539' height='27.326923076923077' fill='#b79ac9' stroke='#8a5aa0' stroke-width='0.6'/>
+<text x='735.3461538461538' y='425.6730769230769' font-size='8' fill='#5b3a72' text-anchor='middle' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>49</text>
+<text x='244' y='436' font-size='9' fill='#1f2430' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>commits por día</text>
+<text x='244' y='448' font-size='8' fill='#6b7280' text-anchor='end' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>(sin barra = 0 commits)</text>
+<line x1='740.0' y1='40' x2='740.0' y2='520' stroke='#c0392b' stroke-width='1.6' stroke-dasharray='5 3'/>
+<text x='736.0' y='38' font-size='9' fill='#c0392b' text-anchor='end' font-weight='700' font-family='Inter, Liberation Sans, Arial, sans-serif'>Entrega 18/11</text>
+<text x='10' y='552' font-size='8.5' fill='#3d4350' text-anchor='start' font-weight='400' font-family='Inter, Liberation Sans, Arial, sans-serif'>Fuentes: propuesta v2.0 (plan) y docs/ESTADO_PROYECTO.md §2 (cierres). Los bloques A–E no tienen fechas por tarea antes del 19/10.</text>
+</svg>

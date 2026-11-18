@@ -1,8 +1,11 @@
-# CONTEXTO DEL PROYECTO — Nierika Studio (fuente de verdad)
+# CONTEXTO DEL PROYECTO — Nierika Studio (qué prometimos)
 
-> Este archivo resume la **Propuesta técnica v2.0 (4 oct 2026)** y el **Plan de trabajo**.
-> Si algo en una conversación contradice este archivo, **gana este archivo** (salvo que el
-> equipo registre un cambio en `ESTADO_PROYECTO.md → Registro de decisiones`).
+> **Qué es este archivo:** el resumen de la **Propuesta técnica v2.0 (4 oct 2026)** y del **Plan de trabajo**
+> (PDFs en `docs/propuesta/`), con los cambios ya aprobados por el equipo. Dice **qué** se entrega y **cómo** debe ser;
+> el avance real está en `ESTADO_PROYECTO.md`.
+> **Orden de autoridad:** (1) Registro de decisiones de `ESTADO_PROYECTO.md` → (2) este archivo →
+> (3) `PLAN_ACTIVIDADES.md` y los PDFs. Si una conversación o un documento contradice este archivo, gana este archivo,
+> salvo que la diferencia esté registrada como decisión.
 
 ---
 
@@ -29,7 +32,7 @@
 ### Incluye
 - Escenario continuo con **3 zonas**: (1) playa y orilla, (2) panteón con barda de piedra, (3) cuarto del cementerio con altar.
 - Navegación **primera persona** (teclado + ratón) **con colisiones**.
-- **5 animaciones**: 2 complejas por KeyFrames + 3 simples.
+- **5 animaciones comprometidas**: 2 complejas por KeyFrames + 3 simples. **Desde el 17/11 hay 5 más** (3 por KeyFrames + 2 simples; decisión de D2, ESTADO §4, X-55): 10 en total.
 - **5 puntos de información cultural** con su fuente.
 - Iluminación: **luz ambiental cálida + 3 luces clave**, modelo **Blinn-Phong**.
 - Audio ambiental (un solo ciclo: oleaje + música lejana).
@@ -39,7 +42,7 @@
 - Calles/edificios del pueblo, colina y mirador de Punta Cometa, tapete de arena.
 - Versión móvil, web o VR. Multijugador o guardado de partida.
 - Reproducción exacta del panteón real (es adaptación del estudio).
-- Personajes con diálogo o IA. **Humo de copal con partículas** (el copalero es extra, sin humo).
+- Personajes con diálogo o IA. **Humo de copal con partículas** (el copalero se modela, pero sin humo).
 
 ---
 
@@ -47,11 +50,11 @@
 
 | Categoría | Requerimiento | Criterio de aceptación |
 |---|---|---|
-| Modelado geométrico | Playa, mar, tumbas, barda, cuarto (fachada, arco, piso, paredes, techo), cruz, altar y 7 objetos de ofrenda | **≥ 18 modelos propios**; externos solo secundarios y con crédito |
+| Modelado geométrico | Playa, mar, tumbas, barda, cuarto (fachada, arco, piso, paredes, techo), cruz, altar y 7 objetos de ofrenda | **≥ 18 modelos propios** (qué cuenta como modelo: decisión del 19/10 e inventario en `ESTADO_PROYECTO.md`); externos solo secundarios y con crédito |
 | Modelado jerárquico | Altar de 3 niveles; silueta con hombro, codo, cadera, rodilla por lado | Al mover el padre, los hijos lo siguen |
 | Texturizado | Arena, piedra rústica, madera, mantel bordado, barro, vidrio, papel picado con transparencia | Texturas **1K**, sin estiramientos visibles |
 | Iluminación | Ambiental cálida + 3 luces clave, Blinn-Phong | El interior del cuarto se distingue sin perder el ambiente nocturno |
-| Animación | 5 animaciones (2 KeyFrames + 3 simples) | **Ninguna proviene de las prácticas del curso**; cada una con justificación matemática documentada |
+| Animación | 5 animaciones (2 KeyFrames + 3 simples) y, desde el 17/11, 5 más (3 KeyFrames + 2 simples) | **Ninguna proviene de las prácticas del curso**; cada una con justificación matemática documentada |
 | Interacción | Fichas al acercarse a 5 objetos | La ficha aparece a **< 2 m** y **cita su fuente** |
 | Recorrido | Cámara 1ª persona con colisiones | No se atraviesa el terreno ni las bardas |
 | Rendimiento | Laptop con gráficos integrados | **≥ 30 FPS a 1280×720** |
@@ -69,9 +72,17 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 | 3 | Olas del mar | Simple | **Vertex shader**: altura = suma de senoidales (frecuencias y amplitudes definidas) |
 | 4 | Velas flotando | Simple | Trayectoria **Bézier** mar adentro + oscilación senoidal vertical; desfase por vela; llama con **fragment shader con ruido** (Perlin o similar) |
 | 5 | Flores de cempasúchil flotando | Simple | Movimiento circular de radio pequeño + rotación continua; velocidad variable con pausas |
+| 6 | Baile familiar (la chilena) — **X-55, 17/11** | Compleja, **KeyFrames** | Persona articulada: zapateado, cintura y brazos por KeyFrames con slerp; papá y mamá orbitan sobre 12 KeyFrames de posición, la niña gira 90° por KeyFrame |
+| 7 | Niño que juega con su perro — **X-55** | Compleja, **KeyFrames** | Lanzamiento del niño y ruta del perro por KeyFrames (smoothstep, slerp); la pelota va en **tiro parabólico** de forma cerrada y el perro recoge con una reverencia de juego |
+| 8 | Señora que sahúma la ofrenda — **X-55** | Compleja, **KeyFrames** | Reverencia del torso y brazo con el copalero por KeyFrames con slerp; el copalero cuelga como péndulo (sin humo) |
+| 9 | Banda al compás — **X-55** | Simple | Rebote $A\,|\sin(\pi t/T_b+\phi)|$, giro e inclinación senoidales al pulso (90 BPM), por sección |
+| 10 | Anfitriona que saluda — **X-55** | Simple | Antebrazo $85°+25°\sin(2\pi\,1.7\,t)$; gira hacia el visitante con aproximación exponencial ($\tau=1/3$ s) cuando está a < 9 m |
+
+> **Actualización 17/11 (decisión en ESTADO §4, X-55):** la regla «KeyFrames solo en silueta y flor» se amplió a baile, perro y sahumerio; lo demás de la restricción (velas, fuego, papel picado y humo no cuentan; nada de humo con partículas; ninguna copiada de las prácticas; justificación matemática de cada una) sigue igual. Matemática: `docs/manual_tecnico/justificacion_personas.md`.
 
 **Silueta (jerarquía):** Torso (raíz) → Cabeza, Brazo izq/der → Antebrazo izq/der, Muslo izq/der → Pierna izq/der. Cada cuadro clave guarda posición del torso + rotación de cada articulación.
 **Línea de tiempo:** Caminata 0 s → Llega al altar 6 s → Extiende brazo 7 s → Suelta la flor 8 s → Retrocede 10 s.
+> **Actualización 04/11 (decisión en ESTADO §4):** con 23.8 m de recorrido a 1.4 m/s la caminata dura **18.33 s**, no 6 s; los demás tiempos se corren después de ese instante.
 
 ---
 
@@ -85,7 +96,7 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 | 4 | Panteón | Tumbas, barda, cruz, arco con papel picado | **Ficha: papel picado** |
 | 5 | Cuarto del cementerio | Altar de 3 niveles con 7 objetos | Silueta dejando flores; **fichas: altar, pan de muerto** |
 
-**Objetos de la ofrenda (7):** vela, botella de refresco de vidrio, pan de muerto, flor de cempasúchil, marco con fotografía, papel picado, copalero de barro (extra, sin humo) — sobre altar de 3 niveles.
+**Objetos de la ofrenda (7):** vela, botella de refresco de vidrio, pan de muerto, flor de cempasúchil, marco con fotografía, papel picado, copalero de barro (sin humo; obligatorio para el conteo de modelos, decisión del 19/10) — sobre altar de 3 niveles.
 
 **Fuentes culturales por ficha** (nivel de evidencia): flores y velas en el mar → Baños (2025), *local documentado*; velas, cempasúchil, copal, pan, papel picado, agua y sal → SEP (2026), *tradición general*; cuarto del cementerio → UNESCO (s. f.), *adaptación del estudio*. Lo que sea adaptación debe decirlo en la ficha.
 
@@ -95,7 +106,8 @@ El profesor **NO acepta como KeyFrames**: velas flotando, fuego, papel picado ni
 
 - **C++17**, **OpenGL 3.3 Core Profile**, **GLSL 330**, **Visual Studio 2022**, compilación **x64** Debug/Release.
 - **GLFW** (ventana/entrada) · **GLEW** (carga de funciones; la propuesta decía GLAD, se cambió el 18/10) · **GLM** (matemáticas) · **Assimp** (.obj) · **SOIL2 / stb_image** (texturas) · **Dear ImGui** (fichas) · **miniaudio** (audio).
-- Base de código: proyecto de la **Práctica 6** del laboratorio (clases del curso `Shader`, `Camera`, `Model`).
+- Assimp, GLFW, GLEW y GLM se instalan con **vcpkg** (`vcpkg.json`, versiones fijas por `builtin-baseline`); SOIL2/stb en `vendor/SOIL2` (decisiones del 19/10).
+- Base de código: proyecto de la **Práctica 6** del laboratorio (clases del curso `Shader`, `Camera`, `Model`, `Mesh`).
 - **Blender** (modelado, UV, export .obj) · **GIMP** (texturas, canales alfa) · **OBS** (videos).
 - Texturas **Poly Haven / ambientCG (CC0)**, 1K, albedo + normal.
 - **Git/GitHub** (ramas por funcionalidad, PR) · **Trello** (Kanban).
@@ -111,8 +123,8 @@ Todo movimiento se calcula en la aplicación (keyframes en C++; oleaje en vertex
 - **Escala:** 1 unidad = 1 metro (escalar en Blender antes de exportar, no con factores grandes en `main.cpp`). Playa 100×50 m; mar 100×100 m (malla subdividida).
 - **Cámara:** pitch bloqueado a ±89°; colisiones **AABB**; ciclo con **deltaTime**.
 - **Modelos:** exportar .obj desde Blender **aplicando modificadores**; pivote correcto (vela: pivote en la base); rutas **relativas**.
-- **Carpetas:** `Models/<objeto>/<objeto>.obj` (+ .mtl y texturas del objeto); `Shaders/*.vs` y `*.frag`; `vendor/` con dependencias; `dist/` con el .exe autónomo + .dll.
-- **Git:** ramas `main` (releases), `develop` (integración), `feature/<actividad>`; todo entra por **pull request** aprobado por el verificador.
+- **Carpetas:** `src/` código C++; `Models/<objeto>/<objeto>.obj` (+ .mtl y **texturas del objeto en la misma carpeta**; la propuesta habla de una carpeta `textures/`, pero en el repo cada textura vive junto a su modelo); `Shaders/*.vs` y `*.frag`; `vendor/SOIL2` (dependencia en código fuente); `build/` salida de compilación (ignorada); `dist/` con el .exe autónomo + .dll.
+- **Git:** ramas `main` (releases), `develop` (integración), `feature/<código>-<nombre>` (código de tarea del ESTADO, p. ej. `feature/a-10-dovelas`); todo entra por **pull request** aprobado por el otro integrante. Commits solo a nombre del integrante.
 - **Definición de terminado:** el entregable existe en `develop`, **compila sin errores** y el verificador lo aprobó en el PR.
 - **Kanban:** columnas Pendiente / En proceso / En revisión / Terminado; **máx. 2 tarjetas en proceso por integrante**; revisión cada viernes 30 min.
 

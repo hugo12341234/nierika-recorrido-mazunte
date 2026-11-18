@@ -1,7 +1,14 @@
 # PLAN DE ACTIVIDADES — 60 actividades (D1 = 319266894, D2 = 321332086)
 
-> Resp. = quien ejecuta · Verif. = quien revisa y aprueba el PR · Verificación: 0.5 h por actividad.
-> Estado real de cada actividad: ver `ESTADO_PROYECTO.md`.
+> **Qué es este archivo:** la copia fiel del plan de trabajo **original** de la propuesta
+> (`docs/propuesta/Plan_de_Trabajo.pdf`). Es **referencia**: no se edita.
+> - **Fechas y responsables ya no rigen** (decisión del 18/10): el orden real y los códigos de tarea
+>   (`A-1`…) están en el *Plan vigente* de `ESTADO_PROYECTO.md` (sección 2), y el estado de cada
+>   actividad en su sección 3.
+> - **Criterio de aceptación y entregable siguen valiendo**, con una aclaración: donde dice `textures/`,
+>   en el repositorio las texturas viven junto a su modelo en `Models/<objeto>/`.
+>
+> Resp. = quien ejecutaba según la propuesta · Verif. = quien revisaba · Verificación: 0.5 h por actividad · Total: 173 h + 30 h.
 
 | N.º | Sem | Fecha | Actividad | Resp | Verif | h | Criterio de aceptación | Entregable | Prior. | Recurso |
 |---|---|---|---|---|---|---|---|---|---|---|

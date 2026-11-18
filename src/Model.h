@@ -1,0 +1,322 @@
+#pragma once
+
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <map>
+#include <vector>
+
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "SOIL2/SOIL2.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include "Mesh.h"
+#include  "Shader.h"
+
+using namespace std;
+
+// inline: la funcion vive en este .h; sin inline habria simbolos duplicados al incluirlo en mas de un .cpp
+inline GLint TextureFromFile(const char *path, string directory);
+
+class Model
+{
+public:
+	/*  Functions   */
+	// Constructor, expects a filepath to a 3D model.
+	Model(GLchar *path)
+	{
+		this->loadModel(path);
+	}
+
+	// Draws the model, and thus all its meshes
+	void Draw(Shader& shader)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			this->meshes[i].Draw(shader);
+		}
+	}
+
+	// X-35: dibuja la persona con ropa, piel y pelo propios. Cada malla usa la textura cuyo nombre de archivo contiene "ropa", "piel" o "pelo"
+	// (asi vienen los materiales de persona_*.obj); aqui se cambia SOLO el id de la textura difusa mientras se dibuja y se restaura al terminar.
+	void DrawAtuendo(Shader& shader, GLuint ropa, GLuint piel, GLuint pelo)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			if (!this->meshes[i].EsVisible()) { Perf::descartadas++; continue; }   // X-68: fuera del frustum: ni se prepara
+			vector<Texture>& tx = this->meshes[i].textures;
+			vector<GLuint> originales;
+			for (size_t k = 0; k < tx.size(); k++)
+			{
+				originales.push_back(tx[k].id);
+				if (tx[k].type != "texture_diffuse") continue;
+				const string ruta = tx[k].path.C_Str();
+				if (ruta.find("ropa") != string::npos)      tx[k].id = ropa;
+				else if (ruta.find("piel") != string::npos) tx[k].id = piel;
+				else if (ruta.find("pelo") != string::npos) tx[k].id = pelo;
+			}
+			this->meshes[i].Draw(shader);
+			for (size_t k = 0; k < tx.size(); k++) tx[k].id = originales[k];
+		}
+	}
+
+	// X-35: dibuja una prenda de una sola malla (falda, rebozo, sombrero) con la tela elegida en lugar de la del .mtl
+	void DrawConTextura(Shader& shader, GLuint tela)
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			if (!this->meshes[i].EsVisible()) { Perf::descartadas++; continue; }   // X-68: fuera del frustum: ni se prepara
+			vector<Texture>& tx = this->meshes[i].textures;
+			vector<GLuint> originales;
+			for (size_t k = 0; k < tx.size(); k++)
+			{
+				originales.push_back(tx[k].id);
+				if (tx[k].type == "texture_diffuse") tx[k].id = tela;
+			}
+			this->meshes[i].Draw(shader);
+			for (size_t k = 0; k < tx.size(); k++) tx[k].id = originales[k];
+		}
+	}
+
+	// X-66: id de la primera textura cargada (0 si no hay); main.cpp la presta al shader para mezclar arena y pasto en el borde
+	GLuint PrimeraTextura() const { return textures_loaded.empty() ? 0 : textures_loaded[0].id; }
+
+	// Libera la GPU del modelo: buffers de cada malla y las texturas (textures_loaded tiene cada textura una sola vez,
+	// aunque varias mallas la usen). Se llama a mano al final de main (decision del 19/10: sin destructores, porque Model se copia)
+	void cleanup()
+	{
+		for (GLuint i = 0; i < this->meshes.size(); i++)
+		{
+			this->meshes[i].cleanup();
+		}
+		for (GLuint i = 0; i < this->textures_loaded.size(); i++)
+		{
+			glDeleteTextures(1, &this->textures_loaded[i].id);
+		}
+		this->meshes.clear();
+		this->textures_loaded.clear();
+	}
+
+private:
+	/*  Model Data  */
+	vector<Mesh> meshes;
+	string directory;
+	vector<Texture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+
+										/*  Functions   */
+										// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
+	void loadModel(string path)
+	{
+		// Read file via ASSIMP
+		Assimp::Importer importer;
+		const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);  // GenNormals: crea normales si el .obj no las trae (necesarias para la iluminacion)
+
+		// Check for errors
+		if (!scene || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || !scene->mRootNode) // if is Not Zero
+		{
+			cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+			return;
+		}
+		// Retrieve the directory path of the filepath
+		this->directory = path.substr(0, path.find_last_of('/'));
+
+		// Process ASSIMP's root node recursively
+		this->processNode(scene->mRootNode, scene);
+	}
+
+	// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
+	void processNode(aiNode* node, const aiScene* scene)
+	{
+		// Process each mesh located at the current node
+		for (GLuint i = 0; i < node->mNumMeshes; i++)
+		{
+			// The node object only contains indices to index the actual objects in the scene.
+			// The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+			this->meshes.push_back(this->processMesh(mesh, scene));
+		}
+
+		// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
+		for (GLuint i = 0; i < node->mNumChildren; i++)
+		{
+			this->processNode(node->mChildren[i], scene);
+		}
+	}
+
+	Mesh processMesh(aiMesh *mesh, const aiScene *scene)
+	{
+		// Data to fill
+		vector<Vertex> vertices;
+		vector<GLuint> indices;
+		vector<Texture> textures;
+
+		// Walk through each of the mesh's vertices
+		for (GLuint i = 0; i < mesh->mNumVertices; i++)
+		{
+			Vertex vertex;
+			glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+
+							  // Positions
+			vector.x = mesh->mVertices[i].x;
+			vector.y = mesh->mVertices[i].y;
+			vector.z = mesh->mVertices[i].z;
+			vertex.Position = vector;
+
+			// Normals (si la malla no tiene normales se usa (0,1,0) para no leer memoria invalida)
+			if (mesh->HasNormals())
+			{
+				vector.x = mesh->mNormals[i].x;
+				vector.y = mesh->mNormals[i].y;
+				vector.z = mesh->mNormals[i].z;
+			}
+			else
+			{
+				vector = glm::vec3(0.0f, 1.0f, 0.0f);
+			}
+			vertex.Normal = vector;
+
+			// Texture Coordinates
+			if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
+			{
+				glm::vec2 vec;
+				// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
+				// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+				vec.x = mesh->mTextureCoords[0][i].x;
+				vec.y = mesh->mTextureCoords[0][i].y;
+				vertex.TexCoords = vec;
+			}
+			else
+			{
+				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+			}
+
+			vertices.push_back(vertex);
+		}
+
+		// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+		for (GLuint i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace face = mesh->mFaces[i];
+			// Retrieve all indices of the face and store them in the indices vector
+			for (GLuint j = 0; j < face.mNumIndices; j++)
+			{
+				indices.push_back(face.mIndices[j]);
+			}
+		}
+
+		// Process materials
+		if (mesh->mMaterialIndex >= 0)
+		{
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			// We assume a convention for sampler names in the shaders. Each diffuse texture should be named
+			// as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
+			// Same applies to other texture as the following list summarizes:
+			// Diffuse: texture_diffuseN
+			// Specular: texture_specularN
+			// Normal: texture_normalN
+
+			// 1. Diffuse maps
+			vector<Texture> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+			// 2. Specular maps
+			vector<Texture> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+			// 3. Mapa de relieve (B-12, 12/11): `map_Bump` del .mtl; Assimp lo entrega como aiTextureType_HEIGHT.
+			//    Se usa como mapa de ALTURA en gris (no como mapa de normales): lighting.frag deriva la normal con dFdx/dFdy.
+			vector<Texture> heightMaps = this->loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
+			textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+		}
+
+		// Return a mesh object created from the extracted mesh data
+		return Mesh(vertices, indices, textures);
+	}
+
+	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
+	// The required info is returned as a Texture struct.
+	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName)
+	{
+		vector<Texture> textures;
+
+		for (GLuint i = 0; i < mat->GetTextureCount(type); i++)
+		{
+			aiString str;
+			mat->GetTexture(type, i, &str);
+
+			// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+			GLboolean skip = false;
+
+			for (GLuint j = 0; j < textures_loaded.size(); j++)
+			{
+				if (textures_loaded[j].path == str)
+				{
+					textures.push_back(textures_loaded[j]);
+					skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
+
+					break;
+				}
+			}
+
+			if (!skip)
+			{   // If texture hasn't been loaded already, load it
+				Texture texture;
+				texture.id = TextureFromFile(str.C_Str(), this->directory);
+				texture.type = typeName;
+				texture.path = str;
+				textures.push_back(texture);
+
+				this->textures_loaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+			}
+		}
+
+		return textures;
+	}
+};
+
+inline GLint TextureFromFile(const char *path, string directory)
+{
+	//Generate texture ID and load texture data
+	string filename = string(path);
+	filename = directory + '/' + filename;
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+
+	int width = 0, height = 0;
+
+	// RGBA: conserva el canal alfa (papel picado, flores); el fragment shader descarta los pixeles con alfa < 0.1
+	unsigned char *image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+	// Si falla, se avisa en consola y se usa 1 pixel magenta: asi la textura faltante se ve a simple vista
+	unsigned char magenta[4] = { 255, 0, 255, 255 };
+	bool cargada = (image != nullptr);
+	if (!cargada)
+	{
+		cout << "ERROR::TEXTURA:: no se pudo cargar " << filename << " (" << SOIL_last_result() << ")" << endl;
+		width = 1;
+		height = 1;
+	}
+
+	// Assign texture to ID
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, cargada ? image : magenta);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	// Parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	if (cargada)
+	{
+		SOIL_free_image_data(image);
+	}
+
+	return textureID;
+}

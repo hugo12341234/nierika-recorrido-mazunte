@@ -444,5 +444,64 @@ CLAUDE.local.md
 *.blend2
 **/.mayaSwatches/
 
-# Videos crudos de OBS (solo se suben los 3 MP4 finales en docs/videos/)
+# Videos: ni los crudos de OBS ni los 3 MP4 finales (~450 MB) se suben a Git; se entregan aparte (docs/videos/README.md)
 *.mkv
+*.mp4
+
+# Nierika: salida de compilacion y paquetes de vcpkg (se regeneran)
+build/
+vcpkg_installed/
+# Release autonomo: se publica como .zip en el Release de GitHub, no en Git (decision 19/10)
+dist/
+
+# Manuales exportados a PDF (tools/e5_exportar_pdf.sh)
+docs/dist_manuales/
+
+# ------------------------------------------------------------------
+# Orden del repositorio (X-70, 18/11): basura generada y archivos locales
+# ------------------------------------------------------------------
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*.swo
+.idea/
+
+# Python (scripts de tools/ y Blender)
+*.py[cod]
+.pytest_cache/
+
+# CMake / compilación fuera de Visual Studio (p. ej. pruebas en Linux)
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+*.o
+*.exe
+*.dll
+*.lib
+*.exp
+!vendor/**/*.lib
+!vendor/**/*.dll
+
+# Paquetes y entregables generados (se publican en el Release, no en Git)
+*.zip
+*.7z
+*.rar
+!docs/**/*.zip
+
+# Videos crudos / capturas de pantalla temporales
+*.avi
+*.mov
+capturas_temp/
+capturas_trello_*/
+scratch/
+tmp/
+
+# Respaldos de Blender y de editores
+*.blend1
+*.blend2
+*.bak
+*.orig
+*.rej
