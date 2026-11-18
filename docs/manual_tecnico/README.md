@@ -26,7 +26,7 @@
 ## Textos de cada integrante
 - `individual/D1_*`: **plantillas vacías** con instrucciones; solo D1 las escribe.
 - `individual/D2_*`: **borradores** marcados «BORRADOR para que Hugo revise»; D2 los reescribe con sus palabras.
-- `secciones/`: secciones sueltas de otros hilos. Si un archivo no existe, el PDF muestra un aviso de pendiente.
+- `secciones/`: secciones sueltas de otros hilos. Si un archivo no existe, el PDF muestra un aviso de pendiente. `evidencias_colaborativas.md` se integra como f.4 y `roles_raci_real.md` como e.4 (sin sus notas internas).
 
 ## Cómo generar los PDF
 Requisitos: python3, pandoc, poppler (`pdfunite`), Node.js con `playwright` y Chromium.

@@ -74,6 +74,15 @@ def adaptar_raci(txt):
     txt = re.sub(r"^## (\d)", r"### \1", txt, flags=re.M)
     return txt
 
+def adaptar_evidencias(raw):
+    """Sección suelta de Trello/Gantt: sus marcas de confianza pasan a palabras (limpiar() borra los emoji) y se integra como f.4."""
+    raw = raw.replace("✅", "(verificado)").replace("🔍", "(inferido)").replace("❓", "(sin evidencia)").replace("❌", "(no demostrable)")
+    raw = re.sub(r"^# [^\n]*\n\n(?:>[^\n]*\n)*", "## f.4 Evidencias de Trello y diagrama de Gantt\n", raw, count=1)
+    raw = re.sub(r"^## 7\. .*\Z", "", raw, flags=re.M | re.S)
+    raw = re.sub(r"^### ", "#### ", raw, flags=re.M)
+    raw = re.sub(r"^## (\d)", r"### \1", raw, flags=re.M)
+    return raw
+
 ANEXOS = {"justificacion_simples.md": "Anexo C. ", "justificacion_complejas.md": "Anexo D. ", "justificacion_personas.md": "Anexo E. "}
 
 def unir(base, archivos):
@@ -86,7 +95,10 @@ def unir(base, archivos):
                 partes.append(PENDIENTES[a])
             continue
         with open(ruta, encoding="utf8") as f:
-            txt = limpiar(f.read(), os.path.dirname(ruta))
+            raw = f.read()
+            if base == MT and a == "secciones/evidencias_colaborativas.md":
+                raw = adaptar_evidencias(raw)
+            txt = limpiar(raw, os.path.dirname(ruta))
             if base == MT and a in ANEXOS:
                 txt = re.sub(r"^# ", "# " + ANEXOS[a], txt, count=1, flags=re.M)
             if base == MT and a == "secciones/roles_raci_real.md":
