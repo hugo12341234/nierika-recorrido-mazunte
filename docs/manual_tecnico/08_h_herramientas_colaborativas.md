@@ -4,7 +4,7 @@
 
 | Herramienta | Para qué se usó | Evidencia verificable |
 |---|---|---|
-| **GitHub** (repositorio público `hugo12341234/nierika-recorrido-mazunte`) | Control de versiones, ramas por tarea y *pull requests* | 491 commits en `develop` entre el 19/10 y el 18/11, PR numerados hasta el #159 (157 PR fusionados a `develop`), ramas `feature/<código>-<nombre>` |
+| **GitHub** (repositorio público `hugo12341234/nierika-recorrido-mazunte`) | Control de versiones, ramas por tarea y *pull requests* | 507 commits en `develop` entre el 19/10 y el 18/11, PR numerados hasta el #174 (165 PR fusionados a `develop`; API de GitHub, al corte de las 23:05 UTC del 18/11), ramas `feature/<código>-<nombre>` |
 | **Trello** (tablero «Nierika Studio - Recorrido Mazunte») | Tablero Kanban con una tarjeta por tarea | Captura del 17/11/2026 (sección f): 65 tarjetas en Terminado, 28 en revisión, 9 en proceso y 2 pendientes |
 | **Hoja del plan** (Google Sheets, con copia en Excel) | Plan de las 60 actividades con horas, responsables y fechas | Archivos `Plan_de_Proyecto_Mazunte_actualizado_*.xlsx` del 03 y 04/11 en la carpeta compartida del proyecto de Claude |
 | **`docs/ESTADO_PROYECTO.md`** | Registro único de plan, estado, decisiones, parámetros y problemas | Registro de decisiones con fecha y motivo (sección 4), versionado en Git |
