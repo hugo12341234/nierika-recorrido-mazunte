@@ -157,8 +157,8 @@ Los pendientes y las decisiones se llevan en [`docs/ESTADO_PROYECTO.md`](docs/ES
   [`docs/manual_tecnico/13_m_creditos_licencias.md`](docs/manual_tecnico/13_m_creditos_licencias.md)); algunas texturas son CC0 (Poly Haven).
   No los redistribuyas con fines comerciales.
 - Créditos y referencias APA 7: [`docs/REFERENCIAS.md`](docs/REFERENCIAS.md), [`Audio/README.md`](Audio/README.md) y la pantalla de Créditos dentro del juego.
-  Las referencias de audio, voz y texturas ya están documentadas (68 en total, con su estado de verificación); lo único abierto es que D2 confirme
-  el canal y la fecha del oleaje abriendo el video una vez, y la fuente de la chilena, que no existe en el repositorio (`docs/REFERENCIAS.md`, sección 8).
+  Las referencias de audio, voz y texturas ya están documentadas (68 en total, con su estado de verificación); lo único abierto es la fuente de la chilena,
+  que no existe en el repositorio, y la versión de Maya (`docs/REFERENCIAS.md`, sección 8).
 - Las bibliotecas de `vendor/` y las que instala vcpkg conservan sus propias licencias.
 
 ## Ramas
