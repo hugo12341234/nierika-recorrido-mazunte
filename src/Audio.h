@@ -28,7 +28,14 @@ public:
     // X-60: mezcla del visitante (tecla M). Multiplica el volumen de cada pista: false = esa pista en silencio.
     void SetMezcla(bool mar, bool musica);
 
+    // X-62: narracion del recorrido guiado. Carga Audio/narracion/narracion_NN.mp3 (NN = 00..11) y la reproduce una vez.
+    // Devuelve su duracion en segundos, o 0 si el archivo no existe o no se pudo reproducir (el recorrido sigue sin voz; no truena).
+    // Mientras la voz suena, ActualizarZona baja la musica a x0.35 y el mar a x0.6 con una rampa de 0.6 s (no cambia las curvas de D-6j ni X-40).
+    float IniciarVoz(int estacion);
+    void DetenerVoz();
+
 private:
+    float atenuacion = 0.0f;   // 0 = sin voz, 1 = voz sonando (rampa de 0.6 s)
     bool mezclaMar = true, mezclaMusica = true;
     AudioImpl* impl = nullptr;
 };

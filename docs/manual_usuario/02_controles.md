@@ -12,8 +12,9 @@
 | Velas del altar | **V** (a menos de 3 m del altar) | Enciende o apaga las velas del altar: la luz cálida y las llamas suben o bajan en un cuarto de segundo. Lejos del altar solo muestra un aviso |
 | Sonido | **M** | Cambia entre «mar y música», «solo el mar», «solo la música» y «silencio» (se avisa arriba en pantalla) |
 | Ayuda de controles | **F1** | Muestra u oculta la lista de controles |
+| Recorrido guiado | **T** | Una visita narrada por 12 estaciones (playa, ofrendas, altar, camino de las ánimas, mirador), con subtítulos y, si existen los audios, con voz. **T**, **Esc** o **W A S D** la cancelan y te dejan donde estás (ver `docs/RECORRIDO_GUIADO.md`) |
 | Reiniciar la silueta | **R** | La silueta vuelve a la orilla y repite su caminata y la flor |
-| Pausa / menú | **Esc** | Abre el menú de pausa (Continuar, Controles, Créditos, Salir); otra vez **Esc** continúa. En el menú de inicio, **Esc** sale |
+| Pausa / menú | **Esc** | Con el recorrido guiado activo, la primera pulsación solo lo cancela. Si no, abre el menú de pausa (Continuar, Controles, Créditos, Salir); otra vez **Esc** continúa. En el menú de inicio, **Esc** sale |
 
 Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - La velocidad al caminar es de **2.0 m/s** (`SPEED` en `Camera.h`) y la sensibilidad del ratón es **0.25**.
@@ -23,6 +24,7 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
 - Desde X-63 (17/11) **Esc ya no cierra el programa directamente**: abre la pausa. Para salir: Esc y luego «Salir» (clic o Enter). En el menú de inicio, Esc sí sale.
 - En los menús el cursor reaparece y se puede hacer clic; también sirven las flechas (o W S) y Enter. En Créditos, flechas arriba/abajo o la rueda del ratón desplazan el texto.
+- **T** (X-62, 17/11): durante el recorrido guiado el ratón no mueve la cámara. No se compiló en VS 2022 al escribir esta nota.
 
 ## 2.2 Teclas sin función
 

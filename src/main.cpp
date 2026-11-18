@@ -21,6 +21,7 @@
 #include "Fichas.h"
 #include "Hud.h"       // X-60: aviso y ayuda de controles
 #include "Menu.h"      // X-63: menu de inicio y pausa
+#include "Recorrido.h" // X-62: recorrido virtual guiado (tecla T)
 #include "AnimFlores.h"  // C-4
 #include "AnimVelas.h"    // C-3: velas flotando (Bezier + vaiven senoidal)
 #include "DejarFlor.h"    // D-4: caida libre de la flor que deja la silueta
@@ -61,6 +62,7 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);   // X-63: solo reenvia el clic al menu
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);          // X-63: rueda para Creditos
 void DoMovement();
+void IniciarRecorrido();
 
 // Camera
 Camera camera(glm::vec3(0.0f, Colisiones::ALTURA_OJOS, 6.0f));  // ojos a 1.6 m (A-9)
@@ -97,6 +99,8 @@ const float ALTAR_VELAS_RADIO = 3.0f;
 int mezclaSonido = 0;                             // M: 0 = mar y musica, 1 = solo mar, 2 = solo musica, 3 = silencio
 HudEstado hud;                                    // aviso breve (arriba) y ayuda de controles (F1)
 Audio* audioPtr = nullptr;                        // para que KeyCallback cambie la mezcla
+Recorrido recorrido;                              // X-62: recorrido guiado (T inicia; T, Esc o W A S D cancelan)
+float duracionSilueta = 18.4f;                    // X-62: Silueta::Duracion(), se lee de la silueta ya creada
 
 // X-63: menu de inicio (Iniciar, Controles, Creditos, Salir) y pausa (Esc en el recorrido). Mientras esta abierto: la camara no se mueve con teclas ni
 // raton, la silueta no avanza y no se dibujan fichas. Al iniciar la primera vez arrancan la silueta, el audio y la camara, igual que antes del menu.
@@ -504,6 +508,7 @@ int main()
     glBindVertexArray(0);
 
     Silueta silueta;  // jerarquia + KeyFrames (src/Silueta.cpp)
+    duracionSilueta = silueta.Duracion();   // X-62
     // D-1: una pieza por .obj con el pivote en la articulacion; el orden es el de los nodos de Silueta
     // (torso, cabeza, brazo/antebrazo izq, brazo/antebrazo der, muslo/pierna izq, muslo/pierna der)
     const char* piezasSilueta[10] = { "torso", "cabeza", "brazo_izq", "antebrazo_izq", "brazo_der", "antebrazo_der",
@@ -527,7 +532,7 @@ int main()
     Audio audio;
     // X-63: el audio arranca al elegir "Iniciar recorrido" (antes sonaba desde que abria la ventana). Las variables de desarrollo
     // (capturas, video, UI de manual y NIERIKA_SIN_MENU) se saltan el menu y arrancan todo como antes.
-    const bool saltarMenu = std::getenv("NIERIKA_CAPTURAS") || std::getenv("NIERIKA_VIDEO") || std::getenv("NIERIKA_SIN_MENU") ||
+    const bool saltarMenu = std::getenv("NIERIKA_CAPTURAS") || std::getenv("NIERIKA_VIDEO") || std::getenv("NIERIKA_SIN_MENU") || std::getenv("NIERIKA_RECORRIDO_CAPTURAS") ||
                             (std::getenv("NIERIKA_UI") && (std::string(std::getenv("NIERIKA_UI")).find("ayuda") != std::string::npos ||
                                                            std::string(std::getenv("NIERIKA_UI")).find("velas_apagadas") != std::string::npos));
     const glm::vec3 posInicial = camera.GetPosition();   // la camara vuelve aqui al iniciar (el fondo del menu la mueve)
@@ -599,6 +604,9 @@ int main()
         }
         else std::cout << "[Video] No se pudo leer la ruta de camara: " << rutaTxt << std::endl;
     }
+    const char* recCapturas = std::getenv("NIERIKA_RECORRIDO_CAPTURAS");   // solo desarrollo (ver mas abajo)
+    int recCuadro = 0;
+    if (recCapturas) IniciarRecorrido();
     while (!glfwWindowShouldClose(window))
     {
         if (indiceCaptura < posesCaptura.size() && framesCaptura == 0)
@@ -665,7 +673,27 @@ int main()
                 camera.SetOrientacion(glm::degrees(std::atan2(dir.z, dir.x)), glm::degrees(std::asin(dir.y)));
             }
         }
+        else
+        {
+        // X-62: con el recorrido guiado activo, la camara la lleva el recorrido (caminar con W A S D lo cancela y devuelve el control)
+        if (recorrido.Activo() && (keys[GLFW_KEY_W] || keys[GLFW_KEY_A] || keys[GLFW_KEY_S] || keys[GLFW_KEY_D] ||
+                                   keys[GLFW_KEY_UP] || keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_LEFT] || keys[GLFW_KEY_RIGHT]))
+            recorrido.Cancelar();
+        if (recorrido.Activo())
+        {
+            glm::vec2 cc(0.0f);   // centro de la comparsa en este instante (la estacion 2 la mira)
+            for (int i = 0; i < Extras::N_COMPARSA; i++) { float cx, cz, cy; Extras::ComparsaN(i, (float)Reloj(), cx, cz, cy); cc += glm::vec2(cx, cz); }
+            recorrido.FijarComparsa(cc / (float)Extras::N_COMPARSA);
+            RecorridoPose rp;
+            // Solo desarrollo: NIERIKA_RECORRIDO_CAPTURAS="carpeta" corre el recorrido a 30 pasos de 0.1 s por cuadro y guarda un PNG por cuadro (cada 3 s de recorrido)
+            const int pasos = recCapturas ? 30 : 1;
+            bool seguia = false;
+            for (int p = 0; p < pasos && recorrido.Activo(); p++) seguia = recorrido.Actualizar(recCapturas ? 0.1f : deltaTime, rp);
+            if (seguia) { camera.SetPosition(rp.pos); camera.SetOrientacion(rp.yaw, rp.pitch); }
+            if (!recorrido.Activo()) { hud.aviso = "Fin del recorrido: ahora el camino es tuyo"; hud.avisoSeg = 4.0f; }
+        }
         else DoMovement();
+        }
 
         // Clear the colorbuffer
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -1930,6 +1958,7 @@ int main()
         // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
         if (!menu.abierto) tSilueta += deltaTime;   // X-63: con el menu abierto la silueta espera (en el inicio, en la orilla; en la pausa, donde iba)
+        { const float ts = recorrido.TiempoSilueta(); if (ts >= 0.0f) tSilueta = ts; }   // X-62: durante el recorrido la silueta llega al altar con la camara
         silueta.Actualizar(tSilueta);
         glUniform1f(specLoc, 0.1f);
         for (size_t i = 0; i < modelosSilueta.size(); i++)
@@ -2107,6 +2136,13 @@ int main()
             hud.cercaAltar = glm::length(glm::vec2(c.x - ALTAR_VELAS.x, c.z - ALTAR_VELAS.z)) < ALTAR_VELAS_RADIO;
             hud.velasEncendidas = velasEncendidas;
             if (hud.avisoSeg > 0.0f) hud.avisoSeg -= deltaTime;
+            // X-62: subtitulos del recorrido
+            hud.tour = recorrido.Activo();
+            if (hud.tour)
+            {
+                hud.tourTitulo = "Estación " + std::to_string(recorrido.Estacion() + 1) + "/" + std::to_string(Recorrido::N_ESTACIONES) + " · " + recorrido.Titulo();
+                hud.tourTexto = recorrido.EnEstacion() ? recorrido.Texto() : "";
+            }
         }
         if (menu.abierto)
         {
@@ -2146,6 +2182,13 @@ int main()
             SOIL_save_screenshot(nombre, SOIL_SAVE_TYPE_PNG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             cuadroVideo++;
             if (relojVideo >= rutaVideo.back().t) glfwSetWindowShouldClose(window, GL_TRUE);
+        }
+        if (recCapturas)
+        {
+            char nombre[512];
+            std::snprintf(nombre, sizeof(nombre), "%s/rec_%03d.png", recCapturas, recCuadro++);
+            SOIL_save_screenshot(nombre, SOIL_SAVE_TYPE_PNG, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            if (!recorrido.Activo()) glfwSetWindowShouldClose(window, GL_TRUE);
         }
         audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z, camera.GetFront().x, camera.GetFront().z);  // X-24: volumen por zona
         // Swap the buffers
@@ -2244,6 +2287,20 @@ void DoMovement()
     camera.SetPosition(colisiones.resolver(posAntes, camera.GetPosition()));
 }
 
+// X-62: arranca el recorrido guiado desde la pose actual de la camara (tecla T; tambien lo usa el modo de capturas de desarrollo)
+void IniciarRecorrido()
+{
+    const glm::vec3 f = camera.GetFront();
+    RecorridoPose actual;
+    actual.pos = camera.GetPosition();
+    actual.yaw = glm::degrees(std::atan2(f.z, f.x));
+    actual.pitch = glm::degrees(std::asin(glm::clamp(f.y, -1.0f, 1.0f)));
+    tSilueta = 0.0f;   // la silueta espera en la orilla hasta que le toca salir
+    recorrido.Iniciar(actual, audioPtr, duracionSilueta);
+    hud.aviso = "Recorrido guiado: T o Esc para salir";
+    hud.avisoSeg = 3.0f;
+}
+
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -2264,8 +2321,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     // X-63: Esc en el recorrido ya no cierra el programa: abre la pausa (el menu); alli Esc continua y "Salir" cierra
     if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
     {
-        MenuAbrir(window, menu, true);
-        for (int k = 0; k < 1024; k++) keys[k] = false;   // que ninguna tecla de caminar quede pegada
+        // X-62: con el recorrido guiado activo, Esc solo lo cancela; con el recorrido inactivo abre la pausa (X-63)
+        if (recorrido.Activo()) { recorrido.Cancelar(); hud.aviso = "Recorrido cancelado"; hud.avisoSeg = 2.0f; }
+        else
+        {
+            MenuAbrir(window, menu, true);
+            for (int k = 0; k < 1024; k++) keys[k] = false;   // que ninguna tecla de caminar quede pegada
+        }
         return;
     }
 
@@ -2308,6 +2370,13 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     if (GLFW_KEY_F1 == key && GLFW_PRESS == action)
         hud.ayuda = !hud.ayuda;
 
+    // T: inicia o cancela el recorrido virtual guiado (X-62)
+    if (GLFW_KEY_T == key && GLFW_PRESS == action)
+    {
+        if (recorrido.Activo()) { recorrido.Cancelar(); hud.aviso = "Recorrido cancelado"; hud.avisoSeg = 2.0f; }
+        else IniciarRecorrido();
+    }
+
     // R: reinicia la caminata de la silueta (D-2)
     if (GLFW_KEY_R == key && GLFW_PRESS == action)
         tSilueta = 0.0f;
@@ -2345,5 +2414,6 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
     lastX = xPos;
     lastY = yPos;
 
+    if (recorrido.Activo()) return;   // X-62: durante el recorrido el raton no mueve la camara
     camera.ProcessMouseMovement(xOffset, yOffset);
 }

@@ -188,6 +188,7 @@ namespace
         { { "V" },                1, "Encender o apagar las velas del altar (a menos de 3 m)" },
         { { "M" },                1, "Sonido: mar y música, solo mar, solo música o silencio" },
         { { "R" },                1, "Reiniciar la caminata de la silueta" },
+        { { "T" },                1, "Recorrido guiado por 12 estaciones, con subtítulos (T, Esc o W A S D lo cancelan)" },
         { { "F1" },               1, "Mostrar u ocultar la ayuda de controles" },
         { { "Esc" },              1, "Pausa: abre este menú (en el menú de inicio, sale)" },
     };
@@ -249,6 +250,9 @@ namespace
         Seccion("Audio (externo, uso educativo no comercial)");
         Linea("Música: «Dios Nunca Muere», Banda Mixe de Oaxaca.");
         Pendiente("Referencia APA 7 incompleta. PENDIENTE: año, canal o plataforma, URL y fecha de consulta.");
+        ImGui::Spacing();
+        Linea("Narración del recorrido guiado (T): voz sintética que lee el guion; no es un personaje.");
+        Pendiente("La herramienta de voz y su referencia APA 7 están PENDIENTES (D2 la elige).");
         ImGui::Spacing();
         Linea("Oleaje: video «Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD» (YouTube, id 6TGHwQHdDlo).",
               "Se usó un tramo recortado en bucle.");

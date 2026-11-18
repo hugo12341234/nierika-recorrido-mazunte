@@ -12,8 +12,9 @@
 | Altar candles | **V** (within 3 m of the altar) | Turns the altar candles on or off: the warm light and the flames fade in or out in a quarter of a second. Away from the altar it only shows a notice |
 | Sound | **M** | Cycles through "sea and music", "sea only", "music only" and "silence" (a notice appears at the top of the screen) |
 | Controls help | **F1** | Shows or hides the list of controls |
+| Guided tour | **T** | A narrated visit through 12 stations (beach, offerings, altar, path of the souls, viewpoint), with subtitles and, if the audio files exist, a voice. **T**, **Esc** or **W A S D** cancel it and leave you where you are (see `docs/RECORRIDO_GUIADO.md`, in Spanish) |
 | Restart the silhouette | **R** | The silhouette returns to the shore and repeats its walk and the flower |
-| Pause / menu | **Esc** | Opens the pause menu (Continue, Controls, Credits, Quit); **Esc** again continues. On the start menu, **Esc** quits |
+| Pause / menu | **Esc** | With the guided tour active, the first press only cancels it. Otherwise it opens the pause menu (Continue, Controls, Credits, Quit); **Esc** again continues. On the start menu, **Esc** quits |
 
 Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Walking speed is **2.0 m/s** (`SPEED` in `Camera.h`); mouse sensitivity is **0.25**.
@@ -23,6 +24,7 @@ Notes verified in the code (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Since X-60 (Nov 17) the **space bar does nothing**: the colored lights were removed (ESTADO sec. 4, Nov 17).
 - Since X-63 (Nov 17) **Esc no longer closes the program directly**: it opens the pause menu. To quit: Esc, then "Salir" (click or Enter). On the start menu, Esc does quit.
 - The cursor reappears in the menus and you can click; the arrow keys (or W S) and Enter also work. In Credits, the up/down arrows or the mouse wheel scroll the text.
+- **T** (X-62, Nov 17): during the guided tour the mouse does not move the camera. Not compiled in VS 2022 when this note was written.
 
 ## 2.2 Keys without a function
 

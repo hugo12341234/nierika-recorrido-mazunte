@@ -186,7 +186,7 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
                 if (d < mejor) { mejor = d; elegida = i; }
             }
     }
-    const bool hayHud = hud.avisoSeg > 0.0f || hud.ayuda || hud.cercaAltar;
+    const bool hayHud = hud.avisoSeg > 0.0f || hud.ayuda || hud.cercaAltar || hud.tour;
     if (elegida < 0 && !hayHud) return;   // lejos de todo: no se dibuja nada (ni se pide trabajo a ImGui)
 
     ImGui_ImplOpenGL3_NewFrame();
@@ -206,6 +206,22 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
         else ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "V: %s las velas del altar", hud.velasEncendidas ? "apagar" : "encender");
         ImGui::End();
     }
+    // X-62: subtitulos del recorrido guiado (arriba, bajo el aviso; la ficha va abajo)
+    if (hud.tour)
+    {
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, 64.0f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
+        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.7f, 0.0f), ImGuiCond_Always);
+        ImGui::SetNextWindowBgAlpha(0.70f);
+        ImGui::Begin("Recorrido", nullptr, flagsHud);
+        ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "%s   (T o Esc: salir del recorrido)", hud.tourTitulo.c_str());
+        if (!hud.tourTexto.empty())
+        {
+            ImGui::PushTextWrapPos(0.0f);
+            ImGui::TextUnformatted(hud.tourTexto.c_str());
+            ImGui::PopTextWrapPos();
+        }
+        ImGui::End();
+    }
     // X-60: ayuda de controles (F1)
     if (hud.ayuda)
     {
@@ -216,6 +232,7 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
         ImGui::Separator();
         ImGui::TextUnformatted("W A S D / flechas   caminar\nRaton              mirar\nV                  encender o apagar las velas (cerca del altar)\n"
                                "M                  sonido: mar y musica / solo mar / solo musica / silencio\nR                  reiniciar la caminata de la silueta\n"
+                               "T                  recorrido guiado (T, Esc o W A S D lo cancelan)\n"
                                "F1                 mostrar u ocultar esta ayuda\nEsc                pausa (menu: continuar, controles, creditos, salir)");
         ImGui::Spacing();
         ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 1.0f), "Acercate a menos de 2 m de un objeto para leer su ficha cultural.");
