@@ -24,8 +24,7 @@
 | `14_anexo_modelos.md`, `15_anexo_pruebas.md` | Anexos A y B |
 
 ## Textos de cada integrante
-- `individual/D1_*`: **plantillas vacías** con instrucciones; solo D1 las escribe.
-- `individual/D2_*`: **borradores** marcados «BORRADOR para que Hugo revise»; D2 los reescribe con sus palabras.
+- `individual/D1_*` y `individual/D2_*`: los textos individuales finales (g.4, g.5, j.4 y j.5), cada uno de su integrante.
 - `secciones/`: secciones sueltas de otros hilos. Si un archivo no existe, el PDF muestra un aviso de pendiente. `evidencias_colaborativas.md` se integra como f.4 y `roles_raci_real.md` como e.4 (sin sus notas internas).
 
 ## Cómo generar los PDF

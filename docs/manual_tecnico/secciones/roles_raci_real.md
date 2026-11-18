@@ -1,6 +1,6 @@
 # Roles ejecutados frente a la Matriz RACI inicial
 
-> **Pendientes al 18/11/2026 (D2):** (1) justificación del trabajo de D1 y sus dos textos individuales: **pendientes, sin inventar**; (2) D2 reescribirá sus borradores individuales (`*_BORRADOR.md`) después.
+> **Pendientes al 18/11/2026 (D2):** (1) justificación del trabajo de D1: **pendiente, sin inventar**. Los textos individuales de D1 y D2 (g.4, g.5, j.4, j.5) ya están integrados desde el 18/11.
 
 > Estado al **18/11/2026**. Todo lo que aparece aquí sale del repositorio, de `docs/ESTADO_PROYECTO.md` o de la propuesta v2.0.
 > Cada afirmación lleva su fuente o está marcada **«sin evidencia»**. No se corrige ni reescribe el historial de Git.

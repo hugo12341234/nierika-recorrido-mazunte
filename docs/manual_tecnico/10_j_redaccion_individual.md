@@ -15,7 +15,6 @@ Cada integrante escribe, **en inglés y con sus propias palabras**, un texto sob
 
 | Integrante | Archivo | Estado al 18/11/2026 |
 |---|---|---|
-| D1 (319266894) | `docs/manual_tecnico/individual/D1_english.md` | **Plantilla vacía**: la completa D1 |
-| D2 (321332086) | `docs/manual_tecnico/individual/D2_english.md` | **Borrador con datos del repositorio**: lo revisa y completa D2 |
+| D1 (319266894) | `docs/manual_tecnico/individual/D1_english.md` | Completo (texto de D1) |
+| D2 (321332086) | `docs/manual_tecnico/individual/D2_english.md` | Completo (texto de D2) |
 
-Después de completarlos, se vuelve a generar el PDF con `python3 tools/e5_exportar_pdf.py tecnico`.

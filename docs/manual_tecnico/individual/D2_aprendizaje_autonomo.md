@@ -1,23 +1,17 @@
 ## g.5 Integrante D2 (321332086)
 
-> **BORRADOR para que Hugo (D2) revise.** Los datos de abajo salen del repositorio y del ESTADO; lo que depende de cómo aprendió D2 (fuentes, tiempos, dificultades) está entre corchetes y debe escribirlo D2. Elige **una** de las tecnologías candidatas, borra las demás y este recuadro.
+**Herramienta o tecnología que aprendí:** Blender 5.2 controlado desde Python con la API `bpy`, usado como módulo y sin abrir la ventana del programa.
 
-**Tecnologías nuevas que el repositorio muestra que D2 incorporó** (candidatas):
+**Por qué fue necesaria para el proyecto:** el cliente pedía al menos 18 modelos propios y el calendario se comprimió en las últimas dos semanas. Modelar cada objeto a mano no era viable en ese tiempo y, además, cada vez que cambiaba una medida (por ejemplo, al corregir la escala a 1 unidad = 1 metro) había que rehacer el modelo. Con `bpy` cada modelo, textura o dato de la escena sale de un script: si algo cambia, se edita un número y se vuelve a generar, y cualquiera puede reproducir el mismo resultado desde el repositorio. Por eso el 11/11 decidí que los modelos y las texturas propias se generarían con scripts.
 
-| Candidata | Evidencia verificable en el repositorio |
-|---|---|
-| **vcpkg en modo manifiesto** (versiones fijas con `builtin-baseline`) | `vcpkg.json` y la decisión del 19/10 de pasar de una solución de 32 bits a x64 con vcpkg |
-| **Blender 5.2 con Python (`bpy`) como módulo, sin ventana** | `tools/bpy_comun.py` y más de 40 scripts de `tools/` que generan modelos, texturas y datos de la escena; decisión del 11/11 |
-| **GLSL: ruido de Perlin, iluminación Blinn-Phong y olas en el vertex shader** | `Shaders/lighting.frag` y `lighting.vs`; justificación en `justificacion_simples.md` |
-| **Dear ImGui y miniaudio** | `src/Fichas.cpp`, `Menu.cpp`, `Audio.cpp` |
-| **Flujo de trabajo con un asistente de IA** (Claude Code y un Proyecto de Claude, con `CLAUDE.md`, `/actividad`, `/cierre`, `/verificar`) | `CLAUDE.md`, `docs/FLUJO_DE_TRABAJO.md`, `.claude/` |
+**Cómo la aprendí:** no conocía la API de Python de Blender; solo había usado Blender con la interfaz gráfica. Aprendí con la documentación oficial de la API (Blender Python API), con ejemplos de la comunidad y, sobre todo, probando: escribía un script corto, lo ejecutaba, abría el `.blend` para ver el resultado y corregía. Me apoyé en un asistente de IA (Claude) para escribir y depurar scripts; mi trabajo fue decidir qué debía generar cada uno, revisar el resultado en Blender y en el programa, y pedir correcciones. Lo más difícil fue entender el modelo de datos de Blender (la diferencia entre objeto, malla y material, y el contexto que exigen algunos operadores cuando no hay ventana), lograr que los `.obj` exportados conservaran la escala y las coordenadas UV correctas para OpenGL, y que las texturas no se vieran estiradas. Trabajé con ella durante la semana del 11 al 18/11.
 
-**Herramienta o tecnología que aprendí:** [D2: escribe cuál elegiste]
+**Qué construí con ella (evidencia):**
 
-**Por qué fue necesaria para el proyecto:** [D2: por ejemplo, para que todos los usuarios compilen con las mismas versiones, o para generar los modelos de forma reproducible]
+* `tools/bpy_comun.py`, un módulo con las funciones comunes (crear materiales, aplicar escala, exportar a `.obj` y guardar el `.blend`).
+* 52 scripts de Python en `tools/`, 25 de ellos de Blender (`bpy`); el resto genera texturas, datos de la escena y documentos.
+* Los 23 modelos del inventario, cada uno con su `.obj` y su `.blend` en `Models/` (Anexo A; tabla calculada con `tools/e5_tabla_modelos.py`).
+* La silueta de piezas orgánicas generada con `tools/x7_silueta.py` (X7, 12/11).
+* Las texturas propias `laminado1.jpg` y `concreto.jpg`, declaradas como propias en los Créditos del programa (X69 y X71).
 
-**Cómo la aprendí:** [D2: fuentes, tiempo y dificultades reales]
-
-**Qué construí con ella (evidencia):** [D2: elige los archivos y commits de la tabla que correspondan a tu elección]
-
-**Qué haría distinto o qué no llegué a dominar:** [D2: reflexión propia]
+**Qué haría distinto o qué no llegué a dominar:** empezaría a usar los scripts desde la primera semana, no al final, para tener tiempo de afinar los modelos. Todavía no domino el modelado orgánico por código: las formas complejas (personas, flores) me salen mejor a mano o con modelos externos, y aún dependo bastante de la documentación y del asistente para escribir scripts largos. También me faltó optimizar la geometría desde Blender: el diagnóstico de rendimiento del 18/11 mostró que había más triángulos de los necesarios.
