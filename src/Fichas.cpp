@@ -108,7 +108,7 @@ namespace
           "La comparsa que marcha por la orilla de este recorrido es una representación del estudio, no una comparsa documentada de Mazunte.",
           "Tradición regional de Oaxaca, ciudad (periodismo); la comparsa de la escena: adaptación del estudio",
           REF_COMPARSA,
-          1, { glm::vec3(-12.0f, 0.0f, 22.0f) } },   // la comparsa recorre z = 22.6 +-0.9 (Extras::ComparsaN); punto en la orilla oeste
+          1, { glm::vec3(-12.0f, 0.0f, 22.0f) } },   // la comparsa va y viene por z = 23.3 +-0.4, x +-23.75 (Extras::ComparsaN, X-64); punto en la orilla oeste
         { "Camino de las ánimas",
           "La flama de la vela guía a los difuntos de regreso a casa (Secretaría de Educación Pública [SEP], 2026). "
           "En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile (México Desconocido, 2026). "

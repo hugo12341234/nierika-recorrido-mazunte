@@ -1586,7 +1586,7 @@ int main()
                     float cx, cz, cy;
                     Extras::ComparsaN(i, tl, cx, cz, cy);
                     glm::mat4 mm = glm::translate(glm::mat4(1.0f), glm::vec3(cx, Colisiones::alturaSuelo(cz) + cy, cz));
-                    mm = glm::rotate(mm, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));          // avanzan hacia +x
+                    mm = glm::rotate(mm, glm::radians(Extras::ComparsaGiro(tl)), glm::vec3(0.0f, 1.0f, 0.0f));   // X-64: rumbo de la comparsa (270 = +x, 90 = -x; gira en los extremos)
                     mm = glm::rotate(mm, glm::radians(Extras::Balanceo(tl, 1.0f / Extras::COMPARSA_F * 2.0f, 0.6f * i, 3.0f)), glm::vec3(0.0f, 0.0f, 1.0f));
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mm));
                     atuendos.dibujar(shader, i % 3 == 0 ? personaPieB : personaPieA, false, 300 + i, mm);   // X-35
@@ -1600,10 +1600,10 @@ int main()
                 {   // tira de papel picado entre las dos primeras columnas, mecida como pendulo (6 grados, 2.4 s)
                     float cx0, cz0, cy0, cx1, cz1, cy1;
                     Extras::ComparsaN(0, tl, cx0, cz0, cy0);  Extras::ComparsaN(1, tl, cx1, cz1, cy1);
-                    glm::mat4 mp = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f * (cx0 + cx1), Colisiones::alturaSuelo(22.6f) + 2.2f, 0.5f * (cz0 + cz1)));
+                    glm::mat4 mp = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f * (cx0 + cx1), Colisiones::alturaSuelo(Extras::COMPARSA_Z) + 2.2f, 0.5f * (cz0 + cz1)));
                     mp = glm::rotate(mp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
                     mp = glm::rotate(mp, glm::radians(Extras::Balanceo(tl, 2.4f, 0.0f, 6.0f)), glm::vec3(1.0f, 0.0f, 0.0f));
-                    mp = glm::scale(mp, glm::vec3(1.0f, 1.0f, 1.0f));
+                    mp = glm::scale(mp, glm::vec3(Extras::COMPARSA_SEP / 1.8f, 1.0f, 1.0f));   // X-64: la tira (1.7 m) se acorta a la separacion de las columnas (era 1.8 m)
                     glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mp));
                     papelPicado.Draw(shader);
                 }
