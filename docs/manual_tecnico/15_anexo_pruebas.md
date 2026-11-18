@@ -34,7 +34,7 @@ Se cumple el criterio de 30 FPS en el equipo con gráficos integrados que se mid
 | Fugas de GPU | No verificadas con herramienta (ver B.3) |
 | Texturas de 512 px | `laminado1.jpg`, `concreto.jpg`, `humo.png`, `papel_fucsia.png` y `papel_morado.png` miden 512 px, y la convención pide 1K; se dejaron sin agrandar |
 | Música y audio | D2 los escuchó y reportó que suenan bien; el balance de volúmenes lo decidió D2 |
-| Narraciones 07 y 08 | Tienen la misma duración, lo que podría indicar que un archivo es copia del otro; D2 debe escucharlas |
+| Narraciones 07 y 08 | Tienen la misma duración, pero **no son copia**: sus sumas MD5 son distintas (`cb44c8f8…` y `7356e37c…`, 18/11). D2 confirmó que son distintas |
 | Datos de la escena | `tools/x33_vida_colinas.py` ya no reproduce el archivo `VidaColinasDatos.h`, porque este se ajustó después de generarse; no debe volver a correrse sin revisar el resultado |
 | Fichas | 13 fichas; las fuentes de las fichas 6 a 13 se compararon por lectura automática de las páginas, no por lectura humana |
 | Repositorio público | El repositorio es público y contiene los números de cuenta; el historial de Git conserva documentos de otras materias que se quitaron del árbol de archivos. Borrarlos del historial exigiría reescribirlo y no se hizo |
