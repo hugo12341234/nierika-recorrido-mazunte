@@ -254,15 +254,41 @@ namespace Extras
         MusicoBanda(-2.2f,  1.0f, 1, 0.0f), MusicoBanda(-1.1f,  1.0f, 2, 1.1f), MusicoBanda(0.0f,  1.0f, 0, 2.2f), MusicoBanda(1.1f,  1.0f, 0, 3.3f), MusicoBanda(2.2f,  1.0f, 3, 4.4f),
         MusicoBanda(-1.6f, -0.9f, 4, 5.5f), MusicoBanda(-0.5f, -0.9f, 5, 0.6f), MusicoBanda(0.7f, -0.9f, 6, 1.7f), MusicoBanda(1.9f, -0.9f, 7, 2.8f) };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
-    // Comparsa: 12 figuras (2 columnas) que marchan por la orilla; x(t) = -48 + ((v t + s_i) mod 96); paso: y = 0.05 |sen(2 pi f t)|, balanceo +-3 grados
+    // Comparsa: 12 figuras (2 columnas de 6) que van y vienen por la orilla. X-65 (18/11): antes marchaban en linea recta de x = -48 a +48 por z = 22.6 +-0.9 y
+    // atravesaban las 4 lanchas varadas, 6 rocas, un farol y la familia de la llegada; ademas las figuras (falda de 0.84 m de ancho, sombrero de 0.78 m) y los
+    // tambores se encimaban entre si. Ahora recorren SOLO el tramo libre de la arena humeda (z = 23.2 +-0.55, a >= 0.25 m del agua en z = 24) entre x = -23.75 y +23.75
+    // (las lanchas empiezan en |x| = 27.3 y las rocas en |x| >= 40). Separacion: 1.1 m entre columnas y 1.6 m entre filas (el tambor sobresale 0.84 m del cuerpo).
+    // Al llegar a cada extremo el grupo se detiene COMPARSA_T_GIRO s, da media vuelta MIRANDO A TIERRA (el tambor va en la columna de tierra: no choca con nadie) y regresa.
+    // El grupo es un bloque rigido: x_i = u(t) + d_i, u(t) = centro (onda triangular con paradas), d_i = 1.6 (i div 2) - 4.0 (filas centradas).
+    //   marcha:  u = -U + V p  (ida)  /  u = U - V p  (vuelta);  parada: u = +-U y giro = 180 * suavizado(p/T_GIRO), suavizado(s) = 3 s^2 - 2 s^3
+    //   paso: y = 0.05 |sen(2 pi f t)| (solo marchando), balanceo +-3 grados (main.cpp)
     constexpr int N_COMPARSA = 12;
-    constexpr float COMPARSA_Z = 22.6f, COMPARSA_L = 96.0f, COMPARSA_V = 1.0f, COMPARSA_F = 1.0f;
+    constexpr float COMPARSA_Z = 23.2f, COMPARSA_SEP = 1.1f, COMPARSA_FILA = 1.6f;       // eje de la comparsa y separacion entre sus dos columnas
+    constexpr float COMPARSA_U = 19.75f, COMPARSA_L = 2.0f * COMPARSA_U, COMPARSA_V = 1.0f, COMPARSA_F = 1.0f, COMPARSA_T_GIRO = 2.5f;
+    constexpr float COMPARSA_CICLO = 2.0f * (COMPARSA_L / COMPARSA_V + COMPARSA_T_GIRO);   // ida + giro + vuelta + giro = 84 s
+    // Estado del grupo en el instante t: centro u (m), rumbo en grados para la rotacion Y del modelo (270 = avanza hacia +x, 90 = hacia -x) y si va marchando
+    struct ComparsaEstado { float u, giro; bool marcha; };
+    inline ComparsaEstado ComparsaGrupo(float t)
+    {
+        const float leg = COMPARSA_L / COMPARSA_V;
+        float p = std::fmod(t + 0.5f * leg, COMPARSA_CICLO);   // t = 0: el grupo esta en el centro (u = 0) yendo hacia +x
+        if (p < 0.0f) p += COMPARSA_CICLO;
+        auto suave = [](float s) { return s * s * (3.0f - 2.0f * s); };
+        if (p < leg)                         return { -COMPARSA_U + COMPARSA_V * p, 270.0f, true };
+        p -= leg;
+        if (p < COMPARSA_T_GIRO)             return { COMPARSA_U, 270.0f + 180.0f * suave(p / COMPARSA_T_GIRO), false };
+        p -= COMPARSA_T_GIRO;
+        if (p < leg)                         return { COMPARSA_U - COMPARSA_V * p, 90.0f, true };
+        p -= leg;
+        return { -COMPARSA_U, 90.0f - 180.0f * suave(p / COMPARSA_T_GIRO), false };
+    }
+    inline float ComparsaGiro(float t) { return ComparsaGrupo(t).giro; }
     inline void ComparsaN(int i, float t, float& x, float& z, float& y)
     {
-        const float s = 1.3f * (i / 2) + 0.0f;
-        x = -48.0f + std::fmod(COMPARSA_V * t + COMPARSA_L * 0.5f + s, COMPARSA_L);
-        z = COMPARSA_Z + ((i % 2) ? 0.9f : -0.9f);
-        y = 0.05f * std::fabs(std::sin(2.0f * PI * COMPARSA_F * t + 0.6f * i));
+        const ComparsaEstado e = ComparsaGrupo(t);
+        x = e.u + COMPARSA_FILA * (i / 2) - 2.5f * COMPARSA_FILA;
+        z = COMPARSA_Z + ((i % 2) ? 0.5f * COMPARSA_SEP : -0.5f * COMPARSA_SEP);
+        y = e.marcha ? 0.05f * std::fabs(std::sin(2.0f * PI * COMPARSA_F * t + 0.6f * i)) : 0.0f;
     }
     // Alfombras de PETALOS DE CEMPASUCHIL (relieve de flores de color y hojas; NO son arena de colores): centro x, z; ancho, largo; tipo 0 rect, 1 cruz
     struct Alfombra { float x, z, ancho, largo; int tipo; };
