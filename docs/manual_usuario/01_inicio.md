@@ -19,24 +19,13 @@ Este manual explica cómo **ejecutarla**, **moverte** e **interactuar**. Si busc
 
 ## 1.3 Cómo abrirlo
 
-Hay dos formas de abrirlo. La entrega incluye el **proyecto de Visual Studio 2022** (código fuente, modelos, shaders y audio en el repositorio de la sección 6) y un programa ya compilado en un archivo `.zip`.
-
-**A. Con el programa ya compilado (`NierikaStudio_2026-11-18.zip`)**
-
-El `.zip` (209.6 MB) se entrega **aparte del repositorio** (no está en Git por su tamaño). Se generó con `tools/empaquetar_release.ps1`.
-
-1. **Descomprime todo** el `.zip` en una carpeta (no ejecutes el programa desde dentro del `.zip`).
-2. Abre `NierikaStudio.exe`. No hace falta instalar nada más: el paquete trae las DLL.
-3. Deja el `.exe` **junto a las carpetas `Models`, `Shaders` y `Audio`**: el programa las busca ahí.
-4. Si Windows avisa que falta `VCRUNTIME140.dll` o `MSVCP140.dll`, instala el *Microsoft Visual C++ Redistributable* de 64 bits (gratuito, de Microsoft).
-
-Límite conocido: el paquete arrancó correctamente en la computadora del equipo, que tiene Visual Studio; **no se probó en una computadora sin Visual Studio**.
-
-**B. Compilando el proyecto de Visual Studio 2022 (código fuente)**
+Esta entrega es el **proyecto de Visual Studio 2022** (código fuente, modelos, shaders y audio en el repositorio de la sección 6). **No se entrega un ejecutable ni un `.zip`:** la forma de abrirlo es compilarlo.
 
 1. Instala **Visual Studio 2022** con la carga de trabajo *Desarrollo de escritorio con C++*.
 2. Instala **vcpkg** una sola vez (`git clone https://github.com/microsoft/vcpkg C:\vcpkg`, luego `C:\vcpkg\bootstrap-vcpkg.bat` y `C:\vcpkg\vcpkg integrate install`). Las bibliotecas Assimp, GLFW, GLEW y GLM se descargan solas al compilar la primera vez (unos 10 a 20 minutos).
 3. Abre `NierikaStudio.sln`, elige **Release | x64** y pulsa **F5**. El ejecutable queda en `build/x64/Release/`.
+
+Si el programa compilado se mueve a otra carpeta, `NierikaStudio.exe` debe estar **junto a las carpetas `Models`, `Shaders` y `Audio`** (el programa las busca ahí). Si Windows avisa que falta `VCRUNTIME140.dll` o `MSVCP140.dll`, instala el *Microsoft Visual C++ Redistributable* de 64 bits (gratuito, de Microsoft).
 
 Al abrirlo, la primera pantalla es el menú de inicio.
 
