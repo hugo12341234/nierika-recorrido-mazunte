@@ -108,7 +108,7 @@ namespace
           "La comparsa que marcha por la orilla de este recorrido es una representación del estudio, no una comparsa documentada de Mazunte.",
           "Tradición regional de Oaxaca, ciudad (periodismo); la comparsa de la escena: adaptación del estudio",
           REF_COMPARSA,
-          1, { glm::vec3(-12.0f, 0.0f, 22.0f) } },   // la comparsa va y viene por z = 23.3 +-0.4, x +-23.75 (Extras::ComparsaN, X-64); punto en la orilla oeste
+          1, { glm::vec3(-12.0f, 0.0f, 22.0f) } },   // la comparsa va y viene por z = 23.2 +-0.55, x +-23.75 (Extras::ComparsaN, X-65); punto en la orilla oeste
         { "Camino de las ánimas",
           "La flama de la vela guía a los difuntos de regreso a casa (Secretaría de Educación Pública [SEP], 2026). "
           "En las alumbradas de Oaxaca, una comparsa recorre el pueblo entre música y baile (México Desconocido, 2026). "
@@ -186,6 +186,7 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
                 if (d < mejor) { mejor = d; elegida = i; }
             }
     }
+    if (hud.tour) elegida = -1;   // X-64: en el recorrido guiado no sale la ficha (los subtitulos y la voz bastan; las fichas siguen en modo libre)
     const bool hayHud = hud.avisoSeg > 0.0f || hud.ayuda || hud.cercaAltar || hud.tour;
     if (elegida < 0 && !hayHud) return;   // lejos de todo: no se dibuja nada (ni se pide trabajo a ImGui)
 
@@ -206,14 +207,14 @@ void FichasDibuja(const glm::vec3& posCamara, const HudEstado& hud)
         else ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "V: %s las velas del altar", hud.velasEncendidas ? "apagar" : "encender");
         ImGui::End();
     }
-    // X-62: subtitulos del recorrido guiado (arriba, bajo el aviso; la ficha va abajo)
+    // X-62/X-64: subtitulos del recorrido guiado, compactos y abajo al centro (sin ficha en ese modo; no tapan el centro de la imagen)
     if (hud.tour)
     {
-        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, 64.0f), ImGuiCond_Always, ImVec2(0.5f, 0.0f));
-        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.7f, 0.0f), ImGuiCond_Always);
-        ImGui::SetNextWindowBgAlpha(0.70f);
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y - 14.0f), ImGuiCond_Always, ImVec2(0.5f, 1.0f));
+        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, 0.0f), ImGuiCond_Always);
+        ImGui::SetNextWindowBgAlpha(0.62f);
         ImGui::Begin("Recorrido", nullptr, flagsHud);
-        ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "%s   (T o Esc: salir del recorrido)", hud.tourTitulo.c_str());
+        ImGui::TextColored(ImVec4(1.0f, 0.75f, 0.2f, 1.0f), "%s  (T o Esc: salir)", hud.tourTitulo.c_str());
         if (!hud.tourTexto.empty())
         {
             ImGui::PushTextWrapPos(0.0f);

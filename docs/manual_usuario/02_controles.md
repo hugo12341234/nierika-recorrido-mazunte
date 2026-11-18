@@ -24,7 +24,7 @@ Notas verificadas en el código (`Camera.h`, `Colisiones.cpp`, `main.cpp`):
 - Desde X-60 (17/11) la **barra espaciadora ya no hace nada**: las luces de colores se quitaron (ESTADO sec. 4, 17/11).
 - Desde X-63 (17/11) **Esc ya no cierra el programa directamente**: abre la pausa. Para salir: Esc y luego «Salir» (clic o Enter). En el menú de inicio, Esc sí sale.
 - En los menús el cursor reaparece y se puede hacer clic; también sirven las flechas (o W S) y Enter. En Créditos, flechas arriba/abajo o la rueda del ratón desplazan el texto.
-- **T** (X-62, 17/11): durante el recorrido guiado el ratón no mueve la cámara. No se compiló en VS 2022 al escribir esta nota.
+- **T** (X-62, 17/11): durante el recorrido guiado el ratón no mueve la cámara y no salen las fichas culturales (solo los subtítulos; las fichas vuelven al cancelar el recorrido). No se compiló en VS 2022 al escribir esta nota.
 
 ## 2.2 Teclas sin función
 

@@ -254,7 +254,7 @@ namespace Extras
         MusicoBanda(-2.2f,  1.0f, 1, 0.0f), MusicoBanda(-1.1f,  1.0f, 2, 1.1f), MusicoBanda(0.0f,  1.0f, 0, 2.2f), MusicoBanda(1.1f,  1.0f, 0, 3.3f), MusicoBanda(2.2f,  1.0f, 3, 4.4f),
         MusicoBanda(-1.6f, -0.9f, 4, 5.5f), MusicoBanda(-0.5f, -0.9f, 5, 0.6f), MusicoBanda(0.7f, -0.9f, 6, 1.7f), MusicoBanda(1.9f, -0.9f, 7, 2.8f) };
     constexpr float BPM_BANDA = 90.0f;                      // pulso de la musica: 1.5 Hz
-    // Comparsa: 12 figuras (2 columnas de 6) que van y vienen por la orilla. X-64 (18/11): antes marchaban en linea recta de x = -48 a +48 por z = 22.6 +-0.9 y
+    // Comparsa: 12 figuras (2 columnas de 6) que van y vienen por la orilla. X-65 (18/11): antes marchaban en linea recta de x = -48 a +48 por z = 22.6 +-0.9 y
     // atravesaban las 4 lanchas varadas, 6 rocas, un farol y la familia de la llegada; ademas las figuras (falda de 0.84 m de ancho, sombrero de 0.78 m) y los
     // tambores se encimaban entre si. Ahora recorren SOLO el tramo libre de la arena humeda (z = 23.2 +-0.55, a >= 0.25 m del agua en z = 24) entre x = -23.75 y +23.75
     // (las lanchas empiezan en |x| = 27.3 y las rocas en |x| >= 40). Separacion: 1.1 m entre columnas y 1.6 m entre filas (el tambor sobresale 0.84 m del cuerpo).

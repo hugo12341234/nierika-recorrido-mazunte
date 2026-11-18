@@ -1,5 +1,5 @@
-// X-64: revisa que la comparsa (los "peregrinos" que marchan por la orilla) no cruce lanchas, rocas, palmas, redes, casas ni otras figuras.
-// Compilar y correr desde la raiz del repo:  g++ -std=c++17 -Isrc tools/x64_pruebas_peregrinos.cpp -o x64_pruebas && ./x64_pruebas
+// X-65: revisa que la comparsa (los "peregrinos" que marchan por la orilla) no cruce lanchas, rocas, palmas, redes, casas ni otras figuras.
+// Compilar y correr desde la raiz del repo:  g++ -std=c++17 -Isrc tools/x65_pruebas_peregrinos.cpp -o x65_pruebas && ./x65_pruebas
 // Sale con codigo 1 si alguna figura de la comparsa (cuerpo de radio 0.3 m) toca un obstaculo en algun instante del ciclo.
 #include <cstdio>
 #include <cmath>
