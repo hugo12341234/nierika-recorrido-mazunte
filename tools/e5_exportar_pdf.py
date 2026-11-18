@@ -76,6 +76,7 @@ def adaptar_raci(txt):
 
 def adaptar_evidencias(raw):
     """Sección suelta de Trello/Gantt: sus marcas de confianza pasan a palabras (limpiar() borra los emoji) y se integra como f.4."""
+    raw = raw.replace("✅ verificado", "(verificado)").replace("✅ **verificado**", "(verificado)")
     raw = raw.replace("✅", "(verificado)").replace("🔍", "(inferido)").replace("❓", "(sin evidencia)").replace("❌", "(no demostrable)")
     raw = re.sub(r"^# [^\n]*\n\n(?:>[^\n]*\n)*", "## f.4 Evidencias de Trello y diagrama de Gantt\n", raw, count=1)
     raw = re.sub(r"^## 7\. .*\Z", "", raw, flags=re.M | re.S)

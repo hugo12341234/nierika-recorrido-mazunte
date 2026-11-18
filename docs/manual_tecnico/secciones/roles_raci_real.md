@@ -2,7 +2,6 @@
 
 > **Pendientes al 18/11/2026 (D2):** (1) justificación del trabajo de D1 y sus dos textos individuales: **pendientes, sin inventar**; (2) D2 reescribirá sus borradores individuales (`*_BORRADOR.md`) después.
 
-> **Sección suelta para el manual técnico (reemplaza a §5.3–5.4 de `05_raci.md` cuando el dueño del manual la integre).**
 > Estado al **18/11/2026**. Todo lo que aparece aquí sale del repositorio, de `docs/ESTADO_PROYECTO.md` o de la propuesta v2.0.
 > Cada afirmación lleva su fuente o está marcada **«sin evidencia»**. No se corrige ni reescribe el historial de Git.
 > Marcas: **[git]** = verificado con `git log` en todas las ramas · **[PR]** = verificado con la API de GitHub · **[ESTADO]** = lo dice el ESTADO (puede ser palabra de D2) · **[inferido]** = deducción, no confirmada.
@@ -20,11 +19,11 @@ El plan original repartía las 60 actividades casi por mitades, con un integrant
 
 Cálculo sobre la tabla de `docs/PLAN_ACTIVIDADES.md` (columnas *Resp.* y *Horas*). Las horas son **estimaciones de la propuesta**, no horas reales; no existe registro de horas reales de ninguno de los dos.
 
-Por área (Tabla 8, ya transcrita en `05_raci.md` §5.1): D1 era R en investigación (1), configuración de VS (4), bocetos del cuarto (7), cámara (9), colisiones (12), arena (13), ciclo de render (15), fachada (16), cruz (19), texturas de piedra (21), vela (23), botella (26), pan (27), copalero (30), texturas PBR (31, 34), clase `Model` (35), ajuste del cuarto (38), olas (39), flores flotando (42, 43), caminata (47), dejar flores (49), fichas ImGui (51), justificación de complejas (53), correcciones de cámara (55), Release x64 (56), manual técnico (58) y Release en GitHub (60).
+Por área (Tabla 8, ya transcrita en la sección e)): D1 era R en investigación (1), configuración de VS (4), bocetos del cuarto (7), cámara (9), colisiones (12), arena (13), ciclo de render (15), fachada (16), cruz (19), texturas de piedra (21), vela (23), botella (26), pan (27), copalero (30), texturas PBR (31, 34), clase `Model` (35), ajuste del cuarto (38), olas (39), flores flotando (42, 43), caminata (47), dejar flores (49), fichas ImGui (51), justificación de complejas (53), correcciones de cámara (55), Release x64 (56), manual técnico (58) y Release en GitHub (60).
 
 ## 2. Qué muestra realmente el repositorio
 
-### 2.1 Autoría en Git (todas las ramas, 18/11/2026) **[git]**
+### 2.1 Autoría en Git (corte de la mañana del 18/11/2026, todas las ramas) **[git]**
 
 | Dato | Valor |
 |---|---|
@@ -38,6 +37,8 @@ Por área (Tabla 8, ya transcrita en `05_raci.md` §5.1): D1 era R en investigac
 | PR abiertos en el repositorio | 150 (todos por `hugo12341234`) **[PR]** |
 | PR con revisión, comentario o mención de `thecurlyguy` | **0** (búsqueda en GitHub: `involves`, `commenter`, `reviewed-by`) **[PR]** |
 | Comentarios en PR e *issues* por otra cuenta | **0** **[PR]** |
+
+*Esta tabla es un corte del 18/11 por la mañana. Al cierre del 18/11, la API de GitHub da para la rama `develop` 491 commits (489 de «Hugo Chacón» y 2 de «Claude»), 157 PR fusionados a `develop` y PR numerados hasta el #159; la conclusión no cambia: ningún commit, PR ni revisión de D1.*
 
 Los commits se concentran en 15 días con actividad: 18–20/10 (61), 25–26/10 (3), 03–04/11 (105), 11–18/11 (300). **No hubo commits** el 21–24/10, 27/10–02/11 ni 05–10/11 **[git]**. La participación de D2 es continua pero **irregular**; la de D1 **no se puede mostrar con el historial**.
 
