@@ -119,7 +119,7 @@ void Audio::ActualizarZona(float x, float z, float fx, float fz)
     const float dx = Extras::BANDA_X - x, dz = Extras::BANDA_Z - z;
     const float d = std::sqrt(dx * dx + dz * dz);
     const float D0 = 3.0f, V0 = 0.355f;   // D-6k: 0.24 con la pista anterior (-10.0 LUFS); la nueva mide -13.4 LUFS, +3.4 dB de ganancia = x1.48 -> 0.355 (misma sonoridad)
-    fija(1, mezclaMusica ? factorMusica * V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)) : 0.0f);   // X-60: M puede silenciar la pista
+    fija(1, mezclaMusica ? factorMusica * V0 * D0 / (std::max)(d, D0) * (1.0f - lim((d - 30.0f) / 30.0f)) : 0.0f);   // X-60: M puede silenciar la pista; X-62: factorMusica baja la musica mientras habla la voz
     // Paneo: derecha = (-fz, fx) en el plano XZ de OpenGL (frente x derecha con arriba +Y); cos del angulo con la direccion a la banda, reducido a 0.7
     if (impl->activo[1] && d > 0.01f)
     {
