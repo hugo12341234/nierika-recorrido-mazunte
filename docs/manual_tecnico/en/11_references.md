@@ -1,5 +1,7 @@
 # 11. References (APA 7)
 
+> **Since Nov 18, 2026 (X-69) the full, current reference list is in [`docs/REFERENCIAS.md`](../../REFERENCIAS.md)** (68 entries, with each one's verification status, in Spanish) and is shown in full in the Credits menu. What follows is the manual's list of Nov 12; if they differ, `REFERENCIAS.md` wins.
+
 > Only sources **cited in the manual**, taken from the proposal v2.0 bibliography (`docs/propuesta/Propuesta_Nierika_v2.0.pdf`, §12), the STATE document or `docs/fichas_culturales.md`. Poly Haven's "n.d." dates were set by D2 (STATE, A-6). **D2 must still check every link before delivery.** Titles of cultural sources stay in their original language (Spanish) as APA 7 requires.
 
 ## Technology

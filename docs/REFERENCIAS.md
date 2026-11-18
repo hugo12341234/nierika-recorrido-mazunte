@@ -143,7 +143,7 @@ ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz]. https://elevenlabs
 
 **[T-06] `concreto.jpg`** (arco, fachada y piso): 🤝 **textura propia, creada en Blender (confirmado por D2 el 18/11/2026)**; mismas condiciones que T-05 (mismo commit `5ef12a2`). No lleva referencia y no aparecía en créditos (solo cae bajo «las demás texturas son del equipo», H-6).
 
-**[T-07] Modelos de Maya de D1** (`calavera`, `pan`/`pan_muerto` de D1, `flor`, `altar` (capilla provisional), y el zip del altar subido en X-43: `cuadro`, `fuego`, `humo`, `mariposa_*`, `mazeta`, `refresco`, `papel_fucsia`, `papel_morado`, `papel_naranja`): ⏳ **PENDIENTE — autoría y herramienta sin confirmar.** El ESTADO los marca como extras que **no cuentan como propios**; D1 se los pasó a D2, la herramienta con la que se hicieron **no está confirmada** (las texturas tienen formato de generador automático) y el retrato del `cuadro` parece una persona real (**permiso sin confirmar**). Sin esos datos no se puede escribir su referencia APA. D1 debe indicar herramienta, fuente y si hay terceros.
+**[T-07] Modelos de Maya de D1** (`calavera`, `pan`/`pan_muerto` de D1, `flor`, `altar` (capilla provisional) y el zip del altar de X-43: `cuadro`, `fuego`, `humo`, `mariposa_*`, `mazeta`, `refresco`, `papel_fucsia`, `papel_morado`, `papel_naranja`): 🤝 **D2 confirmó el 18/11/2026 que también son del equipo** (hechos en Maya). No son fuente externa y no llevan referencia; siguen sin contar entre los modelos de Blender del inventario (decisión «solo Blender», 19/10). Quedan dos dudas que solo anota este archivo: la herramienta con la que se generaron las texturas del zip y el permiso del retrato del `cuadro` si se parece a una persona real (D1).
 
 ### 3.3 Texturas y modelos propios (no llevan referencia)
 
@@ -236,7 +236,7 @@ Referencias completas de las fichas = las de la sección 1 (en la pantalla salen
 
 **Narración del recorrido (`docs/RECORRIDO_GUIADO.md` §7)** — qué fuente respalda cada estación (las dichas en voz alta son las mismas que las de las fichas): 00 → C-02 (el título «se vive con más alma») y C-09; 01 → C-02 y C-01; 02 → C-07; 03 → C-01; 04 → C-04; 05 → C-06 y C-03; 06 → C-01 y C-05; 07 → C-01; 08 → C-03 y C-01; 09 → C-06; 10 → C-08; 11 → idea de fondo de C-01 (redacción del estudio). **Las frases de «mira cómo…», «ven, camina conmigo», «gracias por caminar con nosotros» y la apertura/cierre no tienen fuente: son narrativa del estudio.**
 
-**Créditos del menú (`src/Menu.cpp`, X-63)** — qué incluye y qué le falta: lista las 3 texturas Poly Haven (T-01 a T-03), la música (A-02, sin año/canal/URL), la voz (A-03, sin herramienta), el oleaje (A-01, sin canal/año), las bibliotecas y las herramientas. **Datos que ya existen para completarlo (si D2 decide tocarlo algún día; hoy no se modifica):** A-02 (canal «Ricardo Tizo», 2012) y A-03 (ElevenLabs, 2026), ya confirmados por D2; A-01 (canal «Quiet», 2020) falta que D2 lo confirme. `laminado1.jpg` y `concreto.jpg` (T-05, T-06) siguen sin origen.
+**Créditos del menú (X-69, 18/11/2026):** el menú Créditos ahora lista **todas** las referencias de este archivo (65 referencias en 8 grupos, más las líneas del equipo), con pantalla desplazable; su texto está en `src/Creditos.h`, generado por `tools/x69_generar_creditos.py`. En pantalla va texto plano; **el estado de verificación de cada una vive solo aquí**. Lo siguiente describe el menú anterior (X-63): lista las 3 texturas Poly Haven (T-01 a T-03), la música (A-02, sin año/canal/URL), la voz (A-03, sin herramienta), el oleaje (A-01, sin canal/año), las bibliotecas y las herramientas. Todo lo anterior quedó resuelto en X-69 (A-01 con canal y fecha leídos de metadatos; falta que D2 confirme el canal «Quiet»).
 
 ---
 
@@ -271,11 +271,11 @@ No se pudo comprobar hoy (sin ISBN/DOI a mano o error de lectura): Marschner y S
 
 ## 8. Qué falta (lo que queda abierto)
 
-Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02) y `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
+Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02), `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06), y los modelos de Maya = del equipo (T-07). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
 
 1. ~~`laminado1.jpg` y `concreto.jpg`~~: **cerrado (18/11)**, son propias (Blender).
 2. **Oleaje (A-01):** abrir el video una vez y confirmar canal («Quiet») y fecha (31/03/2020).
-3. **Modelos de Maya de D1 (T-07):** herramienta, fuente y permiso del retrato del cuadro (D1).
+3. **Modelos de Maya (T-07):** cerrado (son del equipo). Solo queda, opcional, la herramienta de las texturas del zip y el permiso del retrato del cuadro (D1).
 4. **«Al atardecer» (H-1):** comprobación visual en el artículo de Baños (opcional).
 5. **Versiones:** `vcpkg list` (GLFW, GLEW, GLM, Assimp), versión de Blender, de Visual Studio y de Maya.
 6. **Farin (M-08):** edición y subtítulo del libro.
@@ -284,13 +284,13 @@ Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video d
 
 ## 9. Conteo (consulta del 18/11/2026)
 
-| Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ pendiente (T-07) |
+| Grupo | Total | ✅ verificadas | 🤝 confirmadas por el equipo | 🔄 parciales | ❌ NO VERIFICADO | ⏳ pendiente |
 |---|---|---|---|---|---|---|
 | C · fuentes culturales y de contenido | 24 | 11 | 0 | 2 | 11 | 0 |
 | A · música, audio y voz | 4 | 0 | 2 | 2 | 0 | 0 |
-| T · texturas y modelos externos | 7 | 4 | 2 | 0 | 0 | 1 |
+| T · texturas y modelos externos | 7 | 4 | 3 | 0 | 0 | 0 |
 | S · bibliotecas, software y estándares | 23 | 9 | 0 | 10 | 4 | 0 |
 | M · bibliografía técnica y matemática | 10 | 7 | 0 | 3 | 0 | 0 |
-| **Total** | **68** | **31** | **4** | **17** | **15** | **1** |
+| **Total** | **68** | **31** | **5** | **17** | **15** | **0** |
 
 Los 11 ❌ del grupo C son 10 citas de la propuesta que no se abrieron (C-13 a C-22, no se usan en fichas ni narración) más `MAZUNTE.pdf` (C-12), que no abrió. «Parcial» incluye A-01 (falta que D2 confirme canal y fecha) y A-04.

@@ -29,17 +29,17 @@ Ninguna de las dos es propia del estudio ni de Mazunte/Oaxaca; no cuentan como m
 - **Original:** «Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD» [Video], YouTube, https://www.youtube.com/watch?v=6TGHwQHdDlo (10 min 06 s, −26.0 LUFS, pico −3.4 dBFS).
 - **Qué se hizo (reproducible con ffmpeg):** tramo de 123 s (de 2:00 a 4:03, niveles estables), **ganancia lineal de +3.2 dB sin limitador** (el pico del tramo era −6.7 dBFS; queda en −3.6 tras el mp3) y **bucle de 120 s con fundido cruzado de 3 s de potencia constante** (los últimos 3 s del tramo se mezclan con el inicio, así el final enlaza con el principio; salto en el empalme 0.0008 contra 0.0068 de paso típico entre muestras). El mp3 puede dejar un hueco de milisegundos al repetir (retardo del codificador); no medido.
 - **No escuchado por Claude:** el tramo se eligió por nivel estable; si trae voces, aplausos o saltos, D2 dice el minuto y se cambia.
-- **Referencia APA 7 (incompleta):** *[Canal — PENDIENTE (D2)].* ([Año — PENDIENTE (D2)]). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo (fecha de consulta: PENDIENTE (D2)).
+- **Referencia APA 7 (X-69, 18/11; canal y fecha leídos de los metadatos de YouTube: D2 puede abrir el enlace para confirmarlos):** Quiet. (2020, 31 de marzo). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo (consulta: 18/11/2026).
 
 ### `musica.mp3` (D-6k, 17/11: cambio de pista, decisión de D2)
 - **Pista vigente en el código:** «Dios Nunca Muere», interpretada por la Banda Mixe de Oaxaca (según D2; es música de banda oaxaqueña, a diferencia de la pista anterior). El archivo conserva el nombre fijo `Audio/musica.mp3`: el código no cambia.
 - **Archivo:** subido por D2 el 17/11 como `Dios_Nuca_Muere_con_la_Banda_Mixe_de_Oaxaca_EyObXpnZsJg.mp3` y guardado como `Audio/musica.mp3` (original de D2: sha256 `a610415a7595…`; ver recorte abajo). El sufijo `EyObXpnZsJg` parece un id de video de YouTube: es solo una pista, **no se da por URL** hasta que D2 la confirme. Decodifica bien con ffmpeg (no abierto con miniaudio en Windows). **Volumen:** la pista nueva mide −13.4 LUFS (la anterior −10.0), así que V0 sube de 0.24 a 0.355 (×1.48 = +3.4 dB) para igualar la sonoridad; valor propuesto por Claude, sin oír. **Recorte (pedido de D2, 17/11):** el original tenía 1.6 s de silencio al inicio y ~7 s al final (~8.6 s sin música en cada repetición). Se recortó con `ffmpeg -ss 1.25 -to 401.16 -i original.mp3 -c copy` (sin recodificar; el corte cae en un cuadro mp3, ±26 ms): quedan ~0.3 s de silencio de colchón por lado, duración 399.9 s, y el bucle deja ~0.6 s entre repeticiones. Sigue decodificando (ffmpeg); sonoridad −13.5 LUFS (la diferencia de 0.1 dB no cambia V0). **Compás (BPM):** no medido (sin herramienta en la nube).
 - **Pista anterior (retirada):** arreglo de «Xochipitzahuatl (Flor Menudita)», canción tradicional náhuatl del centro de México; no era de Mazunte ni de Oaxaca.
-- **Referencia APA 7 (incompleta):** *[Banda Mixe de Oaxaca — confirmar intérprete/canal (D2)].* ([Año — PENDIENTE (D2)]). *Dios Nunca Muere* [Canción/Video]. [Plataforma o canal — PENDIENTE (D2)]. [URL — PENDIENTE (D2)] (fecha de consulta: PENDIENTE (D2)). Uso educativo no comercial, sin licencia libre confirmada (decisión previa de D2).
+- **Referencia APA 7 (X-69, 18/11; D2 confirmó que el mp3 es este video):** Tizo, R. (2012, 24 de octubre). *Dios Nuca Muere con la Banda Mixe de Oaxaca* [Video]. YouTube. https://www.youtube.com/watch?v=EyObXpnZsJg (consulta: 18/11/2026). El título conserva la errata «Nuca» del video original. No se identificó al compositor de la obra. Uso educativo no comercial, sin licencia libre confirmada (decisión previa de D2).
 
-Mientras falten esos campos, los créditos APA 7 de las dos pistas no están completos.
+Las referencias de las dos pistas, de la voz y de todo el proyecto están completas en `docs/REFERENCIAS.md` y se muestran en el menú Créditos (`src/Creditos.h`).
 
-## Narración del recorrido guiado (X-62, 17/11) — los archivos aún NO existen
+## Narración del recorrido guiado (X-62, 17/11; los 12 mp3 se subieron el 18/11)
 
 Además de las dos pistas ambientales, el recorrido guiado (tecla **T**) busca **12 archivos de voz**, uno por estación, en **`Audio/narracion/`** (carpeta aparte, para no romper la regla de «solo `oleaje.mp3` y `musica.mp3`» de arriba):
 
@@ -48,4 +48,4 @@ Además de las dos pistas ambientales, el recorrido guiado (tecla **T**) busca *
 - Si falta uno, la consola dice `[Audio] Sin voz para la estacion N …` y la estación dura su tiempo de diseño (con subtítulos): **no truena**.
 - Si existe, la estación dura lo que dura el audio **+ 1.5 s**: no hay que reajustar tiempos.
 - Mientras habla la voz, la música baja a ×0.35 y el mar a ×0.6 (rampa de 0.6 s, `Audio::ActualizarZona`); la tecla **M** no silencia la voz.
-- Formato: `.mp3`. La voz es sintética: **crédito APA 7 de la herramienta: pendiente** (D2 la elige; se anota aquí, en el ESTADO y en el manual).
+- Formato: `.mp3`. La voz es sintética, generada con ElevenLabs (D2 lo confirmó el 18/11/2026; sin autor de voz pública). Referencia APA 7: ElevenLabs. (2026). *Eleven v4* [Modelo de síntesis de voz]. https://elevenlabs.io/docs/overview/models (la página no da fecha de lanzamiento; 2026 es el año de uso).

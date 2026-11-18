@@ -1,5 +1,7 @@
 # 11. Referencias (APA 7)
 
+> **Desde el 18/11/2026 (X-69) la lista completa y vigente de referencias está en [`docs/REFERENCIAS.md`](../REFERENCIAS.md)** (68 entradas, con el estado de verificación de cada una) y se muestra entera en el menú Créditos. Lo que sigue es la lista del manual del 12/11; si difiere, manda `REFERENCIAS.md` (por ejemplo: el *Plan de marketing* de Mazunte va «s. f.» y *El milagro de Mazunte* es de 2017).
+
 > Solo se listan fuentes **citadas en el manual**, tomadas de la bibliografía de la propuesta v2.0 (`docs/propuesta/Propuesta_Nierika_v2.0.pdf`, §12), del ESTADO o de `docs/fichas_culturales.md`. Las fechas «s. f.» de Poly Haven las definió D2 (ESTADO, A-6). **Falta que D2 compruebe cada enlace antes de entregar.**
 
 ## Tecnología

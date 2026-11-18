@@ -2,6 +2,7 @@
 // Estetica: noche oaxaquena. Colores tomados de la escena: los 5 del papel picado (tools/b7_papel_picado.py), el naranja de las
 // velas (1.0, 0.55, 0.22 en main.cpp) y el dorado de las fichas (1.0, 0.75, 0.2 en Fichas.cpp). Todo se dibuja con ImDrawList.
 #include "Menu.h"
+#include "Creditos.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -228,40 +229,21 @@ namespace
 
     void Pendiente(const char* t) { ImGui::TextColored(ImVec4(1.0f, 0.55f, 0.35f, 1.0f), "%s", t); }
 
-    // Contenido de Creditos: SOLO datos que ya estan en el repo (Audio/README.md, docs/manual_tecnico/06 y 11, ESTADO). Lo que falta dice PENDIENTE.
+    // Contenido de Creditos (X-69): TODAS las referencias de docs/REFERENCIAS.md, agrupadas como alli (src/Creditos.h, generado por
+    // tools/x69_generar_creditos.py). Es texto plano: el estado de verificacion de cada una vive solo en el documento, no en pantalla.
     void ContenidoCreditos()
     {
         ImGui::PushTextWrapPos(0.0f);
-        Seccion("Equipo Nierika Studio (Equipo 15)");
-        Linea("Números de cuenta: 321332086 · 319266894");
-        Linea("Proyecto final de Computación Gráfica e Interacción Humano-Computadora, semestre 2027-1.");
-
-        Seccion("Escena, modelos y animaciones");
-        Linea("Hechos por el equipo con Blender, Maya y código propio (C++17 y OpenGL 3.3).",
-              "Cada ficha cultural cita su fuente en APA 7 y dice cuándo algo es adaptación del estudio.");
-
-        Seccion("Texturas de terceros (CC0, Poly Haven)");
-        Linea("Baglioni, C. (2023). Sandy gravel.", "Arena de la playa.");
-        Linea("Savva, D., y Cilliers, R. (2021). Clay floor 001.", "Piso del cuarto.");
-        Linea("Tuytel, R. (2020). Large sandstone blocks 01.", "Barda del panteón.");
-        Linea("Licencia CC0: polyhaven.com/license. Las demás texturas son del equipo.");
-        Pendiente("Pendiente: origen de laminado1.jpg (fachada y techo), aún sin registrar.");
-
-        Seccion("Audio (externo, uso educativo no comercial)");
-        Linea("Música: «Dios Nunca Muere», Banda Mixe de Oaxaca.");
-        Pendiente("Referencia APA 7 incompleta. PENDIENTE: año, canal o plataforma, URL y fecha de consulta.");
-        ImGui::Spacing();
-        Linea("Narración del recorrido guiado (T): voz sintética que lee el guion; no es un personaje.");
-        Pendiente("La herramienta de voz y su referencia APA 7 están PENDIENTES (D2 la elige).");
-        ImGui::Spacing();
-        Linea("Oleaje: video «Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD» (YouTube, id 6TGHwQHdDlo).",
-              "Se usó un tramo recortado en bucle.");
-        Pendiente("Referencia APA 7 incompleta. PENDIENTE: canal, año y fecha de consulta.");
-
-        Seccion("Bibliotecas y herramientas");
-        Linea("Dear ImGui (Omar Cornut) · miniaudio (David Reid) · GLFW · GLEW · GLM · Assimp · SOIL2 y stb_image.");
-        Linea("Blender · Maya · GIMP · Visual Studio 2022 · vcpkg.");
-        Linea("Las referencias APA 7 completas están en el manual técnico, sección 11.");
+        for (int i = 0; i < Creditos::NUM_SECCIONES; i++)
+        {
+            const Creditos::Seccion& sec = Creditos::SECCIONES[i];
+            Seccion(sec.titulo);
+            for (int k = 0; k < sec.n; k++)
+            {
+                Linea(sec.e[k].texto, sec.e[k].detalle);
+                ImGui::Dummy(ImVec2(1.0f, 4.0f));
+            }
+        }
         ImGui::PopTextWrapPos();
         ImGui::Spacing();
     }
