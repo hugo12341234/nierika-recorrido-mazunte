@@ -271,7 +271,7 @@ No se pudo comprobar hoy (sin ISBN/DOI a mano o error de lectura): Marschner y S
 
 ## 8. Qué falta (lo que queda abierto)
 
-Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02), `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06), y los modelos de Maya = del equipo (T-07). D2 pidió **no modificar el proyecto**, así que lo siguiente solo se anota:
+Cerrado el 18/11/2026 por D2: voz = ElevenLabs (A-03), `musica.mp3` = el video de «Ricardo Tizo» (A-02), `laminado1.jpg`/`concreto.jpg` = propias, hechas en Blender (T-05, T-06), y los modelos de Maya = del equipo (T-07). Lo que sigue abierto es opcional y solo se anota:
 
 1. ~~`laminado1.jpg` y `concreto.jpg`~~: **cerrado (18/11)**, son propias (Blender).
 2. **Oleaje (A-01):** abrir el video una vez y confirmar canal («Quiet») y fecha (31/03/2020).
