@@ -66,6 +66,7 @@ uniform float specularStrength;     // brillo especular por objeto (los modelos 
 uniform int       tieneRelieve;
 uniform int       relieveLuma;     // X-23: 1 = relieve a partir de la luminancia de la textura difusa (barda, tumbas, cruz, roca); la arena usa 'arena'
 uniform sampler2D texture_height1;
+uniform sampler2D texture_mezcla;   // X-66: textura del material vecino en el borde arena/pasto (en la playa = pasto; en las colinas = arena)
 const float RELIEVE_M = 0.003;      // metros de altura que representa el blanco del mapa (3 mm en un pan de 16 cm)
 
 // Perturba la normal N con el gradiente de la altura h (en metros) sin necesitar tangentes: usa las derivadas de pantalla
@@ -145,6 +146,31 @@ float BlinnSpec(vec3 lightDir, vec3 normal, vec3 viewDir)
 {
     vec3 halfDir = normalize(lightDir + viewDir);
     return pow(max(dot(normal, halfDir), 0.0), material.shininess * 4.0);
+}
+
+// X-66: tinte de la arena (X-36) y del pasto (X-36); se usan tambien para mezclar los dos materiales en el borde z = -20
+vec3 colorArena(vec3 tex, vec2 xz, float y)
+{
+    vec3 a = tex * (0.85 + 0.45 * ruidoFbm(xz * 0.35));
+    a *= vec3(1.30, 1.02, 0.72) * (0.88 + 0.30 * ruidoFbm(xz * 4.0));
+    return a * mix(1.0, 0.45, smoothstep(0.0, -0.25, y));
+}
+vec3 colorPasto(vec3 tex, vec2 xz, float y)
+{
+    float m1 = ruidoFbm(xz * 0.025);
+    float m2 = ruidoFbm(xz * 0.18);
+    float alto = smoothstep(2.0, 26.0, y);
+    vec3 tinte = mix(vec3(0.82, 1.18, 0.86), vec3(1.55, 1.28, 0.68), clamp(0.45 + m1 * 1.8 + alto * 0.45, 0.0, 1.0));
+    return tex * tinte * (0.95 + 0.75 * m2);
+}
+// X-66: peso de arena en [0, 1] en el borde norte de la playa (z = -20). Misma funcion en las dos mallas => sin costura.
+// s > 0 hacia la playa; el borde se ondula con ruido (+-2.4 m a ~3 m de periodo y +-0.8 m a ~0.5 m) y la mezcla dura 2 x BORDE_ANCHO
+const float BORDE_Z = -20.0;
+const float BORDE_ANCHO = 3.0;
+float pesoArena(vec2 xz)
+{
+    float s = (xz.y - BORDE_Z) + 6.0 * ruidoFbm(xz * 0.30) + 2.0 * ruidoFbm(xz * 1.9);
+    return smoothstep(-BORDE_ANCHO, BORDE_ANCHO, s);
 }
 
 void main()
@@ -249,20 +275,22 @@ void main()
     {
         // X-36: la textura se repite cada 10 m y las colinas se veian como una sabana lisa. Dos octavas de ruido en el mundo la tinen:
         // manchas de ~40 m (selva oscura <-> pasto seco ocre; mas seco en lo alto) y de ~5 m (matas claras y oscuras)
-        float m1 = ruidoFbm(FragPos.xz * 0.025);
-        float m2 = ruidoFbm(FragPos.xz * 0.18);
-        float alto = smoothstep(2.0, 26.0, FragPos.y);
-        vec3 tinte = mix(vec3(0.82, 1.18, 0.86), vec3(1.55, 1.28, 0.68), clamp(0.45 + m1 * 1.8 + alto * 0.45, 0.0, 1.0));
-        albedo *= tinte * (0.95 + 0.75 * m2);   // X-36 (pulido): colinas ~30 % mas claras (se veian casi negras de noche)
+        // X-36 (pulido): colinas ~30 % mas claras (se veian casi negras de noche)
+        albedo = colorPasto(albedo, FragPos.xz, FragPos.y);
+        // X-66: cerca de z = -20 aparecen manchas de arena (misma funcion de peso que la playa: el borde ya no es una recta)
+        float wA = pesoArena(FragPos.xz);
+        if (wA > 0.001)
+            albedo = mix(albedo, colorArena(texture(texture_mezcla, vec2(FragPos.x, -FragPos.z) * 0.5).rgb, FragPos.xz, FragPos.y), wA);
     }
     if (arena == 1)
     {
-        float manchas = ruidoFbm(FragPos.xz * 0.35);                         // ~[-0.4, 0.4], periodo de ~3 m
-        albedo *= 0.85 + 0.45 * manchas;
-        // X-36 (pulido): con la luna azul la arena parecia concreto. Tinte calido (menos azul) y grano fino a ~25 cm
-        albedo *= vec3(1.30, 1.02, 0.72) * (0.88 + 0.30 * ruidoFbm(FragPos.xz * 4.0));
-        float mojada = smoothstep(0.0, -0.25, FragPos.y);                    // 0 en seco, 1 a 25 cm bajo y = 0
-        albedo *= mix(1.0, 0.45, mojada);
+        // X-36 (pulido): con la luna azul la arena parecia concreto. Tinte calido (menos azul) y grano fino a ~25 cm; mojada = bajo y = 0
+        float wA = pesoArena(FragPos.xz);
+        vec3 arenaCol = colorArena(albedo, FragPos.xz, FragPos.y);
+        // X-66: cerca de z = -20 entran matas de pasto en la arena (solo se muestrea el pasto donde hace falta)
+        if (wA < 0.999)
+            arenaCol = mix(colorPasto(texture(texture_mezcla, vec2(FragPos.x, -FragPos.z) * 0.1).rgb * tinteObjeto, FragPos.xz, FragPos.y), arenaCol, wA);
+        albedo = arenaCol;
     }
 
     vec3 result = CalcDirLight(dirLight, norm, viewDir, albedo);

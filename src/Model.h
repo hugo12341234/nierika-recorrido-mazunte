@@ -81,6 +81,9 @@ public:
 		}
 	}
 
+	// X-66: id de la primera textura cargada (0 si no hay); main.cpp la presta al shader para mezclar arena y pasto en el borde
+	GLuint PrimeraTextura() const { return textures_loaded.empty() ? 0 : textures_loaded[0].id; }
+
 	// Libera la GPU del modelo: buffers de cada malla y las texturas (textures_loaded tiene cada textura una sola vez,
 	// aunque varias mallas la usen). Se llama a mano al final de main (decision del 19/10: sin destructores, porque Model se copia)
 	void cleanup()

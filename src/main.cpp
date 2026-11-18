@@ -848,6 +848,9 @@ int main()
         glm::mat4 modelPlaya(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPlaya));
         glUniform1i(glGetUniformLocation(shader.Program, "arena"), 1);  // X-13: relieve de manchas y arena mojada
+        // X-66: el borde con el pasto (z = -20) se mezcla en el shader; el pasto va en la unidad 6 (Mesh::Draw solo usa las primeras)
+        glUniform1i(glGetUniformLocation(shader.Program, "texture_mezcla"), 6);
+        glActiveTexture(GL_TEXTURE6);  glBindTexture(GL_TEXTURE_2D, colinas.PrimeraTextura());  glActiveTexture(GL_TEXTURE0);
         playa.Draw(shader);
         glUniform1i(glGetUniformLocation(shader.Program, "arena"), 0);
 
@@ -1705,6 +1708,8 @@ int main()
             glm::mat4 mc(1.0f);
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(mc));
             glUniform1i(glGetUniformLocation(shader.Program, "colina"), 1);   // X-36: manchas de color a gran escala (lighting.frag)
+            glUniform1i(glGetUniformLocation(shader.Program, "texture_mezcla"), 6);   // X-66: manchas de arena en el borde con la playa
+            glActiveTexture(GL_TEXTURE6);  glBindTexture(GL_TEXTURE_2D, playa.PrimeraTextura());  glActiveTexture(GL_TEXTURE0);
             colinas.Draw(shader);
             glUniform1i(glGetUniformLocation(shader.Program, "colina"), 0);
             auto conEscala = [&](Model& m, const VegetacionColinas::Instancia& v)
