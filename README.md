@@ -7,16 +7,29 @@ Real-time, first-person 3D virtual tour that recreates the Day of the Dead celeb
 > Final project for *Computer Graphics and Human-Computer Interaction* — School of Engineering, UNAM (semester 2027-1).
 > Delivery: **November 18, 2026**.
 
-## Features (planned scope)
+## Features
 
 - One continuous scene with three zones: **beach and shoreline**, **cemetery** with stone wall, **cemetery chapel** with altar.
-- **First-person navigation** (keyboard + mouse) with AABB collisions.
-- **Lighting**: warm ambient light + 3 key lights, Blinn-Phong.
-- **5 animations**
-  - Keyframed (hierarchical silhouette): walking cycle (slerp + smoothstep) and placing a flower on the altar (quadratic Bézier).
-  - Procedural: sea waves (sum of sines in the vertex shader), floating candles (Bézier path + sine bobbing, noise-based flame), floating marigolds (circular motion + spin).
-- **5 cultural information cards** (Dear ImGui) shown within 2 m of an object, each citing its source.
-- Ambient audio loop (waves + distant music).
+- **First-person navigation** (keyboard + mouse) with AABB collisions, start menu, pause menu and on-screen help (**F1**).
+- **Guided tour** (key **T**): 12 narrated stations with subtitles and voice (`Audio/narracion/`); any movement key cancels it.
+- **Lighting**: warm ambient light + key lights, Blinn-Phong.
+- **10 animations** (5 keyframed + 5 simple; see `docs/ESTADO_PROYECTO.md` and the technical manual): walking silhouette, placing a flower on the altar, sea waves, floating candles and flowers, flames, and more.
+- **13 cultural information cards** (Dear ImGui) shown within 2 m of an object, each citing its source.
+- Ambient audio by zone (waves + band music) and narration; **M** switches the sound mix.
+
+## Controls
+
+| Key | Action |
+|---|---|
+| W A S D / arrows + mouse | Walk and look around |
+| T | Guided tour (T, Esc or W A S D cancel it) |
+| V | Candles on/off (within 3 m of the altar) |
+| M | Sound: sea + music / sea / music / mute |
+| R | Restart the silhouette |
+| F1 | Show/hide help |
+| Esc | Pause menu |
+
+Full details: `docs/manual_usuario/en/` (English) and `docs/manual_usuario/` (Spanish).
 
 ## Tech stack
 
@@ -72,6 +85,15 @@ CLAUDE.md                           Project rules for the AI assistant (Claude C
 3. Open `NierikaStudio.sln`, choose **Release | x64** (or Debug) and press **F5**.
    The first build downloads and compiles Assimp, GLFW, GLEW and GLM (about 10–20 min); later builds are fast.
 
+## License and credits
+
+- **Source code** (`src/`, `Shaders/`, `tools/`) is released under the **MIT License** (see `LICENSE`).
+- **Models, textures and audio are not covered by that license.** Some are third-party material with their own
+  terms (Poly Haven textures are CC0; the two ambient audio tracks are used for non-commercial educational purposes
+  with no free license confirmed). Details and credits: `Audio/README.md`, `docs/manual_tecnico/06_modelos_y_recursos.md`
+  and the in-app Credits screen. Do not redistribute them commercially.
+- Libraries in `vendor/` and those installed by vcpkg keep their own licenses.
+
 ## Branching
 
 - `main` — tested, deliverable versions only.
@@ -89,4 +111,4 @@ CLAUDE.md                           Project rules for the AI assistant (Claude C
 
 ### Resumen (español)
 
-Recorrido virtual 3D en tiempo real del Día de Muertos en Mazunte, Oaxaca: playa con velas y cempasúchil en el mar, panteón y cuarto del cementerio con altar de tres niveles. Navegación en primera persona con colisiones, iluminación Blinn-Phong, cinco animaciones (dos por cuadros clave) y cinco fichas culturales con fuente. Desarrollado en C++17 con OpenGL 3.3 en Visual Studio 2022. La documentación del proyecto está en `docs/`.
+Recorrido virtual 3D en tiempo real del Día de Muertos en Mazunte, Oaxaca: playa con velas y cempasúchil en el mar, panteón y cuarto del cementerio con altar de tres niveles. Navegación en primera persona con colisiones, iluminación Blinn-Phong, diez animaciones (cinco por cuadros clave), recorrido guiado narrado (tecla T) y 13 fichas culturales con fuente. Desarrollado en C++17 con OpenGL 3.3 en Visual Studio 2022. La documentación del proyecto está en `docs/`. El código tiene licencia MIT; los modelos, texturas y audio **no** (ver «License and credits»).
