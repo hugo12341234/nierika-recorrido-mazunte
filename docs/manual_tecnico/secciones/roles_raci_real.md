@@ -28,17 +28,17 @@ Por área (Tabla 8, ya transcrita en la sección e)): D1 era R en investigación
 | Dato | Valor |
 |---|---|
 | Commits distintos en todas las ramas | 469 |
-| Autor «Hugo Chacón» (`152136307+hugo12341234@users.noreply.github.com`) | 460 (148 de ellos con *committer* «GitHub»: merges por la web) |
-| Autor «Hugo Chacón» con correo genérico `noreply@users.noreply.github.com` | 8 |
+| Autor D2 (correo noreply de su cuenta de GitHub) | 460 (148 de ellos con *committer* «GitHub»: merges por la web) |
+| Autor D2 con correo genérico noreply de GitHub | 8 |
 | Autor «Claude» (commit de plataforma) | 1 |
 | Commits con otro autor | **0** |
 | Commits con `Co-Authored-By` de un integrante | **0** (los 15 con `Co-Authored-By` son de Claude) |
 | Commits a nombre de D1 | **0** |
-| PR abiertos en el repositorio | 150 (todos por `hugo12341234`) **[PR]** |
+| PR abiertos en el repositorio | 150 (todos por la cuenta de D2) **[PR]** |
 | PR con revisión, comentario o mención de `thecurlyguy` | **0** (búsqueda en GitHub: `involves`, `commenter`, `reviewed-by`) **[PR]** |
 | Comentarios en PR e *issues* por otra cuenta | **0** **[PR]** |
 
-*Esta tabla es un corte del 18/11 por la mañana. Al cierre del 18/11, la API de GitHub da para la rama `develop` 491 commits (489 de «Hugo Chacón» y 2 de «Claude»), 157 PR fusionados a `develop` y PR numerados hasta el #159; la conclusión no cambia: ningún commit, PR ni revisión de D1.*
+*Esta tabla es un corte del 18/11 por la mañana. Al cierre del 18/11 (al corte de las 23:05 UTC del 18/11), la API de GitHub da para la rama `develop` 507 commits (505 de D2 y 2 de «Claude»), 165 PR fusionados a `develop` y PR numerados hasta el #174; la conclusión no cambia: ningún commit, PR ni revisión de D1.*
 
 Los commits se concentran en 15 días con actividad: 18–20/10 (61), 25–26/10 (3), 03–04/11 (105), 11–18/11 (300). **No hubo commits** el 21–24/10, 27/10–02/11 ni 05–10/11 **[git]**. La participación de D2 es continua pero **irregular**; la de D1 **no se puede mostrar con el historial**.
 
@@ -48,7 +48,7 @@ Los commits se concentran en 15 días con actividad: 18–20/10 (61), 25–26/10
 
 | Aporte | Evidencia en el repo | Qué se puede afirmar | Qué **no** |
 |---|---|---|---|
-| **Iluminación** (Práctica 8 adaptada: 1 direccional, 4 puntuales animadas con seno de 2t, 1 reflector en la cruz, 6 en los escalones) | ESTADO §4 del 04/11 («luces de D1»); PR #16 (A-8), fusionado el 03/11 (hora de México); `Shaders/lighting.vs/.frag`; análisis en `PLAN_INTEGRACION_D1_2026-11-04.md` (archivos `lighting.*`, `lamp.*`, `REPORTE8_GPO8.cpp`) **[ESTADO]** | D2 decidió usar la base de D1; D2 la corrigió para que funcionara (Blinn-Phong, samplers, alfa, `escalonSpots[]`, posiciones) | Que D1 fuera el autor de cada línea: los commits son de D2; el problema #13 (¿animación copiada de la práctica?) se cerró **solo por palabra de D2** |
+| **Iluminación** (Práctica 8 adaptada: 1 direccional, 4 puntuales animadas con seno de 2t (desde X-60 ya no se animan: color 0), 1 reflector en la cruz, 6 en los escalones) | ESTADO §4 del 04/11 («luces de D1»); PR #16 (A-8), fusionado el 03/11 (hora de México); `Shaders/lighting.vs/.frag`; análisis en `PLAN_INTEGRACION_D1_2026-11-04.md` (archivos `lighting.*`, `lamp.*`, `REPORTE8_GPO8.cpp`) **[ESTADO]** | D2 decidió usar la base de D1; D2 la corrigió para que funcionara (Blinn-Phong, samplers, alfa, `escalonSpots[]`, posiciones) | Que D1 fuera el autor de cada línea: los commits son de D2; el problema #13 (¿animación copiada de la práctica?) se cerró **solo por palabra de D2** |
 | **Pan, flor y calavera** (Maya) | PR #17 (X-3), `Models/pan`, `Models/flor`, `Models/calavera` **[ESTADO]** | Existen en el repo como «extras de D1»; **no cuentan** entre los 18 modelos propios (modelados en Maya, no en Blender) | Fechas y archivos fuente de D1 (los originales de 2048 px quedaron con D1/D2, fuera del repo) |
 | **Modelo de la silueta** (10 piezas `.obj` + `silueta.blend`) | PR #39 (D-1), 04/11 **[ESTADO]** | Estuvo en `Models/silueta/` desde el 04/11; el 12/11 D2 lo sustituyó por piezas orgánicas generadas con `tools/x7_silueta.py` (X-7) | Que quede algo de ese modelo en la versión final |
 | **Modelos de Maya del altar** (cuadro, fuego, humo, mariposa, maceta, refresco, papeles) y **escena de referencia en video** | X-43, X-44, X-47, X-49; PR #111, #112, #115 y commits `6f80dc1`, `d4409f8` **[ESTADO]** | D1 se los envió a D2, que los redujo a 1K y los integró; hoy se usan en la escena (fuego, humo, papeles, macetas, cuadro) | La herramienta con que se hicieron (el ESTADO la deja «sin confirmar») |

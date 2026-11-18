@@ -11,10 +11,7 @@ Cada integrante escribe, **en inglés y con sus propias palabras**, un texto sob
 3. **Learning:** what you learned about computer graphics (OpenGL, shaders, animation, lighting), about teamwork and project management, and about using tools such as Git, Trello or an AI assistant.
 4. **Looking back:** what you would do differently.
 
-## j.3 Dónde se escribe
+## j.3 Textos de los integrantes
 
-| Integrante | Archivo | Estado al 18/11/2026 |
-|---|---|---|
-| D1 (319266894) | `docs/manual_tecnico/individual/D1_english.md` | Completo (texto de D1) |
-| D2 (321332086) | `docs/manual_tecnico/individual/D2_english.md` | Completo (texto de D2) |
+A continuación va el texto en inglés de cada integrante. El de D1 lo entregó D1 y el de D2 lo entregó D2 (misma nota que en g.3).
 

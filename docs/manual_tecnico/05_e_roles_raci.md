@@ -33,7 +33,7 @@ Solo se anota lo que consta en el ESTADO y en el historial de Git; no se infiere
 
 | Qué | Quién, según el repositorio | Fuente |
 |---|---|---|
-| Código C++, shaders, scripts de modelos y texturas, audio, documentación, integración de todas las piezas | **D2**: 489 de los 491 commits de `develop` tienen a D2 como autor; el restante es de la plataforma Claude (API de GitHub, 18/11) | Historial de Git |
+| Código C++, shaders, scripts de modelos y texturas, audio, documentación, integración de todas las piezas | **D2**: 505 de los 507 commits de `develop` tienen a D2 como autor; los 2 restantes son de la plataforma Claude (API de GitHub, al corte de las 23:05 UTC del 18/11) | Historial de Git |
 | Iluminación Blinn-Phong con 4 luces puntuales, reflectores y su animación | **D1** (adaptación de su Práctica 8), integrada por D2 en A-8 (04/11) | ESTADO, decisión 04/11 |
 | Calavera, pan, flor y otros modelos de Maya (humo, fuego, mariposas, mazetas, papel, cuadro); modelo de la silueta de 10 piezas | **D1**, integrados por D2 (X-3, D-1, X-43, X-47, X-49) | ESTADO |
 | Playa y mar en Blender | D2 | ESTADO, A-5 y A-7 |

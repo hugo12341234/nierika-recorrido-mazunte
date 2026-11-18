@@ -12,13 +12,13 @@ Lo que queda como límite técnico: no se midió la memoria de GPU; las 23 pieza
 
 ## l.2 Social
 
-El trabajo fue de dos personas y el repositorio no lo refleja por igual: 489 de los 491 commits de `develop` llevan el nombre de D2 (los otros 2, de la cuenta «Claude» de la plataforma), y D1 aparece sobre todo en las luces y los modelos de Maya que se integraron. La coordinación se hizo con Trello, GitHub y un asistente de IA (secciones e, f y h). La causa de ese desbalance no está documentada en el repositorio, por eso este manual no la afirma; cada integrante expone su propia versión en las secciones g y j.
+El trabajo fue de dos personas y el repositorio no lo refleja por igual: 505 de los 507 commits de `develop` llevan el nombre de D2 (los otros 2, de la cuenta «Claude» de la plataforma; API de GitHub, al corte de las 23:05 UTC del 18/11), y D1 aparece sobre todo en las luces y los modelos de Maya que se integraron. La coordinación se hizo con Trello, GitHub y un asistente de IA (secciones e, f y h). La causa de ese desbalance no está documentada en el repositorio, por eso este manual no la afirma; cada integrante expone su propia versión en las secciones g y j.
 
 La gestión mostró un patrón que conviene reconocer: la mayor parte del trabajo se concentró en las últimas dos semanas (más de la mitad de los commits cae del 11 al 18/11, sección d). Aprender de eso es la lección social principal: repartir el trabajo desde la semana 1 y registrar horas reales.
 
 ## l.3 Económica
 
-La propuesta estimó **203 horas** de esfuerzo, un costo de mano de obra de **\$23 409.50 MXN** y un precio al cliente de **\$31 228.27 MXN**. **No se registraron horas reales**, así que no se puede decir si el estimado se cumplió, se excedió o sobró. El costo en dinero fue bajo porque se eligieron herramientas libres o gratuitas (OpenGL, GLFW, GLEW, GLM, Assimp, Dear ImGui, miniaudio, Blender, Poly Haven con licencia CC0). Hubo software comercial: Visual Studio (la propuesta presupuestó la edición Professional) y Maya en la parte de D1. No se anotó el plan de ElevenLabs con que se generó la voz, por lo que su costo no se puede reportar.
+La propuesta estimó **203 horas** de esfuerzo, una mano de obra de **\$16 217.16 MXN**, un costo total de **\$23 409.50 MXN** y un precio al cliente de **\$31 228.27 MXN**. **No se registraron horas reales**, así que no se puede decir si el estimado se cumplió, se excedió o sobró. El costo en dinero fue bajo porque se eligieron herramientas libres o gratuitas (OpenGL, GLFW, GLEW, GLM, Assimp, Dear ImGui, miniaudio, Blender, Poly Haven con licencia CC0). Hubo software comercial: Visual Studio (la propuesta presupuestó la edición Professional) y Maya en la parte de D1. No se anotó el plan de ElevenLabs con que se generó la voz, por lo que su costo no se puede reportar.
 
 ## l.4 Ambiental
 

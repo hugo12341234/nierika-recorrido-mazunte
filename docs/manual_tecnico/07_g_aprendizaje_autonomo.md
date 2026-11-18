@@ -12,13 +12,6 @@ Cada integrante documenta **una herramienta, técnica o tecnología que tuvo que
 4. **Qué construyó con ella**, con evidencia verificable (archivos del repositorio, commits, capturas).
 5. **Qué haría distinto** o qué quedó sin dominar.
 
-## g.3 Dónde se escribe y cómo se integra al PDF
+## g.3 Textos de los integrantes
 
-Cada integrante tiene su archivo en `docs/manual_tecnico/individual/`:
-
-| Integrante | Archivo | Estado al 18/11/2026 |
-|---|---|---|
-| D1 (319266894) | `D1_aprendizaje_autonomo.md` | Completo (texto de D1) |
-| D2 (321332086) | `D2_aprendizaje_autonomo.md` | Completo (texto de D2) |
-
-Los textos de los integrantes aparecen a continuación.
+A continuación va el texto de cada integrante, con sus propias palabras. El texto de D1 lo entregó D1 y el de D2 lo entregó D2; se incluyen tal cual salvo correcciones de forma y de cifras (registro en `docs/ESTADO_PROYECTO.md`, X-75).

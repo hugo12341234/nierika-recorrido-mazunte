@@ -19,22 +19,15 @@ Este manual explica cómo **ejecutarla**, **moverte** e **interactuar**. Si busc
 
 ## 1.3 Cómo abrirlo
 
-Hay dos formas, según lo que hayas recibido.
-
-**A. Con el paquete listo (carpeta o archivo .zip del Release)**
-
-1. Si recibiste un archivo `.zip`, **descomprímelo por completo** en una carpeta (no ejecutes el programa desde dentro del `.zip`).
-2. Abre `NierikaStudio.exe`. No hace falta instalar nada más.
-3. Deja el `.exe` junto a las carpetas `Models`, `Shaders` y `Audio`: el programa las busca ahí.
-4. Si Windows avisa que falta `VCRUNTIME140.dll` o `MSVCP140.dll`, instala el *Microsoft Visual C++ Redistributable* de 64 bits (gratuito, de Microsoft) y vuelve a abrir el programa.
-
-**B. Desde el proyecto de Visual Studio 2022 (código fuente)**
+Esta entrega es el **proyecto de Visual Studio 2022** (código fuente, modelos, shaders y audio en el repositorio de la sección 6). **No incluye un paquete `.zip` con el programa ya compilado:** el script `tools/empaquetar_release.ps1` que lo genera existe, pero el `.zip` no se construyó ni se probó en una computadora sin Visual Studio. Por eso la forma de abrirlo es compilarlo:
 
 1. Instala **Visual Studio 2022** con la carga de trabajo *Desarrollo de escritorio con C++*.
 2. Instala **vcpkg** una sola vez (`git clone https://github.com/microsoft/vcpkg C:\vcpkg`, luego `C:\vcpkg\bootstrap-vcpkg.bat` y `C:\vcpkg\vcpkg integrate install`). Las bibliotecas Assimp, GLFW, GLEW y GLM se descargan solas al compilar la primera vez (unos 10 a 20 minutos).
-3. Abre `NierikaStudio.sln`, elige **Release | x64** y pulsa **F5**.
+3. Abre `NierikaStudio.sln`, elige **Release | x64** y pulsa **F5**. El ejecutable queda en `build/x64/Release/`.
 
-En ambos casos la primera pantalla es el menú de inicio.
+Si más adelante tienes el programa compilado en una carpeta propia, `NierikaStudio.exe` debe estar **junto a las carpetas `Models`, `Shaders` y `Audio`** (el programa las busca ahí). Si Windows avisa que falta `VCRUNTIME140.dll` o `MSVCP140.dll`, instala el *Microsoft Visual C++ Redistributable* de 64 bits (gratuito, de Microsoft).
+
+Al abrirlo, la primera pantalla es el menú de inicio.
 
 ## 1.4 Menú de inicio
 
