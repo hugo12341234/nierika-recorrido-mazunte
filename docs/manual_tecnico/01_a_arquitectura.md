@@ -26,7 +26,7 @@ El código vive en `src/` (9 177 líneas en 44 archivos) y los shaders en `Shade
 | `Audio.h/.cpp` | miniaudio: oleaje y música en bucle con volumen y paneo según la posición, y narración | Propio |
 | `Cull.h`, `Perf.h` | Descarte por frustum por malla (sin cambio visual) y tabla de tiempos por etapa (tecla F9) | Propio |
 | `VidaColinas`, `OfrendasFamiliares`, `PlazaTrasera`, `OfrendaMayor`, `PuebloFondo`, `DecoracionCasas`, `LucesCasas`, `Mariposas`, `Fuego`, `Atuendos`, `VegetacionColinas` | Posiciones y fórmulas de la escena; varios archivos de datos los **generan** los scripts de `tools/` (no se editan a mano) | Propio |
-| `Shaders/lighting.vs/.frag` | Blinn-Phong con luz de luna direccional, 4 luces puntuales animadas, luces de fogatas y faroles, reflectores; oleaje, llama con ruido de Perlin, relieve y descarte por alfa < 0.1 | Luces de D1 (Práctica 8) integradas; resto propio |
+| `Shaders/lighting.vs/.frag` | Blinn-Phong con luz de luna direccional, luces de fogatas y faroles, reflectores y las 4 luces puntuales heredadas de D1 (apagadas, con color 0, desde X-60; ya no se animan); oleaje, llama con ruido de Perlin, relieve y descarte por alfa < 0.1 | Luces de D1 (Práctica 8) integradas; resto propio |
 | `Shaders/sky.vs/.frag` | Cielo nocturno procedural: degradado, estrellas y luna | Propio |
 
 ## a.3 Ciclo de render

@@ -4,6 +4,8 @@ Todas las páginas web se consultaron el **18 de noviembre de 2026**. Las refere
 
 **Cómo leer esta lista.** Las fuentes se abrieron con una herramienta de lectura web del asistente, que devuelve texto o un resumen de la página; no es lectura humana. Una cruz (†) marca una referencia que se conserva porque el proyecto la usa, pero que no se pudo volver a abrir el 18/11/2026. Cuando una página no muestra fecha, se usó la de sus metadatos; «s. f.» significa que ni la página ni sus metadatos la dan. Las fuentes de la propuesta que no usa ninguna ficha, narración ni código se omiten (10 citas de «estado del arte» y de gestión, y una página oficial que no abrió).
 
+**Referencias no confirmadas del todo** (se conservan porque el proyecto las usa): Farin (2002), cuya edición y subtítulo no se confirmaron; Mikkelsen (2010), que no se volvió a comprobar el 18/11; el video de Tizo (2012), cuyo título se transcribe como aparece publicado (con «Nuca»); y la norma ISO/IEC 14882:2017, que su página marca como retirada.
+
 ## k.1 Fuentes culturales y de contenido (fichas, narración e investigación)
 
 Baños, L. (2025, 27 de octubre). *Los pueblos mágicos de Oaxaca donde el Día de Muertos se vive con más alma*. Oaxaca Informa. https://www.oaxacainforma.com/es/cultura/2025/pueblos-magicos-oaxaca-dia-de-muertos-2025
@@ -38,7 +40,7 @@ ElevenLabs. (2026, 9 de octubre). *Terms of use* [Condiciones del servicio]. htt
 
 Quiet. (2020, 31 de marzo). *Relajarse Relax - Sonido Olas del Mar - Playa Atardecer HD* [Video]. YouTube. https://www.youtube.com/watch?v=6TGHwQHdDlo
 
-Tizo, R. (2012, 24 de octubre). *Dios Nuca Muere con la Banda Mixe de Oaxaca* [Video]. YouTube. https://www.youtube.com/watch?v=EyObXpnZsJg (se respeta el título tal como está publicado)
+Tizo, R. (2012, 24 de octubre). *Dios Nuca Muere con la Banda Mixe de Oaxaca* [Video]. YouTube. https://www.youtube.com/watch?v=EyObXpnZsJg
 
 ## k.3 Texturas externas
 
@@ -90,7 +92,7 @@ The GLEW contributors. (s. f.). *The OpenGL Extension Wrangler Library (GLEW)* [
 
 de Vries, J. (2020). *Learn OpenGL: Learn modern OpenGL graphics programming in a step-by-step fashion*. Kendall & Welling. https://learnopengl.com/ †
 
-International Organization for Standardization / International Electrotechnical Commission. (2017). *Programming languages — C++* (ISO/IEC 14882:2017, Edición 5). https://www.iso.org/standard/68564.html (la página lo marca como retirado)
+International Organization for Standardization / International Electrotechnical Commission. (2017). *Programming languages — C++* (ISO/IEC 14882:2017, Edición 5). https://www.iso.org/standard/68564.html
 
 Kessenich, J., Baldwin, D., y Rost, R. (2010). *The OpenGL shading language* (Language version 3.30, Document revision 6). The Khronos Group. https://registry.khronos.org/OpenGL/specs/gl/GLSLangSpec.3.30.pdf
 
@@ -104,11 +106,11 @@ Blinn, J. F. (1977). Models of light reflection for computer synthesized picture
 
 Catmull, E., y Rom, R. (1974). A class of local interpolating splines. En *Computer aided geometric design* (pp. 317–326). Elsevier. https://doi.org/10.1016/B978-0-12-079050-0.50020-5
 
-Farin, G. (2002). *Curves and surfaces for CAGD: A practical guide* (5th ed.). Morgan Kaufmann. (edición y subtítulo por confirmar)
+Farin, G. (2002). *Curves and surfaces for CAGD: A practical guide* (5th ed.). Morgan Kaufmann.
 
 Khronos Group. (s. f.). *smoothstep*. En *OpenGL 4 reference pages*. https://registry.khronos.org/OpenGL-Refpages/gl4/html/smoothstep.xhtml
 
-Mikkelsen, M. S. (2010). Bump mapping unparametrized surfaces on the GPU. *Journal of Graphics, GPU, and Game Tools, 15*(1), 49–61. (no se volvió a comprobar el 18/11)
+Mikkelsen, M. S. (2010). Bump mapping unparametrized surfaces on the GPU. *Journal of Graphics, GPU, and Game Tools, 15*(1), 49–61.
 
 Perlin, K. (1985). An image synthesizer. *ACM SIGGRAPH Computer Graphics, 19*(3), 287–296. https://doi.org/10.1145/325165.325247
 

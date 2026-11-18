@@ -63,7 +63,7 @@ Tarjeta en Trello (código X-n / A-1…E-7) ──► rama feature/<código>-<no
 | Herramienta | Uso | Evidencia | Confianza |
 |---|---|---|---|
 | **Trello** (Kanban) | Estado de cada tarea, etiquetas de bloque y prioridad, enlace al PR, capturas adjuntas | Figuras 1–7 | ✅ |
-| **GitHub** (ramas + PR) | Una rama `feature/<código>` por tarea y todo entra a `develop` por PR | `git log`: **157 PR fusionados** a `develop` (19/10–18/11, API de GitHub); 123 desde ramas `feature/…` y 34 desde ramas `claude/…` (hilos web) | ✅ |
+| **GitHub** (ramas + PR) | Una rama `feature/<código>` por tarea y todo entra a `develop` por PR | `git log`: **165 PR fusionados** a `develop` (19/10–18/11, API de GitHub, al corte de las 23:05 UTC del 18/11); 128 desde ramas `feature/…` y 37 desde ramas `claude/…` (hilos web) | ✅ |
 | **Registro de decisiones** (`ESTADO_PROYECTO.md` §4) | Todo cambio de alcance, valor o regla se anota antes de tocar el código | Sección 4 del ESTADO (decisiones por fecha) | ✅ |
 | **Comandos `/actividad`, `/cierre`, `/verificar`** y subagentes (`verificador`, `revisor-opengl`, `justificacion-matematica`) | Arrancar, cerrar y revisar tareas con el mismo formato | `.claude/skills/` y `.claude/agents/` en el repositorio | ✅ existen · 🔍 uso por tarea visible en las descripciones de las tarjetas |
 | **Hoja del plan** (Excel/Google Sheets) | Las 60 actividades originales con fecha, responsable, horas y estado | `Plan_de_Proyecto_Mazunte_actualizado_2026-11-03.xlsx` (hoja «Plan de trabajo») | ✅ |
@@ -73,11 +73,11 @@ Tarjeta en Trello (código X-n / A-1…E-7) ──► rama feature/<código>-<no
 
 - ✅ La regla del equipo es que **nada entra a `develop` sin la revisión del otro integrante** y existen
   veredictos `/verificar … APROBAR` en los PR #9, #11, #13–#17, #40 y #41 (según el registro del ESTADO, estado al 12/11).
-- ✅ Los 491 commits de `develop` (API de GitHub, 18/11): 489 a nombre de **D2 (Hugo Chacón)** y 2 de la cuenta «Claude». El historial
+- ✅ Los 507 commits de `develop` (API de GitHub, al corte de las 23:05 UTC del 18/11): 505 a nombre de **D2** y 2 de la cuenta «Claude». El historial
   de Git **no muestra commits de D1**. El ESTADO registra que D1 fue invitado al repositorio y aún no había aceptado la
   invitación. Por eso la revisión cruzada **no puede demostrarse con el historial de GitHub** para la mayor parte del
   trabajo; ver la sección e) del manual.
-- ✅ Desde el 12/11 las tareas B-12, B-13 y C-1…D-7 se cerraron con la nota «visto por Hugo … sin `/verificar` de
+- ✅ Desde el 12/11 las tareas B-12, B-13 y C-1…D-7 se cerraron con la nota «visto por D2 … sin `/verificar` de
   otra persona» (ESTADO §3). Es decir, **varias tareas se cerraron con visto bueno de una sola persona**; no se
   presentan como revisión independiente.
 - 🔍 El uso de IA como asistente (Claude Code y Proyecto web) está documentado, pero el criterio y la decisión
@@ -223,7 +223,7 @@ videos, manuales) siguen en curso el día de la entrega. ✅ datos del Excel y d
 | Afirmación | Estado |
 |---|---|
 | Trello como tablero Kanban con 4 columnas y límite de 2 en proceso por persona | ✅ `CONTEXTO_PROYECTO.md` §7 y Figura 1 |
-| Ciclo Trello → rama `feature/` → PR a `develop` → `/verificar` | ✅ `FLUJO_DE_TRABAJO.md`; 157 PR fusionados a `develop` (API de GitHub) |
+| Ciclo Trello → rama `feature/` → PR a `develop` → `/verificar` | ✅ `FLUJO_DE_TRABAJO.md`; 165 PR fusionados a `develop` (API de GitHub, al corte de las 23:05 UTC del 18/11) |
 | Cifras del tablero (104 tarjetas, 70 con lista, 78 con adjuntos, 0 con fecha o miembro) | ✅ consultadas en Trello el 18/11/2026 |
 | El equipo no usó Scrum | ✅ sin sprints ni ceremonias en los documentos; 🔍 no se declaró formalmente «no Scrum» |
 | Se hicieron revisiones los viernes | ❓ sin minutas |

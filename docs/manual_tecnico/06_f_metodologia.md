@@ -14,7 +14,7 @@ La propuesta v2.0 comparó **Kanban, Scrum y Cascada** frente a las condiciones 
 | Revisión por el otro integrante | Regla del 18/10: el otro integrante revisa antes de integrar a `develop`. Desde el 20/10, comando `/verificar <código>` con veredicto APROBAR antes de cada fusión |
 | Memoria única del proceso | `docs/ESTADO_PROYECTO.md` registra plan, estado de cada tarea, decisiones con fecha y motivo, parámetros con valores y problemas abiertos; se actualiza con `/cierre` al terminar cada sesión |
 | Mejora continua | Replaneación del 18/10, auditorías del 19/10 y del 17/11 y 18/11, y decisiones registradas cuando algo no funcionaba (por ejemplo, el «pipeline vertical mínimo» del 04/11) |
-| Control de versiones | Ramas `main` (solo entregas), `develop` (integración) y `feature/*`; todo entra por *pull request*; 491 commits en `develop` y PR numerados hasta el #159 |
+| Control de versiones | Ramas `main` (solo entregas), `develop` (integración) y `feature/*`; todo entra por *pull request*; 507 commits en `develop` y PR numerados hasta el #174 (al corte de las 23:05 UTC del 18/11) |
 
 ![Tablero de Trello el 17/11/2026: 65 tarjetas en Terminado, 28 en revisión, 9 en proceso y 2 pendientes](evidencias/2026-11-17_trello_tablero.jpg)
 
