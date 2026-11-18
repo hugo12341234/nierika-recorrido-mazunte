@@ -76,7 +76,7 @@ Con $y$ constante da $\mathbf{n}=(0,1,0)$, que es la normal actual del `.obj` [r
 2. **Pendiente máxima.** La pendiente de cada senoide es $A_i k_i=2\pi A_i/\lambda_i$. Para que la superficie no se pliegue sobre sí misma basta $\sum_i A_i k_i<1$ **[propuesta]** (criterio estándar: pendiente total < 1 ⇒ no hay autointersección en el modelo de altura pura).
 3. **No romper la orilla.** La arena baja de $y=-0.2$ en $z=+24$ [repo]. Si $\sum A_i>0.1$ m, el mar puede subir a $y>-0.1$ y cruzar la arena donde ya no debe (en $z=+22$ la arena está en $y=-0.1$). Verificar $\sum_i A_i$ contra esos 0.1 m **[propuesta]** y revisar la prueba de z-fighting de A-7 con las olas activas.
 
-### 1.6 Tabla de parámetros (a llenar con el código)
+### 1.6 Tabla de parámetros (valores del código)
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|
@@ -154,7 +154,7 @@ $$
 
 Se descarta el fragmento si `forma < 0.1`; el color pasa de rojo a naranja y a amarillo claro según $\text{calor}=\text{clamp}(1.2\,\text{forma}-0.5h+0.3)$. Restar $2t'$ a la coordenada vertical hace que el ruido **suba**; el desplazamiento lateral crece con $h$, por eso la punta se mueve más. La llama **no** cuenta como KeyFrames y el humo con partículas está fuera de alcance [repo].
 
-### 2.4 Tabla de parámetros (a llenar con el código)
+### 2.4 Tabla de parámetros (valores del código)
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|
@@ -195,7 +195,7 @@ $$
 Como $\sin^2x=(1-\cos2x)/2$, la integral tiene forma cerrada: $\theta(u)=\omega_{\max}\big(u/2-t_{mov}\sin(2\pi u/t_{mov})/(4\pi)\big)$, y cada fase de movimiento recorre exactamente $\pi$ (media vuelta); tras $n$ ciclos $\theta=n\pi+\theta(u)$ (`AnimFlores.h:36-45`). $\omega$ vale 0 en los extremos de la fase, así que la velocidad es continua (sin escalón de aceleración). **Cuidado numérico resuelto:** $\theta$ es función cerrada de $t$ (no se acumula `theta += omega * deltaTime`), así que no depende de los FPS ni deriva.
 **Prioridad:** las pausas son lo **primero que se recorta** si falta tiempo (ESTADO, "qué recortar primero") [repo]; si se recortan, esta sección se reduce a $\omega$ constante.
 
-### 3.4 Tabla de parámetros (a llenar con el código)
+### 3.4 Tabla de parámetros (valores del código)
 
 | Símbolo | Valor en el código | Unidad | Archivo:línea |
 |---|---|---|---|

@@ -20,7 +20,7 @@ Todas las cifras salen del repositorio (rama `develop` al 18/11/2026) o de medic
 | Fichas culturales | 13, con referencias en APA 7 (secciones b y k) |
 | Audio | 2 pistas ambientales y 12 narraciones del recorrido guiado |
 | Recorrido guiado | 12 estaciones, tecla T, unos 6 min 30 s |
-| Historial | 465 commits en `develop` entre el 19/10 y el 18/11 (464 con autor D2 y 1 de la plataforma Claude) y *pull requests* numerados hasta el #150 (consulta a la API de GitHub, 18/11; ver secciones d y e) |
+| Historial | 491 commits en `develop` entre el 19/10 y el 18/11 (489 con autor D2 y 2 de la cuenta «Claude» de la plataforma) y *pull requests* numerados hasta el #159 (consulta a la API de GitHub, 18/11; ver secciones d y e) |
 | Rendimiento | En una laptop con Intel Core i5 de 11.ª generación y gráficos integrados: mínimo 45 FPS y promedio de unos 60, tras el PR #148 (antes, unos 15). En una GPU dedicada: entre 200 y 340 FPS. Mediciones de D2 en su equipo; el criterio del cliente es ≥ 30 FPS a 1280×720 |
 
 ## Dónde está cada elemento que pide la entrega
