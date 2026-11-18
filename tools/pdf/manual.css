@@ -5,8 +5,8 @@ body { font-family: Inter, "Liberation Sans", Arial, sans-serif; color: var(--ti
 h1 { font-size: 19pt; color: var(--oro); border-bottom: 2px solid var(--oro); padding-bottom: 4px; margin-top: 0; break-before: page; break-after: avoid; }
 body > h1:first-of-type, #TOC + h1 { break-before: page; }
 h2 { font-size: 13.5pt; color: var(--tinta); margin-top: 1.4em; break-after: avoid; border-left: 4px solid var(--oro); padding-left: 8px; }
-h3 { font-size: 11pt; color: var(--tinta); margin-top: 1.1em; break-after: avoid; }
-h4 { font-size: 10pt; break-after: avoid; }
+h3 { font-size: 11.2pt; color: #7a5a1e; margin-top: 1.2em; break-after: avoid; border-bottom: 1px solid #e3d6b5; padding-bottom: 2px; }
+h4 { font-size: 10pt; color: #4a4f5c; margin-top: 1em; break-after: avoid; }
 p, li { orphans: 3; widows: 3; }
 a { color: #0b5394; text-decoration: none; word-break: break-word; }
 code { font-family: "DejaVu Sans Mono", Menlo, Consolas, monospace; font-size: 8.4pt; background: #f1ece0; padding: 0 3px; border-radius: 2px; word-break: break-word; }
@@ -19,20 +19,26 @@ th { background: #efe3c8; color: var(--tinta); text-align: left; border: 1px sol
 td { border: 1px solid #e0d8c4; padding: 3px 6px; vertical-align: top; overflow-wrap: anywhere; }
 tr:nth-child(even) td { background: #fcfaf4; }
 blockquote { border-left: 4px solid #d8c9a5; margin: 0.8em 0; padding: 0.2em 1em; background: var(--fondo); color: #3d4350; }
-img { max-width: 100%; max-height: 150mm; display: block; margin: 0.6em auto; border: 1px solid #ddd; break-inside: avoid; }
+img { max-width: 100%; max-height: 105mm; display: block; margin: 0 auto; border: 1px solid #ddd; break-inside: avoid; }
 p > img:only-child { margin: 0.6em auto; }
 em { color: #333; }
-figure { break-inside: avoid; margin: 0.6em 0; }
+figure { break-inside: avoid; margin: 1em 0 1.1em 0; text-align: center; }
+figure .fimg { margin: 0; }
+figcaption { font-size: 8.6pt; color: #3d4350; line-height: 1.35; margin: 5px auto 0 auto; max-width: 160mm; text-align: left; border-left: 3px solid var(--oro); padding-left: 8px; }
+figcaption .fn { font-weight: 700; color: var(--oro); }
+figcaption code { font-size: 7.8pt; }
 hr { border: 0; border-top: 1px solid #ddd; margin: 1.2em 0; }
 math { font-size: 105%; }
 math[display="block"] { margin: 0.5em 0; }
 #TOC { break-after: page; }
 #TOC ul { list-style: none; padding-left: 1.1em; margin: 0.15em 0; }
 #TOC > ul { padding-left: 0; }
-#TOC > ul > li { margin-top: 0.5em; font-weight: 600; }
+#TOC > ul > li { margin-top: 0.55em; font-weight: 600; }
 #TOC > ul > li > ul { font-weight: 400; font-size: 9pt; }
 #TOC > ul > li > ul > li > ul { display: none; }
-#TOC a { color: var(--tinta); }
+#TOC a { color: var(--tinta); display: flex; align-items: baseline; gap: 4px; }
+#TOC a .dots { flex: 1; border-bottom: 1px dotted #9a9078; margin: 0 2px 3px 2px; min-width: 12px; }
+#TOC a .pg { font-variant-numeric: tabular-nums; min-width: 1.6em; text-align: right; color: var(--oro); font-weight: 700; }
 nav#TOC::before { content: "Contenido"; display: block; font-size: 19pt; color: var(--oro); border-bottom: 2px solid var(--oro); margin-bottom: 0.6em; font-weight: 700; }
 body.cover { background: linear-gradient(160deg, #2b1a0e 0%, #4a2a10 55%, #b4781e 130%); color: #fff; height: 297mm; width: 210mm; }
 .portada { padding: 48mm 22mm 0 22mm; }
@@ -46,3 +52,13 @@ body.cover { background: linear-gradient(160deg, #2b1a0e 0%, #4a2a10 55%, #b4781
 .portada table.datos td:first-child { color: #f3c775; width: 52mm; }
 .aviso { border: 1px dashed #b4781e; background: #fff8e6; padding: 6px 10px; margin: 0.8em 0; font-size: 9pt; }
 .pendiente { border: 2px solid #c0392b; background: #fdecea; padding: 6px 10px; margin: 0.8em 0; font-size: 9pt; }
+
+/* Matriz RACI planeada frente a real */
+table.raci { font-size: 8pt; table-layout: fixed; }
+table.raci th:nth-child(1) { width: 20%; } table.raci th:nth-child(2) { width: 13%; } table.raci th:nth-child(3) { width: 27%; }
+table.raci th:nth-child(4) { width: 15%; } table.raci th:nth-child(5) { width: 25%; }
+table.raci td:first-child { font-weight: 600; }
+td.lec { font-weight: 600; }
+td.lec-d2 { background: #fbe3df !important; color: #7a2418; }
+td.lec-parcial { background: #fdf0cf !important; color: #6b4a00; }
+td.lec-sin { background: #e9eaee !important; color: #3d4350; }

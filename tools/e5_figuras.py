@@ -26,7 +26,7 @@ DEF = "<defs><marker id='p' markerWidth='8' markerHeight='8' refX='7' refY='4' o
 def arquitectura():
     W, H = 760, 560
     s = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>{DEF}<rect width='{W}' height='{H}' fill='#fffdf8'/>",
-         t(W / 2, 24, "Figura 1. Arquitectura por capas de Nierika Studio", 14, "#1f2430", "middle", "700")]
+         t(W / 2, 24, "", 14, "#1f2430", "middle", "700")]
     c1, b1 = "#fdf0d5", "#b4781e"; c2, b2 = "#e8f0fb", "#4a78b5"; c3, b3 = "#eaf5ea", "#4f9a55"; c4, b4 = "#f3e9f6", "#8a5aa0"
     s.append(t(20, 52, "APLICACIÓN DEL RECORRIDO (C++17 · Visual Studio 2022 · src/main.cpp coordina todos los módulos)", 10.5, "#7a5a1e", "start", "700"))
     mods = [
@@ -56,7 +56,7 @@ def arquitectura():
 def ciclo():
     W, H = 760, 330
     s = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'>{DEF}<rect width='{W}' height='{H}' fill='#fffdf8'/>",
-         t(W / 2, 24, "Figura 2. Ciclo de cada cuadro (src/main.cpp)", 14, "#1f2430", "middle", "700")]
+         t(W / 2, 24, "", 14, "#1f2430", "middle", "700")]
     pasos = [("1. Tiempo", ["deltaTime y reloj", "FPS cada 0.5 s"]), ("2. Eventos", ["teclado y ratón", "menú / pausa"]),
              ("3. Cámara", ["libre, o la lleva", "el recorrido (T)"]), ("4. Movimiento", ["W A S D × deltaTime", "colisiones AABB"]),
              ("5. Animación", ["relojes en forma", "cerrada del tiempo"]), ("6. Luces y cielo", ["uniforms de luz", "cielo procedural"]),
@@ -93,7 +93,7 @@ def gantt():
     W, H = 760, 560; L, R = 250, 20; span = (fin - ini).days
     def X(day): return L + (day - ini).days / span * (W - L - R)
     s = [f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {W} {H}' width='{W}' height='{H}'><rect width='{W}' height='{H}' fill='#fffdf8'/>",
-         t(W / 2, 22, "Figura 3. Cronograma: plan inicial (propuesta v2.0) frente a la ejecución real", 13.5, "#1f2430", "middle", "700")]
+         t(W / 2, 22, "", 13.5, "#1f2430", "middle", "700")]
     cur = ini
     while cur <= fin:  # líneas de semana (lunes)
         if cur.weekday() == 0:
