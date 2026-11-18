@@ -48,6 +48,7 @@ public:
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
+			if (!this->meshes[i].EsVisible()) { Perf::descartadas++; continue; }   // X-68: fuera del frustum: ni se prepara
 			vector<Texture>& tx = this->meshes[i].textures;
 			vector<GLuint> originales;
 			for (size_t k = 0; k < tx.size(); k++)
@@ -69,6 +70,7 @@ public:
 	{
 		for (GLuint i = 0; i < this->meshes.size(); i++)
 		{
+			if (!this->meshes[i].EsVisible()) { Perf::descartadas++; continue; }   // X-68: fuera del frustum: ni se prepara
 			vector<Texture>& tx = this->meshes[i].textures;
 			vector<GLuint> originales;
 			for (size_t k = 0; k < tx.size(); k++)

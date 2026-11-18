@@ -110,6 +110,8 @@
     <ClCompile Include="vendor\SOIL2\etc1_utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Cull.h" />
+    <ClInclude Include="src\Perf.h" />
     <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\AnimFlores.h" />
     <ClInclude Include="src\AnimVelas.h" />

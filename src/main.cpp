@@ -41,6 +41,7 @@
 #include "PlazaTrasera.h"  // X-52: plaza detras de la capilla
 #include "OfrendasFamiliares.h"  // X-55: 14 ofrendas familiares distintas en la playa de atras (sustituyen al panteon de 16 tumbas de X-54)
 #include "Silueta.h"  // D-1/D-2: silueta de cubos con caminata por KeyFrames
+#include "Perf.h"  // X-68: contador de tiempos por etapa (F9 o NIERIKA_PERF=1)
 #include "PersonasAnim.h"  // X-55: 5 animaciones nuevas de personas y perro (3 KeyFrames + 2 simples)
 
 // GLM Mathematics
@@ -213,6 +214,8 @@ int main()
         std::cout << "Failed to initialize GLEW" << std::endl;
         return EXIT_FAILURE;
     }
+
+    ::Perf::Iniciar();   // X-68
 
     // C-7b: Dear ImGui para las fichas culturales por proximidad
     FichasInit(window);
@@ -648,6 +651,8 @@ int main()
 
         // Check and call events
         glfwPollEvents();
+        ::Perf::InicioCuadro();
+        Cull::OlvidarTexturas();   // X-68: ImGui y la carga de modelos enlazan texturas por su cuenta; se vuelve a empezar cada cuadro
         // X-63: "Iniciar recorrido": arranca todo como antes del menu (camara en su sitio de siempre, silueta desde t = 0, audio)
         if (iniciarPendiente)
         {
@@ -717,10 +722,12 @@ int main()
             glDepthMask(GL_TRUE);
         }
 
+        PERF("cielo");
         shader.Use();
         glUniform3f(glGetUniformLocation(shader.Program, "tinteObjeto"), 1.0f, 1.0f, 1.0f);   // X-55: sin tinte salvo en las ofrendas familiares
 
         glm::mat4 view = camera.GetViewMatrix();
+        Cull::FijarFrustum(projection * view);   // X-68: planos de vision de este cuadro (descarte por malla en Mesh::Draw)
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
         glUniform3f(glGetUniformLocation(shader.Program, "viewPos"), camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
@@ -846,6 +853,7 @@ int main()
         GLint specLoc = glGetUniformLocation(shader.Program, "specularStrength");
         glUniform1f(specLoc, 0.05f);
 
+        PERF("luces (uniforms)");
         // 0. PLAYA (100 x 50 m, vertices ya en coordenadas del mundo: x -50..50, z -20..30; A-5)
         glm::mat4 modelPlaya(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelPlaya));
@@ -856,6 +864,7 @@ int main()
         playa.Draw(shader);
         glUniform1i(glGetUniformLocation(shader.Program, "arena"), 0);
 
+        PERF("playa");
         // 0b. MAR (100 x 100 m en y = -0.2, vertices ya en coordenadas del mundo: x -50..50, z 22..122; orilla en z = 24; A-7)
         glm::mat4 modelMar(1.0f);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(modelMar));
@@ -877,6 +886,7 @@ int main()
         glUniform1i(glGetUniformLocation(shader.Program, "espuma"), 0);
         glUniform1i(glGetUniformLocation(shader.Program, "oleaje"), 0);   // el resto de los modelos sin oleaje
 
+        PERF("mar");
         // 1. FACHADA (escala real en el .obj desde A-2: planta exterior de 3.93 x 2.62 m, arco de 2.11 m)
         glm::mat4 modelFachada(1.0f);
         modelFachada = glm::translate(modelFachada, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -899,6 +909,7 @@ int main()
         piso.Draw(shader);
         glUniform1i(glGetUniformLocation(shader.Program, "relieveLuma"), 0);
 
+        PERF("capilla (fachada)");
         // 3b. MODELOS PROPIOS DE BLENDER (B-1, B-2, B-5, B-6, B-8, B-9, B-11, B-14). Posiciones PROVISIONALES: B-13 las ajusta.
         // Altar de 3 niveles al centro del cuarto (X-58: antes contra el muro derecho): x -0.8..+0.8, contra el muro del fondo (ver ALTAR_POS), frente a la puerta.
         // Tiene colision (B-13). La capilla provisional y el pan de Maya se retiraron en B-13 (12/11).
@@ -1175,6 +1186,7 @@ int main()
             llamasLista(objsPir, glm::vec3(0.0f, 0.0f, PlazaTrasera::CZ), 0.0f);
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
+        PERF("altar y cuarto");
         // X-9: vegetacion decorativa en la playa (z 14..22, fuera de la barda y lejos del eje x = 0 de la caminata)
         {
             const glm::vec3 palmas[8] = { { -25.0f, 0.0f, 13.0f }, { -13.0f, 0.0f, -4.0f }, { -17.0f, 0.0f, 5.0f }, { 16.0f, 0.0f, -3.0f },
@@ -1338,6 +1350,7 @@ int main()
             }
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
         }
+        PERF("ceremonia/extras");
         // X-24: narrativa de la ruta en 5 estaciones (ver docs/EXTRAS_Y_MEJORAS.md). Todo con matematica simple, sin KeyFrames.
         {
             const float tn = (float)Reloj();
@@ -1445,6 +1458,7 @@ int main()
             }
             glUniform1f(specLoc, 0.05f);
         }
+        PERF("narrativa");
         // ===== X-25..X-28: los lados de la escena (investigacion de Mazunte en docs/investigacion_mazunte.md). Sin KeyFrames: solo formulas simples =====
         if (!std::getenv("NIERIKA_SIN_LADOS"))   // solo para las capturas "antes" de docs/EXTRAS_Y_MEJORAS.md
         {
@@ -1704,6 +1718,7 @@ int main()
             glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
             glUniform1f(specLoc, 0.05f);
         }
+        PERF("lados/casas");
         // X-18: colinas verdes de fondo y su vegetacion (50 m detras de la barda; no son Punta Cometa)
         {
             glUniform1f(specLoc, 0.02f);
@@ -1726,6 +1741,7 @@ int main()
             for (int i = 0; i < VegetacionColinas::N_ARBUSTOS; i++) conEscala(arbusto, VegetacionColinas::ARBUSTOS[i]);
             glUniform1f(specLoc, 0.05f);
         }
+        PERF("colinas");
         // ===== X-33 / X-34 / X-35: VIDA EN LAS COLINAS Y EN LA FRANJA NORTE DE LA PLAYA =====
         // Senderos de cempasuchil con faroles que suben a las colinas (norte, este, oeste), un campamento con fogata en cada mirador y otra fogata
         // en cada cima, 4 campamentos y 2 palapas en la franja norte de la playa, mas vegetacion, luciernagas y gente con atuendos propios.
@@ -1962,6 +1978,7 @@ int main()
             llamaModelo.Draw(shader);
         }
         glUniform1i(glGetUniformLocation(shader.Program, "llama"), 0);
+        PERF("vida colinas");
         // 4. SILUETA (D-1/D-2): 10 piezas jerarquicas, caminata de la orilla (z = +24) al altar por KeyFrames con slerp y smoothstep.
         // Cada pieza se dibuja con la matriz de mundo de su nodo (el pivote del .obj es la articulacion)
         if (!menu.abierto) tSilueta += deltaTime;   // X-63: con el menu abierto la silueta espera (en el inicio, en la orilla; en la pausa, donde iba)
@@ -1992,6 +2009,7 @@ int main()
             glUniform3f(glGetUniformLocation(shader.Program, "tinteObjeto"), 1.0f, 1.0f, 1.0f);
         }
 
+        PERF("silueta/ofrendas");
         // ===== X-55 (17/11): 5 ANIMACIONES NUEVAS DE PERSONAS =====
         //  1 BaileFamiliar, 2 JuegoPerro (nino + perro + pelota), 3 Sahumerio: KeyFrames (Pista + slerp, PersonasAnim.cpp).  4 banda al compas (arriba) y 5 Anfitriona: senos.
         //  Cada persona es una jerarquia de piezas (Models/persona_art), vestida por Atuendos::dibujarPartes. NIERIKA_T_PERS=<s> fija el reloj (solo capturas).
@@ -2053,6 +2071,7 @@ int main()
             }
         }
 
+        PERF("personas animadas");
         // X-47: humo del copal (modelo `humo` de D1, sin particulas): una columna sobre cada copalero, semitransparente y sin escribir profundidad.
         // Va al final, despues de lo opaco. La textura es opaca: la transparencia es el uniforme humoAlfa (NIERIKA_HUMO_ALFA la cambia para pruebas).
         {
@@ -2136,6 +2155,7 @@ int main()
             glDisable(GL_BLEND);
         }
 
+        PERF("humo y halos");
         // C-7b: ficha cultural si la camara esta a < 2 m de uno de los 5 objetos (se dibuja al final, sobre la escena)
         // X-60: avisos (arriba) y ayuda; el aviso fijo "V" aparece solo cerca del altar
         {
@@ -2198,6 +2218,8 @@ int main()
             if (!recorrido.Activo()) glfwSetWindowShouldClose(window, GL_TRUE);
         }
         audio.ActualizarZona(camera.GetPosition().x, camera.GetPosition().z, camera.GetFront().x, camera.GetFront().z);  // X-24: volumen por zona
+        ::Perf::FinCuadro();
+        if (::Perf::terminado) glfwSetWindowShouldClose(window, GL_TRUE);
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -2372,6 +2394,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
         hud.aviso = nombres[mezclaSonido];
         hud.avisoSeg = 2.0f;
     }
+
+    if (GLFW_KEY_F9 == key && GLFW_PRESS == action) ::Perf::Alternar();   // X-68: medicion de tiempos por etapa (solo desarrollo; no esta en el manual)
 
     // F1: muestra u oculta la ayuda de controles (X-60)
     if (GLFW_KEY_F1 == key && GLFW_PRESS == action)
